@@ -1,15 +1,13 @@
 Package: divDyn
 Type: Package
 Title: Calculating metrics of diversity dynamics using occurrence data
-Version: 0.1.1
+Version: 0.1.2
 Author: Adam T. Kocsis
 Maintainer: Adam T. Kocsis <adamkocsis@fau.de>
 Description: The package implements functions to describe sampling and diversity dynamics of fossil occurrence datasets (e.g. from the Paleobiology Database).
 License: What license is it under?
 Encoding: UTF-8
-LazyData: true
+LazyData: false
 Imports:
-LinkingTo:
+LinkingTo: 
 RoxygenNote: 5.0.1
-NeedsCompilation: no
-Packaged: 2017-11-16 14:39:46 UTC; kocsis
