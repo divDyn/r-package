@@ -5,7 +5,7 @@ Version: 0.1.2
 Author: Adam T. Kocsis
 Maintainer: Adam T. Kocsis <adamkocsis@fau.de>
 Description: The package implements functions to describe sampling and diversity dynamics of fossil occurrence datasets (e.g. from the Paleobiology Database).
-License: What license is it under?
+License: Creative Commons 4.0
 Encoding: UTF-8
 LazyData: false
 Imports:
