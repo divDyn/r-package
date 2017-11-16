@@ -224,7 +224,7 @@ spCleanse <- function(vec, mode="simple", collapse="_"){
 #'	  data(stages)
 #'
 #'	# calculate metrics of diversity dynamics
-#'    ddZ <- divDyn(scleractinia, tax="genus", bin="slc")
+#'    dd <- divDyn(scleractinia, tax="genus", bin="slc")
 #'
 #'	# plotting
 #'	  library(geoscale)
