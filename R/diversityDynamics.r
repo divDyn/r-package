@@ -158,55 +158,55 @@ spCleanse <- function(vec, mode="simple", collapse="_"){
 #' 
 #' The following variables are produced:
 #'
-#' nTimeSlice: the time slice number
+#' bin: the time slice number
 #'
-#' nThrough: the number of through-ranging taxa
+#' tThrough: the number of through-ranging taxa
 #'
-#' nOri: the number of originating taxa
+#' tOri: the number of originating taxa
 #'
-#' nExt: the number of taxa getting extinct
+#' tExt: the number of taxa getting extinct
 #'
-#' n1tTaxa: the number of stratigraphic singleton (single-interval) taxa
+#' t1: the number of stratigraphic singleton (single-interval) taxa
 #'
-#' nD2tTaxa: the number of taxa that are present in the i-1th and the ith interval (lower two timers)
+#' t2d: the number of taxa that are present in the i-1th and the ith interval (lower two timers)
 #'
-#' nU2tTaxa: the number of taxa that are present in the ith and the i+1th interval (upper two timers)
+#' t2u: the number of taxa that are present in the ith and the i+1th interval (upper two timers)
 #'
-#' nUGfTaxa: upper gap-fillers ($later)
+#' tGFu: upper gap-fillers ($later)
 #'
-#' nDGfTaxa: lower gap-fillers ($later)
+#' tGFd: lower gap-fillers ($later)
 #'
-#' n3tTaxa: the number of three timer taxa, present in time slice i-1, i, and i+1
+#' t3: the number of three timer taxa, present in time slice i-1, i, and i+1
 #'
-#' nPtTaxa: the part timer taxa, present in time slice i-1,and i+1, but not in i
+#' tPart: the part timer taxa, present in time slice i-1,and i+1, but not in i
 #'
-#' nFooteExt: the per capita extinction rates of foote (not normalized with interval length!)
+#' extPC: the per capita extinction rates of foote (not normalized with interval length!)
 #'
-#' nFooteOri: the per capita origination rates of foote (not normalized with interval length!)
+#' oriPC: the per capita origination rates of foote (not normalized with interval length!)
 #'
-#' n3tExt: the three-timer extinction rates 
+#' ext3t: the three-timer extinction rates 
 #'
-#' n3tOri: the three-timer origination rates 
+#' ori3t: the three-timer origination rates 
 #'
-#' nC3tExt: the corrected three-timer extinction rates 
+#' extC3t: the corrected three-timer extinction rates 
 #'
-#' nC3tOri: the corrected three-timer origination rates
+#' oriC3t: the corrected three-timer origination rates
 #'
-#' nSIB: sampled-in-bin diversity (richness)
+#' divSIB: sampled-in-bin diversity (richness)
 #'
-#' nCorrSIB: corrected sampled-in-bin diversity (richness)
+#' divCSIB: corrected sampled-in-bin diversity (richness)
 #'
-#' nBoundaryCrosser: boundary-crosser diversity (richness)
+#' divBC: boundary-crosser diversity (richness)
 #'
-#' nRangeThrough: range-through diversity (richness)
+#' divRT: range-through diversity (richness)
 #'
-#' nFooteSampProb: sampling probability (Foote)
+#' sampRange: sampling probability (Foote)
 #'
-#' n3tSampComp: three-timer sampling completeness (used as a correcting value in nC3tExt, nC3tOri and nCorrSIB)
+#' samp3t: three-timer sampling completeness (used as a correcting value in nC3tExt, nC3tOri and nCorrSIB)
 #'
-#' nGfExt: gap-filler extinction rates
+#' extGF: gap-filler extinction rates
 #'
-#' nGfOri: gap-filler origination rates
+#' oriGF: gap-filler origination rates
 #'
 #' @param dat (data.frame): the data frame containing PBDB occurrences.
 #' 
@@ -228,7 +228,7 @@ spCleanse <- function(vec, mode="simple", collapse="_"){
 #'
 #'	# plotting
 #'	  library(geoscale)
-#'	  geoscalePlot(stages$mid,dd$nRangeThrough, age.lim=c(260,0), 
+#'	  geoscalePlot(stages$mid,dd$divRT, age.lim=c(260,0), 
 #'	    data.lim=c(0,300), type="l", units="Period", vers="ICS2014", 
 #'	    ts.width=0.1, tick.scale=50, boxes="Period",ts.col=F,
 #'	    label="range-through diversity (genera)")
@@ -373,8 +373,8 @@ divDyn <- function(dat, tax="occurrence.genus_name", bin="bin", noNAStart=F, inf
 	
 		
 	#create the returning table
-	dRatesAndMetrics<-cbind(nTimeSlice, nThrough, nOri, nExt, n1tTaxa, nD2tTaxa, nU2tTaxa, nUGfTaxa, nDGfTaxa, n3tTaxa, nPtTaxa, nFooteExt, nFooteOri, n3tExt, n3tOri, nC3tExt, nC3tOri, nSIB, 
-							nCorrSIB, nBoundaryCrosser,nRangeThrough, nFooteSampProb, n3tSampComp, nGfExt, nGfOri)
+	dRatesAndMetrics<-cbind(bin=nTimeSlice, tThrough=nThrough, tOri=nOri, tExt=nExt, t1=n1tTaxa, t2d=nD2tTaxa, t2u=nU2tTaxa, tGFu=nUGfTaxa, tGFd=nDGfTaxa, t3=n3tTaxa, tPart=nPtTaxa, extPC=nFooteExt, oriPC=nFooteOri, ext3t=n3tExt, ori3t=n3tOri, extC3t=nC3tExt, oriC3t=nC3tOri, divSIB=nSIB, 
+							divCSIB=nCorrSIB, divBC=nBoundaryCrosser,divRT=nRangeThrough, sampRange=nFooteSampProb, samp3t=n3tSampComp, extGF=nGfExt, oriGF=nGfOri)
 	if(Inf!=T)
 	{
 		dRatesAndMetrics[is.infinite(dRatesAndMetrics)]<-NA
@@ -382,6 +382,7 @@ divDyn <- function(dat, tax="occurrence.genus_name", bin="bin", noNAStart=F, inf
 	}
 							
 	dRatesAndMetrics<-as.data.frame(dRatesAndMetrics, stringsAsFactors=F)
+	
 	
 				#!!!nTot3tSampComp
 
