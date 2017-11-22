@@ -1,4 +1,8 @@
 # Change log
+## [0.1.4] - 2017-11-22
+### Changes
+- documentation
+
 
 ## [0.1.3] - 2017-11-21
 ### Changes
