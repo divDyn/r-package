@@ -2,7 +2,7 @@
 % Please edit documentation in R/diversityDynamics.r
 \name{divDyn}
 \alias{divDyn}
-\title{Diversity dynamics function}
+\title{Time series from metrics of diversity dynamics}
 \usage{
 divDyn(dat, tax = "occurrence.genus_name", bin = "bin", noNAStart = F,
   inf = F)
@@ -20,8 +20,8 @@ so the first row will contain the estimates for the lowest bin number.}
 \item{Inf}{(logical): should infinites be converted to NAs?}
 }
 \description{
-This script contains mostly the work of Wolfgang Kiessling. It calculates 
-various aspects of a time series resolved from PBDB occurrences.
+This function calculates 
+various metrics in the form of time series from resolved PBDB occurrences.
 }
 \details{
 The following variables are produced:

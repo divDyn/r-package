@@ -151,10 +151,10 @@ spCleanse <- function(vec, mode="simple", collapse="_"){
 }
 
 
-#' Diversity dynamics function
+#' Time series from metrics of diversity dynamics 
 #' 
-#' This script contains mostly the work of Wolfgang Kiessling. It calculates 
-#' various aspects of a time series resolved from PBDB occurrences.
+#' This function calculates 
+#' various metrics in the form of time series from resolved PBDB occurrences.
 #' 
 #' The following variables are produced:
 #'
