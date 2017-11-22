@@ -48,7 +48,7 @@ The output variables are the same as in the divDyn function. Likely updates: c++
     data.lim=c(0,300), type="l", units="Period", vers="ICS2014", 
     ts.width=0.1, tick.scale=50, boxes="Period",ts.col=F,
     label="range-through diversity (genera)")
-  lines(stages$mid,rarefDD100$divRT, col="blue")
+  lines(stages$mid,rarefDD$divRT, col="blue")
   legend("topleft", legend=c("raw","rarefaction"),
     col=c("black", "blue"), lwd=c(1,1))
 
