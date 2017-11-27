@@ -1,4 +1,8 @@
 # Change log
+## [0.1.5] - 2017-11-27
+### Added
+- the streaklog() and whichmaxstreak() functions
+
 ## [0.1.4] - 2017-11-22
 ### Changes
 - documentation
