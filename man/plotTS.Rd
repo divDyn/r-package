@@ -46,16 +46,16 @@ As most analysis use an individually compiled time scale object, in order to ens
 }
 \examples{
 data(stages)
-  tsPlot(stages, boxes="period", shading="series")
+  plotTS(stages, boxes="period", shading="series")
 
 # only the Mesozoic, custom axes
-  tsPlot(stages, boxes="period", shading="stage", xlim=52:81, 
+  plotTS(stages, boxes="period", shading="stage", xlim=52:81, 
     plot.args=list(axes=F, main="Mesozoic"))
   axis(1, at=seq(250, 75, -25), labels=seq(250, 75, -25))
   axis(2)
 
 # only the Triassic, use the supplied abbreviations
-  tsPlot(stages, boxes="short", shading="stage", xlim=c(250,199), 
+  plotTS(stages, boxes="short", shading="stage", xlim=c(250,199), 
     ylab="variable", labels.args=list(cex=1.5, col="blue"), 
     boxes.args=list(col="gray95"))
 }
