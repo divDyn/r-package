@@ -1,6 +1,10 @@
 # divDyn
 R package for analysing diversity dynamics with Paleobiology Database occurrences
 
+## installing and update
+1. make sure that the devtools package is installed
+2. run devtools::install_github("adamkocsis/divDyn")
+
 # Change log
 ## [0.1.6] - 2017-12-04
 ### Added
