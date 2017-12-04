@@ -1,4 +1,9 @@
 # Change log
+## [0.1.6] - 2017-12-04
+### Added
+- the plotTS() time scale plotting function
+- examples were updated
+
 ## [0.1.5] - 2017-11-27
 ### Added
 - the streaklog() and whichmaxstreak() functions

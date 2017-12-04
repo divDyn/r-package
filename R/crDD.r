@@ -28,14 +28,12 @@
 #'	  rarefDD <- crDD(scleractinia, quota=100, iter=10, intactBins=95)
 #'
 #'	# plotting
-#'	  library(geoscale)
-#'	  geoscalePlot(stages$mid,dd$divRT, age.lim=c(260,0), 
-#'	    data.lim=c(0,300), type="l", units="Period", vers="ICS2014", 
-#'	    ts.width=0.1, tick.scale=50, boxes="Period",ts.col=F,
-#'	    label="range-through diversity (genera)")
-#'	  lines(stages$mid,rarefDD$divRT, col="blue")
+#'	  plotTS(stages, shading="series", boxes="period", xlim=52:95, 
+#'	  ylab="range-through diversity (genera)", ylim=c(0,230))
+#'	  lines(stages$mid, dd$divRT, lwd=2)
+#'	  lines(stages$mid,rarefDD$divRT, col="blue", lwd=2)
 #'	  legend("topleft", legend=c("raw","rarefaction"),
-#'	    col=c("black", "blue"), lwd=c(1,1))
+#'	    col=c("black", "blue"), lwd=c(2,2), bg="white")
 #'
 #' @export
 crDD<-function (dat, quota, tax="genus", bin="slc", coll="collection_no",  iter=100, noNAStart, average="geom", intactBins=NULL){

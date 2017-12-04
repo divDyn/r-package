@@ -35,7 +35,7 @@ data(scleractinia)
 fossils<-subset(scleractinia, slc!=95)
 fossilEnv<-subset(fossils, bath!="uk")
 # calculate affinities
-	aff<-affinity(fossilEnv, env="bath", tax="genus", bin="slc", alpha=1)
+  aff<-affinity(fossilEnv, env="bath", tax="genus", bin="slc", alpha=1)
 
 }
 

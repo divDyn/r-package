@@ -19,7 +19,7 @@
 #'	fossils<-subset(scleractinia, slc!=95)
 #'	fossilEnv<-subset(fossils, bath!="uk")
 #'	# calculate affinities
-#'		aff<-affinity(fossilEnv, env="bath", tax="genus", bin="slc", alpha=1)
+#'	  aff<-affinity(fossilEnv, env="bath", tax="genus", bin="slc", alpha=1)
 #'	
 #' @export
 affinity<-function(dat, env, tax="occurrence.genus_name",  bin="SLC", coll="collection_no", alpha=1,reldat=NULL){
