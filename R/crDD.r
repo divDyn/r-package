@@ -150,7 +150,7 @@ crDD<-function (dat, quota, tax="genus", bin="slc", coll="collection_no",  iter=
 				#export the counts	
 				mSIBTrials[,k] <- dDivDyn$divSIB
 				mRTTrials[,k] <- dDivDyn$divRT
-				m1tTaxaTrials[,k]<-dDivDyn$t1
+				m1tTaxaTrials[,k]<-dDivDyn$tSing
 				m3tTaxaTrials[,k]<-dDivDyn$t3
 				mPtTaxaTrials[,k]<-dDivDyn$tPart
 				mU2tTaxaTrials[,k]<-dDivDyn$t2u

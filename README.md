@@ -6,6 +6,12 @@ R package for analysing diversity dynamics with Paleobiology Database occurrence
 2. run devtools::install_github("adamkocsis/divDyn")
 
 # Change log
+## [0.2.0] - 2017.12.11
+### Changes
+- added Rccp import
+- divDyn() updated to v2, ca. 150x faster
+- installation changes
+
 ## [0.1.6] - 2017-12-04
 ### Added
 - the plotTS() time scale plotting function

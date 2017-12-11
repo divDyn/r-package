@@ -32,4 +32,3 @@ The function whichmaxstreak() will return the indices of those values that are i
   streaklog(b)
   whichmaxstreak(b)
 }
-

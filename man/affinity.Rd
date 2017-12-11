@@ -38,4 +38,3 @@ fossilEnv<-subset(fossils, bath!="uk")
   aff<-affinity(fossilEnv, env="bath", tax="genus", bin="slc", alpha=1)
 
 }
-

@@ -59,4 +59,3 @@ data(stages)
     ylab="variable", labels.args=list(cex=1.5, col="blue"), 
     boxes.args=list(col="gray95"))
 }
-

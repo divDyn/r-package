@@ -43,4 +43,3 @@ nThrough: the number of through-ranging taxa
 data(scleractinia)
 fl <- fadLad(scleractinia, tax="genus", bin="slc", maxdate="ma_max", mindate="ma_min")
 }
-

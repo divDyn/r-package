@@ -5,7 +5,7 @@
 \title{Time series from metrics of diversity dynamics}
 \usage{
 divDyn(dat, tax = "occurrence.genus_name", bin = "bin", noNAStart = F,
-  inf = F)
+  inf = F, data.frame = T)
 }
 \arguments{
 \item{dat}{(data.frame): the data frame containing PBDB occurrences.}
@@ -17,7 +17,9 @@ divDyn(dat, tax = "occurrence.genus_name", bin = "bin", noNAStart = F,
 \item{noNAStart}{(bool): useful when the dataset does not start from bin No. 1. Then noNAStart=TRUE will cut the first part of the resulting table, 
 so the first row will contain the estimates for the lowest bin number.}
 
-\item{Inf}{(logical): should infinites be converted to NAs?}
+\item{inf}{(logical): should infinites be converted to NAs?}
+
+\item{data.frame}{(logical): should be a data frame or a matrix?}
 }
 \description{
 This function calculates 
@@ -34,7 +36,7 @@ tOri: the number of originating taxa
 
 tExt: the number of taxa getting extinct
 
-t1: the number of stratigraphic singleton (single-interval) taxa
+tSing: the number of stratigraphic singleton (single-interval) taxa
 
 t2d: the number of taxa that are present in the i-1th and the ith interval (lower two timers)
 
@@ -91,4 +93,3 @@ oriGF: gap-filler origination rates
 
 
 }
-

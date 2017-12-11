@@ -51,4 +51,3 @@ The output variables are the same as in the divDyn function. Likely updates: c++
     col=c("black", "blue"), lwd=c(2,2), bg="white")
 
 }
-

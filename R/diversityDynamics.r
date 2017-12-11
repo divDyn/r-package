@@ -166,7 +166,7 @@ spCleanse <- function(vec, mode="simple", collapse="_"){
 #'
 #' tExt: the number of taxa getting extinct
 #'
-#' t1: the number of stratigraphic singleton (single-interval) taxa
+#' tSing: the number of stratigraphic singleton (single-interval) taxa
 #'
 #' t2d: the number of taxa that are present in the i-1th and the ith interval (lower two timers)
 #'
@@ -216,7 +216,8 @@ spCleanse <- function(vec, mode="simple", collapse="_"){
 #' @param noNAStart (bool): useful when the dataset does not start from bin No. 1. Then noNAStart=TRUE will cut the first part of the resulting table, 
 #' 						so the first row will contain the estimates for the lowest bin number.
 #' 
-#' @param Inf (logical): should infinites be converted to NAs?
+#' @param inf (logical): should infinites be converted to NAs?
+#' @param data.frame (logical): should be a data frame or a matrix?
 #' 
 #' @examples
 #'	# import data
@@ -233,157 +234,93 @@ spCleanse <- function(vec, mode="simple", collapse="_"){
 #'
 #'
 #' @export
-divDyn <- function(dat, tax="occurrence.genus_name", bin="bin", noNAStart=F, inf=F)
+divDyn <- function(dat, tax="occurrence.genus_name", bin="bin", noNAStart=F, inf=F, data.frame=T)
 {
-	#bin<-""
-	#tax<-"occurrence.genus_name"
 	
-	#independent vector for the taxa names
-	fTaxa<-dat[, tax]
-	#independent vector for the time slice numbers
-	nBins<-dat[, bin]
+	# is binVar numeric
+	if(!is.numeric(dat[,bin])){
+		stop("The bin variable is not numeric.")
+	}
 	
+	# sub dataset
+	subDat <- unique(dat[,c(tax, bin)])
+	
+	bNeed<- !(is.na(subDat[,tax]) | is.na(subDat[,bin]))
+	# taxon vars
+	taxVar<-subDat[bNeed, tax]
+	binVar<-subDat[bNeed, bin]
+
 	#the maximum number of time slices
-	nVectorLength<-max(nBins, na.rm=T)
+	nVectorLength<-max(binVar, na.rm=T)
+	
 	#starting interval
-	nStart<-min(nBins, na.rm=T)
+	nStart<-min(binVar, na.rm=T)
 	
 	#ending interval
-	nEnd<-max(nBins, na.rm=T)
+	nEnd<-max(binVar, na.rm=T)
 	
 	#the vector of time slice numbers
 	nTimeSlice<-c(rep(NA, nStart-1), nStart:nEnd)
 	
 	
-	# Modified to two-timer metrics backward
-	# Data vectors - definitions
-	ex <- numeric(nVectorLength) #vector of extinct taxa
-	or <- numeric(nVectorLength) #vector of originating taxa
-	su <- numeric(nVectorLength) #vector of total survivors
-	nD2tTaxa <- numeric(nVectorLength) #vector of two timers (bottom)
-	nU2tTaxa <- numeric(nVectorLength) #vector of two timers (top)
-	n3tTaxa <- numeric(nVectorLength) #vector of three timers 
-	nPtTaxa <- numeric(nVectorLength) #vector for part timers
-	n1tTaxa <- numeric(nVectorLength) #vector for singletons
-	nThrough <- numeric(nVectorLength) #vector for through-ranging taxa 
-	nSIB <- numeric(nVectorLength) #vector for SIB diversities
-	nUGfTaxa<-numeric(nVectorLength) #vector of gap fillers (top for extinctions)
-	nDGfTaxa<-numeric(nVectorLength) #vector of gap fillers (bottom, for originations)
-
+	# factorize
+	taxVar <- as.numeric(factor(taxVar))
 	
-	# for every time slice
-	for (i in nStart:nEnd) 
+	# shift to 0 indices
+	taxVar<-taxVar-1
+	binVar<-binVar-1
+	
+	# here comes the counts variables
+	counts <- Counts(taxVar,binVar)
+
+	# the metrics
+	metrics <- Metrics(counts)
+							 
+	if(inf!=T)
 	{
-		rfl<-levels(factor(fTaxa[nBins==i])) #All genera sampled in bin
-		rfupl<-levels(factor(fTaxa[nBins>i])) # All genera in younger bins
-		rfdol<-levels(factor(fTaxa[nBins<i])) # All genera in older bins
-		rfotl<-levels(factor(fTaxa[nBins!=i])) # All genera outside bin
-		rf1d<-levels(factor(fTaxa[nBins==(i-1)])) # All genera in previous bin
-		rf1u<-levels(factor(fTaxa[nBins==(i+1)])) # All genera in subsequent bin
-		rf2d<-levels(factor(fTaxa[nBins==(i-2)])) # All genera in bin i-2
-		rf2u<-levels(factor(fTaxa[nBins==(i+2)])) # All genera in bin i+2
-		
-	
-	
-		s1 <- length(rfl [rfl %in% rfupl]) #Survivors from bin, top crosser
-		s2 <- length(rfl [rfl %in% rfdol]) #Survivors to bin, bottom crosser
-		ns <- length(rfl [rfl %in% rfotl]) #non-single interval taxa
-		nD2tTaxa[i] <- length(rfl [rfl %in% rf1d]) # Two-timers at bottom
-		nU2tTaxa[i]<- length(rfl [rfl %in% rf1u]) # Two-timers at top
-		n3tTaxa[i] <- length(rfl [rfl %in% rf1d & rfl %in% rf1u]) # Three-timers
-		nPtTaxa[i] <- length(rf1d [rf1d %in% rf1u])-n3tTaxa[i] # Part timers
-		nUGfTaxa[i] <-length(rf2u[rf2u %in% rf1d[!(rf1d %in% rf1u)]]) # gap fillers at the top (not present in i+1, but present in i-1 and i+2)
-		nDGfTaxa[i] <-length(rf2d[rf2d %in% rf1u[!(rf1u %in% rf1d)]]) # gap fillers at the bottom (not present in i-1, but present in i+1 and i-2)
-		nThrough[i] <- length(rfdol [rfdol %in% rfupl]) # Through-rangers
-
-
-		n1tTaxa[i]<-length(rfl)-ns # single interval taxa
-		nSIB[i]<-length(rfl) # sampled in bin taxa
-		ex[i]<- length(rfl)-s1 # extinct taxa, sib-s1
-		or[i]<- length(rfl)-s2 # originating taxa, sib-s2
-		
+		metrics[is.infinite(metrics)]<-NA
 		
 	}
 	
-	
-## when the lowest number of time slice is not one!
-#	ttd<-ttd[start:end]
-#	ttu<-ttu[start:end]
-#	tht<-tht[start:end]
-#	ptm<-ptm[start:end]
-#	nThrough<-nThrough[start:end]
-#	sg<-sg[start:end]
-#	sib<-sib[start:end]
-#	ex<-ex[start:end]
-#	or<-or[start:end]
-  
-	
-  
-	nOri <- or-n1tTaxa					#top crosser, originating
-	nExt <- ex-n1tTaxa					#bottom crosser, extinguishing
-	nBoundaryCrosser <- nThrough+nExt                   #Boundary crossers
-	div <- nBoundaryCrosser+nOri                   # total diversity
-	sib. <- nSIB-n1tTaxa
-	nRangeThrough<-div+n1tTaxa
-	
-	sib.[sib.==0]<-NA
-
-	#Sampling parameters
-		#sampling probability (Foote, 2000)
-		ss <- nThrough
-		obs <- sib.-nExt-nOri
-		nobs <- ss-obs
-		nFooteSampProb <- obs/ss 
-
-		#Three-timer sampling completeness (Alroy, 2008)	
-		n3tSampComp <- n3tTaxa/(n3tTaxa+nPtTaxa)
-			
-			#Sampling completeness of the entire time series
-			nTot3tSampComp<- sum(n3tTaxa, na.rm=T)/(sum(n3tTaxa, na.rm=T)+sum(nPtTaxa, na.rm=T))
-			
-	
-	#Foote (2000) rates
-		nFooteExt<- -log(nThrough/(nThrough+nExt))
-		nFooteOri<- -log(nThrough/(nThrough+nOri))
-		
-	#Three-timer rates by Alroy (2008)
-		#uncorrected:
-		n3tExt <- log(nD2tTaxa/n3tTaxa) # two-timer/three-timer ratio (bottom)
-		n3tOri <- log(nU2tTaxa/n3tTaxa) # two-timer/three-timer ration (top)
-		
-		#corrected:
-			#extinction rates:
-				thtSampCompNext <- c(n3tSampComp[2:nVectorLength],NA) # Sampling probability in subsequent bin (BIN5)
-				nC3tExt <- n3tExt + log(thtSampCompNext)
-				#nC3tExt[nC3tExt<0] <- 0 # omit negative values
-			
-			#origination rates:
-				thtSampCompPrev <- c(NA, n3tSampComp[1:nVectorLength-1]) # Sampling probability in previous bin (BIN5)
-				nC3tOri <- n3tOri + log(thtSampCompPrev)
-				#nC3tOri[nC3tOri<0] <- 0 #omit negative values
-	 
-	
-	#Gap filler rates by Alroy(2013)
-		nGfExt<-log((nD2tTaxa+nPtTaxa)/(n3tTaxa+nPtTaxa+nUGfTaxa))
-		nGfOri<-log((nU2tTaxa+nPtTaxa)/(n3tTaxa+nPtTaxa+nDGfTaxa))
-	
-	#corrected sampled-in-bin diversity
-		nCorrSIB<-nSIB*nTot3tSampComp/n3tSampComp
+	# cbind all together
+	dCountsAndMetrics<-cbind(bin=nTimeSlice,  counts, metrics)
 	
 		
 	#create the returning table
-	dRatesAndMetrics<-cbind(bin=nTimeSlice, tThrough=nThrough, tOri=nOri, tExt=nExt, t1=n1tTaxa, t2d=nD2tTaxa, t2u=nU2tTaxa, tGFu=nUGfTaxa, tGFd=nDGfTaxa, t3=n3tTaxa, tPart=nPtTaxa, extPC=nFooteExt, oriPC=nFooteOri, ext3t=n3tExt, ori3t=n3tOri, extC3t=nC3tExt, oriC3t=nC3tOri, divSIB=nSIB, 
-							divCSIB=nCorrSIB, divBC=nBoundaryCrosser,divRT=nRangeThrough, sampRange=nFooteSampProb, samp3t=n3tSampComp, extGF=nGfExt, oriGF=nGfOri)
-	if(Inf!=T)
-	{
-		dRatesAndMetrics[is.infinite(dRatesAndMetrics)]<-NA
-		
+	dCountsAndMetrics<-dCountsAndMetrics[,c(
+		"bin",
+		"t2d",
+		"t2u",
+		"t3",
+		"tPart",
+		"tGFd",
+		"tGFu",
+		"tSing",
+		"tOri",
+		"tExt",
+		"tThrough",
+		"divSIB",
+		"divCSIB",
+		"divRT",
+		"divBC",
+		"extPC",
+		"oriPC",
+		"ext3t",
+		"ori3t",
+		"extC3t",
+		"oriC3t",
+		"extGF",
+		"oriGF",
+		"samp3t",
+		"sampRange"
+	)]
+	
+	if(data.frame){				
+		dCountsAndMetrics<-as.data.frame(dCountsAndMetrics, stringsAsFactors=F)
 	}
-							
-	dRatesAndMetrics<-as.data.frame(dRatesAndMetrics, stringsAsFactors=F)
 	
 	
-				#!!!nTot3tSampComp
+	#!!!nTot3tSampComp
 
 	#want to see the NA's at the beginnning? (when the time series does not start with bin 1)
 		if (missing(noNAStart)) {}
@@ -391,7 +328,7 @@ divDyn <- function(dat, tax="occurrence.genus_name", bin="bin", noNAStart=F, inf
 		{
 			if (noNAStart==TRUE)
 			{
-				dRatesAndMetrics<-dRatesAndMetrics[nStart:nEnd,]
+				dCountsAndMetrics<-dCountsAndMetrics[nStart:nEnd,]
 			}
 			
 			if (noNAStart!=TRUE & noNAStart!=FALSE)
@@ -402,5 +339,101 @@ divDyn <- function(dat, tax="occurrence.genus_name", bin="bin", noNAStart=F, inf
 	
 	
 	#return the table					
-	return(dRatesAndMetrics)
+	return(dCountsAndMetrics)
 }
+
+# function version 2.0
+Counts <- function(tax, bin){
+	counts<- .Call('_divDyn_Counts', PACKAGE = 'divDyn', tax, bin)
+	colnames(counts)<- c(
+		"t1",
+		"t2d",
+		"t2u",
+		"t3",
+		"tPart",
+		"tGFd",
+		"tGFu",
+		"tSing",
+		"tOri",
+		"tExt",
+		"tThrough",
+		"divSIB"
+	)
+	return(counts)
+
+}
+
+Metrics<- function(counts){
+##########################################
+	# the metrics
+	metNames<-c("divCSIB",
+		"divRT",
+		"divBC",
+		"extPC",
+		"oriPC",
+		"ext3t",
+		"ori3t",
+		"extC3t",
+		"oriC3t",
+		"extGF",
+		"oriGF",
+		"samp3t",
+		"sampRange")
+	
+	#container
+	metrics<-matrix(NA, ncol=length(metNames), nrow=nrow(counts))
+	colnames(metrics)<-metNames
+	
+	#BC diversity
+	metrics[,"divBC"] <- counts[,"tThrough"]+counts[,"tExt"]
+
+	# total diversity
+	sib. <- counts[,"divSIB"]-counts[,"tSing"]
+	div <- metrics[,"divBC"]+counts[,"tOri"]                  
+	metrics[,"divRT"]<-div+counts[,"tSing"]
+	
+	#Sampling parameters
+	#sampling probability (Foote, 2000)
+	obs <- sib.-counts[,"tExt"]-counts[,"tOri"]
+	metrics[,"sampRange"] <- obs/counts[,"tThrough"] 
+
+	#Three-timer sampling completeness (Alroy, 2008)	
+	metrics[,"samp3t"] <- counts[,"t3"]/(counts[,"t3"]+counts[,"tPart"])
+			
+			#Sampling completeness of the entire time series
+			nTot3tSampComp<- sum(counts[,"t3"], na.rm=T)/(sum(counts[,"t3"], na.rm=T)+sum(counts[,"tPart"], na.rm=T))
+			
+	
+	#Foote (2000) rates
+		metrics[,"extPC"]<- -log(counts[,"tThrough"]/(counts[,"tThrough"]+counts[,"tExt"]))
+		metrics[,"oriPC"]<- -log(counts[,"tThrough"]/(counts[,"tThrough"]+counts[,"tOri"]))
+		
+	#Three-timer rates by Alroy (2008)
+		#uncorrected:
+		metrics[,"ext3t"] <- log(counts[,"t2d"]/counts[,"t3"]) # two-timer/three-timer ratio (bottom)
+		metrics[,"ori3t"] <- log(counts[,"t2u"]/counts[,"t3"]) # two-timer/three-timer ration (top)
+		
+		#corrected:
+			#extinction rates:
+				thtSampCompNext <- c(metrics[2:nrow(counts),"samp3t"],NA) # Sampling probability in subsequent bin (BIN5)
+				metrics[,"extC3t"] <- metrics[,"ext3t"] + log(thtSampCompNext)
+				#nC3tExt[nC3tExt<0] <- 0 # omit negative values
+			
+			#origination rates:
+				thtSampCompPrev <- c(NA, metrics[1:(nrow(counts)-1),"samp3t"]) # Sampling probability in previous bin (BIN5)
+				metrics[,"oriC3t"] <- metrics[,"ori3t"] + log(thtSampCompPrev)
+				#nC3tOri[nC3tOri<0] <- 0 #omit negative values
+	 
+	
+	#Gap filler rates by Alroy(2013)
+		metrics[,"extGF"]<-log((counts[,"t2d"]+counts[,"tPart"])/(counts[,"t3"]+counts[,"tPart"]+counts[,"tGFu"]))
+		metrics[,"oriGF"]<-log((counts[,"t2u"]+counts[,"tPart"])/(counts[,"t3"]+counts[,"tPart"]+counts[,"tGFd"]))
+	
+	#corrected sampled-in-bin diversity
+		metrics[,"divCSIB"]<-counts[,"divSIB"]*nTot3tSampComp/metrics[,"samp3t"]
+	
+
+	return(metrics)
+}
+
+

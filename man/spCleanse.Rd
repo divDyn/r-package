@@ -24,4 +24,3 @@ This version will not keep subgenera, and will assign species to the base genus.
 examp <- c("Genus cf. species", "Genus spp.", "Family indet.", "Mygenus yourspecies", "Okgenus ? questionsp")
 spCleanse(examp) 
 }
-
