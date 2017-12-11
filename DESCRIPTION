@@ -8,6 +8,8 @@ Description: The package implements functions to describe sampling and diversity
 License: Creative Commons BY 4.0
 Encoding: UTF-8
 LazyData: false
+Depends:
+    R (>= 3.2.2)
 Imports: Rcpp
 NeedsCompilation: yes
 RoxygenNote: 6.0.1
