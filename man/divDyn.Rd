@@ -87,7 +87,7 @@ oriGF: gap-filler origination rates
    dd <- divDyn(scleractinia, tax="genus", bin="slc")
 
 # plotting
-  plotTS(stages, shading="series", boxes="period", xlim=c(260,0), 
+  plotTS(stages, shading="series", boxes="per", xlim=c(260,0), 
   ylab="range-through diversity (genera)", ylim=c(0,230))
   lines(stages$mid, dd$divRT, lwd=2)
 

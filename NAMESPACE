@@ -1,4 +1,4 @@
-
+export(ratesplit)
 export(affinity)
 export(crDD)
 export(divDyn)

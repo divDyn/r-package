@@ -19,7 +19,7 @@
 #' @param boxes.args (list): list of arguments that will be passed to the rect() function that draws the rectangles of time intervals.
 #' @examples
 #'	data(stages)
-#'	  plotTS(stages, boxes="period", shading="series")
+#'	  plotTS(stages, boxes="per", shading="series")
 #'
 #'	# only the Mesozoic, custom axes
 #'	  plotTS(stages, boxes="period", shading="stage", xlim=52:81, 
@@ -32,7 +32,7 @@
 #'	    ylab="variable", labels.args=list(cex=1.5, col="blue"), 
 #'	    boxes.args=list(col="gray95"))
 #' @export
-plotTS<-function(tsdat,  boxes, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0.005,
+plotTS<-function(tsdat,  boxes, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 	bottom="bottom", mid="mid",top="top",
 	xlab="age (Ma)", ylab="",
 	shading=NULL,shading.col=c("white", "gray80"),
@@ -41,7 +41,7 @@ plotTS<-function(tsdat,  boxes, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0.005,
 	labels.args=NULL){
 	
 #	tsdat<-stages
-#	boxes<-"period"
+#	boxes<-"per"
 #	bottom="bottom"
 #	mid="mid"
 #	top="top"

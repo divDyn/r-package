@@ -4,10 +4,10 @@
 \alias{plotTS}
 \title{Time series plotting using a custom timescale object}
 \usage{
-plotTS(tsdat, boxes, ylim = c(0, 1), xlim = NULL, prop = 0.05,
-  gap = 0.005, bottom = "bottom", mid = "mid", top = "top",
-  xlab = "age (Ma)", ylab = "", shading = NULL, shading.col = c("white",
-  "gray80"), plot.args = NULL, boxes.args = NULL, labels.args = NULL)
+plotTS(tsdat, boxes, ylim = c(0, 1), xlim = NULL, prop = 0.05, gap = 0,
+  bottom = "bottom", mid = "mid", top = "top", xlab = "age (Ma)",
+  ylab = "", shading = NULL, shading.col = c("white", "gray80"),
+  plot.args = NULL, boxes.args = NULL, labels.args = NULL)
 }
 \arguments{
 \item{tsdat}{(data frame): time scale data frame}
@@ -46,7 +46,7 @@ As most analysis use an individually compiled time scale object, in order to ens
 }
 \examples{
 data(stages)
-  plotTS(stages, boxes="period", shading="series")
+  plotTS(stages, boxes="per", shading="series")
 
 # only the Mesozoic, custom axes
   plotTS(stages, boxes="period", shading="stage", xlim=52:81, 

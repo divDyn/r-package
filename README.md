@@ -15,6 +15,15 @@ install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/divDyn_0.
 
 
 # Change log
+## [0.2.1] - 2017.12.12
+### Added
+- the ratesplit() function for selectivity tests
+- period abbreviations for the 'stages' object
+
+### Changes
+- plotTS() function default changes
+
+
 ## [0.2.0] - 2017.12.11
 ### Changes
 - added Rccp import

@@ -28,7 +28,7 @@
 #'	  rarefDD <- crDD(scleractinia, quota=100, iter=10, intactBins=95)
 #'
 #'	# plotting
-#'	  plotTS(stages, shading="series", boxes="period", xlim=52:95, 
+#'	  plotTS(stages, shading="series", boxes="per", xlim=52:95, 
 #'	  ylab="range-through diversity (genera)", ylim=c(0,230))
 #'	  lines(stages$mid, dd$divRT, lwd=2)
 #'	  lines(stages$mid,rarefDD$divRT, col="blue", lwd=2)
