@@ -9,7 +9,7 @@ As the package now uses compiled code to make things run faster, there are two w
 2. You have to compile the code for yourself. For this:
 - install a compiler. for windows this would be included in Rtools.
 - make sure that the devtools package is installed
-- run devtools::install_github("adamkocsis/divDyn")
+- run `devtools::install_github("adamkocsis/divDyn")`
 
 
 
