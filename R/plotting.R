@@ -248,7 +248,7 @@ plotTS<-function(tsdat,  boxes, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 #'	  shades(stages$mid, randVar, col="blue", res=20,method="symmetric")	  
 #'	  
 #'	plotTS(stages, boxes="per", shading="series", ylim=c(0,30), ylab="log-normal distributions")
-#	  randVar <- t(sapply(1:95, FUN=function(x){rlnorm(150, 0,1)}))
+#'	  randVar <- t(sapply(1:95, FUN=function(x){rlnorm(150, 0,1)}))
 #'	  shades(stages$mid, randVar, col="blue", res=c(0,0.33, 0.66, 1),method="decrease")	 
 #' @export
 shades <- function(x, y, col, res=100, border=NA,interpolate=F, method="symmetric"){
