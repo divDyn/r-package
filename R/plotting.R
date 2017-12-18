@@ -241,10 +241,10 @@ plotTS<-function(tsdat,  boxes, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 #' @param res (numeric value): If a single value is entered, than it represents the number of quantiles to be shown (coerced to 150, if higher is entered). If it is vector of values, it will be interpreted as the vector of quantiles to be shown. If method="symmetric", only an odd number of quantiles are plotted. 
 #' @param border (character value): the color of the quantile lines
 #' @param col (character value): the color of the quantiles, currently just a single color is allowed.
-#' @param method (character value): The default "symmetric" method will plot the mid quantile range with highest opacity and the shades will be more translucent at the tails of the distributions. The "decrease" method will decrease the opacity with higher quantiles, which makes the plotts of low-bounded distributions easier to interpret.
+#' @param method (character value): The default "symmetric" method will plot the mid quantile range with highest opacity and the shades will be more translucent at the tails of the distributions. The "decrease" method will decrease the opacity with higher quantiles, which can make the plots of bottom-bounded distributions easier to interpret.
 #' @examples
 #'	data(stages)
-#'	plotTS(stages, boxes="per", shading="series", ylim=c(-5,5), ylim=c(normal distributions))
+#'	plotTS(stages, boxes="per", shading="series", ylim=c(-5,5), ylab=c("normal distributions"))
 #'	  randVar <- t(sapply(1:95, FUN=function(x){rnorm(150, 0,1)}))
 #'	  shades(stages$mid, randVar, col="blue", res=20,method="symmetric")	  
 #'	  
@@ -261,7 +261,8 @@ shades <- function(x, y, col, res=100, border=NA,interpolate=F, method="symmetri
 		interpolate <- FALSE
 	}
 	
-	if(length(col)>1) stop("Please enter only one color.")
+	if(length(col)>1 | length(border)>1) stop("Please enter only one color as the col and border arguments.")
+	
 	
 	if(interpolate){
 		
