@@ -1,7 +1,7 @@
 # Subsampling scripts
 
 # Wrapper function to perform a specified task with Classical Rarefaction of bins
-cr <- function(dat, FUN=NULL, quota,iter=10,  bin="SLC", tax="genus", intact=NULL, output="arithmetic", implementation="for", method="cr"){
+subseries <- function(dat, FUN=NULL, quota,iter=10,  bin="SLC", tax="genus", intact=NULL, output="arithmetic", implementation="for", method="cr"){
 
 #	bin <- "slc"
 #	tax<- "genus"

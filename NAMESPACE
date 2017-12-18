@@ -7,6 +7,7 @@ export(plotTS)
 export(spCleanse)
 export(streaklog)
 export(whichmaxstreak)
+export(shades)
 
 
 importFrom("Rcpp")
