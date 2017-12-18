@@ -235,7 +235,6 @@ plotTS<-function(tsdat,  boxes, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 #' This intermediate-level function will plot a time series with the quantiles shown as shades (using alpha values) around the central tendency.
 #'
 #' @param interpolate (logical value): In case the symmetric method is chosen, the series of quantile values can be interpolated with a LOESS function. 
-#' @param boxes (character): column name indicating the names that should be plotted as a timescale
 #' @param x (numeric): The x coordinates.
 #' @param y (numeric matrix): The series of distributions to be plotted. Every row represents a distribution of values. The number of rows must equal to the length of x. 
 #' @param res (numeric value): If a single value is entered, than it represents the number of quantiles to be shown (coerced to 150, if higher is entered). If it is vector of values, it will be interpreted as the vector of quantiles to be shown. If method="symmetric", only an odd number of quantiles are plotted. 
