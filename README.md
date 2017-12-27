@@ -7,7 +7,7 @@ As the package now uses compiled code to make things run faster, there are two w
 `install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/divDyn_0.2.2.zip", repos=NULL)`
 
 2. You have to compile the code for yourself. For this:
-- Install a compiler. For Windows, this would be included in Rtools.
+- Install a C++ compiler. For Windows, this would be included in Rtools.
 - Make sure that the devtools package is installed
 - Run `devtools::install_github("adamkocsis/divDyn")`
 
