@@ -8,6 +8,7 @@ export(spCleanse)
 export(streaklog)
 export(whichmaxstreak)
 export(shades)
+export(subseries)
 
 
 importFrom("Rcpp")

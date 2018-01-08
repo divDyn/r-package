@@ -1,4 +1,4 @@
-#' Diversity dynamics with classical rarefaction
+#' Diversity dynamics with classical rarefaction (obsolete - will be omitted in version 0.4)
 #' 
 #' This script calculates time series of diversity dynamics with iterated subsampling in every time slice.
 #' 
@@ -227,7 +227,7 @@ crDD<-function (dat, quota, tax="genus", bin="slc", coll="collection_no",  iter=
 		logmSIB<-log(mSIBTrials)
 		logmSIB[is.infinite(logmSIB)]<-NA
 		nSIBGeo<- apply(logmSIB, 1, mean, na.rm=T) 
-		nSIB<- exp(nSIBGeo)
+		nSIBGeo<- exp(nSIBGeo)
 		
 		logmBC<-log(mBoundaryCrosserTrials)
 		logmBC[is.infinite(logmBC)]<-NA
@@ -251,7 +251,7 @@ crDD<-function (dat, quota, tax="genus", bin="slc", coll="collection_no",  iter=
 		
 		nU2tTaxaGeo<- apply(mU2tTaxaTrials, 1, mean, na.rm=T) 
 		
-		nUGfTaxaGeo<- apply(logmUGf, 1, mean, na.rm=T) 
+		nUGfTaxaGeo<- apply(mUGfTaxaTrials, 1, mean, na.rm=T) 
 		
 		nDGfTaxaGeo<- apply(mDGfTaxaTrials, 1, mean, na.rm=T) 
 		
@@ -299,7 +299,7 @@ crDD<-function (dat, quota, tax="genus", bin="slc", coll="collection_no",  iter=
 					#nC3tOriGeo[nC3tOriGeo<0] <- 0 #omit negative values
 	 
 		#corrected sampled-in-bin diversity
-			nCorrSIB<-nSIB*nTot3tSampCompGeo/n3tSampComp
+			nCorrSIB<-nSIBGeo*nTot3tSampCompGeo/n3tSampComp
 		
 		#Gap filler estimates (Alroy, 2013)
 			nGfExt<-log((nD2tTaxaGeo+nPtTaxaGeo)/(n3tTaxaGeo+nPtTaxaGeo+nUGfTaxaGeo))
@@ -319,7 +319,7 @@ crDD<-function (dat, quota, tax="genus", bin="slc", coll="collection_no",  iter=
 						t2u=nU2tTaxaGeo, t3=n3tTaxaGeo,  tPart=nPtTaxaGeo, tExt=nExtGeo, tOri=nOriGeo, divBC=nBoundaryCrosserGeo,
 						tThrough=nThroughGeo,divRT=nRTGeo,
 						extPC=nFooteExt, oriPC=nFooteOri, samp3t=n3tSampComp,  
-						ext3t=n3tExt,ori3t=n3tOri, extC3t=nC3tExt,  oriC3t=nC3tOri,  divSIB=nSIB, 
+						ext3t=n3tExt,ori3t=n3tOri, extC3t=nC3tExt,  oriC3t=nC3tOri,  divSIB=nSIBGeo, 
 						divCSIB=nCorrSIB, extGF=nGfExt, oriGF=nGfOri)
 		
 		dResults<-as.data.frame(dResults, stringsAsFactors=F)

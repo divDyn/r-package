@@ -2,7 +2,7 @@
 % Please edit documentation in R/crDD.r
 \name{crDD}
 \alias{crDD}
-\title{Diversity dynamics with classical rarefaction}
+\title{Diversity dynamics with classical rarefaction (obsolete - will be omitted in version 0.4)}
 \usage{
 crDD(dat, quota, tax = "genus", bin = "slc", coll = "collection_no",
   iter = 100, noNAStart, average = "geom", intactBins = NULL)

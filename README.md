@@ -4,17 +4,23 @@ R package for analysing diversity dynamics with Paleobiology Database occurrence
 ## installing and update
 As the package now uses compiled code to make things run faster, there are two ways to install.
 1. I have built binaries for Windows x86 and x64. If you have one of these architectures, you can install the package with:
-`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/divDyn_0.2.2.zip", repos=NULL)`
+`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/divDyn_0.2.3.zip", repos=NULL)`
 
 2. You have to compile the code for yourself. For this:
-- Install a C++ compiler. For Windows, this would be included in Rtools.
+- Install a compiler. For Windows, this would be included in Rtools.
 - Make sure that the devtools package is installed
 - Run `devtools::install_github("adamkocsis/divDyn")`
 
 
 
 
+
 # Change log
+## [0.2.3] - 2018.01.08
+### Added
+- the subseries() function to execute certain functions with subsampling applied.
+
+
 ## [0.2.2] - 2017.12.18
 ### Added
 - the shades() function for plotting distributions of values arranged in a time series

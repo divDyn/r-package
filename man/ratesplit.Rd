@@ -25,7 +25,7 @@ ratesplit(dat, sel, tax = "genus", bin = "slc", rate = "pc",
 
 \item{alpha}{(num): Threshold for the between meaningful and meaningless split. If method=="AIC", the value corresponds to the minimum weight value the dual model should have , by default it is 0.89, which corresponds to the likelihood ratio of 8. If method=="binom", the value corresponds to the alpha value of the binomial test.}
 
-\item{output}{(character): Either "simple" or "total". Simple returns the indices of the series where selectivity can be suggested. "total" returns a matrix of Akaike weights, or binomial probabilities.}
+\item{output}{(character): Either "simple" or "full". Simple returns the indices of the series where selectivity can be suggested. "full" returns a matrix of Akaike weights, or binomial probabilities.}
 }
 \description{
 This function will determine whether there are meaningful differences between the taxonomic rates in the individual time slices of two subsets of an occurrence database.

@@ -7,7 +7,7 @@
 #' The meaningfulness of the split is dependent on the estimate accurracy and the magnitude of the difference.
 #' @param sel (character): Variable name to do the splitting of the dataset. Can have only two levels.
 #'	
-#' @param output (character): Either "simple" or "total". Simple returns the indices of the series where selectivity can be suggested. "total" returns a matrix of Akaike weights, or binomial probabilities.
+#' @param output (character): Either "simple" or "full". Simple returns the indices of the series where selectivity can be suggested. "full" returns a matrix of Akaike weights, or binomial probabilities.
 #'	
 #' @param method (character): Either "AIC", "binom" or "combine". The "AIC" method calculates the Akaike weights of the single and dual rate models. The "binom" method assumes a binomial error distribution of the counts that are necessary for the rate calculations. The "combine" method shows slices that pass both tests, the "AIC" being usually the stronger.
 #'	
