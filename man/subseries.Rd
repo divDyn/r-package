@@ -31,7 +31,7 @@ subseries(dat, FUN = "divDyn", q, iter = 10, bin = "SLC", intact = NULL,
 
 \item{implement}{(character value): Either "lapply", "for" or "foreach". The iterator function of the subsampling trials. Use "lapply" for speed, but this may result in memory issues. Currently only the "for" implementation works.}
 
-\item{method}{(character value): The type of subsampling to be implemented. By default this is classical rarefaction ("cr").}
+\item{method}{(character value): The type of subsampling to be implemented. By default this is classical rarefaction ("cr"). "oxw" stands for occurrence weighted by list subsampling.}
 
 \item{...}{arguments passed to the method-specific subsampling functions.}
 }
@@ -79,5 +79,24 @@ sibDiv<-sib(scleractinia)
 # calculate it with subsampling
 rarefSIB<-subseries(scleractinia,iter=50, q=50,
   tax="genus", bin="slc", output="arit", intact=95, FUN=sib)
+
+# Example 3 - different subsampling methods with default function (divDyn)
+# compare different subsampling types
+  # classical rarefaction
+  cr<-subseries(scleractinia,iter=100, q=20,tax="genus", bin="slc", output="dist", intact=95)
+  # by-list subsampling (unweighted) - 3 collections
+  UW<-subseries(scleractinia,iter=100, q=3,tax="genus", bin="slc", output="dist", intact=95, method="oxw", x=0)
+  # occurrence weighted by list subsampling
+  OW<-subseries(scleractinia,iter=100, q=20,tax="genus", bin="slc", output="dist", intact=95, method="oxw", x=1)
+ 
+# plot
+  plotTS(stages, shading="series", boxes="per", xlim=c(260,0), 
+  ylab="range-through diversity (genera)", ylim=c(0,100))
+  shades(stages$mid, cr$divRT, col="red")
+  shades(stages$mid, UW$divRT, col="blue")
+  shades(stages$mid, OW$divRT, col="green")
   
+  legend("topleft", bg="white", legend=c("CR (20)", "UW (3)", "OW (20)"), 
+    col=c("red", "blue", "green"), lty=c(1,1,1), lwd=c(2,2,2))
+
 }

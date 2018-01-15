@@ -19,7 +19,7 @@
 #' 
 #' @param tax (character value): The name of the taxon variable.
 #' 
-#' @param method (character value): The type of subsampling to be implemented. By default this is classical rarefaction ("cr").
+#' @param method (character value): The type of subsampling to be implemented. By default this is classical rarefaction ("cr"). "oxw" stands for occurrence weighted by list subsampling. 
 #' 
 #' @param FUN The function to be iteratively executed during the subsampling trials. IF set to NULL, no function will be executed, and the subsampled datasets will be returned as a list. If set to the default "divDyn", the divDyn(), function will be run with default settings. The function should be defined with a single argument, the database subset resulting from a trial. 
 #' 
@@ -68,7 +68,26 @@
 #' # calculate it with subsampling
 #' rarefSIB<-subseries(scleractinia,iter=50, q=50,
 #'   tax="genus", bin="slc", output="arit", intact=95, FUN=sib)
+#'
+#' # Example 3 - different subsampling methods with default function (divDyn)
+#' # compare different subsampling types
+#'   # classical rarefaction
+#'   cr<-subseries(scleractinia,iter=100, q=20,tax="genus", bin="slc", output="dist", intact=95)
+#'   # by-list subsampling (unweighted) - 3 collections
+#'   UW<-subseries(scleractinia,iter=100, q=3,tax="genus", bin="slc", output="dist", intact=95, method="oxw", x=0)
+#'   # occurrence weighted by list subsampling
+#'   OW<-subseries(scleractinia,iter=100, q=20,tax="genus", bin="slc", output="dist", intact=95, method="oxw", x=1)
+#'  
+#' # plot
+#'   plotTS(stages, shading="series", boxes="per", xlim=c(260,0), 
+#'   ylab="range-through diversity (genera)", ylim=c(0,100))
+#'   shades(stages$mid, cr$divRT, col="red")
+#'   shades(stages$mid, UW$divRT, col="blue")
+#'   shades(stages$mid, OW$divRT, col="green")
 #'   
+#'   legend("topleft", bg="white", legend=c("CR (20)", "UW (3)", "OW (20)"), 
+#'     col=c("red", "blue", "green"), lty=c(1,1,1), lwd=c(2,2,2))
+#' 
 #' @export
 subseries <- function(dat, FUN="divDyn", q,iter=10,  bin="SLC",intact=NULL, tax="genus", duplicates=FALSE, coll="collection_no", output="arit", implement="for", method="cr",...){
 	
@@ -188,7 +207,13 @@ subseries <- function(dat, FUN="divDyn", q,iter=10,  bin="SLC",intact=NULL, tax=
 		for(k in 1:iter){
 			#1. produce one subsample
 			if(method=="cr"){
-				trialDat<-dat[subsampleCR(binVar=dat[,bin], q=q, intact=keep),]
+				oneResult<-subsampleCR(binVar=dat[,bin], q=q, intact=keep)
+				trialDat<-dat[oneResult$rows,]
+			}
+			
+			if(method=="oxw"){
+				oneResult<-subsampleOXW(binVar=dat[,bin], collVar=dat[, coll], q=q, intact=keep,...)
+				trialDat<-dat[oneResult$rows,]
 			}
 			
 			#2. run the function on subsample
@@ -356,6 +381,11 @@ subsampleCR <- function(binVar,q,intact=NULL){
 	
 	}, q=q)
 	
+	# what was not enough for the subsampling
+	failed<-unlist(lapply(tap, is.null))
+	failed<-as.numeric(names(failed[failed]))
+	failed<-failed[!failed%in%intact]
+	
 	# the rows that should be passed
 	trialRows <- rows%in%unlist(tap)
 	
@@ -365,6 +395,91 @@ subsampleCR <- function(binVar,q,intact=NULL){
 	# combine the two
 	subsampleRows<-trialRows | intactRows
 
+	
+	# result
+	res<-list(rows=subsampleRows, fail=failed)
+
 	# return
-	return(subsampleRows)
+	return(res)
+}
+
+
+
+subsampleOXW<-function(binVar, collVar, q, intact=NULL,x=1){
+	
+	# future argument: appr represents how the subsampling quota is approached
+	# appr can be "over", "under", "optimize"
+	appr="over"
+	
+	# the chosen quota
+	if(x!=0){
+		newQ<-q^x
+	}else{
+		newQ<-q
+	}
+	rows<- 1:length(binVar)
+	
+	#keep track of not enough
+	ne<-NULL
+	tap<-tapply(X=rows, INDEX=binVar, FUN=function(y){
+	#	y<-rows[binVar==i]
+		# because indices are subsetted
+		collection<-collVar[y]
+		
+		# get the weight of each collection
+		expTab<-table(collection)^x
+		
+		# shuffle
+		expTab<-sample(expTab)
+		
+		# add up
+		cumulative<-cumsum(expTab)
+
+		
+		
+		# there are enough 
+		if(length(cumulative)>0){
+			if(cumulative[length(cumulative)]>newQ){
+				bSelect<-cumulative<=newQ
+				# potential forking!!! 
+				if(appr=="over"){
+					if(sum(bSelect)!=length(bSelect)){
+						bSelect[sum(bSelect)+1] <- TRUE
+					}
+				}
+				
+				# the collections to keep
+				keepCollections<-as.numeric(names(cumulative)[bSelect])
+				return(y[collection%in%keepCollections])
+				
+			}else{
+				return(NULL)
+			}
+		}else{
+			return(NULL)
+			
+		}
+	
+	})
+	
+	# what was not enough for the subsampling
+	failed<-unlist(lapply(tap, is.null))
+	failed<-as.numeric(names(failed[failed]))
+	failed<-failed[!failed%in%intact]
+	
+	# the rows that should be passed
+	trialRows <- rows%in%unlist(tap)
+	
+	# these rows should be present regardless of the subsampling
+	intactRows<-binVar%in%intact
+	
+	# combine the two
+	subsampleRows<-trialRows | intactRows
+	
+	# result
+	res<-list(rows=subsampleRows, fail=failed)
+
+	# return
+	return(res)
+
 }
