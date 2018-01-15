@@ -20,7 +20,7 @@ As the package now uses compiled code to make things run faster, there are two w
 # Change log
 ## [0.2.4] - 2018.01.15
 ### Added
-- the the "oxw" method for the subseries() function for occurrence-weighted by list subsampling. Check out the examples for 
+- the the "oxw" method for the subseries() function. This implements occurrence-weighted by list subsampling.
 
 ## [0.2.3] - 2018.01.08
 ### Added
