@@ -8,7 +8,8 @@ export(spCleanse)
 export(streaklog)
 export(whichmaxstreak)
 export(shades)
-export(subseries)
+export(subsample)
+export(survivors)
 
 
 importFrom("Rcpp")

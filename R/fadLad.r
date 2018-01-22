@@ -4,7 +4,7 @@
 #' 
 #' The following variables are produced:
 #'
-#' taxon: the name of the taxon.
+#' row names: the name of the taxon.
 #'
 #' FAD: first appearance date in the given time slices.
 #'
@@ -29,73 +29,151 @@
 #'	data(scleractinia)
 #'	fl <- fadLad(scleractinia, tax="genus", bin="slc", maxdate="ma_max", mindate="ma_min")
 #' @export
-fadLad<-function(dat, tax, bin, maxdate=F, mindate=F)
-#dat<-scleractinia
-#tax<-"genus"
-#bin<-"slc"
-#maxdate<-"ma_max"
-#mindate<-"ma_min"
-#
-{
-	#if there are ages
-	if(maxdate!=F & mindate!=F)
-	{
-		cTaxa<-levels(factor(dat[,tax]))
+fadLad<-function(dat, tax, bin, maxdate=NULL, mindate=NULL){
+	# for the prototype
+#	dat <- scleractinia
+#	tax<- "genus"
+#	bin <- "slc"
+#	maxdate <- "ma_max"
+#	mindate <- "ma_min"
+
+	# defense
+		if(!is.matrix(dat) & !is.data.frame(dat) ) stop("Invalid 'dat' argument.")
+		if(!tax%in%colnames(dat))stop("Invalid 'tax' argument.")
+		if(!bin%in%colnames(dat)) stop("Invalid 'bin' argument.")
+		if(!is.numeric(dat[,bin])) stop("'bin' must be a numeric variable.")
+	
+	# in case there are numerical dates
+	if(!is.null(maxdate) & !is.null(mindate)){
+		# check whether the columns are there
+		if(sum(colnames(dat)%in%c(maxdate, mindate))!=2) stop("Invalid 'mindate' or 'maxdate' arguments.")
+		if(!is.numeric(dat[,maxdate]) | !is.numeric(dat[,mindate])) stop("Invalid 'mindate' and/or 'maxdate' arguments.")
 		
-		mFadLad<-matrix(NA, nrow=length(cTaxa), ncol=6)
-		dFadLad<-as.data.frame(mFadLad)
-		colnames(dFadLad)<-c("FAD", "LAD", "range", "FAD_DATE", "LAD_DATE", "DUR")
-		#rownames(dFadLad)<-cTaxa
+		# single iteration
+		tempFL<-tapply(INDEX=dat[,tax], X=1:nrow(dat), FUN=function(x){
+			suppressWarnings(c(
+				min(dat[x,bin], na.rm=T), 
+				max(dat[x,bin], na.rm=T),
+				max(dat[x,maxdate], na.rm=T), 
+				min(dat[x,mindate], na.rm=T)))
+		})
+		fl<-matrix(unlist(tempFL), ncol=4, byrow=T)
+		fl[!is.finite(fl)]<-NA
+		fl<-as.data.frame(fl)
+		colnames(fl) <- c("FAD", "LAD", "myFAD", "myLAD")
 		
+		# calculate durations
+		fl$duration <- fl[,"myFAD"]-fl[,"myLAD"]
+		fl$range <- fl[,"LAD"]-fl[,"FAD"]
 		
-		for(i in 1:length(cTaxa))
-		{
-			nTax<-dat[dat[,tax]==cTaxa[i], bin]
-			
-			nTaxMaxDate<-dat[dat[,tax]==cTaxa[i], maxdate]
-			nTaxMinDate<-dat[dat[,tax]==cTaxa[i], mindate]
-			
-			nTaxMaxDate<-nTaxMaxDate[!is.na(nTaxMaxDate)]
-			nTaxMinDate<-nTaxMinDate[!is.na(nTaxMinDate)]
-			
-			dFadLad[i,1]<-min(nTax, na.rm=T)
-			dFadLad[i,2]<-max(nTax, na.rm=T)
-			dFadLad[i,3]<-max(nTax, na.rm=T)-min(nTax, na.rm=T)
-			if(length(nTaxMaxDate)>0){
-				dFadLad[i,4]<-max(nTaxMaxDate, na.rm=T)
-			}
-			if(length(nTaxMinDate)>0){
-				dFadLad[i,5]<-min(nTaxMinDate, na.rm=T)
-			}
-			if(length(nTaxMaxDate)>0 & length(nTaxMinDate)>0){
-				dFadLad[i,6]<-max(nTaxMaxDate, na.rm=T)-min(nTaxMinDate, na.rm=T)
-			}
-			
-		}
-		taxon<-cTaxa
-		dFadLad<-cbind(taxon, dFadLad)
-		return(dFadLad)
+		# order properly
+		fl<-fl[,c("FAD", "LAD", "range", "myFAD", "myLAD", "duration")]
+		
+	# in case there aren't
 	}else{
-		cTaxa<-levels(factor(dat[,tax]))
 		
-		mFadLad<-matrix(NA, nrow=length(cTaxa), ncol=3)
-		dFadLad<-as.data.frame(mFadLad)
-		colnames(dFadLad)<-c("FAD", "LAD", "range")
+		# single iteration
+		tempFL<-tapply(INDEX=dat[,tax], X=dat[,bin], FUN=function(x){
+			c(min(x, na.rm=T), max(x, na.rm=T))
+		})
+		fl<-matrix(unlist(tempFL), ncol=2, byrow=T)
+		fl<-data.frame(FAD=fl[,1], LAD=fl[,2])
+		fl$range <- fl[,"LAD"]-fl[,"FAD"]
+	}
+	
+	# add the species names
+	rownames(fl)<- names(tempFL)
+	return(fl)
+	
+
+}
+
+
+
+#' Estimation of survivorship probabilities
+#' 
+#' This function will calculate both forward and backward survivorship probabilities from a given occurrence dataset or FAD-LAD matrix.
+#' 
+#' @param dat (data.frame): the data frame containing PBDB occurrences.
+#' 
+#' @param tax (char): variable  name of the occurring taxa (variable type: factor) - such as "occurrence.genus_name"
+#' 
+#' @param bin (char): variable name of the time slice numbers of the particular occurrences (variable type: int)- such as "slc" or whatever. Bin numbers should be in ascending order,can contain NA's, it can start from a number other than 1 and must not start with 0.
+#' @param noNAStart (bool): useful when the dataset does not start from bin No. 1. Then noNAStart=TRUE will cut the first part of the resulting table, 
+#' 						so the first row will contain the estimates for the lowest bin number.
+#' 
+#' @param fl (matrix or data.frame). If so desired, the function can be run on an FAD-LAD dataset. (fadLad)
+#' 
+#' @param method (character value): either "forward" or "backward".
+#' 
+#' @examples
+#' data(scleractinia)
+#' surv<-survivors(scleractinia, tax="genus", bin="slc", method="forward")
+#' 
+#' # plot
+#' data(stages)
+#' plotTS(stages, shading="series", boxes="per", xlim=c(260,0), 
+#'   ylab="proportion of survivors present")
+#'   
+#' for(i in 1:ncol(surv)) lines(stages$mid, surv[,i])
+#' 
+#' @export
+survivors<-function(dat, tax="genus", bin="slc", method="forward", noNAStart=FALSE,fl=NULL){
+	
+	# calculate FAD-LAD matrix first, if not provided
+	if(is.null(fl)){
+		fl <- fadLad(dat, tax, bin)
+	}else{
+		if(!"FAD"%in%colnames(fl) | !"LAD"%in%colnames(fl)) stop("Invalid FAD-LAD matrix.")
+	}
+	
+	if(noNAStart){
+		inter<-min(fl$FAD):max(fl$LAD)
+	}else{
+		inter <- 1:max(fl$LAD)
+	}
+	
+	template<-rep(NA, max(inter))
+	
+	if(method=="forward"){
 		
-		for(i in 1:length(cTaxa))
-		{
-			nTax<-dat[dat[,tax]==cTaxa[i], bin]
+		sProbList<-sapply(inter, FUN=function(x){
+			# who are there?
+			bOrig <- fl$FAD<=x & x<=fl$LAD
+			original<-fl[bOrig,]
+			subVector <- x:max(inter)
+			curSurv<-sapply(subVector, FUN=function(y){
+				return(sum(original$FAD<=y & y<=original$LAD))
+				
+			})
 			
-			dFadLad[i,1]<-min(nTax, na.rm=T)
-			dFadLad[i,2]<-max(nTax, na.rm=T)
-			dFadLad[i,3]<-max(nTax, na.rm=T)-min(nTax, na.rm=T)
+			retVal <- template
+			retVal[subVector]<-curSurv/sum(bOrig)
+			return(retVal)
+		})
+	}
+	
+	if(method=="backward"){
+		
+		sProbList<-sapply(inter, FUN=function(x){
+			# who are there?
+			bOrig <- fl$FAD<=x & x<=fl$LAD
+			original<-fl[bOrig,]
+			subVector <- min(inter):x
+			curSurv<-sapply(subVector, FUN=function(y){
+				return(sum(original$FAD<=y & y<=original$LAD))
+				
+			})
 			
-		}
-		taxon<-cTaxa
-		dFadLad<-cbind(taxon, dFadLad, stringsAsFactors=F)
-		return(dFadLad)
+			retVal <- template
+			retVal[subVector]<-curSurv/sum(bOrig)
+			return(retVal)
+		})
 	
 	}
 	
-	
+	return(sProbList)
 }
+
+
+

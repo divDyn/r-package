@@ -4,7 +4,7 @@
 \alias{fadLad}
 \title{FAD - LAD matrix from occurrence data}
 \usage{
-fadLad(dat, tax, bin, maxdate = F, mindate = F)
+fadLad(dat, tax, bin, maxdate = NULL, mindate = NULL)
 }
 \arguments{
 \item{dat}{(data.frame): Occurrence data.}
@@ -23,7 +23,7 @@ Function to generate range data from an occurrence dataset.
 \details{
 The following variables are produced:
 
-taxon: the name of the taxon.
+row names: the name of the taxon.
 
 FAD: first appearance date in the given time slices.
 
