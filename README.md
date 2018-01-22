@@ -19,10 +19,12 @@ As the package now uses compiled code to make things run faster, there are two w
 
 # Change log
 ## [0.2.5] - 2018.01.22
+### Added
+- survivors() function to calculate survivorship probabilities
+
 ### Changes
 - the 'subseries()' function was renamed to 'subsample()' for easier application
 - the 'fadLad()' function was redrafted for speed
-
 
 
 ## [0.2.4] - 2018.01.15
