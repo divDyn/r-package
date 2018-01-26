@@ -74,9 +74,16 @@ sampRange: sampling probability (Foote)
 
 samp3t: three-timer sampling completeness (used as a correcting value in nC3tExt, nC3tOri and nCorrSIB)
 
-extGF: gap-filler extinction rates
+extGF: gap-filler extinction rates (Alroy, 2014)
 
-oriGF: gap-filler origination rates
+oriGF: gap-filler origination rates (Alroy, 2014)
+
+E2f3: second-for-third extinction propotions (Alroy, 2015)
+
+O2f3: second-for-third origination propotions (Alroy, 2015)
+ext2f3: second-for-third extinction rates (based on Alroy, 2015)
+
+ori2f3: second-for-third origination rates (based on Alroy, 2015)
 }
 \examples{
 # import data

@@ -26,6 +26,14 @@ NumericMatrix Counts(NumericVector tax, NumericVector bin)
 	NumericVector tGFu(nBins);
 	NumericVector tGFd(nBins);
 	
+	NumericVector s1d(nBins);
+	NumericVector s2d(nBins);
+	NumericVector s3d(nBins);
+	
+	NumericVector s1u(nBins);
+	NumericVector s2u(nBins);
+	NumericVector s3u(nBins);
+	
 	NumericVector singleton(nBins);
 	NumericVector tThrough(nBins);
 	NumericVector tExtNoSing(nBins);
@@ -110,6 +118,54 @@ NumericMatrix Counts(NumericVector tax, NumericVector bin)
 			
 			}
 			
+			//s1d
+			if((i>1)& (i<(nBins-1))){	
+				if((TotalMatrix(j,i-1)==1) & (TotalMatrix(j,i)==1) & (TotalMatrix(j,i+1)==0) & (TotalMatrix(j,i+2)==0)){
+					s1d(i)++;
+				}
+			
+			}
+			
+			//s2d
+			if((i>1)& (i<(nBins-1))){	
+				if((TotalMatrix(j,i-1)==1) & (TotalMatrix(j,i)==0) & (TotalMatrix(j,i+1)==1) & (TotalMatrix(j,i+2)==0)){
+					s2d(i)++;
+				}
+			
+			}
+			
+			//s3d
+			if((i>1)& (i<(nBins-1))){	
+				if((TotalMatrix(j,i-1)==1) & (TotalMatrix(j,i)==0) & (TotalMatrix(j,i+1)==0) & (TotalMatrix(j,i+2)==1)){
+					s3d(i)++;
+				}
+			
+			}
+			
+			//s1u
+			if((i>1)& (i<(nBins-1))){	
+				if((TotalMatrix(j,i-2)==0) & (TotalMatrix(j,i-1)==0) & (TotalMatrix(j,i)==1) & (TotalMatrix(j,i+1)==1)){
+					s1u(i)++;
+				}
+			
+			}
+			
+			//s2u
+			if((i>1)& (i<(nBins-1))){	
+				if((TotalMatrix(j,i-2)==0) & (TotalMatrix(j,i-1)==1) & (TotalMatrix(j,i)==0) & (TotalMatrix(j,i+1)==1)){
+					s2u(i)++;
+				}
+			
+			}
+			
+			//s3u
+			if((i>1)& (i<(nBins-1))){	
+				if((TotalMatrix(j,i-2)==1) & (TotalMatrix(j,i-1)==0) & (TotalMatrix(j,i)==0) & (TotalMatrix(j,i+1)==1)){
+					s3u(i)++;
+				}
+			
+			}
+			
 		}
 		
 		// now that we know the FAD and the LAD
@@ -132,7 +188,7 @@ NumericMatrix Counts(NumericVector tax, NumericVector bin)
 		
 	}
 	
-	NumericMatrix endMatrix(nBins,12);
+	NumericMatrix endMatrix(nBins,18);
 	endMatrix(_,0) = t1;
 	endMatrix(_,1) = t2d;
 	endMatrix(_,2) = t2u;
@@ -140,11 +196,17 @@ NumericMatrix Counts(NumericVector tax, NumericVector bin)
 	endMatrix(_,4) = tP;
 	endMatrix(_,5) = tGFd;
 	endMatrix(_,6) = tGFu;
-	endMatrix(_,7) = singleton;
-	endMatrix(_,8) = tOriNoSing;
-	endMatrix(_,9) = tExtNoSing;
-	endMatrix(_,10) = tThrough;
-	endMatrix(_,11) = divSIB;
+	endMatrix(_,7) = s1d;
+	endMatrix(_,8) = s2d;
+	endMatrix(_,9) = s3d;
+	endMatrix(_,10) = s1u;
+	endMatrix(_,11) = s2u;
+	endMatrix(_,12) = s3u;
+	endMatrix(_,13) = singleton;
+	endMatrix(_,14) = tOriNoSing;
+	endMatrix(_,15) = tExtNoSing;
+	endMatrix(_,16) = tThrough;
+	endMatrix(_,17) = divSIB;
 
 	return endMatrix;
 	

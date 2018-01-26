@@ -83,11 +83,11 @@ rarefSIB<-subsample(scleractinia,iter=50, q=50,
 # Example 3 - different subsampling methods with default function (divDyn)
 # compare different subsampling types
   # classical rarefaction
-  cr<-subsample(scleractinia,iter=100, q=20,tax="genus", bin="slc", output="dist", intact=95)
+  cr<-subsample(scleractinia,iter=50, q=20,tax="genus", bin="slc", output="dist", intact=95)
   # by-list subsampling (unweighted) - 3 collections
-  UW<-subsample(scleractinia,iter=100, q=3,tax="genus", bin="slc", output="dist", intact=95, method="oxw", x=0)
+  UW<-subsample(scleractinia,iter=50, q=3,tax="genus", bin="slc", output="dist", intact=95, method="oxw", x=0)
   # occurrence weighted by list subsampling
-  OW<-subsample(scleractinia,iter=100, q=20,tax="genus", bin="slc", output="dist", intact=95, method="oxw", x=1)
+  OW<-subsample(scleractinia,iter=50, q=20,tax="genus", bin="slc", output="dist", intact=95, method="oxw", x=1)
  
 # plot
   plotTS(stages, shading="series", boxes="per", xlim=c(260,0), 

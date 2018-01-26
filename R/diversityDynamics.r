@@ -204,9 +204,17 @@ spCleanse <- function(vec, mode="simple", collapse="_"){
 #'
 #' samp3t: three-timer sampling completeness (used as a correcting value in nC3tExt, nC3tOri and nCorrSIB)
 #'
-#' extGF: gap-filler extinction rates
+#' extGF: gap-filler extinction rates (Alroy, 2014)
 #'
-#' oriGF: gap-filler origination rates
+#' oriGF: gap-filler origination rates (Alroy, 2014)
+#'
+#' E2f3: second-for-third extinction propotions (Alroy, 2015)
+#'
+#' O2f3: second-for-third origination propotions (Alroy, 2015)
+#
+#' ext2f3: second-for-third extinction rates (based on Alroy, 2015)
+#'
+#' ori2f3: second-for-third origination rates (based on Alroy, 2015)
 #'
 #' @param dat (data.frame): the data frame containing PBDB occurrences.
 #' 
@@ -311,6 +319,10 @@ divDyn <- function(dat, tax="occurrence.genus_name", bin="bin", noNAStart=F, inf
 		"oriC3t",
 		"extGF",
 		"oriGF",
+		"E2f3",
+		"O2f3",
+		"ext2f3",
+		"ori2f3",
 		"samp3t",
 		"sampRange"
 	)]
@@ -353,6 +365,12 @@ Counts <- function(tax, bin){
 		"tPart",
 		"tGFd",
 		"tGFu",
+		"s1d",
+		"s2d",
+		"s3d",
+		"s1u",
+		"s2u",
+		"s3u",
 		"tSing",
 		"tOri",
 		"tExt",
@@ -377,6 +395,10 @@ Metrics<- function(counts){
 		"oriC3t",
 		"extGF",
 		"oriGF",
+		"E2f3",
+		"O2f3",
+		"ext2f3",
+		"ori2f3",
 		"samp3t",
 		"sampRange")
 	
@@ -425,9 +447,45 @@ Metrics<- function(counts){
 				#nC3tOri[nC3tOri<0] <- 0 #omit negative values
 	 
 	
-	#Gap filler rates by Alroy(2013)
+	#Gap filler rates by Alroy(2014)
 		metrics[,"extGF"]<-log((counts[,"t2d"]+counts[,"tPart"])/(counts[,"t3"]+counts[,"tPart"]+counts[,"tGFu"]))
 		metrics[,"oriGF"]<-log((counts[,"t2u"]+counts[,"tPart"])/(counts[,"t3"]+counts[,"tPart"]+counts[,"tGFd"]))
+	
+	# second- for third (Alroy, 2015)
+	
+	#	substituteF<-function(x){
+	#		# in such cases ... 
+	#		# reversed ordering
+	#		first <- x[1]<x[2] & x[2]<x[3]
+	#		
+	#		# s2 is minimum
+	#		second <- x[2]<x[1] & x[2]<x[3]
+	#		
+	#		# s2 is maximum
+	#		third <- x[2]>x[1] & x[2]>x[3]
+	#		
+	#		# substituting the second lowest of the three counts for s3
+	#		if(first | second | third){
+	#			sort(x)[2]
+	#		}else{
+	#			x[3]
+	#		}
+	#	}
+		# this is not enough, because the proportion can be still very negative,
+		# he correctly says at the end of the paragraph, it should be a second in the order
+	
+		# extinction proportions (Eq. 4 in Alroy, 2015)
+		sSubD<-apply(counts[,c("s1d","s2d","s3d")],1,function(x) sort(x)[2])
+		metrics[,"E2f3"] <- (counts[,"s1d"]-sSubD)/(counts[,"t2d"]+counts[,"tPart"])
+		
+		# origination proportions
+		sSubU<-apply(counts[,c("s1u","s2u","s3u")],1,function(x) sort(x)[2])
+		metrics[,"O2f3"] <- (counts[,"s1u"]-sSubU)/(counts[,"t2u"]+counts[,"tPart"])
+	
+		# transform to classical rate form
+		metrics[,"ext2f3"] <-log(1/(1-metrics[,"E2f3"]))
+		metrics[,"ori2f3"] <-log(1/(1-metrics[,"O2f3"]))
+		
 	
 	#corrected sampled-in-bin diversity
 		metrics[,"divCSIB"]<-counts[,"divSIB"]*nTot3tSampComp/metrics[,"samp3t"]
