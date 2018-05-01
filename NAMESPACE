@@ -10,6 +10,7 @@ export(whichmaxstreak)
 export(shades)
 export(subsample)
 export(survivors)
+export(sampstat)
 
 
 importFrom("Rcpp")

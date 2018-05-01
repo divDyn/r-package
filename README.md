@@ -5,15 +5,36 @@ The vignette is getting written. Until then, the features of the package are dem
 
 ## installing and update
 As the package now uses compiled code to make things run faster, there are two ways to install.
-1. I have built binaries for Windows x86 and x64. If you have one of these architectures, you can install the package with:
-`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/divDyn_0.2.6.zip", repos=NULL)`
+1. I have built binaries for Windows x86 and x64*. If you have one of these architectures, you can install the package with:
+`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/divDyn_0.2.8.zip", repos=NULL)`
 
-2. You have to compile the code for yourself. For this:
-- Install a compiler. For Windows, this would be included in Rtools.
-- Make sure that the devtools package is installed
+2. You have to compile the code for yourself. To do this:
+- Install a compiler. For Windows, this would be included in Rtools (https://cran.r-project.org/bin/windows/Rtools/).
+- Make sure that the 'devtools' package is installed
 - Run `devtools::install_github("adamkocsis/divDyn")`
 
+* if you use either a Mac or Linux, and point no. 2 doesn't work for you for some reason, then contact me and I will compile a binary for you.
 
+
+# Change log
+## [0.2.8] - 2018.05.01
+### Added
+- multiple versions of the shareholder quorum subsampling (SQS) routine to subsample()
+- the sampstat() function, that outputs basic sampling stats for the time slices
+- useFailed argument to subsample(). Changes output depending on whether the subsampling quota/quorum is reached.
+- bug fix for the CR method in subsampling 
+
+### Changes
+- argument distribution in the subsample() function, FUN argument simplified to a single function
+
+### Planned
+- the subsampling routines will be remodularized so that their argument becomes the dataset, rather than the individual columns. This will allow the support for custom subsampling functions.
+- 
+
+## [0.2.7] - 2018.02.01
+### Changes
+- bug (due to output changes in fadLad) and speed fixes for the affinity() function. The interface also changed, it now outputs a single vector instead of a data.frame.
+- bug fix in the ratesplit() function argument distribution. The "combine" version works properly now.
 
 # Change log
 ## [0.2.6] - 2018.01.26
@@ -77,4 +98,4 @@ As the package now uses compiled code to make things run faster, there are two w
 - the first version of the crDD() function is added.
 
 ### Notes
-Pre-alpha versions were not registered.
+Pre-open versions were not registered.

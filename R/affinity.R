@@ -2,7 +2,7 @@
 #'
 #' This function will return the environmental affinities of taxa, given the sampling conditions implied by the supplied dataset.
 #'
-#' Sampling patterns have an overprinting effect on the frequency of taxon occurrences in different environments. The environmental affinity (sensu Kiessling and Aberhan, 2007 - Paleobiology 33, 414-434 and Kiessling and Kocsis, 2015 - Paleobiology 41, 402-414) expresses whether the taxa are more likely to occurr in an environment, given the sampling patterns of the dataset at hand. 
+#' Sampling patterns have an overprinting effect on the frequency of taxon occurrences in different environments. The environmental affinity (sensu Kiessling and Aberhan, 2007 - Paleobiology 33, 414-434 and Kiessling and Kocsis, 2015 - Paleobiology 41, 402-414) expresses whether the taxa are more likely to occur in an environment, given the sampling patterns of the dataset at hand. NA output indicates that the environmental variable 
 #'
 #' @param dat (data.frame): the occurrence dataset containing the taxa with unknown environmental affinities.
 #' @param env (char): The name of the column with the occurrences' environmental values.
@@ -31,7 +31,10 @@ affinity<-function(dat, env, tax="occurrence.genus_name",  bin="SLC", coll="coll
 #	coll<-"collection_no"
 #	alpha<-"0.1"
 #	output<-"occs"
-
+	
+	# omit everything from dat that is not necessary
+		dat<-dat[,c(coll, tax,bin, env)]
+	
 	# the affinity variable
 		affDat<-dat[, env]
 		
@@ -39,23 +42,31 @@ affinity<-function(dat, env, tax="occurrence.genus_name",  bin="SLC", coll="coll
 		affLevels<-unique(affDat)
 		if(length(affLevels)!=2) stop("The 'env' variable contains more or less than 2 levels of entries. ")
 
+		# in case a relative dataset is added
+		if(!is.null(reldat)){
+			relLev<-reldat[,env]
+			if(sum(!affLevels%in%relLev)==2) stop("The 'env' variable in 'reldat' does not contain the 'env' entries of 'dat'. ")
+			dRel<-reldat[,c(coll, tax,bin, env)]
+		}else{
+			dRel<-dat
+		}
+		
 	# create an FAD-LAD matrix first
-	dFL<-fadLad(dat, tax, bin)
+		dFL<-fadLad(dat, tax, bin)
 	
+	# add the names to the matrix so that apply can process it
+		dFL$taxon<-rownames(dFL)
+	
+
 	# calculate the affinity of every taxon
 	affVarTaxon<-apply(dFL, 1, FUN=function(x){
 
 #	affVarTaxon<-character(length(dFL$taxon))
 #	for (i in 1:length(affVarTaxon)){
 
-		if(is.null(reldat)){
-			dRel<-dat
-		}else{
-			dRel<-reldat
-		}
-		#subset of the taxons ranges
+	#subset of the taxons ranges
 	#	dSub<-subset(dat, dat[,bin]>=dFL$FAD[i] & dat[,bin]<=dFL$LAD[i])
-		dSub<-subset(dRel, dRel[,bin]>=as.numeric(x[2]) & dRel[,bin]<=as.numeric(x[3]))
+		dSub<-subset(dRel, dRel[,bin]>=as.numeric(x[1]) & dRel[,bin]<=as.numeric(x[2]))
 		dSub<-dSub[, c(tax, coll, env)]
 		dSub<-unique(dSub)
 		
@@ -70,9 +81,8 @@ affinity<-function(dat, env, tax="occurrence.genus_name",  bin="SLC", coll="coll
 		
 		#dataset corresponding to the taxon at hand
 	#	dTax<-subset(dat, dat[,tax]==as.character(dFL$taxon[i]))
-		dTax<-subset(dat, dat[,tax]==as.character(x[1]))
-		dTax<-dTax[, c(tax, coll, env)]
-		dTax<-unique(dTax)
+		dTax<-subset(dat, dat[,tax]==as.character(x[length(x)]))
+		dTax<-unique(dTax[, c(tax, coll, env)])
 		
 		dTax2<-dTax[, c(coll, env)]
 
@@ -129,10 +139,9 @@ affinity<-function(dat, env, tax="occurrence.genus_name",  bin="SLC", coll="coll
 	}
 	)
 	#table(affVarTaxon)
-
+	names(affVarTaxon)<-rownames(dFL)
 	
-	# returned values
-	ret<-data.frame(taxon=dFL$taxon,affinity=affVarTaxon)
-	colnames(ret)[1]<-tax
-	return(ret)
+	return(affVarTaxon)
 }
+
+

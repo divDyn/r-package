@@ -23,7 +23,7 @@ ratesplit(dat, sel, tax = "genus", bin = "slc", rate = "pc",
 
 \item{AICc}{(logical): Only applicable for the "AIC" method. Toggles whether the small sample corrected AIC (AICc) should be used instead of the regular one.}
 
-\item{alpha}{(num): Threshold for the between meaningful and meaningless split. If method=="AIC", the value corresponds to the minimum weight value the dual model should have , by default it is 0.89, which corresponds to the likelihood ratio of 8. If method=="binom", the value corresponds to the alpha value of the binomial test.}
+\item{alpha}{(num): Threshold for the between meaningful and meaningless split. If method=="AIC", the value corresponds to the minimum weight value the dual model should have , by default it is 0.89, which corresponds to the likelihood ratio of 8. If method=="binom", the value corresponds to the alpha value of the binomial test. If method=="combine" than two alpha values are required (1st for the AIC, 2nd for the binomial test). If alpha is NULL, than the default values will be used.}
 
 \item{output}{(character): Either "simple" or "full". Simple returns the indices of the series where selectivity can be suggested. "full" returns a matrix of Akaike weights, or binomial probabilities.}
 }

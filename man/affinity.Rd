@@ -27,7 +27,7 @@ as the null model of sampling.}
 This function will return the environmental affinities of taxa, given the sampling conditions implied by the supplied dataset.
 }
 \details{
-Sampling patterns have an overprinting effect on the frequency of taxon occurrences in different environments. The environmental affinity (sensu Kiessling and Aberhan, 2007 - Paleobiology 33, 414-434 and Kiessling and Kocsis, 2015 - Paleobiology 41, 402-414) expresses whether the taxa are more likely to occurr in an environment, given the sampling patterns of the dataset at hand.
+Sampling patterns have an overprinting effect on the frequency of taxon occurrences in different environments. The environmental affinity (sensu Kiessling and Aberhan, 2007 - Paleobiology 33, 414-434 and Kiessling and Kocsis, 2015 - Paleobiology 41, 402-414) expresses whether the taxa are more likely to occur in an environment, given the sampling patterns of the dataset at hand. NA output indicates that the environmental variable
 }
 \examples{
 data(scleractinia)

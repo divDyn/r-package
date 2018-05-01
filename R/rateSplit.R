@@ -11,7 +11,7 @@
 #'	
 #' @param method (character): Either "AIC", "binom" or "combine". The "AIC" method calculates the Akaike weights of the single and dual rate models. The "binom" method assumes a binomial error distribution of the counts that are necessary for the rate calculations. The "combine" method shows slices that pass both tests, the "AIC" being usually the stronger.
 #'	
-#' @param alpha (num): Threshold for the between meaningful and meaningless split. If method=="AIC", the value corresponds to the minimum weight value the dual model should have , by default it is 0.89, which corresponds to the likelihood ratio of 8. If method=="binom", the value corresponds to the alpha value of the binomial test.
+#' @param alpha (num): Threshold for the between meaningful and meaningless split. If method=="AIC", the value corresponds to the minimum weight value the dual model should have , by default it is 0.89, which corresponds to the likelihood ratio of 8. If method=="binom", the value corresponds to the alpha value of the binomial test. If method=="combine" than two alpha values are required (1st for the AIC, 2nd for the binomial test). If alpha is NULL, than the default values will be used.
 #'	
 #' @param AICc (logical): Only applicable for the "AIC" method. Toggles whether the small sample corrected AIC (AICc) should be used instead of the regular one.
 #'	
@@ -87,8 +87,21 @@ ratesplit<-function(dat,  sel, tax="genus", bin="slc", rate="pc", method="AIC",A
 	}
 	 
 	if(is.null(alpha)){
-		if(method=="AIC") alpha <- 0.89
-		if(method=="binom") alpha <- 0.05
+		if(method=="AIC") alphaAIC <- 0.89
+		if(method=="binom") alphaBinom <- 0.05
+		if(method=="combine") {
+			alphaAIC <- 0.89
+			alphaBinom <- 0.05
+		}
+		
+	}else{
+		if(method=="AIC") alphaAIC<-alpha[1]
+		if(method=="binom") alphaBinom<-alpha[1]
+		if(method=="combine"){
+			if(length(alpha)!=2) stop("With the combine method you need at least two alpha values.")
+			alphaAIC<-alpha[1]
+			alphaBinom<-alpha[2]
+		} 
 	}
 	 
 	#data selection:
@@ -113,7 +126,7 @@ ratesplit<-function(dat,  sel, tax="genus", bin="slc", rate="pc", method="AIC",A
 		fext<- cbind(ddBoth$extPC, dd1$extPC, dd2$extPC)     #Foote extinction rates based on total ranges
 		fori<- cbind(ddBoth$oriPC,dd1$oriPC, dd2$oriPC)           #Foote origination rates based on total ranges
 		
-		if(method=="AIC"){
+		if(method=="AIC" | method=="combine"){
 		
 		
 			# Log-likelihoods and AIC
@@ -174,28 +187,29 @@ ratesplit<-function(dat,  sel, tax="genus", bin="slc", rate="pc", method="AIC",A
 				wOri2 <- exp(-0.5*zOri2)/(exp(-0.5*zOri1)+exp(-0.5*zOri2)) # dual rate preferred
 			
 			# likelihood ratio larger than alpha
-				AkaikeSelExt <- which(wExt2 > alpha)
-				AkaikeSelOri <- which(wOri2 > alpha)
+				AkaikeSelExt <- which(wExt2 > alphaAIC)
+				AkaikeSelOri <- which(wOri2 > alphaAIC)
 				
-				if(output=="simple"){
-					res<-list(ext=AkaikeSelExt, ori=AkaikeSelOri)
-					
-					if(method=="combine"){
-						aicRes<-res
-					}
-					
+			if(output=="simple"){
+				res<-list(ext=AkaikeSelExt, ori=AkaikeSelOri)
+				
+				if(method=="combine"){
+					aicRes<-res
 				}
-				if(output=="full"){
-					if(method=="combine"){
-						stop("The full output option does not work with the combine method")
-					}
-					
-					res<-data.frame(singleOri=wOri1, dualOri=wOri2,singleExt=wExt1, dualExt=wExt2)
+				
+			}
+			if(output=="full"){
+				
+				res<-data.frame(singleOri=wOri1, dualOri=wOri2,singleExt=wExt1, dualExt=wExt2)
+				if(method=="combine"){
+					aicRes<-res
+				}else{
 					return(res)
 				}
+			}
 		}
 		
-		if(method=="binom"){
+		if(method=="binom" | method=="combine"){
 			
 			# binomials 
 			dualBC <- apply(newBC[,2:3], 1,  sum) # for boundary crossers
@@ -213,27 +227,38 @@ ratesplit<-function(dat,  sel, tax="genus", bin="slc", rate="pc", method="AIC",A
 				pr <- newBC[,2]/dualBC # boundary crossers 
 		
 			# Binomial test (specific for three columns) - extinctions
-				sig <- pbinom(kExt,nExt,pr,lower.tail=F)+dbinom(kExt,nExt,pr)
-				sig2 <- pbinom(nExt-kExt,nExt,1-pr,lower.tail=F)+dbinom(nExt-kExt,nExt,1-pr)
+				sigExt <- pbinom(kExt,nExt,pr,lower.tail=F)+dbinom(kExt,nExt,pr)
+				sigExt2 <- pbinom(nExt-kExt,nExt,1-pr,lower.tail=F)+dbinom(nExt-kExt,nExt,1-pr)
 				
 				# which are significant
-				binExt <- which(sig <= alpha | sig2 <= alpha)
+				binExt <- which(sigExt <= alphaBinom | sigExt2 <= alphaBinom)
 			
 			# Binomial test (specific for three columns) - originations
-				sig <- pbinom(kOri,nOri,pr,lower.tail=F)+dbinom(kOri,nOri,pr)
-				sig2 <- pbinom(nOri-kOri,nOri,1-pr,lower.tail=F)+dbinom(nOri-kOri,nOri,1-pr)
+				sigOri <- pbinom(kOri,nOri,pr,lower.tail=F)+dbinom(kOri,nOri,pr)
+				sigOri2 <- pbinom(nOri-kOri,nOri,1-pr,lower.tail=F)+dbinom(nOri-kOri,nOri,1-pr)
 				
 				# which are significant
-				binOri <- which(sig <= alpha | sig2 <= alpha)	
+				binOri <- which(sigOri <= alphaBinom | sigOri2 <= alphaBinom)	
 				
 			# output
+			if(output=="simple"){
 				res<-list(ext=binExt, ori=binOri)
-		
+			}
+			if(output=="full"){
+				res<-cbind(sigExt, sigExt2, sigOri, sigOri2)
+			
+			}
 		}
 	}
 	if(method=="combine"){
-		res$ext<-res$ext[res$ext%in%aicRes]
-		res$ori<-res$ori[res$ori%in%aicRes]
+		if(output=="simple"){
+			res$ext<-binExt[binExt%in%AkaikeSelExt]
+			res$ori<-binOri[binOri%in%AkaikeSelOri]
+		}
+		if(output=="full"){
+			res<-cbind(res, aicRes)
+		
+		}
 	}
 	
 	
