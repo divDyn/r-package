@@ -1,5 +1,5 @@
 # divDyn
-R package for analysing diversity dynamics from fossil occurrence data
+R package for analyzing diversity dynamics from fossil occurrence data
 
 The vignette is getting written. Until then, the features of the package are demonstrated with the function examples (check out divDyn(), subsample() and affinity() for example).  
 
