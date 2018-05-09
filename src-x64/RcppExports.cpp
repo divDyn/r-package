@@ -17,9 +17,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// CRbinwise
+NumericMatrix CRbinwise(NumericVector binVar, int quota);
+RcppExport SEXP _divDyn_CRbinwise(SEXP binVarSEXP, SEXP quotaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type binVar(binVarSEXP);
+    Rcpp::traits::input_parameter< int >::type quota(quotaSEXP);
+    rcpp_result_gen = Rcpp::wrap(CRbinwise(binVar, quota));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_divDyn_Counts", (DL_FUNC) &_divDyn_Counts, 2},
+    {"_divDyn_CRbinwise", (DL_FUNC) &_divDyn_CRbinwise, 2},
     {NULL, NULL, 0}
 };
 

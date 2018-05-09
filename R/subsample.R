@@ -15,7 +15,7 @@
 #' 
 #' @param iter (numeric value): The number of iterations to be executed.
 #' 
-#' @param bin (character value): The name of the subsetting variable (has to be integer). For time series, this is the time-slice variable.
+#' @param bin (character value): The name of the subsetting variable (has to be integer). For time series, this is the time-slice variable. If set to NULL, the function performs unbinned subsampling.
 #' 
 #' @param tax (character value): The name of the taxon variable.
 #' 
@@ -57,19 +57,31 @@
 #'   lines(stages$mid,rarefDD$divRT, col="red", lwd=2)
 #'   
 #'   
+#' 
 #' # Example 2-SIB diversity (§correct the indexing!)
 #' # draft a simple function to calculate SIB diversity
 #' sib<-function(dat, bin, tax){
-#'   tapply(INDEX=dat[,bin], X=dat[,tax], function(y){
+#'   calc<-tapply(INDEX=dat[,bin], X=dat[,tax], function(y){
 #'     length(levels(factor(y)))
 #'   })
+#'   return(calc[as.character(stages$num)])
 #' }
 #' sibDiv<-sib(scleractinia, bin="slc", tax="genus")
 #' 
 #' # calculate it with subsampling
 #' rarefSIB<-subsample(scleractinia,iter=50, q=50,
 #'   tax="genus", bin="slc", output="arit", intact=95, FUN=sib)
-#'
+#' rarefDD<-subsample(scleractinia,iter=50, q=50,
+#'   tax="genus", bin="slc", output="arit", intact=95)
+#' 
+#' # plot
+#' plotTS(stages, shading="series", boxes="per", xlim=c(260,0), 
+#'   ylab="SIB diversity (genera)", ylim=c(0,230))
+#' 
+#' lines(stages$mid, rarefDD$divSIB, lwd=2, col="black")
+#' lines(stages$mid, rarefSIB, lwd=2, col="blue")
+#'     
+#' 
 #' # Example 3 - different subsampling methods with default function (divDyn)
 #' # compare different subsampling types
 #'   # classical rarefaction
@@ -103,6 +115,9 @@ subsample <- function(dat, q, tax="genus", coll="collection_no", bin="SLC", FUN=
 #	output<- "arit"
 #	intact<-c(94,95)
 	# defense
+	
+	quoVar<-q
+	
 	if(!output%in%c("arit", "geom", "list", "dist")) stop("Invalid output argument.")
 	
 	# prepare for the fact that method should be a function
@@ -110,10 +125,18 @@ subsample <- function(dat, q, tax="genus", coll="collection_no", bin="SLC", FUN=
 
 	# method specific defence
 	if(method=="sqs"){
-		if(q>1 | q<=0) stop("Shareholder Quorum has to be in the 0-1 interval.")
+		if(quoVar>1 | quoVar<=0) stop("Shareholder Quorum has to be in the 0-1 interval.")
 	}
 	if(method%in%c("cr", "oxw")){
-		if(q<=1) stop("The quota has to be a natural number larger than 1.")
+		if(quoVar<=1) stop("The quota has to be a natural number larger than 1.")
+	}
+	
+	# should be null or positive integers
+	if(!is.null(bin)){
+		bVar<-dat[,bin]
+		if(sum(is.na(bVar))>0) stop("The bin column contains missing (NA) values.")
+		if(sum(bVar<=0)>0 | sum(bVar%%1)>0) stop("The bin column may only contain positive integers")
+	
 	}
 	
 	# check the presences of vectors
@@ -150,7 +173,9 @@ subsample <- function(dat, q, tax="genus", coll="collection_no", bin="SLC", FUN=
 		#a. perform the function on the total dataset to assess final structure
 		if(!is.null(FUN)){
 			if(is.function(FUN)){
+				# match function
 				FUN<-match.fun(FUN)
+				
 				# match function arguments to the big call
 					# all function arguments
 					allArgs<-as.list(match.call()) 
@@ -235,7 +260,31 @@ subsample <- function(dat, q, tax="genus", coll="collection_no", bin="SLC", FUN=
 		containList<-list()
 	}
 	
-	if(method=="sqs"){
+	
+	
+	# subsampling specific preparatory phase
+	# CR
+	if(method=="cr"& !is.null(bin)){
+		# order the rows 
+		oBin <- order(dat[,bin])
+		
+		# reorder dataset
+		dat <- dat[oBin,]
+		
+		# the only important variable
+		binVar <- dat[,bin]
+		
+		# intact rows
+		keepRows<-binVar%in%keep
+		
+		# just organize
+		oneResult<-list()
+	
+	}
+	
+	
+	# SQS
+	if(method=="sqs" & !is.null(bin)){
 		# distribute arguments
 			addArgs<-list(...)
 			
@@ -266,7 +315,7 @@ subsample <- function(dat, q, tax="genus", coll="collection_no", bin="SLC", FUN=
 				"binVar"=dat[,bin],
 				"freqVar"=freqVar,
 				"collVar"=dat[, coll],
-				"q"=q,
+				"q"=quoVar,
 				"intact"=keep
 			))
 		}
@@ -289,7 +338,7 @@ subsample <- function(dat, q, tax="genus", coll="collection_no", bin="SLC", FUN=
 				"taxVar"=dat[,tax],
 				"collVar"=dat[,coll],
 				"refVar"=dat[,ref],
-				"q"=q
+				"q"=quoVar
 			
 			))
 
@@ -308,18 +357,44 @@ subsample <- function(dat, q, tax="genus", coll="collection_no", bin="SLC", FUN=
 	
 		for(k in 1:iter){
 			#1. produce one subsample
-			if(method=="cr"){
-				oneResult<-subsampleCR(binVar=dat[,bin], q=q, intact=keep)
+	#		if(method=="cr" & !is.null(bin)){
+	#			oneResult<-subsampleCR(binVar=dat[,bin], q=quoVar, intact=keep)
+	#			appliedArgs$dat<-dat[oneResult$rows,]
+	#		}
+			
+			if(method=="cr" & !is.null(bin)){
+			
+				# output of cpp function
+				binCRres<-.Call('_divDyn_CRbinwise', PACKAGE = 'divDyn', binVar, quoVar)
+			
+				# increase indexing (R)
+				binCRres[,1]<-binCRres[,1]+1
+			
+				# rows where quota not reached
+				failOutput <- binCRres[,1]==-8
+				
+				# bins where quota not reached
+				oneResult$fail<-binCRres[failOutput,2]
+				
+				# the rows where 
+				usedRows<-rep(FALSE, nrow(dat))
+				
+				# output by subsampling
+				usedRows[binCRres[!failOutput,1]] <- TRUE
+				
+				usedRows[keepRows] <- TRUE
+				# should be kept intact
+				appliedArgs$dat<-dat[usedRows,]
+				
+			}
+			
+			if(method=="oxw"& !is.null(bin)){
+				oneResult<-subsampleOXW(binVar=dat[,bin], collVar=dat[, coll], q=quoVar, intact=keep,...)
 				appliedArgs$dat<-dat[oneResult$rows,]
 			}
 			
-			if(method=="oxw"){
-				oneResult<-subsampleOXW(binVar=dat[,bin], collVar=dat[, coll], q=q, intact=keep,...)
-				appliedArgs$dat<-dat[oneResult$rows,]
-			}
-			
-			if(method=="sqs"){
-			#	oneResult<-subsampleSQS2010(binVar=dat[,bin], freqVar=freqVar, collVar=dat[, coll], q=q, intact=keep)
+			if(method=="sqs"& !is.null(bin)){
+			#	oneResult<-subsampleSQS2010(binVar=dat[,bin], freqVar=freqVar, collVar=dat[, coll], q=quoVar, intact=keep)
 				if(vers=="inexact"){
 					oneResult<-do.call(subsampleSQSinexact, args=sqsArgs)
 					appliedArgs$dat<-dat[oneResult$rows,]
@@ -327,7 +402,6 @@ subsample <- function(dat, q, tax="genus", coll="collection_no", bin="SLC", FUN=
 				if(vers=="exact"){
 					oneResult<-do.call(subsampleSQSexact, args=sqsArgs)
 					appliedArgs$dat<-dat[oneResult$rows,]
-				
 				}
 			
 			}
@@ -357,7 +431,8 @@ subsample <- function(dat, q, tax="genus", coll="collection_no", bin="SLC", FUN=
 			#3. save the results depending on the output type
 			if(out=="vector"){
 				if(sum(names(trialRes)%in%rownames(holder))==length(trialRes)){
-					holder[names(trialRes),k]<-trialRes
+				#	holder[names(trialRes),k]<-trialRes
+					holder[,k]<-trialRes
 				}else{
 					if(nrow(holder)==length(trialRes)){
 						holder[,k]<-trialRes
@@ -394,6 +469,35 @@ subsample <- function(dat, q, tax="genus", coll="collection_no", bin="SLC", FUN=
 		}
 		
 	}
+	
+#	if(implement=="lapply" & method=="cr"){
+#		listSource<-rep(list(list(binVar,quoVar, keepRows)), iter)
+#		allResults<-lapply(listSource, function(x){
+#			# get one trial dataset
+#			oneResult<-do.call(subsampleCRpp,x)
+#			
+#			# add it to function args
+#			appliedArgs$dat<-dat[oneResult$row,]
+#					
+#			# add the failed stuff is so required
+#			if(useFailed){
+#				appliedArgs$dat<-rbind(appliedArgs$dat, dat[dat[,bin]%in%oneResult$fail,])
+#			}
+#			
+#			#2. run the function on subsample
+#			if(is.null(FUN)){
+#				trialRes<-appliedArgs$dat
+#			}else{
+#				if(is.function(FUN)){
+#					trialRes<-do.call(FUN,appliedArgs)
+#				}
+#			}
+#			
+#			return(list(res=trialRes, fail=oneResult$fail))
+#		})
+#		
+#	}
+	
 	# Checkpoint2
 #	return(holder)
 
@@ -556,6 +660,8 @@ subsampleCR <- function(binVar,q,intact=NULL){
 	# return
 	return(res)
 }
+
+
 
 #' @param x the exponent of by-list subsampling (rarefaction) method.
 #' @rdname subsample

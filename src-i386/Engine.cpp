@@ -213,3 +213,131 @@ NumericMatrix Counts(NumericVector tax, NumericVector bin)
 }
 
 
+int randWrapper(const int n) {
+	return floor(unif_rand()*n);
+}
+
+Rcpp::NumericVector randomShuffle(Rcpp::NumericVector a) {
+
+    // clone a into b to leave a alone
+    Rcpp::NumericVector b = Rcpp::clone(a);
+
+    std::random_shuffle(b.begin(), b.end(), randWrapper);
+
+    return b;
+}
+
+// [[Rcpp::export]]
+NumericMatrix CRbinwise(NumericVector binVar, int quota){
+	// do a single loop for finding the  different bins
+	int n = binVar.size();
+	NumericVector indexVector(n);
+	
+	// define storage matrix
+	NumericMatrix storage(n, 3);
+	
+	// initialize
+	int changeCount=0;
+	storage(0,0) = 0;
+	
+	// initialize the first bin number
+	storage(0, 2) = binVar(0);
+	
+	for(int i=0; i<n; i++){
+		// store the values for later use
+		indexVector(i) =i;
+		
+		// check relationship to previous
+		if(i>0){
+			if(binVar(i)!=binVar(i-1)){
+				storage(changeCount,1) = i-1; 
+				// increment
+				changeCount++;
+				
+				// the next one starts
+				storage(changeCount, 0) = i;
+				
+				// which bin are you talking about?
+				storage(changeCount, 2) = binVar(i);
+			}
+		}
+		
+		// if you reached the last row
+		if(i==(n-1)){
+			storage(changeCount, 1) = i;
+		
+		}
+	
+	}
+
+
+	// define two integer variables
+	int cStart =0;
+	int cEnd = 0;
+	
+	int counter=0;
+	
+	NumericVector tempVect;
+	NumericMatrix endMatrix (n, 2);
+	
+	//number of entries saved
+	int endValue = 0;
+	int vectLength = 0;
+	
+	// the last row
+	changeCount++;
+	
+	// do the random sampling and store stuff in a random variable
+	// how many bins are there?
+	for(int j=0; j<changeCount;j++){
+		// starting and ending points
+		cStart= storage(j, 0);
+		cEnd = storage(j, 1);
+		
+		
+		// what will be the length of this vector? is it larger than the quota?
+		vectLength = cEnd-cStart+1; 
+		
+		if(vectLength>=quota){
+			
+			// vector of indices
+			NumericVector tempVect(vectLength);
+			counter=0;
+			for(int i=cStart;i<(cEnd+1);i++){
+				tempVect(counter)= i;
+				counter++;				
+				
+			}
+			
+			// shuffle vector in some way
+			tempVect=randomShuffle(tempVect);
+			
+			for(int i=0; i<quota; i++){
+				endMatrix(endValue,0)= tempVect(i);
+				endMatrix(endValue,1) = storage(j, 2);
+				endValue++;			
+				
+			}
+		}else{
+			// return a placeholder value ? 
+			endMatrix(endValue,0) = -9;
+			endMatrix(endValue,1) = storage(j, 2);
+			
+			
+			// for which bin
+			endValue++;
+			
+			
+		}
+	}
+	
+	// clean up the endMAtrix
+	NumericMatrix realEnd(endValue, 2);
+	
+	for(int i=0; i<endValue;i++){
+		realEnd(i,_) = endMatrix(i,_);
+		
+	}
+
+	return realEnd;
+}

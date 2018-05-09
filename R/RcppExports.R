@@ -5,3 +5,7 @@ Counts <- function(tax, bin) {
     .Call('_divDyn_Counts', PACKAGE = 'divDyn', tax, bin)
 }
 
+CRbinwise <- function(binVar, quota) {
+    .Call('_divDyn_CRbinwise', PACKAGE = 'divDyn', binVar, quota)
+}
+

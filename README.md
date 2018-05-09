@@ -9,7 +9,7 @@ As the package is still getting developed, if you have any requirements or recom
 ## installing and update
 As the package now uses compiled code to make things run faster, there are two ways to install.
 1. I have built binaries for Windows x86 and x64*. If you have one of these architectures, you can install the package with:
-`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/divDyn_0.2.8.zip", repos=NULL)`
+`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/divDyn_0.2.9.zip", repos=NULL)`
 
 2. You have to compile the code for yourself. To do this:
 - Install a compiler. For Windows, this would be included in Rtools (https://cran.r-project.org/bin/windows/Rtools/).
@@ -20,6 +20,11 @@ As the package now uses compiled code to make things run faster, there are two w
 
 
 # Change log
+## [0.2.9] - 2018.05.09
+### Changed
+- the 'cr' method of the subsample() function was rewritten in C++ and Rcpp classes for faster performance
+- fixed bug in the subsample() function, when custom functions produce vector output
+
 ## [0.2.8] - 2018.05.01
 ### Added
 - multiple versions of the shareholder quorum subsampling (SQS) routine to subsample()
