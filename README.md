@@ -1,7 +1,7 @@
 # divDyn
 R package for analyzing diversity dynamics from fossil occurrence data
 
-The vignette is getting written. Until then, the features of the package are demonstrated with the function examples (check out divDyn(), subsample() and affinity() for example).  
+The vignette is getting written. Until then, the features of the package are demonstrated with the function examples (e.g. check out ?divDyn, ?subsample and ?affinity).  
 
 As the package is still getting developed, if you have any requirements or recommendations on what to add (or if you find a mistake), please contact me at adam.kocsis@fau.de.
 
@@ -9,21 +9,32 @@ As the package is still getting developed, if you have any requirements or recom
 ## installing and update
 As the package now uses compiled code to make things run faster, there are two ways to install.
 1. I have built binaries for Windows x86 and x64*. If you have one of these architectures, you can install the package with:
-`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/divDyn_0.2.9.zip", repos=NULL)`
+`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/divDyn_0.2.10.zip", repos=NULL)`
+
+You can acess earlier versions by changing the version number appropriately.
 
 2. You have to compile the code for yourself. To do this:
 - Install a compiler. For Windows, this would be included in Rtools (https://cran.r-project.org/bin/windows/Rtools/).
 - Make sure that the 'devtools' package is installed
 - Run `devtools::install_github("adamkocsis/divDyn")`
 
-* if you use either a Mac or Linux, and point no. 2 doesn't work for you for some reason, then contact me and I will compile a binary for you.
-
+* if you use either a Mac or Linux, and point no. 2 doesn't work for you for some reason, then contact me  and I will compile a binary for you.
 
 # Change log
+## [0.2.10] - 2018.05.13
+### Added
+- proportional extinction and origination rates to the divDyn() function
+- the omit() function for culling occurrence datasets (kind of slow yet)
+
+### Changed
+- argumentation of the divDyn function was extended to accomodate the omission of occurrences within the function (optional)
+
+
 ## [0.2.9] - 2018.05.09
 ### Changed
-- the 'cr' method of the subsample() function was rewritten in C++ and Rcpp classes for faster performance
+- the 'cr' method of the subsample() function was rewritten in C++ and with Rcpp classes for faster performance
 - fixed bug in the subsample() function, when custom functions produce vector output
+
 
 ## [0.2.8] - 2018.05.01
 ### Added

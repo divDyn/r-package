@@ -22,7 +22,7 @@
 #' @param useFailed (logical): If the interval does not reach the subsampling quota, should the data be used? 
 #' @param method (character value): The type of subsampling to be implemented. By default this is classical rarefaction ("cr"). "oxw" stands for occurrence weighted by list subsampling. If set to "sqs", the program will execute the shareholder quorum subsampling algorithm as it was suggested by Alroy (2010).
 #' 
-#' @param FUN The function to be iteratively executed on the results of the subsampling trials. If set to NULL, no function will be executed, and the subsampled datasets will be returned as a list. By default set to the divDyn() function. The function must have an argument called 'dat', that represents the dataset resulting from a subsampling trial (or the entire dataset). Arguments of the subsample() function call will be searched for potential arguments of this function, which means that already provided variables (e.g. 'bin' and 'tax') will also be used. You can also provide additional arguments (similarly to the apply iterator).
+#' @param FUN The function to be iteratively executed on the results of the subsampling trials. If set to NULL, no function will be executed, and the subsampled datasets will be returned as a list. By default set to the divDyn() function. The function must have an argument called 'dat', that represents the dataset resulting from a subsampling trial (or the entire dataset). Arguments of the subsample() function call will be searched for potential arguments of this function, which means that already provided variables (e.g. 'bin' and 'tax') will also be used. You can also provide additional arguments (similarly to the apply iterator). Functions that allow arguments to pass through (that have argument '...') are not allowed.
 #' 
 #' @param output (character value): If the function output are vectors or matrices, the 'arit' and 'geom' values will trigger simple averaging with arithmetic or geometric means. If the function output of a single trial is again a vector or a matrix, setting the output to 'dist' will return the calculated results of every trial, organized in a list of independent variables (e.g. if the function output is value, the return will contain a list vectors, if it is a vector, the output will be a list of vectors, if the function output is a data.frame, the output will be a list of matrices). If output="list", the structure of the original function output will be retained, and the results of the individual trials will be concatenated to a list.
 #' 
@@ -33,7 +33,7 @@
 #' @param duplicates (logical value): Toggles whether multiple entries from the same taxon ("tax") and collection ("coll") variables should be omitted. Useful for omitting occurrences of multiple species-level occurrences of the same genus.
 #' @param coll (character value): the variable name of the collection identifiers. 
 #' 
-#' @param ... arguments passed to the method-specific subsampling functions:
+#' @param ... arguments passed to FUN and the method-specific subsampling functions:
 #' 
 #' @examples
 #' 

@@ -39,7 +39,7 @@ subsampleSQSinexact(binVar, freqVar, q, collVar = NULL, byList = FALSE,
 
 \item{bin}{(character value): The name of the subsetting variable (has to be integer). For time series, this is the time-slice variable. If set to NULL, the function performs unbinned subsampling.}
 
-\item{FUN}{The function to be iteratively executed on the results of the subsampling trials. If set to NULL, no function will be executed, and the subsampled datasets will be returned as a list. By default set to the divDyn() function. The function must have an argument called 'dat', that represents the dataset resulting from a subsampling trial (or the entire dataset). Arguments of the subsample() function call will be searched for potential arguments of this function, which means that already provided variables (e.g. 'bin' and 'tax') will also be used. You can also provide additional arguments (similarly to the apply iterator).}
+\item{FUN}{The function to be iteratively executed on the results of the subsampling trials. If set to NULL, no function will be executed, and the subsampled datasets will be returned as a list. By default set to the divDyn() function. The function must have an argument called 'dat', that represents the dataset resulting from a subsampling trial (or the entire dataset). Arguments of the subsample() function call will be searched for potential arguments of this function, which means that already provided variables (e.g. 'bin' and 'tax') will also be used. You can also provide additional arguments (similarly to the apply iterator). Functions that allow arguments to pass through (that have argument '...') are not allowed.}
 
 \item{iter}{(numeric value): The number of iterations to be executed.}
 
@@ -55,7 +55,7 @@ subsampleSQSinexact(binVar, freqVar, q, collVar = NULL, byList = FALSE,
 
 \item{useFailed}{(logical): If the interval does not reach the subsampling quota, should the data be used?}
 
-\item{...}{arguments passed to the method-specific subsampling functions:}
+\item{...}{arguments passed to FUN and the method-specific subsampling functions:}
 
 \item{x}{the exponent of by-list subsampling (rarefaction) method.}
 

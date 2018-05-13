@@ -4,22 +4,31 @@
 \alias{divDyn}
 \title{Time series from metrics of diversity dynamics}
 \usage{
-divDyn(dat, tax = "occurrence.genus_name", bin = "bin", noNAStart = F,
-  inf = F, data.frame = T)
+divDyn(dat, tax = "occurrence.genus_name", bin = "bin",
+  coll = "collection_no", ref = "occurrence.reference_no", om = NULL,
+  noNAStart = F, inf = F, data.frame = T, filterNA = FALSE)
 }
 \arguments{
-\item{dat}{(data.frame): the data frame containing PBDB occurrences.}
+\item{dat}{(data.frame): the data frame of fossil occurrences.}
 
-\item{tax}{(char): variable  name of the occurring taxa (variable type: factor) - such as "occurrence.genus_name"}
+\item{tax}{(character): variable  name of the occurring taxa (variable type: factor) - such as "occurrence.genus_name"}
 
-\item{bin}{(char): variable name of the time slice numbers of the particular occurrences (variable type: int)- such as "slc" or whatever. Bin numbers should be in ascending order,can contain NA's, it can start from a number other than 1 and must not start with 0.}
+\item{bin}{(character): variable name of the time slice numbers of the particular occurrences (variable type: int)- such as "slc" or whatever. Bin numbers should be in ascending order,can contain NA's, it can start from a number other than 1 and must not start with 0.}
 
-\item{noNAStart}{(bool): useful when the dataset does not start from bin No. 1. Then noNAStart=TRUE will cut the first part of the resulting table, 
+\item{coll}{(character): the variable name of the collection identifiers. (optional, only for filtering!)}
+
+\item{ref}{(character): the variable name of the reference identifiers. (optional, only for filtering!)}
+
+\item{om}{(character): the om parameter of the omit() function. If set to NULL (default), then no occurrences will be omitted before the execution of the function.}
+
+\item{noNAStart}{(logical): useful when the dataset does not start from bin No. 1. Then noNAStart=TRUE will cut the first part of the resulting table, 
 so the first row will contain the estimates for the lowest bin number.}
 
 \item{inf}{(logical): should infinites be converted to NAs?}
 
 \item{data.frame}{(logical): should be a data frame or a matrix?}
+
+\item{filterNA}{(logical): the filterNA() parameter of the omit function.}
 }
 \description{
 This function calculates 
@@ -49,6 +58,10 @@ tGFd: lower gap-fillers ($later)
 t3: the number of three timer taxa, present in time slice i-1, i, and i+1
 
 tPart: the part timer taxa, present in time slice i-1,and i+1, but not in i
+
+extProp: proportional extinctions, including single-interval taxa
+
+oriProp: proportional originations, including single-interval taxa
 
 extPC: the per capita extinction rates of foote (not normalized with interval length!)
 
@@ -84,6 +97,12 @@ O2f3: second-for-third origination propotions (Alroy, 2015)
 ext2f3: second-for-third extinction rates (based on Alroy, 2015)
 
 ori2f3: second-for-third origination rates (based on Alroy, 2015)
+
+References:
+Foote, M. 2000.
+Alroy, J. 2008
+Alroy, J. 2014.
+Alroy, J. 2015.
 }
 \examples{
 # import data
@@ -95,8 +114,16 @@ ori2f3: second-for-third origination rates (based on Alroy, 2015)
 
 # plotting
   plotTS(stages, shading="series", boxes="per", xlim=c(260,0), 
-  ylab="range-through diversity (genera)", ylim=c(0,230))
+    ylab="range-through diversity (genera)", ylim=c(0,230))
   lines(stages$mid, dd$divRT, lwd=2)
 
+ # with omission of single reference taxa  
+   ddNoSing <- divDyn(scleractinia, tax="genus", bin="slc", om="ref")
+   lines(stages$mid, ddNoSing$divRT, lwd=2, col="red")
+   
+   # legend
+   legend("topleft", legend=c("all", "no single-ref. taxa"), 
+     col=c("black", "red"), lwd=c(2,2))
+   
 
 }

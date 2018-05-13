@@ -180,6 +180,10 @@ spCleanse <- function(vec, mode="simple", collapse="_"){
 #'
 #' tPart: the part timer taxa, present in time slice i-1,and i+1, but not in i
 #'
+#' extProp: proportional extinctions, including single-interval taxa
+#'
+#' oriProp: proportional originations, including single-interval taxa
+#' 
 #' extPC: the per capita extinction rates of foote (not normalized with interval length!)
 #'
 #' oriPC: the per capita origination rates of foote (not normalized with interval length!)
@@ -215,18 +219,28 @@ spCleanse <- function(vec, mode="simple", collapse="_"){
 #' ext2f3: second-for-third extinction rates (based on Alroy, 2015)
 #'
 #' ori2f3: second-for-third origination rates (based on Alroy, 2015)
+#' 
+#' References:
+#' Foote, M. 2000.
+#' Alroy, J. 2008
+#' Alroy, J. 2014.
+#' Alroy, J. 2015.
 #'
-#' @param dat (data.frame): the data frame containing PBDB occurrences.
+#' @param dat (data.frame): the data frame of fossil occurrences.
 #' 
-#' @param tax (char): variable  name of the occurring taxa (variable type: factor) - such as "occurrence.genus_name"
+#' @param tax (character): variable  name of the occurring taxa (variable type: factor) - such as "occurrence.genus_name"
 #' 
-#' @param bin (char): variable name of the time slice numbers of the particular occurrences (variable type: int)- such as "slc" or whatever. Bin numbers should be in ascending order,can contain NA's, it can start from a number other than 1 and must not start with 0.
-#' @param noNAStart (bool): useful when the dataset does not start from bin No. 1. Then noNAStart=TRUE will cut the first part of the resulting table, 
+#' @param bin (character): variable name of the time slice numbers of the particular occurrences (variable type: int)- such as "slc" or whatever. Bin numbers should be in ascending order,can contain NA's, it can start from a number other than 1 and must not start with 0.
+#' @param noNAStart (logical): useful when the dataset does not start from bin No. 1. Then noNAStart=TRUE will cut the first part of the resulting table, 
 #' 						so the first row will contain the estimates for the lowest bin number.
 #' 
 #' @param inf (logical): should infinites be converted to NAs?
 #' @param data.frame (logical): should be a data frame or a matrix?
 #' 
+#' @param om (character): the om parameter of the omit() function. If set to NULL (default), then no occurrences will be omitted before the execution of the function.
+#' @param filterNA (logical): the filterNA() parameter of the omit function.
+#' @param coll (character): the variable name of the collection identifiers. (optional, only for filtering!)
+#' @param ref (character): the variable name of the reference identifiers. (optional, only for filtering!)
 #' @examples
 #'	# import data
 #'	  data(scleractinia)
@@ -237,12 +251,20 @@ spCleanse <- function(vec, mode="simple", collapse="_"){
 #'
 #'	# plotting
 #'	  plotTS(stages, shading="series", boxes="per", xlim=c(260,0), 
-#'	  ylab="range-through diversity (genera)", ylim=c(0,230))
+#'	    ylab="range-through diversity (genera)", ylim=c(0,230))
 #'	  lines(stages$mid, dd$divRT, lwd=2)
-#'
+#' 
+#'  # with omission of single reference taxa  
+#'    ddNoSing <- divDyn(scleractinia, tax="genus", bin="slc", om="ref")
+#'    lines(stages$mid, ddNoSing$divRT, lwd=2, col="red")
+#'    
+#'    # legend
+#'    legend("topleft", legend=c("all", "no single-ref. taxa"), 
+#'      col=c("black", "red"), lwd=c(2,2))
+#'    
 #'
 #' @export
-divDyn <- function(dat, tax="occurrence.genus_name", bin="bin", noNAStart=F, inf=F, data.frame=T)
+divDyn <- function(dat, tax="occurrence.genus_name", bin="bin", coll="collection_no", ref="occurrence.reference_no", om=NULL,noNAStart=F, inf=F, data.frame=T, filterNA=FALSE)
 {
 	
 	# is binVar numeric
@@ -250,9 +272,15 @@ divDyn <- function(dat, tax="occurrence.genus_name", bin="bin", noNAStart=F, inf
 		stop("The bin variable is not numeric.")
 	}
 	
+	# the omission phase
+	if(!is.null(om)){
+		dat<-dat[!omit(dat, tax=tax, bin=bin,om=om, ref=ref, coll=coll, filterNA=filterNA),]
+	}
+	
 	# sub dataset
 	subDat <- unique(dat[,c(tax, bin)])
 	
+	# omit NAs
 	bNeed<- !(is.na(subDat[,tax]) | is.na(subDat[,bin]))
 	# taxon vars
 	taxVar<-subDat[bNeed, tax]
@@ -311,6 +339,8 @@ divDyn <- function(dat, tax="occurrence.genus_name", bin="bin", noNAStart=F, inf
 		"divCSIB",
 		"divRT",
 		"divBC",
+		"extProp",
+		"oriProp",
 		"extPC",
 		"oriPC",
 		"ext3t",
@@ -387,6 +417,8 @@ Metrics<- function(counts){
 	metNames<-c("divCSIB",
 		"divRT",
 		"divBC",
+		"extProp",
+		"oriProp",
 		"extPC",
 		"oriPC",
 		"ext3t",
@@ -425,6 +457,9 @@ Metrics<- function(counts){
 			#Sampling completeness of the entire time series
 			nTot3tSampComp<- sum(counts[,"t3"], na.rm=T)/(sum(counts[,"t3"], na.rm=T)+sum(counts[,"tPart"], na.rm=T))
 			
+	# proportional extinctions
+		metrics[,"extProp"]<-(counts[,"tExt"]+counts[,"tSing"])/metrics[,"divRT"]
+		metrics[,"oriProp"]<-(counts[,"tOri"]+counts[,"tSing"])/metrics[,"divRT"]
 	
 	#Foote (2000) rates
 		metrics[,"extPC"]<- -log(counts[,"tThrough"]/(counts[,"tThrough"]+counts[,"tExt"]))
@@ -495,3 +530,117 @@ Metrics<- function(counts){
 }
 
 
+#' Omission of occurrences that belong to poorly sampled taxa
+#' 
+#' Function to quickly omit single-collection and single-reference taxa.
+#' 
+#' The function returns a logical vector of the rows to be omitted. The function is embedded in the divDyn() function, but can be called independently.
+#' 
+#' @param bin (character value): The name of the subsetting variable (has to be integer). For time series, this is the time-slice variable. If set to NULL, the function performs unbinned subsampling.
+#' 
+#' @param tax (character value): The name of the taxon variable.
+#' 
+#' @param dat (data.frame): Occurrence dataset, with bin, tax and coll as column names.
+#' @param coll (character value): the variable name of the collection identifiers. 
+#' @param ref (character value): the variable name of the reference identifiers. 
+#' @param om (character value): the type of omission. "coll" omits occurrences of taxa that occurr only in one collection. "ref" omits occurrences of taxa that were described only in one reference. "binref"  will omit the set of single reference taxa that were described by more than one references, but appear in only one reference in a time bin.
+#' @param filterNA (logical value): additional entries can be added to influence the dataset that might not have reference or collection information (NA entries). These occurrences are treated as single-collection or single-reference taxa if the na.rm argument is set to FALSE (default). Setting this argument to TRUE will keep these entries. (see example)
+#' 
+#' @examples
+#' # omit single-reference taxa
+#'   data(scleractinia)
+#'   toOmit <- omit(scleractinia, bin="slc", tax="genus", om="ref")
+#'   dat <- scleractinia[!toOmit,]
+#' 
+#' # within divDyn
+#'   # plotting
+#'	  plotTS(stages, shading="series", boxes="per", xlim=c(260,0), 
+#'	    ylab="range-through diversity (genera)", ylim=c(0,230))
+#'   # multiple ref/slice required
+#'   ddNoSing <- divDyn(scleractinia, tax="genus", bin="slc", om="binref")
+#'   lines(stages$mid, ddNoSing$divRT, lwd=2, col="red")
+#'
+#'   # with the recent included (NA reference value)
+#'   ddNoSingRec <- divDyn(scleractinia, tax="genus", bin="slc",
+#'     om="binref", filterNA=TRUE)
+#'   lines(stages$mid, ddNoSingRec$divRT, lwd=2, col="blue")
+#'   
+#'   # legend
+#'   legend("topleft", legend=c("no single-ref. taxa", 
+#'     "no single-ref. taxa,\n with recent"), 
+#'     col=c("red", "blue"), lwd=c(2,2))
+
+#' @export
+omit <- function(dat, tax="occurrence.genus_name", bin="bin", coll="collection_no", ref="occurrence.reference_no", om="ref", filterNA=FALSE){
+
+	if(!om%in%c("coll", "ref","binref")) stop("Invalid om argument.")
+	
+	if(om=="coll"){
+		# omit multiple occ rows of same tax (genus) and same coll
+		nonDupl <- !duplicated(dat[,c(tax, coll)])
+		
+		# which taxa come from just one collection?
+		tabSing <- table(dat[nonDupl,tax])
+		
+		# single collection taxa
+		singTax<- names(tabSing)[tabSing==1]
+		
+		# omit the single collection taxa
+		boolEnd<-dat[,tax]%in%singTax
+		
+		# if na.rm TRUE than do not omit NA collection stuff
+		if(filterNA){
+			boolEnd <- boolEnd & !is.na(dat[,coll])
+		}
+	}
+	
+	if(om=="ref"){
+		# omit multiple occ rows of same tax (genus) and same coll
+		nonDupl <- !duplicated(dat[,c(tax, ref)])
+		
+		# which taxa come from just one collection?
+		tabSing <- table(dat[nonDupl,tax])
+		
+		# single collection taxa
+		singTax<- names(tabSing)[tabSing==1]
+		
+		# omit the single collection taxa
+		boolEnd<-dat[,tax]%in%singTax
+		
+		# if na.rm TRUE than do not omit NA collection stuff
+		if(filterNA){
+			boolEnd <- boolEnd & !is.na(dat[,ref])
+		}
+	}
+	
+	
+	
+	if(om=="binref"){
+		nonDupl <- !duplicated(dat[,c(tax, ref, bin)])
+		
+		rows<-1:nrow(dat)
+	
+		tap<-tapply(INDEX=dat[nonDupl,bin], X=rows[nonDupl], function(x){
+			sliceTax<-dat[x,tax]
+			
+			tabSing <- table(dat[x,tax])
+		
+			singTax<- names(tabSing)[tabSing==1]
+			
+			x[sliceTax%in%singTax]
+		
+		})
+		
+		boolEnd<-rep(FALSE, length(rows))
+		boolEnd[unlist(tap)]<-TRUE
+		
+		# if na.rm TRUE than do not omit NA reference stuff
+		if(filterNA){
+			boolEnd <- boolEnd & !is.na(dat[,ref])
+		}
+		
+	}
+	
+	return(boolEnd)
+
+}
