@@ -9,7 +9,7 @@ As the package is still getting developed, if you have any requirements or recom
 ## installing and update
 As the package now uses compiled code to make things run faster, there are two ways to install.
 1. I have built binaries for Windows x86 and x64*. If you have one of these architectures, you can install the package with:
-`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/divDyn_0.2.10.zip", repos=NULL)`
+`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/divDyn_0.2.11.zip", repos=NULL)`
 
 You can acess earlier versions by changing the version number appropriately.
 
@@ -19,6 +19,12 @@ You can acess earlier versions by changing the version number appropriately.
 - Run `devtools::install_github("adamkocsis/divDyn")`
 
 * if you use either a Mac or Linux, and point no. 2 doesn't work for you for some reason, then contact me  and I will compile a binary for you.
+
+# Change log
+## [0.2.11] - 2018.05.17
+### Added
+- bug fix for the plotTS() function, enables log scaling of y axis with plot.args=list(log="y")
+- the parts() function for efficient plotting of proportion/count data over time 
 
 # Change log
 ## [0.2.10] - 2018.05.13

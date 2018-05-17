@@ -5,9 +5,9 @@
 \title{Time series plotting using a custom timescale object}
 \usage{
 plotTS(tsdat, boxes, ylim = c(0, 1), xlim = NULL, prop = 0.05, gap = 0,
-  bottom = "bottom", mid = "mid", top = "top", xlab = "age (Ma)",
-  ylab = "", shading = NULL, shading.col = c("white", "gray80"),
-  plot.args = NULL, boxes.args = NULL, labels.args = NULL)
+  bottom = "bottom", top = "top", xlab = "age (Ma)", ylab = "",
+  shading = NULL, shading.col = c("white", "gray80"), plot.args = NULL,
+  boxes.args = NULL, labels.args = NULL)
 }
 \arguments{
 \item{tsdat}{(data frame): time scale data frame}
@@ -23,8 +23,6 @@ plotTS(tsdat, boxes, ylim = c(0, 1), xlim = NULL, prop = 0.05, gap = 0,
 \item{gap}{(numeric value): proportion of the vertical extent of the plot that should be a gap betwen the timescale and the plot.}
 
 \item{bottom}{(character): column name of the table for the variable that contains the older ages of intervals.}
-
-\item{mid}{(character): column name of the table for the variable that contains the mean ages of intervals.}
 
 \item{top}{(character): column name of the table for the variable that contains the earliest ages of intervals.}
 

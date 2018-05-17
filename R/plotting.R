@@ -10,7 +10,6 @@
 #' @param prop (numeric value): proportion of the vertical extent of the plot for the timescale
 #' @param gap (numeric value): proportion of the vertical extent of the plot that should be a gap betwen the timescale and the plot.
 #' @param bottom (character): column name of the table for the variable that contains the older ages of intervals.
-#' @param mid (character): column name of the table for the variable that contains the mean ages of intervals.
 #' @param top (character): column name of the table for the variable that contains the earliest ages of intervals.
 #' @param shading (character): column name used for the shading.
 #' @param shading.col (character): name of colors that will be used for the shading, if shading is set.
@@ -33,7 +32,7 @@
 #'	    boxes.args=list(col="gray95"))
 #' @export
 plotTS<-function(tsdat,  boxes, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
-	bottom="bottom", mid="mid",top="top",
+	bottom="bottom", top="top",
 	xlab="age (Ma)", ylab="",
 	shading=NULL,shading.col=c("white", "gray80"),
 	plot.args=NULL,
@@ -43,7 +42,6 @@ plotTS<-function(tsdat,  boxes, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 #	tsdat<-stages
 #	boxes<-"per"
 #	bottom="bottom"
-#	mid="mid"
 #	top="top"
 #	ylim=c(0,1)
 #	xlab="age (Ma)"
@@ -54,6 +52,10 @@ plotTS<-function(tsdat,  boxes, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 #	boxes.args<-NULL
 #	plot.args<-NULL
 #	labels.args<-NULL
+	tsCols<-colnames(tsdat)
+	if(!bottom%in%tsCols) stop("The 'bottom' column is not found.")
+	if(!top%in%tsCols) stop("The 'top' column is not found.")
+	
 	
 	# length(ylim) should be 2, and numeric, default
 	if(!is.numeric(ylim)){
@@ -78,6 +80,18 @@ plotTS<-function(tsdat,  boxes, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 		}
 	}
 	
+	# if the log axis is planned
+	yLog<-FALSE
+	if(!is.null(plot.args)){
+		if(!is.null(plot.args$log)){
+			if(is.na(plot.args$log)) stop("Invalid log argument in plot.args.")
+			if(plot.args$log=="y"){
+				yLog<-TRUE
+			
+			}
+		}
+	
+	}
 	
 	# xlim defense
 	if(is.null(xlim)){
@@ -96,10 +110,19 @@ plotTS<-function(tsdat,  boxes, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 	}
 	
 	# the ylim adjustment
-	boxesTop<-ylim[1]-diff(range(ylim))*gap
-	plotBottom<-ylim[1]
+	if(!yLog){
+		boxesTop<-ylim[1]-diff(range(ylim))*gap
+		plotBottom<-ylim[1]
 	
-	ylim[1]<-ylim[1]-diff(range(ylim))*prop-diff(range(ylim))*gap
+		ylim[1]<-ylim[1]-diff(range(ylim))*prop-diff(range(ylim))*gap
+	}else{
+		boxesTop<-exp(log(ylim[1])-diff(range(log(ylim)))*gap)
+		plotBottom<-ylim[1]
+	
+		ylim[1]<-exp(log(ylim[1])-diff(log(range(ylim)))*prop-diff(log(range(ylim)))*gap)
+
+	
+	}
 	
 	# check whether the additional arguments work ok or not
 	if(!is.null(boxes.args)){
@@ -125,14 +148,15 @@ plotTS<-function(tsdat,  boxes, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 	# the empty plot
 		# invoke plot
 		plotArgs<-list(
-			x=NULL,
-			y=NULL,
+			x=1,
+			y=1,
 			xlim=xlim, 
 			ylim=ylim,
 			xlab=xlab, 
 			ylab=ylab,
 			xaxs="i",
-			yaxs="i"
+			yaxs="i",
+			type="n"
 		)
 		plotArgs<-c(plotArgs, plot.args)
 		do.call(plot, plotArgs)
@@ -156,6 +180,7 @@ plotTS<-function(tsdat,  boxes, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 			yTop[i]<-boxesTop
 			yBottom[i]<-ylim[1]
 			labMid[i]<-mean(c(curBottom, curTop))
+		
 	}
 	
 	#boxes
@@ -370,4 +395,326 @@ shades <- function(x, y, col, res=100, border=NA,interpolate=F, method="symmetri
 	}
 	
 }
+	
+
+
+#' Plot polygons of counts or proportions 
+#' 
+#' This function plots the changing shares of category in association with an independent variable. 
+#' 
+#' This function is useful for displaying the changing proportions of a category as time passess by.
+#' 
+#' To be added: missing portions are omitted in this version, but should be represented as gaps in the polygons. 
+#' 
+#' @param x (numeric vector): The independent variable through which the proportion is tracked. Identical entries are used to assess, which belong to the set, their values represent the x coordinate over the plot.
+#' 
+#' @param b (character or factor): Category designation.
+#' 
+#' @param ord The parameter of the variable order. Either "up" (increasing), "down" (decreasing) or the vector of categories in the desired order.
+#' 
+#' @param col The colour of polygons. By default this is grayscale. 
+#' 
+#' @param border The colour of the polygon borders. 
+#' 
+#' @param prop (logical value): Should the diagram show proportions or counts?
+#' 
+#' @param xlim (numeric vector): Extension of polygons to cover plotting area. Two values, has to exceed the range of x. 
+#' 
+#' @param ylim (numeric vector): If prop=TRUE, then the argument controls the position of the proportions in the plotting area. If prop=FALSE, then the entire plotting area will be shifted by the single ylim value.
+#' 
+#' @param labs (logical value): should the category names be plotted?
+#' 
+#' @param na.valid (logical value): if TRUE, than the missing values will be treated as an independent category. Entries where x is NA will be omitted either way.
+#' 
+#' @param labs.args (list): Lists of arguments for the text() function. If one entry for each argument is provided, then it will be applied to all labels. If the number of elements in an argument equals the number of categories to be plotted, then one to one assignment will be used (e.g. for 4 categories in total, if the labs.args list contains a col vector element of length 4, see examples.).
+#' 
+#' @param plot (logical value): If set to TRUE than the function will plot the output. If set to FALSE, then a matrix with the relevant values will be returned. This output is similar to the output of table(), but handles proportions instantly.
+#' 
+#' @param vertical (logical value): Horizontal or vertical plotting? If FALSE, the independent variable will be horizontal, if TRUE, the count/proportion variable will be horizontal. In the latter case xlim and ylim has reversed roles.
+#' @examples
+#' 
+#' # dummy examples 
+#'   # independent variable
+#'   slc<-c(rep(1, 5), rep(2,7), rep(3,6))
+#' 
+#'   # the categories as they change
+#'   v1<-c("a", "a", "b", "c", "c") # 1
+#'   v2<-c("a", "b", "b", "b", "c", "d", "d") # 2
+#'   v3<-c("a", "a", "a", "c", "c", "d") #3
+#'   va<-c(v1, v2,v3)
+#' 
+#'   # basic function
+#'     plot(NULL, NULL, ylim=c(0,1), xlim=c(0.5, 3.5))
+#'     parts(slc, va, prop=T)
+#'  
+#'   # vertical plot
+#'     plot(NULL, NULL, xlim=c(0,1), ylim=c(0.5, 3.5))
+#'     parts(slc, va, col=c("red" ,"blue", "green", "orange"), xlim=c(0.5,3.5), labs=T, prop=T, vertical=T)
+#' 
+#'   # intensive argumentation
+#'     plot(NULL, NULL, ylim=c(0,10), xlim=c(0.5, 3.5))
+#'     parts(slc, va, ord=c("b", "c", "d", "a"), col=c("red" ,"blue", "green", "orange"), 
+#' 	  xlim=c(0.5,3.5), labs=T, prop=F, 
+#' 	  labs.args=list(cex=1.3, col=c("black", "orange", "red", "blue")))
+#' 
+#'   # just the values
+#'     parts(slc, va, prop=T,plot=F)
+#' 	
+#' # real example
+#'   # the proportion of coral occurrences through time in terms of bathymetry
+#'   data(scleractinia)
+#'   data(stages)
+#' 
+#'   # time scale plot
+#'   plotTS(stages, shading="series", boxes="per", xlim=c(250,0), 
+#'     ylab="proportion of occurrences", ylim=c(0,1))
+#'   
+#'   # plot of proportions	
+#'   cols <- c("#55555588","#88888888", "#BBBBBB88")
+#'   types <- c("uk", "shal", "deep")
+#'   
+#'   parts(x=stages$mid[scleractinia$slc], b=scleractinia$bath, 
+#'    ord=types, col=cols, prop=T,border=NA, labs=F)
+#'    
+#'   # legend
+#'   legend("left", inset=c(0.1,0), legend=c("unknown", "shallow", "deep"), fill=cols, bg="white", cex=1.4) 
+#' 
+#' @export
+parts<-function(x, b=NULL, ord="up", prop=F, plot=TRUE,  col=NULL, xlim=NULL, border=NULL, ylim=c(0,1), na.valid=FALSE, labs=T, labs.args=NULL, vertical=F){
+	
+	# starting arguments
+	if(is.matrix(x)){
+		if(ncol(x==2)){
+			b<-x[,2]
+			x<-x[,1]
+		}
+	}
+	if(length(x)!=length(b)) stop("x and b have to have the same length.")
+	
+	#filter NAs
+	if(!na.valid){
+		bothNA<-is.na(b) | is.na(x)
+		b<-b[!bothNA]
+		x<-x[!bothNA]
+	}else{
+		# remove NAs in x
+		b<-b[!is.na(x)]
+		x<-x[!is.na(x)]
+		# an assign another
+		b[is.na(b)]<-"N/A"
+		
+	}
+		
+	# the unique entries
+	bLevs<-unique(b)
+	
+	# the x values
+	# increasing order
+	if(!is.null(xlim)){
+		if(xlim[1]<xlim[2]){
+			x2<-sort(x)
+		}
+		if(xlim[1]>xlim[2]){
+			x2<-sort(x, decreasing=T)
+		}
+	}else{
+		x2<-sort(x)
+		xlim<-range(x2)
+		xR<-diff(xlim)
+		xlim[1]<-xlim[1]-0.1*xR
+		xlim[2]<-xlim[2]+0.1*xR
+	
+	}
+	# the appropriate order of the bins
+	xLev<-unique(x2)
+	
+	
+	# the order of plotting of categoreies
+	if(sum(bLevs%in%ord)==length(bLevs)){
+		bLevs<-ord
+	}else{
+		if(length(ord)==1){
+			if(ord=="up"){
+				bLevs<-sort(bLevs)
+			}
+			if(ord=="down"){
+				bLevs<-sort(bLevs, decreasing=T)
+			}
+		}else{
+			stop("Invalid ord argument.")
+		}
+	}
+	
+	# arguments of the labels
+	if(labs){
+		if(!is.null(labs.args)){
+			labs.args<-lapply(labs.args, function(x){
+				if(length(x)!=length(bLevs) & length(x)!=1) stop("Provide each category lab an individual entry in arguments or one.")
+				if(length(x)==1){
+					return(rep(x, length(bLevs)))
+				}
+				if(length(x)==length(bLevs)){
+					return(x)
+				}
+			
+			})
+		}
+	}
+	
+	# default colors
+	if(is.null(col)){
+		dif<-floor(1/(length(bLevs)-1)*100)
+		grayVal<-seq(0, 100, by=dif)
+		col<-paste("gray", grayVal, sep="")
+		names(col)<-bLevs
+	}else{
+		if(!length(col)==length(bLevs)) stop("The number of colour in 'col' doesn't match the number of categories.")
+		names(col)<-bLevs
+	
+	}
+	if(!is.null(border)){
+		if(length(border)==1){
+			border<-rep(border, length(bLevs))
+			names(border)<-bLevs
+		}else{
+			if(!length(border)==length(ord)) stop("The number of colours in 'border' doesn't match the number of categories.")
+		}
+	}
+	
+	allProps<-tapply(INDEX=x, X=b, function(y){
+		oneres<-sapply(bLevs, function(z){
+			sum(z==y)
+		})
+		
+		#if plotted, return the cumulative
+		if(plot){
+			if(prop){
+				cumsum(oneres/length(y))
+			}else{
+				cumsum(oneres)
+			}
+		# if not plotted, then return the values
+		}else{
+			if(prop){
+				oneres/length(y)
+			}else{
+				oneres
+			}
+		}
+	})
+	
+	# reorder the by x
+	allProps<-allProps[as.character(xLev)]
+	
+	# the labels
+	if(labs){
+		theProps<-tapply(INDEX=x, X=b, function(y){
+			oneres<-sapply(bLevs, function(z){
+				sum(z==y)
+			})
+			
+			if(prop){
+				oneres/length(y)
+			}else{
+				oneres			
+			}
+		})
+		
+		theProps<-theProps[as.character(xLev)]
+		
+		labPos <-sapply(bLevs, function(y){
+			lap<-lapply(theProps, function(z){
+				z[y]
+			})
+			res<-unlist(lap)
+			xLev[which(res==max(res))[1]]
+		})
+	}
+	
+	if(prop){
+		yRange<-range(ylim)
+		if(length(diff(yRange))>1) stop('ylim argument must have two entries')
+		if(diff(yRange)<0) stop("ylim values have to be ascending")
+	}
+	
+	# get the values out
+	allCum <-sapply(bLevs, function(y){
+		lap<-lapply(allProps, function(z){
+			z[y]
+		})
+		res<-unlist(lap)
+		names(res)<-names(lap)
+		res
+	})
+	
+	# return values if plot is FALSE
+	if(!plot){
+		return(allCum)
+	}
+	
+	# rescale if necessary	
+	if(prop){
+		allCum<-allCum*diff(yRange)
+	}
+	
+	# and shift
+	allCum <- allCum+ylim[1]
+		
+	for(i in length(bLevs):1){
+		plotY<-c(
+			allCum[1,bLevs[i]], 
+			allCum[,bLevs[i]], 
+			allCum[nrow(allCum),bLevs[i]],
+			rep(ylim[1], length(xLev)+2))
+		
+		# the xlims
+		plotX<-c(xlim[1], xLev, xlim[2], xlim[2], rev(xLev), xlim[1])
+	
+		if(vertical){
+			polygon(plotY, plotX, col=col[bLevs[i]], border=border[bLevs[i]])
+		}else{
+			polygon(plotX, plotY, col=col[bLevs[i]], border=border[bLevs[i]])
+		}
+	}
+	
+	if(labs){
+		
+		for(i in 1:length(labPos)){
+			xCoord<-labPos[i]
+			
+			yVect<-allCum[as.character(labPos[i]), ]
+			
+			yPos<-which(names(yVect)==names(labPos)[i])
+			if(yPos==1){
+				yCoord<-mean(c(yVect[yPos],ylim[1]))
+			}else{
+				yCoord<-mean(c(yVect[yPos],yVect[yPos-1]))
+			}
+			if(vertical){
+				newArgs<-list(
+					label=names(labPos)[i],
+					y=xCoord,
+					x=yCoord
+				)	
+			}else{
+				newArgs<-list(
+					label=names(labPos)[i],
+					x=xCoord,
+					y=yCoord
+				)	
+			}
+			
+			plusArgs<-lapply(labs.args, function(u){
+				u[i]
+			})
+			
+			# plot the labels
+			do.call(text, c(newArgs, plusArgs))
+		}
+	
+	}
+}
+
+	
+	
 	

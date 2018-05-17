@@ -12,6 +12,7 @@ export(subsample)
 export(survivors)
 export(sampstat)
 export(omit)
+export(parts)
 
 importFrom("Rcpp")
 useDynLib(divDyn)
