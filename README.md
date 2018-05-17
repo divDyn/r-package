@@ -26,7 +26,7 @@ You can acess earlier versions by changing the version number appropriately.
 - bug fix for the plotTS() function, enables log scaling of y axis with plot.args=list(log="y")
 - the parts() function for efficient plotting of proportion/count data over time 
 
-# Change log
+
 ## [0.2.10] - 2018.05.13
 ### Added
 - proportional extinction and origination rates to the divDyn() function
