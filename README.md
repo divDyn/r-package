@@ -18,7 +18,7 @@ You can acess earlier versions by changing the version number appropriately.
 - Make sure that the 'devtools' package is installed
 - Run `devtools::install_github("adamkocsis/divDyn")`
 
- * if you use either a Mac or Linux, and point no. 2 doesn't work for you for some reason, then contact me  and I will compile a binary for you.
+ '*' if you use either a Mac or Linux, and point no. 2 doesn't work for you for some reason, then contact me  and I will compile a binary for you.
 
 # Change log
 ## [0.3.0] - 2018.06.01
