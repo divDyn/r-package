@@ -4,8 +4,8 @@
 \alias{divDyn}
 \title{Time series from metrics of diversity dynamics}
 \usage{
-divDyn(dat, tax = "occurrence.genus_name", bin = "bin",
-  coll = "collection_no", ref = "occurrence.reference_no", om = NULL,
+divDyn(dat, tax = "genus", bin = "bin", breaks = NULL,
+  coll = "collection_no", ref = "reference_no", om = NULL,
   noNAStart = F, inf = F, data.frame = T, filterNA = FALSE)
 }
 \arguments{
@@ -13,7 +13,9 @@ divDyn(dat, tax = "occurrence.genus_name", bin = "bin",
 
 \item{tax}{(character): variable  name of the occurring taxa (variable type: factor) - such as "occurrence.genus_name"}
 
-\item{bin}{(character): variable name of the time slice numbers of the particular occurrences (variable type: int)- such as "slc" or whatever. Bin numbers should be in ascending order,can contain NA's, it can start from a number other than 1 and must not start with 0.}
+\item{bin}{(character): variable name of the time slice numbers of the particular occurrences. This variable should be numeric and should increase as time passes by (use negative values for age estimates!).}
+
+\item{breaks}{(numeric): If NULL (default) the used values in the 'bin' variable will designate independent time slices that follow each other in succession. In case of positive integer bin identifiers, and if noNAStart=FALSE,  the index of the row will be the bin number. If a vector is provided, than the numeric entries in 'bin' will be binned similarly to the hist() function. The order of elements in this vector is arbitrary.}
 
 \item{coll}{(character): the variable name of the collection identifiers. (optional, only for filtering!)}
 
@@ -21,8 +23,7 @@ divDyn(dat, tax = "occurrence.genus_name", bin = "bin",
 
 \item{om}{(character): the om parameter of the omit() function. If set to NULL (default), then no occurrences will be omitted before the execution of the function.}
 
-\item{noNAStart}{(logical): useful when the dataset does not start from bin No. 1. Then noNAStart=TRUE will cut the first part of the resulting table, 
-so the first row will contain the estimates for the lowest bin number.}
+\item{noNAStart}{(logical): useful when the dataset does not start from bin No. 1, but positive integer bin numbers are provided. Then noNAStart=TRUE will cut the first part of the resulting table, so the first row will contain the estimates for the lowest bin number.}
 
 \item{inf}{(logical): should infinites be converted to NAs?}
 
@@ -37,7 +38,7 @@ various metrics in the form of time series from resolved PBDB occurrences.
 \details{
 The following variables are produced:
 
-bin: the time slice number
+bin: the time slice number, or the numeric identifier of the time slice
 
 tThrough: the number of through-ranging taxa
 
@@ -85,7 +86,7 @@ divRT: range-through diversity (richness)
 
 sampRange: sampling probability (Foote)
 
-samp3t: three-timer sampling completeness (used as a correcting value in nC3tExt, nC3tOri and nCorrSIB)
+samp3t: three-timer sampling completeness (used as a correcting value in extC3t, oriC3t and divCSIB)
 
 extGF: gap-filler extinction rates (Alroy, 2014)
 
@@ -94,23 +95,28 @@ oriGF: gap-filler origination rates (Alroy, 2014)
 E2f3: second-for-third extinction propotions (Alroy, 2015)
 
 O2f3: second-for-third origination propotions (Alroy, 2015)
+
 ext2f3: second-for-third extinction rates (based on Alroy, 2015)
 
 ori2f3: second-for-third origination rates (based on Alroy, 2015)
 
 References:
-Foote, M. 2000.
-Alroy, J. 2008
-Alroy, J. 2014.
-Alroy, J. 2015.
+
+Foote, M. (2000) Origination and Extinction Components of Taxonomic Diversity: General Problems. Paleobiology 26, 74-102. doi:10.1666/0094-8373(2000)26[74:OAECOT]2.0.CO;2).
+
+Alroy, J. (2008) Dynamics of origination and extinction in the marine fossil record. Proceedings of the National Academy of Science 105, 11536-11542. doi: 10.1073/pnas.0802597105
+
+Alroy, J. (2014) Accurate and precise estimates of origination and extinction rates. Paleobiology 40, 374-397. doi: 10.1666/13036
+
+Alroy, J. (2015) A more precise speciation and extinction rate estimator. Paleobiology 41, 633–639. doi: 10.1017/pab.2015.26
 }
 \examples{
 # import data
-  data(scleractinia)
+  data(corals)
   data(stages)
 
 # calculate metrics of diversity dynamics
-   dd <- divDyn(scleractinia, tax="genus", bin="slc")
+   dd <- divDyn(corals, tax="genus", bin="slc")
 
 # plotting
   plotTS(stages, shading="series", boxes="per", xlim=c(260,0), 
@@ -118,12 +124,19 @@ Alroy, J. 2015.
   lines(stages$mid, dd$divRT, lwd=2)
 
  # with omission of single reference taxa  
-   ddNoSing <- divDyn(scleractinia, tax="genus", bin="slc", om="ref")
+   ddNoSing <- divDyn(corals, tax="genus", bin="slc", om="ref")
    lines(stages$mid, ddNoSing$divRT, lwd=2, col="red")
-   
-   # legend
-   legend("topleft", legend=c("all", "no single-ref. taxa"), 
-     col=c("black", "red"), lwd=c(2,2))
+
+ # using the estimated ages (less robust) - 10 million years
+   # mean ages (should be negative to maintain order)
+   corals$me_ma <- -apply(corals[, c("max_ma", "min_ma")], 1, mean)
+   # divDyn
+   ddRadio10 <- divDyn(corals, tax="genus", bin="me_ma", breaks=seq(0,-250,-10))
+   lines(-ddRadio10$bin, ddRadio10$divRT, lwd=2, col="green")
+      
+ # legend
+   legend("topleft", legend=c("all", "no single-ref. taxa", "all, estimated ages"), 
+     col=c("black", "red", "green"), lwd=c(2,2,2), bg="white")
    
 
 }

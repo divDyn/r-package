@@ -158,7 +158,7 @@ spCleanse <- function(vec, mode="simple", collapse="_"){
 #' 
 #' The following variables are produced:
 #'
-#' bin: the time slice number
+#' bin: the time slice number, or the numeric identifier of the time slice
 #'
 #' tThrough: the number of through-ranging taxa
 #'
@@ -206,7 +206,7 @@ spCleanse <- function(vec, mode="simple", collapse="_"){
 #'
 #' sampRange: sampling probability (Foote)
 #'
-#' samp3t: three-timer sampling completeness (used as a correcting value in nC3tExt, nC3tOri and nCorrSIB)
+#' samp3t: three-timer sampling completeness (used as a correcting value in extC3t, oriC3t and divCSIB)
 #'
 #' extGF: gap-filler extinction rates (Alroy, 2014)
 #'
@@ -215,24 +215,29 @@ spCleanse <- function(vec, mode="simple", collapse="_"){
 #' E2f3: second-for-third extinction propotions (Alroy, 2015)
 #'
 #' O2f3: second-for-third origination propotions (Alroy, 2015)
-#
+#'
 #' ext2f3: second-for-third extinction rates (based on Alroy, 2015)
 #'
 #' ori2f3: second-for-third origination rates (based on Alroy, 2015)
 #' 
 #' References:
-#' Foote, M. 2000.
-#' Alroy, J. 2008
-#' Alroy, J. 2014.
-#' Alroy, J. 2015.
+#'
+#' Foote, M. (2000) Origination and Extinction Components of Taxonomic Diversity: General Problems. Paleobiology 26, 74-102. doi:10.1666/0094-8373(2000)26[74:OAECOT]2.0.CO;2).
+#'
+#' Alroy, J. (2008) Dynamics of origination and extinction in the marine fossil record. Proceedings of the National Academy of Science 105, 11536-11542. doi: 10.1073/pnas.0802597105
+#'
+#' Alroy, J. (2014) Accurate and precise estimates of origination and extinction rates. Paleobiology 40, 374-397. doi: 10.1666/13036
+#'
+#' Alroy, J. (2015) A more precise speciation and extinction rate estimator. Paleobiology 41, 633–639. doi: 10.1017/pab.2015.26
 #'
 #' @param dat (data.frame): the data frame of fossil occurrences.
 #' 
 #' @param tax (character): variable  name of the occurring taxa (variable type: factor) - such as "occurrence.genus_name"
 #' 
-#' @param bin (character): variable name of the time slice numbers of the particular occurrences (variable type: int)- such as "slc" or whatever. Bin numbers should be in ascending order,can contain NA's, it can start from a number other than 1 and must not start with 0.
-#' @param noNAStart (logical): useful when the dataset does not start from bin No. 1. Then noNAStart=TRUE will cut the first part of the resulting table, 
-#' 						so the first row will contain the estimates for the lowest bin number.
+#' @param bin (character): variable name of the time slice numbers of the particular occurrences. This variable should be numeric and should increase as time passes by (use negative values for age estimates!). 
+#'
+#' @param breaks (numeric): If NULL (default) the used values in the 'bin' variable will designate independent time slices that follow each other in succession. In case of positive integer bin identifiers, and if noNAStart=FALSE,  the index of the row will be the bin number. If a vector is provided, than the numeric entries in 'bin' will be binned similarly to the hist() function. The order of elements in this vector is arbitrary.
+#' @param noNAStart (logical): useful when the dataset does not start from bin No. 1, but positive integer bin numbers are provided. Then noNAStart=TRUE will cut the first part of the resulting table, so the first row will contain the estimates for the lowest bin number.
 #' 
 #' @param inf (logical): should infinites be converted to NAs?
 #' @param data.frame (logical): should be a data frame or a matrix?
@@ -243,11 +248,11 @@ spCleanse <- function(vec, mode="simple", collapse="_"){
 #' @param ref (character): the variable name of the reference identifiers. (optional, only for filtering!)
 #' @examples
 #'	# import data
-#'	  data(scleractinia)
+#'	  data(corals)
 #'	  data(stages)
 #'
 #'	# calculate metrics of diversity dynamics
-#'    dd <- divDyn(scleractinia, tax="genus", bin="slc")
+#'    dd <- divDyn(corals, tax="genus", bin="slc")
 #'
 #'	# plotting
 #'	  plotTS(stages, shading="series", boxes="per", xlim=c(260,0), 
@@ -255,22 +260,100 @@ spCleanse <- function(vec, mode="simple", collapse="_"){
 #'	  lines(stages$mid, dd$divRT, lwd=2)
 #' 
 #'  # with omission of single reference taxa  
-#'    ddNoSing <- divDyn(scleractinia, tax="genus", bin="slc", om="ref")
+#'    ddNoSing <- divDyn(corals, tax="genus", bin="slc", om="ref")
 #'    lines(stages$mid, ddNoSing$divRT, lwd=2, col="red")
-#'    
-#'    # legend
-#'    legend("topleft", legend=c("all", "no single-ref. taxa"), 
-#'      col=c("black", "red"), lwd=c(2,2))
+#'
+#'  # using the estimated ages (less robust) - 10 million years
+#'    # mean ages (should be negative to maintain order)
+#'    corals$me_ma <- -apply(corals[, c("max_ma", "min_ma")], 1, mean)
+#'    # divDyn
+#'    ddRadio10 <- divDyn(corals, tax="genus", bin="me_ma", breaks=seq(0,-250,-10))
+#'    lines(-ddRadio10$bin, ddRadio10$divRT, lwd=2, col="green")
+#'       
+#'  # legend
+#'    legend("topleft", legend=c("all", "no single-ref. taxa", "all, estimated ages"), 
+#'      col=c("black", "red", "green"), lwd=c(2,2,2), bg="white")
 #'    
 #'
 #' @export
-divDyn <- function(dat, tax="occurrence.genus_name", bin="bin", coll="collection_no", ref="occurrence.reference_no", om=NULL,noNAStart=F, inf=F, data.frame=T, filterNA=FALSE)
+divDyn <- function(dat, tax="genus", bin="bin", breaks=NULL, coll="collection_no", ref="reference_no", om=NULL,noNAStart=F, inf=F, data.frame=T, filterNA=FALSE)
 {
 	
-	# is binVar numeric
+	# checking the binning argument
+	# is numeric
 	if(!is.numeric(dat[,bin])){
 		stop("The bin variable is not numeric.")
 	}
+	
+	# what do you want to do with the bin numbers?
+	# nothing, individual time slices
+	if(is.null(breaks)){
+		
+		# if bin values are integers
+		if(sum(dat[,bin]%%1, na.rm=T)==0){
+			
+			# smallest bin value
+			minBin<-min(dat[,bin], na.rm=T)
+			
+			# if non-positive entries occurr
+			if(minBin<=0){
+				# transformation is necessary (shift by three, to make sure the C++ function works appropriately)
+				dat[,bin]<-5+dat[,bin]-minBin
+				binID<-c(rep(NA, 4), sort(unique(dat[,bin]))-5+minBin)
+			
+			# if no transformation will be necessary
+			}else{
+				binID<-NULL
+			}
+			
+		# non-integers: factorization
+		}else{
+			# use plain factorization values
+			fact<-factor(dat[,bin])
+			
+			newBin<-as.numeric(fact) + 4 # add some offset 
+			
+			# replace bin numbers with positive integers
+			dat[,bin] <- newBin
+			
+			# use later
+			binID<-c(rep(NA,4),as.numeric(levels(fact)))
+			
+		}
+	
+	# use a predefined binning of numeric values
+	}else{	
+		if(!is.numeric(breaks)) stop("The breaks argument has to be a numeric vector. ")
+		
+		# order the breaking vector 
+		breaks<-sort(breaks)
+		
+		# calculate the bin averages
+		both<-cbind(c(breaks,NA),c(NA, breaks))
+		means<-apply(both, 1, mean)
+		means<-means[!is.na(means)]
+		
+		# bin the variable
+		fact<-cut(dat[,bin], breaks)
+		
+		# the function will use this to output the data
+		newBin<-as.numeric(fact)
+		
+		if(length(unique(newBin))<4) stop("At least 4 time slices are necessary.")
+		
+		# replace bin numbers with positive integers
+		dat[,bin] <- newBin
+		
+		# save the relevant means, use the binID later to identify the position
+	
+		to<-max(newBin,na.rm=T)
+		binID<-c(rep(NA,4),means[1:to])
+		
+		 # add 4 as an offset
+		 dat[,bin]<-dat[,bin]+4
+		
+	}
+	
 	
 	# the omission phase
 	if(!is.null(om)){
@@ -321,6 +404,12 @@ divDyn <- function(dat, tax="occurrence.genus_name", bin="bin", coll="collection
 	# cbind all together
 	dCountsAndMetrics<-cbind(bin=nTimeSlice,  counts, metrics)
 	
+	if(!is.null(binID)){
+		dCountsAndMetrics[,"bin"]<-binID
+		
+		# and get rid of the NAs
+		dCountsAndMetrics<-dCountsAndMetrics[5:nrow(dCountsAndMetrics),]
+	}
 		
 	#create the returning table
 	dCountsAndMetrics<-dCountsAndMetrics[,c(
@@ -548,20 +637,20 @@ Metrics<- function(counts){
 #' 
 #' @examples
 #' # omit single-reference taxa
-#'   data(scleractinia)
-#'   toOmit <- omit(scleractinia, bin="slc", tax="genus", om="ref")
-#'   dat <- scleractinia[!toOmit,]
+#'   data(corals)
+#'   toOmit <- omit(corals, bin="slc", tax="genus", om="ref")
+#'   dat <- corals[!toOmit,]
 #' 
 #' # within divDyn
 #'   # plotting
 #'	  plotTS(stages, shading="series", boxes="per", xlim=c(260,0), 
 #'	    ylab="range-through diversity (genera)", ylim=c(0,230))
 #'   # multiple ref/slice required
-#'   ddNoSing <- divDyn(scleractinia, tax="genus", bin="slc", om="binref")
+#'   ddNoSing <- divDyn(corals, tax="genus", bin="slc", om="binref")
 #'   lines(stages$mid, ddNoSing$divRT, lwd=2, col="red")
 #'
 #'   # with the recent included (NA reference value)
-#'   ddNoSingRec <- divDyn(scleractinia, tax="genus", bin="slc",
+#'   ddNoSingRec <- divDyn(corals, tax="genus", bin="slc",
 #'     om="binref", filterNA=TRUE)
 #'   lines(stages$mid, ddNoSingRec$divRT, lwd=2, col="blue")
 #'   
@@ -569,9 +658,8 @@ Metrics<- function(counts){
 #'   legend("topleft", legend=c("no single-ref. taxa", 
 #'     "no single-ref. taxa,\n with recent"), 
 #'     col=c("red", "blue"), lwd=c(2,2))
-
 #' @export
-omit <- function(dat, tax="occurrence.genus_name", bin="bin", coll="collection_no", ref="occurrence.reference_no", om="ref", filterNA=FALSE){
+omit <- function(dat, tax="genus", bin="bin", coll="collection_no", ref="reference_no", om="ref", filterNA=FALSE){
 
 	if(!om%in%c("coll", "ref","binref")) stop("Invalid om argument.")
 	

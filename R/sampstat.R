@@ -37,15 +37,15 @@
 #' @param ref (char): the column name of reference numbers.
 #'
 #' @examples
-#'	data(scleractinia)
+#'	data(corals)
 #'	# slice-specific sampling
-#'	basic<-sampstat(scleractinia, tax="genus", bin="slc")
+#'	basic<-sampstat(corals, tax="genus", bin="slc")
 #'
 #' # subsampling diagnostic
-#'  subStats<-subsample(scleractinia, method="cr", tax="genus", FUN=sampstat, bin="slc", q=100,noNAstart=F)
+#'  subStats<-subsample(corals, method="cr", tax="genus", FUN=sampstat, bin="slc", q=100,noNAstart=F)
 #'	
 #' @export
-sampstat <- function(dat, tax="occurrence.genus_name", bin="slc", coll="collection_no", ref="occurrence.reference_no", noNAstart=FALSE){
+sampstat <- function(dat, tax="genus", bin="slc", coll="collection_no", ref="reference_no", noNAstart=FALSE){
 
 	# factorize everything
 	binVar<-as.integer(dat[,bin])

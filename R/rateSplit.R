@@ -23,12 +23,12 @@
 #' @param bin (char): variable name of the time slice numbers of the particular occurrences (variable type: int)- such as "slc" or whatever. Bin numbers should be in ascending order,can contain NA's, it can start from a number other than 1 and must not start with 0.
 #' @examples
 #'	# example with the coral dataset of Kiessling and Kocsis (2015)
-#'	data(scleractinia)
+#'	data(corals)
 #'	data(stages)
 #'	
 #'	# split by ecology
-#'	  z<-scleractinia[scleractinia$ecology=="z",]
-#'	  az<-scleractinia[scleractinia$ecology=="az",]
+#'	  z<-corals[corals$ecology=="z",]
+#'	  az<-corals[corals$ecology=="az",]
 #'	
 #'	# calculate diversity dynamics
 #'	ddZ<-divDyn(z, tax="genus", bin="slc")
@@ -61,7 +61,7 @@
 ratesplit<-function(dat,  sel, tax="genus", bin="slc", rate="pc", method="AIC",AICc=T, na.rm=T, alpha=NULL, output="simple"){
 #	 #dummy data:
 # 	
-#	 dat<-scleractinia
+#	 dat<-corals
 #	 tax<-"genus"
 #	 bin<-"slc"
 #	 cRate<-"nFooteOri"

@@ -37,12 +37,12 @@ The meaningfulness of the split is dependent on the estimate accurracy and the m
 }
 \examples{
 # example with the coral dataset of Kiessling and Kocsis (2015)
-data(scleractinia)
+data(corals)
 data(stages)
 
 # split by ecology
-  z<-scleractinia[scleractinia$ecology=="z",]
-  az<-scleractinia[scleractinia$ecology=="az",]
+  z<-corals[corals$ecology=="z",]
+  az<-corals[corals$ecology=="az",]
 
 # calculate diversity dynamics
 ddZ<-divDyn(z, tax="genus", bin="slc")

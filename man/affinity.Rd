@@ -4,8 +4,8 @@
 \alias{affinity}
 \title{Calculate environmental affinities of taxa}
 \usage{
-affinity(dat, env, tax = "occurrence.genus_name", bin = "SLC",
-  coll = "collection_no", alpha = 1, reldat = NULL)
+affinity(dat, env, tax = "genus", bin = "SLC", coll = "collection_no",
+  alpha = 1, reldat = NULL)
 }
 \arguments{
 \item{dat}{(data.frame): the occurrence dataset containing the taxa with unknown environmental affinities.}
@@ -30,9 +30,9 @@ This function will return the environmental affinities of taxa, given the sampli
 Sampling patterns have an overprinting effect on the frequency of taxon occurrences in different environments. The environmental affinity (sensu Kiessling and Aberhan, 2007 - Paleobiology 33, 414-434 and Kiessling and Kocsis, 2015 - Paleobiology 41, 402-414) expresses whether the taxa are more likely to occur in an environment, given the sampling patterns of the dataset at hand. NA output indicates that the environmental variable
 }
 \examples{
-data(scleractinia)
+data(corals)
 # omit values where no occurrence environment entry is present, or where unknown
-fossils<-subset(scleractinia, slc!=95)
+fossils<-subset(corals, slc!=95)
 fossilEnv<-subset(fossils, bath!="uk")
 # calculate affinities
   aff<-affinity(fossilEnv, env="bath", tax="genus", bin="slc", alpha=1)

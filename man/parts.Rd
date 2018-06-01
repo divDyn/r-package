@@ -9,7 +9,7 @@ parts(x, b = NULL, ord = "up", prop = F, plot = TRUE, col = NULL,
   labs = T, labs.args = NULL, vertical = F)
 }
 \arguments{
-\item{x}{(numeric vector): The independent variable through which the proportion is tracked. Identical entries are used to assess, which belong to the set, their values represent the x coordinate over the plot.}
+\item{x}{(numeric vector): The independent variable through which the proportion is tracked. Identical entries are used to assess which values belong together to a set. Their values represent the x coordinate over the plot.}
 
 \item{b}{(character or factor): Category designation.}
 
@@ -36,10 +36,10 @@ parts(x, b = NULL, ord = "up", prop = F, plot = TRUE, col = NULL,
 \item{vertical}{(logical value): Horizontal or vertical plotting? If FALSE, the independent variable will be horizontal, if TRUE, the count/proportion variable will be horizontal. In the latter case xlim and ylim has reversed roles.}
 }
 \description{
-This function plots the changing shares of category in association with an independent variable.
+This function plots the changing shares of categories in association with an independent variable.
 }
 \details{
-This function is useful for displaying the changing proportions of a category as time passess by.
+This function is useful for displaying the changing proportions of a category as time progresses.
 
 To be added: missing portions are omitted in this version, but should be represented as gaps in the polygons.
 }
@@ -74,7 +74,7 @@ To be added: missing portions are omitted in this version, but should be represe
 	
 # real example
   # the proportion of coral occurrences through time in terms of bathymetry
-  data(scleractinia)
+  data(corals)
   data(stages)
 
   # time scale plot
@@ -85,7 +85,7 @@ To be added: missing portions are omitted in this version, but should be represe
   cols <- c("#55555588","#88888888", "#BBBBBB88")
   types <- c("uk", "shal", "deep")
   
-  parts(x=stages$mid[scleractinia$slc], b=scleractinia$bath, 
+  parts(x=stages$mid[corals$slc], b=corals$bath, 
    ord=types, col=cols, prop=T,border=NA, labs=F)
    
   # legend

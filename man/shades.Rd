@@ -5,7 +5,7 @@
 \title{Quantile plot of time series}
 \usage{
 shades(x, y, col, res = 100, border = NA, interpolate = F,
-  method = "symmetric")
+  method = "symmetric", na.rm = FALSE)
 }
 \arguments{
 \item{x}{(numeric): The x coordinates.}
@@ -21,6 +21,8 @@ shades(x, y, col, res = 100, border = NA, interpolate = F,
 \item{interpolate}{(logical value): In case the symmetric method is chosen, the series of quantile values can be interpolated with a LOESS function.}
 
 \item{method}{(character value): The default "symmetric" method will plot the mid quantile range with highest opacity and the shades will be more translucent at the tails of the distributions. The "decrease" method will decrease the opacity with higher quantiles, which can make the plots of bottom-bounded distributions easier to interpret.}
+
+\item{na.rm}{(logical value): If set to FALSE, than rows that are missing from the dataset will be plotted as gaps in the shading. If set to TRUE, than these gaps will be skipped.}
 }
 \description{
 This intermediate-level function will plot a time series with the quantiles shown as shades (using alpha values) around the central tendency.

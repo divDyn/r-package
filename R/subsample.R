@@ -37,11 +37,11 @@
 #' 
 #' @examples
 #' 
-#' data(scleractinia)
+#' data(corals)
 #' data(stages)
 #' # Example 1-calculate metrics of diversity dynamics
-#'   dd <- divDyn(scleractinia, tax="genus", bin="slc")
-#'   rarefDD<-subsample(scleractinia,iter=50, q=50,
+#'   dd <- divDyn(corals, tax="genus", bin="slc")
+#'   rarefDD<-subsample(corals,iter=50, q=50,
 #'   tax="genus", bin="slc", output="dist", intact=95)
 #' 	
 #' # plotting
@@ -53,7 +53,7 @@
 #'     col=c("black", "blue"), lwd=c(2,2), bg="white")
 #'   
 #'   # compare with previous function (is obsolete)
-#'   rarefDD <- crDD(scleractinia, quota=50, iter=100, intactBins=95)
+#'   rarefDD <- crDD(corals, quota=50, iter=100, intactBins=95)
 #'   lines(stages$mid,rarefDD$divRT, col="red", lwd=2)
 #'   
 #'   
@@ -66,12 +66,12 @@
 #'   })
 #'   return(calc[as.character(stages$num)])
 #' }
-#' sibDiv<-sib(scleractinia, bin="slc", tax="genus")
+#' sibDiv<-sib(corals, bin="slc", tax="genus")
 #' 
 #' # calculate it with subsampling
-#' rarefSIB<-subsample(scleractinia,iter=50, q=50,
+#' rarefSIB<-subsample(corals,iter=50, q=50,
 #'   tax="genus", bin="slc", output="arit", intact=95, FUN=sib)
-#' rarefDD<-subsample(scleractinia,iter=50, q=50,
+#' rarefDD<-subsample(corals,iter=50, q=50,
 #'   tax="genus", bin="slc", output="arit", intact=95)
 #' 
 #' # plot
@@ -85,13 +85,13 @@
 #' # Example 3 - different subsampling methods with default function (divDyn)
 #' # compare different subsampling types
 #'   # classical rarefaction
-#'   cr<-subsample(scleractinia,iter=50, q=20,tax="genus", bin="slc", output="dist", intact=95)
+#'   cr<-subsample(corals,iter=50, q=20,tax="genus", bin="slc", output="dist", intact=95)
 #'   # by-list subsampling (unweighted) - 3 collections
-#'   UW<-subsample(scleractinia,iter=50, q=3,tax="genus", bin="slc", output="dist", intact=95, method="oxw", x=0)
+#'   UW<-subsample(corals,iter=50, q=3,tax="genus", bin="slc", output="dist", intact=95, method="oxw", x=0)
 #'   # occurrence weighted by list subsampling
-#'   OW<-subsample(scleractinia,iter=50, q=20,tax="genus", bin="slc", output="dist", intact=95, method="oxw", x=1)
+#'   OW<-subsample(corals,iter=50, q=20,tax="genus", bin="slc", output="dist", intact=95, method="oxw", x=1)
 #'  
-#'   SQS<-subsample(scleractinia,iter=50, q=0.4,tax="genus", bin="slc", output="dist", intact=95, method="sqs", ref="occurrence.reference_no")
+#'   SQS<-subsample(corals,iter=50, q=0.4,tax="genus", bin="slc", output="dist", intact=95, method="sqs", ref="reference_no")
 #'
 #' # plot
 #'   plotTS(stages, shading="series", boxes="per", xlim=c(260,0), 
@@ -110,7 +110,7 @@ subsample <- function(dat, q, tax="genus", coll="collection_no", bin="SLC", FUN=
 	
 #	bin <- "slc"
 #	tax<- "genus"
-#	dat <- scleractinia
+#	dat <- corals
 #	q<-40
 #	output<- "arit"
 #	intact<-c(94,95)
@@ -758,7 +758,7 @@ subsampleOXW<-function(binVar, collVar, q, intact=NULL,x=1){
 #'  of SQS this metric is changed to a different method using single occurrence and double occurrence taxa ("alroy"). 
 #'@rdname subsample
 # excludeDominant sets the Alroy's 2nd correction, sets the frequency of the dominant taxon's to 0
-frequencies<-function(dat,bin, tax, coll, ref="occurrence.reference_no", singleton="ref", excludeDominant=TRUE, largestColl=TRUE, fcorr="good"){
+frequencies<-function(dat,bin, tax, coll, ref="reference_no", singleton="ref", excludeDominant=TRUE, largestColl=TRUE, fcorr="good"){
 
 	# the number of occurrences
 		O<-table(dat[,bin])

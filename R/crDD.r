@@ -20,12 +20,12 @@
 #' @param intactBins (num): Vector of those bin identifiers that must be included in the metric calculations, but should not be subsampled. Can be useful for including recent species list, without collection identifiers.
 #' @examples
 #'	# import data
-#'	  data(scleractinia)
+#'	  data(corals)
 #'	  data(stages)
 #'
 #'	# calculate metrics of diversity dynamics
-#'    dd <- divDyn(scleractinia, tax="genus", bin="slc")
-#'	  rarefDD <- crDD(scleractinia, quota=100, iter=10, intactBins=95)
+#'    dd <- divDyn(corals, tax="genus", bin="slc")
+#'	  rarefDD <- crDD(corals, quota=100, iter=10, intactBins=95)
 #'
 #'	# plotting
 #'	  plotTS(stages, shading="series", boxes="per", xlim=52:95, 

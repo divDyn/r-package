@@ -4,9 +4,8 @@
 \alias{sampstat}
 \title{Basic sampling summary for every bin}
 \usage{
-sampstat(dat, tax = "occurrence.genus_name", bin = "slc",
-  coll = "collection_no", ref = "occurrence.reference_no",
-  noNAstart = FALSE)
+sampstat(dat, tax = "genus", bin = "slc", coll = "collection_no",
+  ref = "reference_no", noNAstart = FALSE)
 }
 \arguments{
 \item{dat}{(data.frame): the occurrence dataset.}
@@ -52,11 +51,11 @@ chao1occ: Chao1 extrapolation estimator, based on the the number of single-colle
 chao1ref: Chao1 extrapolation estimator, based on the the number of single-reference and two-reference taxa (occ2).
 }
 \examples{
-data(scleractinia)
+data(corals)
 # slice-specific sampling
-basic<-sampstat(scleractinia, tax="genus", bin="slc")
+basic<-sampstat(corals, tax="genus", bin="slc")
 
 # subsampling diagnostic
- subStats<-subsample(scleractinia, method="cr", tax="genus", FUN=sampstat, bin="slc", q=100,noNAstart=F)
+ subStats<-subsample(corals, method="cr", tax="genus", FUN=sampstat, bin="slc", q=100,noNAstart=F)
 
 }

@@ -26,16 +26,16 @@
 #' @param maxdate (char): optional, the column names of maximum radiometric dates of occurrences.
 #' @param mindate (char): optional, the column names of minimum radiometric dates of occurrences.
 #' @examples
-#'	data(scleractinia)
-#'	fl <- fadLad(scleractinia, tax="genus", bin="slc", maxdate="ma_max", mindate="ma_min")
+#'	data(corals)
+#'	fl <- fadLad(corals, tax="genus", bin="slc", maxdate="max_ma", mindate="min_ma")
 #' @export
 fadLad<-function(dat, tax, bin, maxdate=NULL, mindate=NULL){
 	# for the prototype
-#	dat <- scleractinia
+#	dat <- corals
 #	tax<- "genus"
 #	bin <- "slc"
-#	maxdate <- "ma_max"
-#	mindate <- "ma_min"
+#	maxdate <- "max_ma"
+#	mindate <- "min_ma"
 
 	# defense
 		if(!is.matrix(dat) & !is.data.frame(dat) ) stop("Invalid 'dat' argument.")
@@ -107,8 +107,8 @@ fadLad<-function(dat, tax, bin, maxdate=NULL, mindate=NULL){
 #' @param method (character value): either "forward" or "backward".
 #' 
 #' @examples
-#' data(scleractinia)
-#' surv<-survivors(scleractinia, tax="genus", bin="slc", method="forward")
+#' data(corals)
+#' surv<-survivors(corals, tax="genus", bin="slc", method="forward")
 #' 
 #' # plot
 #' data(stages)

@@ -4,9 +4,8 @@
 \alias{omit}
 \title{Omission of occurrences that belong to poorly sampled taxa}
 \usage{
-omit(dat, tax = "occurrence.genus_name", bin = "bin",
-  coll = "collection_no", ref = "occurrence.reference_no", om = "ref",
-  filterNA = FALSE)
+omit(dat, tax = "genus", bin = "bin", coll = "collection_no",
+  ref = "reference_no", om = "ref", filterNA = FALSE)
 }
 \arguments{
 \item{dat}{(data.frame): Occurrence dataset, with bin, tax and coll as column names.}
@@ -31,20 +30,20 @@ The function returns a logical vector of the rows to be omitted. The function is
 }
 \examples{
 # omit single-reference taxa
-  data(scleractinia)
-  toOmit <- omit(scleractinia, bin="slc", tax="genus", om="ref")
-  dat <- scleractinia[!toOmit,]
+  data(corals)
+  toOmit <- omit(corals, bin="slc", tax="genus", om="ref")
+  dat <- corals[!toOmit,]
 
 # within divDyn
   # plotting
   plotTS(stages, shading="series", boxes="per", xlim=c(260,0), 
     ylab="range-through diversity (genera)", ylim=c(0,230))
   # multiple ref/slice required
-  ddNoSing <- divDyn(scleractinia, tax="genus", bin="slc", om="binref")
+  ddNoSing <- divDyn(corals, tax="genus", bin="slc", om="binref")
   lines(stages$mid, ddNoSing$divRT, lwd=2, col="red")
 
   # with the recent included (NA reference value)
-  ddNoSingRec <- divDyn(scleractinia, tax="genus", bin="slc",
+  ddNoSingRec <- divDyn(corals, tax="genus", bin="slc",
     om="binref", filterNA=TRUE)
   lines(stages$mid, ddNoSingRec$divRT, lwd=2, col="blue")
   

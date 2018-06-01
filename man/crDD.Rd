@@ -35,12 +35,12 @@ The output variables are the same as in the divDyn function. Likely updates: c++
 }
 \examples{
 # import data
-  data(scleractinia)
+  data(corals)
   data(stages)
 
 # calculate metrics of diversity dynamics
-   dd <- divDyn(scleractinia, tax="genus", bin="slc")
-  rarefDD <- crDD(scleractinia, quota=100, iter=10, intactBins=95)
+   dd <- divDyn(corals, tax="genus", bin="slc")
+  rarefDD <- crDD(corals, quota=100, iter=10, intactBins=95)
 
 # plotting
   plotTS(stages, shading="series", boxes="per", xlim=52:95, 

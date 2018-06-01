@@ -25,8 +25,8 @@ so the first row will contain the estimates for the lowest bin number.}
 This function will calculate both forward and backward survivorship probabilities from a given occurrence dataset or FAD-LAD matrix.
 }
 \examples{
-data(scleractinia)
-surv<-survivors(scleractinia, tax="genus", bin="slc", method="forward")
+data(corals)
+surv<-survivors(corals, tax="genus", bin="slc", method="forward")
 
 # plot
 data(stages)

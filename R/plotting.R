@@ -266,6 +266,7 @@ plotTS<-function(tsdat,  boxes, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 #' @param border (character value): the color of the quantile lines
 #' @param col (character value): the color of the quantiles, currently just a single color is allowed.
 #' @param method (character value): The default "symmetric" method will plot the mid quantile range with highest opacity and the shades will be more translucent at the tails of the distributions. The "decrease" method will decrease the opacity with higher quantiles, which can make the plots of bottom-bounded distributions easier to interpret.
+#' @param na.rm (logical value): If set to FALSE, than rows that are missing from the dataset will be plotted as gaps in the shading. If set to TRUE, than these gaps will be skipped. 
 #' @examples
 #'	data(stages)
 #'	plotTS(stages, boxes="per", shading="series", ylim=c(-5,5), ylab=c("normal distributions"))
@@ -276,8 +277,19 @@ plotTS<-function(tsdat,  boxes, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 #'	  randVar <- t(sapply(1:95, FUN=function(x){rlnorm(150, 0,1)}))
 #'	  shades(stages$mid, randVar, col="blue", res=c(0,0.33, 0.66, 1),method="decrease")	 
 #' @export
-shades <- function(x, y, col, res=100, border=NA,interpolate=F, method="symmetric"){
+shades <- function(x, y, col, res=100, border=NA,interpolate=F, method="symmetric",na.rm=FALSE){
 	if(nrow(y)!=length(x)) stop("length of x and y don't match")
+	
+	# omit missing?
+	if(na.rm){
+		logVector<- apply(y, 1, function(a){
+			if(sum(is.na(a))==length(a)) FALSE else TRUE
+		})
+		
+		x<-x[logVector]
+		y<-y[logVector,]
+	}
+	
 	if(length(res)==1){
 		if(res>150) res<-150
 	}else{
@@ -373,7 +385,25 @@ shades <- function(x, y, col, res=100, border=NA,interpolate=F, method="symmetri
 		bSelect[sL$starts[j]:(sL$starts[j]+sL$streaks[j]-1)] <- TRUE
 		
 		xSub<-x[bSelect]
-		resSub<-resolved[,bSelect]
+		resSub<-resolved[,bSelect, drop=FALSE]
+		
+		# in case a single row is subsetted
+		if(ncol(resSub)==1){
+			# the x coordinate
+			actInd<-which(bSelect)
+			xPrev<-x[actInd-1]
+			xNext<-x[actInd+1]
+			
+			xPrev<-xSub-0.2*(xSub-xPrev)
+			xNext<-xSub-0.2*(xSub-xNext)
+			
+			xSub<-c(xPrev, xNext)
+			
+			# double
+			resSub<-cbind(resSub, resSub)
+		
+		
+		}
 		
 		if(method=="symmetric"){
 			for(i in 1:(nrow(resSub)/2)){
@@ -400,13 +430,13 @@ shades <- function(x, y, col, res=100, border=NA,interpolate=F, method="symmetri
 
 #' Plot polygons of counts or proportions 
 #' 
-#' This function plots the changing shares of category in association with an independent variable. 
+#' This function plots the changing shares of categories in association with an independent variable. 
 #' 
-#' This function is useful for displaying the changing proportions of a category as time passess by.
+#' This function is useful for displaying the changing proportions of a category as time progresses.
 #' 
 #' To be added: missing portions are omitted in this version, but should be represented as gaps in the polygons. 
 #' 
-#' @param x (numeric vector): The independent variable through which the proportion is tracked. Identical entries are used to assess, which belong to the set, their values represent the x coordinate over the plot.
+#' @param x (numeric vector): The independent variable through which the proportion is tracked. Identical entries are used to assess which values belong together to a set. Their values represent the x coordinate over the plot.
 #' 
 #' @param b (character or factor): Category designation.
 #' 
@@ -462,7 +492,7 @@ shades <- function(x, y, col, res=100, border=NA,interpolate=F, method="symmetri
 #' 	
 #' # real example
 #'   # the proportion of coral occurrences through time in terms of bathymetry
-#'   data(scleractinia)
+#'   data(corals)
 #'   data(stages)
 #' 
 #'   # time scale plot
@@ -473,7 +503,7 @@ shades <- function(x, y, col, res=100, border=NA,interpolate=F, method="symmetri
 #'   cols <- c("#55555588","#88888888", "#BBBBBB88")
 #'   types <- c("uk", "shal", "deep")
 #'   
-#'   parts(x=stages$mid[scleractinia$slc], b=scleractinia$bath, 
+#'   parts(x=stages$mid[corals$slc], b=corals$bath, 
 #'    ord=types, col=cols, prop=T,border=NA, labs=F)
 #'    
 #'   # legend

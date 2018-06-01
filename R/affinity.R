@@ -14,16 +14,16 @@
 #' as the null model of sampling.
 #'
 #' @examples
-#'	data(scleractinia)
+#'	data(corals)
 #'	# omit values where no occurrence environment entry is present, or where unknown
-#'	fossils<-subset(scleractinia, slc!=95)
+#'	fossils<-subset(corals, slc!=95)
 #'	fossilEnv<-subset(fossils, bath!="uk")
 #'	# calculate affinities
 #'	  aff<-affinity(fossilEnv, env="bath", tax="genus", bin="slc", alpha=1)
 #'	
 #' @export
-affinity<-function(dat, env, tax="occurrence.genus_name",  bin="SLC", coll="collection_no", alpha=1,reldat=NULL){
-#	dat<-scleractinia[scleractinia$slc!=95,]
+affinity<-function(dat, env, tax="genus",  bin="SLC", coll="collection_no", alpha=1,reldat=NULL){
+#	dat<-corals[corals$slc!=95,]
 #	dat<-dat[dat$envnow!="uk",]
 #	env<- "envnow"
 #	tax<-"genus"

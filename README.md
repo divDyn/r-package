@@ -1,26 +1,41 @@
 # divDyn
 R package for analyzing diversity dynamics from fossil occurrence data
 
-The vignette is getting written. Until then, the features of the package are demonstrated with the function examples (e.g. check out ?divDyn, ?subsample and ?affinity).  
+The vignette is getting written. Until then, the features of the package are demonstrated with the function examples (check out ?divDyn, ?subsample and ?affinity).  
 
 As the package is still getting developed, if you have any requirements or recommendations on what to add (or if you find a mistake), please contact me at adam.kocsis@fau.de.
 
 
-## installing and update
+## Installing and update
 As the package now uses compiled code to make things run faster, there are two ways to install.
-1. I have built binaries for Windows x86 and x64*. If you have one of these architectures, you can install the package with:
-`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/divDyn_0.2.11.zip", repos=NULL)`
+1. The first option is to use the binaries I have built for Windows x86 and x64*. If you have one of these architectures, you can install the package with:
+`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/divDyn_0.3.0.zip", repos=NULL)`
 
 You can acess earlier versions by changing the version number appropriately.
 
-2. You have to compile the code for yourself. To do this:
+2. The second option is to compile the code for yourself. To do this:
 - Install a compiler. For Windows, this would be included in Rtools (https://cran.r-project.org/bin/windows/Rtools/).
 - Make sure that the 'devtools' package is installed
 - Run `devtools::install_github("adamkocsis/divDyn")`
 
-* if you use either a Mac or Linux, and point no. 2 doesn't work for you for some reason, then contact me  and I will compile a binary for you.
+ * if you use either a Mac or Linux, and point no. 2 doesn't work for you for some reason, then contact me  and I will compile a binary for you.
 
 # Change log
+## [0.3.0] - 2018.06.01
+### Added
+- continuous time entry is now possible for the divDyn() function. (does not yet work with subsampling!!!!)
+- the breaks argument to the divDyn() function
+
+### Changed
+- the examples and defaults match the current download from the Paleobiology Database
+- the previous 'scleractinia' example dataset was renamed to 'corals' for the sake of simplicity
+
+## [0.2.12] - 2018.05.17
+### Added
+- na.rm argument for the shades() function to omit gaps in plotting of the time series
+- bug fix for the shades() function, single rows bounded by rows of NAs (gaps) from above and below do not crash the function anymore
+
+
 ## [0.2.11] - 2018.05.17
 ### Added
 - bug fix for the plotTS() function, enables log scaling of y axis with plot.args=list(log="y")

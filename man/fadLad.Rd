@@ -40,6 +40,6 @@ DUR: optionally, the duration of taxa in numeric ages. It is given for single-in
 nThrough: the number of through-ranging taxa
 }
 \examples{
-data(scleractinia)
-fl <- fadLad(scleractinia, tax="genus", bin="slc", maxdate="ma_max", mindate="ma_min")
+data(corals)
+fl <- fadLad(corals, tax="genus", bin="slc", maxdate="max_ma", mindate="min_ma")
 }

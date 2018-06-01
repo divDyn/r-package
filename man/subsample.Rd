@@ -18,9 +18,8 @@ subsampleCR(binVar, q, intact = NULL)
 
 subsampleOXW(binVar, collVar, q, intact = NULL, x = 1)
 
-frequencies(dat, bin, tax, coll, ref = "occurrence.reference_no",
-  singleton = "ref", excludeDominant = TRUE, largestColl = TRUE,
-  fcorr = "good")
+frequencies(dat, bin, tax, coll, ref = "reference_no", singleton = "ref",
+  excludeDominant = TRUE, largestColl = TRUE, fcorr = "good")
 
 subsampleSQSexact(binVar, q, taxVar, collVar, refVar, byList = FALSE,
   intact = NULL, singleton = "ref")
@@ -94,11 +93,11 @@ The implementation of SQS has more variables than necessary, as I intended to re
 }
 \examples{
 
-data(scleractinia)
+data(corals)
 data(stages)
 # Example 1-calculate metrics of diversity dynamics
-  dd <- divDyn(scleractinia, tax="genus", bin="slc")
-  rarefDD<-subsample(scleractinia,iter=50, q=50,
+  dd <- divDyn(corals, tax="genus", bin="slc")
+  rarefDD<-subsample(corals,iter=50, q=50,
   tax="genus", bin="slc", output="dist", intact=95)
 	
 # plotting
@@ -110,7 +109,7 @@ data(stages)
     col=c("black", "blue"), lwd=c(2,2), bg="white")
   
   # compare with previous function (is obsolete)
-  rarefDD <- crDD(scleractinia, quota=50, iter=100, intactBins=95)
+  rarefDD <- crDD(corals, quota=50, iter=100, intactBins=95)
   lines(stages$mid,rarefDD$divRT, col="red", lwd=2)
   
   
@@ -123,12 +122,12 @@ sib<-function(dat, bin, tax){
   })
   return(calc[as.character(stages$num)])
 }
-sibDiv<-sib(scleractinia, bin="slc", tax="genus")
+sibDiv<-sib(corals, bin="slc", tax="genus")
 
 # calculate it with subsampling
-rarefSIB<-subsample(scleractinia,iter=50, q=50,
+rarefSIB<-subsample(corals,iter=50, q=50,
   tax="genus", bin="slc", output="arit", intact=95, FUN=sib)
-rarefDD<-subsample(scleractinia,iter=50, q=50,
+rarefDD<-subsample(corals,iter=50, q=50,
   tax="genus", bin="slc", output="arit", intact=95)
 
 # plot
@@ -142,13 +141,13 @@ lines(stages$mid, rarefSIB, lwd=2, col="blue")
 # Example 3 - different subsampling methods with default function (divDyn)
 # compare different subsampling types
   # classical rarefaction
-  cr<-subsample(scleractinia,iter=50, q=20,tax="genus", bin="slc", output="dist", intact=95)
+  cr<-subsample(corals,iter=50, q=20,tax="genus", bin="slc", output="dist", intact=95)
   # by-list subsampling (unweighted) - 3 collections
-  UW<-subsample(scleractinia,iter=50, q=3,tax="genus", bin="slc", output="dist", intact=95, method="oxw", x=0)
+  UW<-subsample(corals,iter=50, q=3,tax="genus", bin="slc", output="dist", intact=95, method="oxw", x=0)
   # occurrence weighted by list subsampling
-  OW<-subsample(scleractinia,iter=50, q=20,tax="genus", bin="slc", output="dist", intact=95, method="oxw", x=1)
+  OW<-subsample(corals,iter=50, q=20,tax="genus", bin="slc", output="dist", intact=95, method="oxw", x=1)
  
-  SQS<-subsample(scleractinia,iter=50, q=0.4,tax="genus", bin="slc", output="dist", intact=95, method="sqs", ref="occurrence.reference_no")
+  SQS<-subsample(corals,iter=50, q=0.4,tax="genus", bin="slc", output="dist", intact=95, method="sqs", ref="reference_no")
 
 # plot
   plotTS(stages, shading="series", boxes="per", xlim=c(260,0), 
