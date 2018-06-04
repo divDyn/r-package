@@ -21,7 +21,7 @@ You can acess earlier versions by changing the version number appropriately.
  '*' if you use either a Mac or Linux, and point no. 2 doesn't work for you for some reason, then contact me  and I will compile a binary for you.
 
 # Change log
-## [0.3.1] - 2018.06.02
+## [0.3.1] - 2018.06.04
 ### Added
 - method argument for the affinity() function, allows implementation of a simple majority rule (method="majority") or the Bayesian approach of Simpson and Harnik (2009, method="bayesian")
 
