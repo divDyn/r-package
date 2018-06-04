@@ -4,8 +4,8 @@
 \alias{affinity}
 \title{Calculate environmental affinities of taxa}
 \usage{
-affinity(dat, env, tax = "genus", bin = "SLC", coll = "collection_no",
-  alpha = 1, reldat = NULL)
+affinity(dat, env, tax = "genus", bin = "slc", coll = "collection_no",
+  method = "binom", alpha = 1, reldat = NULL)
 }
 \arguments{
 \item{dat}{(data.frame): the occurrence dataset containing the taxa with unknown environmental affinities.}
@@ -18,6 +18,8 @@ affinity(dat, env, tax = "genus", bin = "SLC", coll = "collection_no",
 
 \item{coll}{(char): the column name of collection numbers.}
 
+\item{method}{(character): The method used for affinity calculation. Can be either "binom", "bayesian" or "majority".}
+
 \item{alpha}{(num): the alpha value of the binomial tests. By default (alpha=1) binomial testing is off.}
 
 \item{reldat}{(data.frame): database with the same structure as 'dat'. Typically 'dat' is the subset of 'reldat'. If given, the occurrence distribution of 'reldat' is used 
@@ -27,7 +29,15 @@ as the null model of sampling.}
 This function will return the environmental affinities of taxa, given the sampling conditions implied by the supplied dataset.
 }
 \details{
-Sampling patterns have an overprinting effect on the frequency of taxon occurrences in different environments. The environmental affinity (sensu Kiessling and Aberhan, 2007 - Paleobiology 33, 414-434 and Kiessling and Kocsis, 2015 - Paleobiology 41, 402-414) expresses whether the taxa are more likely to occur in an environment, given the sampling patterns of the dataset at hand. NA output indicates that the environmental variable
+Sampling patterns have an overprinting effect on the frequency of taxon occurrences in different environments. The environmental affinity (sensu Kiessling and Aberhan, 2007 - Paleobiology 33, 414-434 and Kiessling and Kocsis, 2015 - Paleobiology 41, 402-414) expresses whether the taxa are more likely to occur in an environment, given the sampling patterns of the dataset at hand. NA output indicates that the environmental affinity is equivocal based on the selected method.
+
+The following methods are implemented:
+
+'majority': environmental affinity will be assigned based on the sampled proportions, without assuming a equal sampling probabilities in the two environments (more occurrence in env. 1 means that taxon prefers env. 1)
+
+'binom': The proportion of occurrences of a taxon in environment 1 and environment 2 will be compared to a null model which is based on the distribution of all occurrences from the stratigraphic range of the taxon. The alpha value indicates the significance of the binomial tests.
+
+'bayesian': The same as 'binom', except that instead of a binomial test, Bayesian inference is used (Simpson and Harnik, 2009). Note: using choose(n, k)*p^k*(1-p)^(n-k) to calculate the conditional probability P(E|H1) (as it was published in Simpson and Harnik, 2009) did not produce a meaningful output. This is likely the case as this formula calculates the probability of the exact event of sampling k success out of n trials, which decreases systematically as n increases. However, using the CDF (pbinom(n, k, p)) to estimate P(E|H1) produces plausible final output. This corresponds to the event that given H1, out of n trials, k is the maximum number of env1 occurrences given its sampling conditions characterized by p (total dataset). The function is implemented thusly.
 }
 \examples{
 data(corals)
@@ -35,6 +45,7 @@ data(corals)
 fossils<-subset(corals, slc!=95)
 fossilEnv<-subset(fossils, bath!="uk")
 # calculate affinities
-  aff<-affinity(fossilEnv, env="bath", tax="genus", bin="slc", alpha=1)
+  aff1<-affinity(fossilEnv, env="bath", tax="genus", bin="slc", alpha=1)
+   aff2<-affinity(fossilEnv, env="bath", tax="genus", bin="slc", method="bayesian")
 
 }

@@ -21,6 +21,13 @@ You can acess earlier versions by changing the version number appropriately.
  '*' if you use either a Mac or Linux, and point no. 2 doesn't work for you for some reason, then contact me  and I will compile a binary for you.
 
 # Change log
+## [0.3.1] - 2018.06.02
+### Added
+- method argument for the affinity() function, allows implementation of a simple majority rule (method="majority") or the Bayesian approach of Simpson and Harnik (2009, method="bayesian")
+
+### Changed
+- the affinity() function was also completely reprogrammed
+
 ## [0.3.0] - 2018.06.01
 ### Added
 - continuous time entry is now possible for the divDyn() function. (does not yet work with subsampling!!!!)

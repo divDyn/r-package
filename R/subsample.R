@@ -58,7 +58,7 @@
 #'   
 #'   
 #' 
-#' # Example 2-SIB diversity (§correct the indexing!)
+#' # Example 2-SIB diversity 
 #' # draft a simple function to calculate SIB diversity
 #' sib<-function(dat, bin, tax){
 #'   calc<-tapply(INDEX=dat[,bin], X=dat[,tax], function(y){
