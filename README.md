@@ -9,6 +9,7 @@ As the package is still getting developed, if you have any requirements or recom
 ## Installing and update
 As the package now uses compiled code to make things run faster, there are two ways to install.
 1. The first option is to use the binaries I have built. 
+
 If you have a windows computer, you can install the package with:
 `install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Win_x64_x86/divDyn_0.3.1.zip", repos=NULL)`
 
