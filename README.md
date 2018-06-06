@@ -8,8 +8,13 @@ As the package is still getting developed, if you have any requirements or recom
 
 ## Installing and update
 As the package now uses compiled code to make things run faster, there are two ways to install.
-1. The first option is to use the binaries I have built for Windows x86 and x64*. If you have one of these architectures, you can install the package with:
-`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/divDyn_0.3.1.zip", repos=NULL)`
+1. The first option is to use the binaries I have built. If you have a windows computer, you can install the package with:
+`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Win_x64_x86/divDyn_0.3.1.zip", repos=NULL)`
+
+If you have a Mac running OS X, then use the following link:
+`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Mac_OSX/divDyn_0.3.1.tgz", repos=NULL)`
+
+If you have linux computer you probably know how to solve these problems, please go to option no. 2. 
 
 You can acess earlier versions by changing the version number appropriately.
 
