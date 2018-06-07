@@ -16,7 +16,7 @@ If you have a windows computer, you can install the package with the following R
 If you have a Mac running OS X, then use the following link:
 `install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Mac_OSX/divDyn_0.3.1.tgz", repos=NULL)`
 
-I am now aware that the package won't run on R 3.5.x as the internals are different from the 3.4.x versions that I compiled these packages with. If you have a brand new R, please downgrade, or perhaps try option 2. 
+I am now aware that the binary packages won't install on R 3.5.x as the internals are different from the 3.4.x versions that I compiled these packages with. If you have a brand new R, please downgrade, or perhaps try option 2. 
 
 If you have Linux computer you probably know how to solve these problems. The sources of different versions are in the /_archive folder. Otherwise you can try option no. 2. 
 
