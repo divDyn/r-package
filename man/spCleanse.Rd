@@ -7,18 +7,18 @@
 spCleanse(vec, mode = "simple", collapse = "_")
 }
 \arguments{
-\item{vec}{Character vector, the vector containing species names with qualifiers of open taxonomy.}
+\item{vec}{\code{(character)}: the vector containing species names with qualifiers of open taxonomy.}
 
-\item{mode}{Character value, either "simple" or "debug". "simple" will return the cleaned species name vector, "debug" returns a data table that allows one by one checking.}
+\item{mode}{\code{(character)}: either \code{"simple"} or \code{"debug"}. \code{"simple"} will return the cleaned species name vector, \code{"debug"} returns a data table that allows one by one checking.}
 
-\item{collapse}{Character value, this argument will be passed to the paste function's argument of the same name. The character value to be inserted between the genus and species names.}
+\item{collapse}{\code{(character)}: this argument will be passed to the paste function's argument of the same name. The character value to be inserted between the genus and species names.}
 }
 \description{
-This function will get rid of
+This function will take a vector of binomial names with various qualifiers of open nomenclatures, and removes them form the vector entries. Only the the genus and species names will remain.
 }
 \details{
 This version will not keep subgenera, and will assign species to the base genus. The following qualifiers will be omitted:
-"n.", "sp.", "?", "gen.", "aff.", "cf.", "ex", "gr.", "subgen.", "spp" and informal species designated with letters. Entries with "informal" and "indet." in them will also be invalidated.
+\emph{"n."}, \emph{"sp."}, \emph{"?"}, \emph{"gen."}, \emph{"aff."}, \emph{"cf."}, \emph{"ex gr."}, \emph{"subgen."}, \emph{"spp"} and informal species designated with letters. Entries with \emph{"informal"} and \emph{"indet."} in them will also be invalidated.
 }
 \examples{
 examp <- c("Genus cf. species", "Genus spp.", "Family indet.", "Mygenus yourspecies", "Okgenus ? questionsp")

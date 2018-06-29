@@ -1,8 +1,8 @@
 Package: divDyn
 Type: Package
 Title: Calculating metrics of diversity dynamics using occurrence data
-Version: 0.3.1
-Author: Adam T. Kocsis, Wolfgang Kiessling
+Version: 0.4.0
+Author: Adam T. Kocsis, Carl J. Reddin, John Alroy, Wolfgang Kiessling
 Maintainer: Adam T. Kocsis <adamkocsis@fau.de>
 Description: The package implements functions to describe sampling and diversity dynamics of fossil occurrence datasets (e.g. from the Paleobiology Database).
 License: Creative Commons BY 4.0
@@ -14,3 +14,7 @@ Imports: Rcpp
 NeedsCompilation: yes
 RoxygenNote: 6.0.1
 LinkingTo: Rcpp
+VignetteBuilder: knitr
+Suggests:
+    knitr,
+    rmarkdown

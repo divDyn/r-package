@@ -5,18 +5,23 @@
 \title{Basic sampling summary for every bin}
 \usage{
 sampstat(dat, tax = "genus", bin = "slc", coll = "collection_no",
-  ref = "reference_no", noNAstart = FALSE)
+  ref = "reference_no", total = FALSE, noNAstart = FALSE,
+  duplicates = NULL)
 }
 \arguments{
-\item{dat}{(data.frame): the occurrence dataset.}
+\item{dat}{\code{(data.frame)}: the occurrence dataset.}
 
-\item{tax}{(char): the column name of taxon names.}
+\item{tax}{\code{(character)}: the column name of taxon names.}
 
-\item{bin}{(char): the column name of bin names.}
+\item{bin}{\code{(character)}: the column name of bin names.}
 
-\item{coll}{(char): the column name of collection numbers.}
+\item{coll}{\code{(character)}: the column name of collection numbers.}
 
-\item{ref}{(char): the column name of reference numbers.}
+\item{ref}{\code{(character)}: the column name of reference numbers.}
+
+\item{total}{\code{(logical)}:  If \code{FALSE}, then the function will provide sampling statistics for the individual bins. \code{TRUE} on the other hand, will provide them for the total dataset.}
+
+\item{duplicates}{\code{(logical)}: The function will check whether there are duplicate occurrences (multiple species/genera). When set to \code{NULL}, nothing will happen, but the function will notify you if duplicates are present. If set to \code{TRUE}, the function will not do anything with these, if set to \code{FALSE}, the duplicates will be omitted.}
 }
 \description{
 This function will return the basic sampling summaries of a dataset
@@ -24,31 +29,47 @@ This function will return the basic sampling summaries of a dataset
 \details{
 A number of sampling related variables are calculated with the function.
 
-occs: The number of occurrences in each time bin.
+By setting \code{total} to \code{FALSE} (default), the following results are output:
 
-colls: The number of collections in each time bin.
+\code{occs}: The number of occurrences in each time bin.
 
-refs: The number of references in each time bin.
+\code{colls}: The number of collections in each time bin.
 
-SIBs: The number of Sampled-In-Bin taxa in each time bin.
+\code{refs}: The number of references in each time bin.
 
-occ1: The number of taxa in each time bin, that occur in only 1 collection.
+\code{SIBs}: The number of Sampled-In-Bin taxa in each time bin.
 
-ref1: The number of taxa in each time bin, that occur in only 1 reference.
+\code{occ1}: The number of taxa in each time bin, that occur in only 1 collection.
 
-occ2: The number of taxa in each time bin, that occur in exactly 2 collections.
+\code{ref1}: The number of taxa in each time bin, that occur in only 1 reference.
 
-ref2: The number of taxa in each time bin, that occur in exactly 2 references.
+\code{occ2}: The number of taxa in each time bin, that occur in exactly 2 collections.
 
-dom: Dominance, the proportion of occurrences in the time bin that belong to the most frequent taxon.
+\code{ref2}: The number of taxa in each time bin, that occur in exactly 2 references.
 
-u: Good's u, coverage estimator based on the number of single-collection taxa (occ1).
+\code{dom}: Dominance, the proportion of occurrences in the time bin that belong to the most frequent taxon.
 
-uPrime: Good's u, coverage estimator based on the number of single-reference taxa (ref1).
+\code{u}: Good's u, coverage estimator based on the number of single-collection taxa (occ1).
 
-chao1occ: Chao1 extrapolation estimator, based on the the number of single-collection and two-collection taxa (occ1).
+\code{uPrime}: Good's u, coverage estimator based on the number of single-reference taxa (ref1).
 
-chao1ref: Chao1 extrapolation estimator, based on the the number of single-reference and two-reference taxa (occ2).
+\code{chao1occ}: Chao1 extrapolation estimator, based on the the number of single-collection and two-collection taxa (occ1).
+
+\code{chao1ref}: Chao1 extrapolation estimator, based on the the number of single-reference and two-reference taxa (occ2).
+
+Setting the \code{total} to \code{TRUE} will lead to the following results
+
+\code{bins}: The total number of bins sampled.
+
+\code{occs}: The total number of sampled occurrences.
+
+\code{colls}: The total number of sampled collections.
+
+\code{refs}:  The total number of sampled references.
+
+\code{taxa}:  The total number of sampled taxa.
+
+\code{gappiness}: The proportion of sampling gaps in the ranges of the taxa §.
 }
 \examples{
 data(corals)

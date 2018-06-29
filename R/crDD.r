@@ -1,4 +1,4 @@
-#' Diversity dynamics with classical rarefaction (obsolete - will be omitted in version 0.4)
+#' Diversity dynamics with classical rarefaction (obsolete - will be omitted in version 0.5)
 #' 
 #' This script calculates time series of diversity dynamics with iterated subsampling in every time slice.
 #' 

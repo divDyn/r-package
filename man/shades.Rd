@@ -4,35 +4,37 @@
 \alias{shades}
 \title{Quantile plot of time series}
 \usage{
-shades(x, y, col, res = 100, border = NA, interpolate = F,
+shades(x, y, col, res = 10, border = NA, interpolate = F,
   method = "symmetric", na.rm = FALSE)
 }
 \arguments{
-\item{x}{(numeric): The x coordinates.}
+\item{x}{\code{(numeric)}: The x coordinates.}
 
-\item{y}{(numeric matrix): The series of distributions to be plotted. Every row represents a distribution of values. The number of rows must equal to the length of x.}
+\item{y}{\code{(numeric matrix)}: The series of distributions to be plotted. Every row represents a distribution of values. The number of rows must equal to the length of \code{x}.}
 
-\item{col}{(character value): the color of the quantiles, currently just a single color is allowed.}
+\item{col}{\code{(character)}: The color of the quantiles, currently just a single color is allowed.}
 
-\item{res}{(numeric value): If a single value is entered, than it represents the number of quantiles to be shown (coerced to 150, if higher is entered). If it is vector of values, it will be interpreted as the vector of quantiles to be shown. If method="symmetric", only an odd number of quantiles are plotted.}
+\item{res}{\code{(numeric)}: If a single value is entered, than this argument represents the number of quantiles to be shown (coerced to 150, if higher is entered). If it is vector of values, it will be interpreted as the vector of quantiles to be shown. If \code{method="symmetric"}, only an odd number of quantiles are plotted.}
 
-\item{border}{(character value): the color of the quantile lines}
+\item{border}{\code{(character)}: The color of the quantile lines. A single value, by default, no lines are drawn (\code{border=NA}).}
 
-\item{interpolate}{(logical value): In case the symmetric method is chosen, the series of quantile values can be interpolated with a LOESS function.}
+\item{interpolate}{\code{(logical)}: In case the symmetric method is chosen, the series of quantile values can be interpolated with a LOESS function.}
 
-\item{method}{(character value): The default "symmetric" method will plot the mid quantile range with highest opacity and the shades will be more translucent at the tails of the distributions. The "decrease" method will decrease the opacity with higher quantiles, which can make the plots of bottom-bounded distributions easier to interpret.}
+\item{method}{\code{(character)}: The default \code{"symmetric"} method will plot the mid quantile range with highest opacity and the shades will be more translucent at the tails of the distributions. The \code{"decrease"} method will decrease the opacity with higher quantiles, which can make more sense for bottom-bounded distributions (e.g. exponential).}
 
-\item{na.rm}{(logical value): If set to FALSE, than rows that are missing from the dataset will be plotted as gaps in the shading. If set to TRUE, than these gaps will be skipped.}
+\item{na.rm}{\code{(logical)}: If set to \code{FALSE}, than rows that are missing from the dataset will be plotted as gaps in the shading. If set to \code{TRUE}, than these gaps will be skipped.}
 }
 \description{
-This intermediate-level function will plot a time series with the quantiles shown as shades (using alpha values) around the central tendency.
+This intermediate-level function will plot a time series with the quantiles shown with transparency values.
 }
 \examples{
+# some random values accross the Phanerozoic
 data(stages)
 plotTS(stages, boxes="per", shading="series", ylim=c(-5,5), ylab=c("normal distributions"))
   randVar <- t(sapply(1:95, FUN=function(x){rnorm(150, 0,1)}))
-  shades(stages$mid, randVar, col="blue", res=20,method="symmetric")	  
+  shades(stages$mid, randVar, col="blue", res=10,method="symmetric")
   
+# a bottom-bounded distribution (log normal)
 plotTS(stages, boxes="per", shading="series", ylim=c(0,30), ylab="log-normal distributions")
   randVar <- t(sapply(1:95, FUN=function(x){rlnorm(150, 0,1)}))
   shades(stages$mid, randVar, col="blue", res=c(0,0.33, 0.66, 1),method="decrease")	 

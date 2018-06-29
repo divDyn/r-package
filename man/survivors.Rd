@@ -2,27 +2,35 @@
 % Please edit documentation in R/fadLad.r
 \name{survivors}
 \alias{survivors}
-\title{Estimation of survivorship probabilities}
+\title{Proportions of survivorship}
 \usage{
 survivors(dat, tax = "genus", bin = "slc", method = "forward",
   noNAStart = FALSE, fl = NULL)
 }
 \arguments{
-\item{dat}{(data.frame): the data frame containing PBDB occurrences.}
+\item{dat}{\code{(data.frame)} The data frame containing fossil occurrences.}
 
-\item{tax}{(char): variable  name of the occurring taxa (variable type: factor) - such as "occurrence.genus_name"}
+\item{tax}{\code{(character)} The variable  name of the occurring taxa (variable type: \code{factor} or \code{character}).}
 
-\item{bin}{(char): variable name of the time slice numbers of the particular occurrences (variable type: int)- such as "slc" or whatever. Bin numbers should be in ascending order,can contain NA's, it can start from a number other than 1 and must not start with 0.}
+\item{bin}{\code{(character)} The variable name of the time slice numbers of the particular occurrences (variable type: \code{numeric}). Bin numbers should be in ascending order,can contain \code{NA}s, it can start from a number other than 1 and must not start with 0.}
 
-\item{method}{(character value): either "forward" or "backward".}
+\item{method}{\code{(character)} Either \code{"forward"} or \code{"backward"}.}
 
-\item{noNAStart}{(bool): useful when the dataset does not start from bin No. 1. Then noNAStart=TRUE will cut the first part of the resulting table, 
+\item{noNAStart}{\code{(logical)} Useful when the dataset does not start from bin \code{1}. Then \code{noNAStart=TRUE} will cut the first part of the resulting table, 
 so the first row will contain the estimates for the lowest bin number.}
 
-\item{fl}{(matrix or data.frame). If so desired, the function can be run on an FAD-LAD dataset. (fadLad)}
+\item{fl}{\code{(matrix} or \code{data.frame}). If so desired, the function can be run on an FAD-LAD dataset, output by the \code{\link{fadLad}} function.}
 }
 \description{
-This function will calculate both forward and backward survivorship probabilities from a given occurrence dataset or FAD-LAD matrix.
+This function will calculate both forward and backward survivorship proportions from a given occurrence dataset or FAD-LAD matrix.
+}
+\details{
+Proportions of survivorship are great tools to visualize changes in the composition of a group over time (Raup, 1978). The curves show how a once coexisting set of taxa, called a cohort, looses its participants (forward survivorship) as time progress, or gains its elements as time is analyzed backwards.
+Each value corresponds to a cohort in a bin (\emph{a}) and one other bin (\emph{b}). The value expresses what proportion of the analyzed cohort (present together in bin \emph{a}) is present in bin \emph{b}.
+
+References:
+
+Raup, D. M. (1978). Cohort analysis of generic survivorship. Paleobiology, 4(1), 1-15.
 }
 \examples{
 data(corals)

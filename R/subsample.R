@@ -1,39 +1,49 @@
 #' Serial subsampling wrapper function
 #' 
-#' The function will take a desired function that takes an occurrence dataset as an argument, and reruns it iteratively on its subsets. 
+#' The function will take a desired function that has an occurrence dataset as an argument, and reruns it iteratively on the subsets of the dataset. 
 #' 
-#' The procedure of 'subsampling' or 'sampling standarization' has to be applied in cases 
-#' In paleontological questions... 
+#'
+#'
+#' Although the help file lists some functions, the only interface for the procedures is the \code{subsample} function that serves as a framework for additional functions. All user input happens with this function and only it is exported to the package namespace. Currently the Classical Rarefaction (\code{"cr"}, Raup, 1975), the occurrence weighted by-list subsampling (\code{"oxw"}, Alroy et al., 2001) and the Shareholder Quorum Subsampling methods are implemented (\code{"sqs"}, Alroy, 2010).
+#'
+#' For a detailed treatment on what the function does, please see the vignette ('Handout to the R package 'divDyn' v0.4.0 for diversity dynamics from fossil occurrence data').
+#'
+#' The subsampleXYZ functions produce a single trial result by returning the row indices of the original datasets.
+#' The CR and OxW types call the \code{subsampleCR}, \code{subsampleOXW} internally. SQS has two different implementations, the \code{"exact"} and \code{"inexact"} approach (Alroy, 2014). The \code{"inexact"} solution is set to be the default method, as it is computationally less demanding. 
+#' The \code{"inexact"} method calls the \code{frequencies} and the \code{subsampleSQSinexact} functions. The first calculates frequencies for each taxon and each bin, the second performs a single subsampling trial. The \code{"exact"} implementation calls the \code{subsampleSQSexact} internal function to perform the trials. You can study the source codes of these functions  at \url{http://www.github.org/adamkocsis/divDyn/R/} in the subsample.R file.
 #' 
-#' The function is used to test whether a specific statement holds when sampling standardization is applied. The procedure calculates the variables in question given a certain sampling standardization and routine and level.
-#' The implementation of SQS has more variables than necessary, as I intended to reproduce the work of Alroy, which was a continuous process. This method will be simplified in the future after explicit simulation trials.
+#' \strong{References:}
+#'
+#' Alroy, J., Marshall, C. R., Bambach, R. K., Bezusko, K., Foote, M., Fürsich, F. T., … Webber, A. (2001). Effects of sampling standardization on estimates of Phanerozoic marine diversification. Proceedings of the National Academy of Science, 98(11), 6261-6266.
 #' 
+#' Alroy, J. (2010). The Shifting Balance of Diversity Among Major Marine Animal Groups. Science, 329, 1191-1194. https://doi.org/10.1126/science.1189910
+#'
+#' Raup, D. M. (1975). Taxonomic Diversity Estimation Using Rarefaction. Paleobiology, 1, 333-342. https: //doi.org/10.2307/2400135
 #' 
-#' @param q (numeric value): Subsampling level argument (mandatory). Depends on the subsampling function, it is the number of occurrences for "cr"
+#' @param q (\code{numeric)}: Subsampling level argument (mandatory). Depends on the subsampling function, it is the number of occurrences for \code{"cr"}, and the number of desired occurrences to the power of \code{x} for O^x^W. It is also the quorum of the SQS method.
 #' 
-#' @param dat (data.frame): Occurrence dataset, with bin, tax and coll as column names.
+#' @param dat (\code{data.frame}): Occurrence dataset, with \code{bin}, \code{tax} and \code{coll} as column names.
 #' 
-#' @param iter (numeric value): The number of iterations to be executed.
+#' @param iter (\code{numeric}): The number of iterations to be executed.
 #' 
-#' @param bin (character value): The name of the subsetting variable (has to be integer). For time series, this is the time-slice variable. If set to NULL, the function performs unbinned subsampling.
+#' @param bin (\code{character}): The name of the subsetting variable (has to be integer). For time series, this is the time-slice variable. 
 #' 
-#' @param tax (character value): The name of the taxon variable.
+#' @param tax (\code{character}): The name of the taxon variable.
 #' 
-#' @param useFailed (logical): If the interval does not reach the subsampling quota, should the data be used? 
-#' @param method (character value): The type of subsampling to be implemented. By default this is classical rarefaction ("cr"). "oxw" stands for occurrence weighted by list subsampling. If set to "sqs", the program will execute the shareholder quorum subsampling algorithm as it was suggested by Alroy (2010).
+#' @param useFailed (\code{logical}): If the bin does not reach the subsampling quota, should the bin be used? 
+#' @param type (\code{character}): The type of subsampling to be implemented. By default this is classical rarefaction (\code{"cr"}). (\code{"oxw"}) stands for occurrence weighted by-list subsampling. If set to (\code{"sqs"}), the program will execute the shareholder quorum subsampling algorithm as it was suggested by Alroy (2010).
 #' 
-#' @param FUN The function to be iteratively executed on the results of the subsampling trials. If set to NULL, no function will be executed, and the subsampled datasets will be returned as a list. By default set to the divDyn() function. The function must have an argument called 'dat', that represents the dataset resulting from a subsampling trial (or the entire dataset). Arguments of the subsample() function call will be searched for potential arguments of this function, which means that already provided variables (e.g. 'bin' and 'tax') will also be used. You can also provide additional arguments (similarly to the apply iterator). Functions that allow arguments to pass through (that have argument '...') are not allowed.
+#' @param FUN (\code{function}): The function to be iteratively executed on the results of the subsampling trials. If set to \code{NULL}, no function will be executed, and the subsampled datasets will be returned as a \code{list}. By default set to the \code{\link{divDyn}} function. The function must have an argument called \code{dat}, that represents the dataset resulting from a subsampling trial (or the entire dataset). Arguments of the \code{subsample} function call will be searched for potential arguments of this function, which means that already provided variables (e.g. \code{bin} and \code{tax}) will also be used. You can also provide additional arguments (similarly to the \code{\link[base]{apply}} iterator). Functions that allow arguments to pass through (that have argument '...') are not allowed, as well as functions that have the same arguments as \code{subsample} but would require different values.
 #' 
-#' @param output (character value): If the function output are vectors or matrices, the 'arit' and 'geom' values will trigger simple averaging with arithmetic or geometric means. If the function output of a single trial is again a vector or a matrix, setting the output to 'dist' will return the calculated results of every trial, organized in a list of independent variables (e.g. if the function output is value, the return will contain a list vectors, if it is a vector, the output will be a list of vectors, if the function output is a data.frame, the output will be a list of matrices). If output="list", the structure of the original function output will be retained, and the results of the individual trials will be concatenated to a list.
+#' @param output (\code{character}): If the function output are vectors or matrices, the \code{"arit"} and \code{"geom"} values will trigger simple averaging with arithmetic or geometric means. If the function output of a single trial is again a \code{vector} or a \code{matrix}, setting the output to \code{"dist"} will return the calculated results of every trial, organized in a \code{list} of independent variables (e.g. if the function output is value, the return will contain a single \code{vector}, if it is a \code{vector}, the output will be a list of \code{vector}s, if the function output is a \code{data.frame}, the output will be a \code{list} of \code{matrix} class objects). If \code{output="list"}, the structure of the original function output will be retained, and the results of the individual trials will be concatenated to a \code{list}.
 #' 
-#' @param intact (numeric vector): The bins, which will not be subsampled but will be added to the subsampling trials. Negative values will be treated as indications on which bins to omit. If the number of occurrences does not reach the subsampling quota, by default it will not be represented in the subsampling trials. You can force their inclusion with the intact argument.
+#' @param intact (\code{numeric}): The bins, which will not be subsampled but will be added to the subsampling trials. Negative values will be treated as indications on which bins to omit. If the number of occurrences does not reach the subsampling quota, by default it will not be represented in the subsampling trials. You can force their inclusion with the \code{intact} argument.
 #' 
-#' @param implement (character value): Either "lapply", "for" or "foreach". The iterator function of the subsampling trials. Use "lapply" for speed, but this may result in memory issues. Currently only the "for" implementation is finished.
+#' @param duplicates (\code{logical} ): Toggles whether multiple entries from the same taxon (\code{"tax"}) and collection (\code{"coll"}) variables should be omitted. Useful for omitting occurrences of multiple species-level occurrences of the same genus. It is set to \code{FALSE} by default.
+#' @param coll (\code{character}): The variable name of the collection identifiers. 
 #' 
-#' @param duplicates (logical value): Toggles whether multiple entries from the same taxon ("tax") and collection ("coll") variables should be omitted. Useful for omitting occurrences of multiple species-level occurrences of the same genus.
-#' @param coll (character value): the variable name of the collection identifiers. 
-#' 
-#' @param ... arguments passed to FUN and the method-specific subsampling functions:
+#' @param vers (\code{character}): A parameter of SQS. The implementation type either \code{"exact"} or \code{"inexact"}.
+#' @param ... arguments passed to \code{FUN} and the type-specific subsampling functions:
 #' 
 #' @examples
 #' 
@@ -82,16 +92,16 @@
 #' lines(stages$mid, rarefSIB, lwd=2, col="blue")
 #'     
 #' 
-#' # Example 3 - different subsampling methods with default function (divDyn)
+#' # Example 3 - different subsampling types with default function (divDyn)
 #' # compare different subsampling types
 #'   # classical rarefaction
 #'   cr<-subsample(corals,iter=50, q=20,tax="genus", bin="slc", output="dist", intact=95)
 #'   # by-list subsampling (unweighted) - 3 collections
-#'   UW<-subsample(corals,iter=50, q=3,tax="genus", bin="slc", output="dist", intact=95, method="oxw", x=0)
+#'   UW<-subsample(corals,iter=50, q=3,tax="genus", bin="slc", output="dist", intact=95, type="oxw", x=0)
 #'   # occurrence weighted by list subsampling
-#'   OW<-subsample(corals,iter=50, q=20,tax="genus", bin="slc", output="dist", intact=95, method="oxw", x=1)
+#'   OW<-subsample(corals,iter=50, q=20,tax="genus", bin="slc", output="dist", intact=95, type="oxw", x=1)
 #'  
-#'   SQS<-subsample(corals,iter=50, q=0.4,tax="genus", bin="slc", output="dist", intact=95, method="sqs", ref="reference_no")
+#'   SQS<-subsample(corals,iter=50, q=0.4,tax="genus", bin="slc", output="dist", intact=95, type="sqs", ref="reference_no")
 #'
 #' # plot
 #'   plotTS(stages, shading="series", boxes="per", xlim=c(260,0), 
@@ -106,7 +116,7 @@
 #' 
 #' @rdname subsample
 #' @export
-subsample <- function(dat, q, tax="genus", coll="collection_no", bin="SLC", FUN=divDyn,  iter=50,  method="cr", intact=NULL, duplicates=FALSE,  output="arit", implement="for", useFailed=FALSE, ...){
+subsample <- function(dat, q, tax="genus", coll="collection_no", bin="SLC", FUN=divDyn,  iter=50,  type="cr", intact=NULL, duplicates=FALSE,  output="arit",  useFailed=FALSE, vers="inexact",...){
 	
 #	bin <- "slc"
 #	tax<- "genus"
@@ -116,28 +126,35 @@ subsample <- function(dat, q, tax="genus", coll="collection_no", bin="SLC", FUN=
 #	intact<-c(94,95)
 	# defense
 	
+	# temporary omission
+	implement<- "for"
 	quoVar<-q
-	
-	if(!output%in%c("arit", "geom", "list", "dist")) stop("Invalid output argument.")
-	
-	# prepare for the fact that method should be a function
-	# distribute method -> 
-
-	# method specific defence
-	if(method=="sqs"){
-		if(quoVar>1 | quoVar<=0) stop("Shareholder Quorum has to be in the 0-1 interval.")
-	}
-	if(method%in%c("cr", "oxw")){
-		if(quoVar<=1) stop("The quota has to be a natural number larger than 1.")
-	}
-	
-	# should be null or positive integers
-	if(!is.null(bin)){
-		bVar<-dat[,bin]
-		if(sum(is.na(bVar))>0) stop("The bin column contains missing (NA) values.")
-		if(sum(bVar<=0)>0 | sum(bVar%%1)>0) stop("The bin column may only contain positive integers")
-	
-	}
+	# function defense
+		# iteration
+		if(length(iter)!=1) stop("Only a single number of iterations is allowed.")
+		if(iter<1 | iter%%1!=0) stop("Only a positive integers are allowed.")
+				
+		# output
+		if(!output%in%c("arit", "geom", "list", "dist")) stop("Invalid output argument.")
+		
+		#type
+		if(!type%in%c("sqs", "cr", "oxw")) stop("Invalid subsampling type.")
+		
+		# type specific defense
+		if(type=="sqs"){
+			if(quoVar>1 | quoVar<=0) stop("Shareholder Quorum has to be in the 0-1 interval.")
+		}
+		if(type%in%c("cr", "oxw")){
+			if(quoVar<=1) stop("The quota has to be a natural number larger than 1.")
+		}
+		
+		# should be null or positive integers
+		if(!is.null(bin)){
+			bVar<-dat[,bin]
+			if(sum(is.na(bVar))>0) stop("The bin column contains missing (NA) values.")
+			if(sum(bVar<=0)>0 | sum(bVar%%1)>0) stop("The bin column may only contain positive integers")
+		
+		}
 	
 	# check the presences of vectors
 	if(!duplicates){
@@ -169,44 +186,47 @@ subsample <- function(dat, q, tax="genus", coll="collection_no", bin="SLC", FUN=
 	
 	
 	#a. given that the final output is not a list
-	if (output!="list"){
-		#a. perform the function on the total dataset to assess final structure
-		if(!is.null(FUN)){
-			if(is.function(FUN)){
-				# match function
-				FUN<-match.fun(FUN)
-				
-				# match function arguments to the big call
-					# all function arguments
-					allArgs<-as.list(match.call()) 
-					appliedArgs<-formals(FUN)
-					
-					# arguments already set
-					overlapArgs<-allArgs[names(allArgs)%in%names(appliedArgs)]
-					
-					appliedArgs[names(overlapArgs)]<-overlapArgs
-					
-					appliedArgs$dat<-dat
-					
-					wholeRes<-do.call(FUN, appliedArgs)
-			}else{
-			#	if(FUN=="divDyn"){
-			#		wholeRes<-divDyn(dat, tax=tax, bin=bin)
-			#	}else{
-					stop("Invalid FUN argument.")
-			#	}
-			}
-		}else{
-			output<- "list"
-			# empty list to save the subsampling output
-			appliedArgs<-list()
+	
+	#a. perform the function on the total dataset to assess final structure
+	if(!is.null(FUN)){
+		if(is.function(FUN)){
+			# match function
+			FUN<-match.fun(FUN)
 			
-			wholeRes<-NULL
-		}
+			# match function arguments to the big call
+				# all function arguments
+				allArgs<-as.list(match.call()) 
+				appliedArgs<-formals(FUN)
+				
+				# arguments already set
+				overlapArgs<-allArgs[names(allArgs)%in%names(appliedArgs)]
+				
+				appliedArgs[names(overlapArgs)]<-overlapArgs
+				
+				appliedArgs$dat<-dat
 		
-			}else{
+				if(output!="list"){				
+					wholeRes<-do.call(FUN, appliedArgs)
+				}else{
+					wholeRes<-NULL
+				}
+		}else{
+		#	if(FUN=="divDyn"){
+		#		wholeRes<-divDyn(dat, tax=tax, bin=bin)
+		#	}else{
+				stop("Invalid FUN argument.")
+		#	}
+		}
+	}else{
+		output<- "list"
+		# empty list to save the subsampling output
+		appliedArgs<-list()
+		
 		wholeRes<-NULL
 	}
+	
+	
+	# the output object will be 
 	# default
 	out<-"list"
 
@@ -239,7 +259,7 @@ subsample <- function(dat, q, tax="genus", coll="collection_no", bin="SLC", FUN=
 			colnames(holder)<-rep(1:iter, each=nVar)
 			out<-"data.frame"
 		}
-		
+	
 		if(out=="list"){
 			message("U have to do the averaging yourself")
 		}
@@ -264,7 +284,7 @@ subsample <- function(dat, q, tax="genus", coll="collection_no", bin="SLC", FUN=
 	
 	# subsampling specific preparatory phase
 	# CR
-	if(method=="cr"& !is.null(bin)){
+	if(type=="cr"& !is.null(bin)){
 		# order the rows 
 		oBin <- order(dat[,bin])
 		
@@ -284,7 +304,7 @@ subsample <- function(dat, q, tax="genus", coll="collection_no", bin="SLC", FUN=
 	
 	
 	# SQS
-	if(method=="sqs" & !is.null(bin)){
+	if(type=="sqs" & !is.null(bin)){
 		# distribute arguments
 			addArgs<-list(...)
 			
@@ -328,7 +348,7 @@ subsample <- function(dat, q, tax="genus", coll="collection_no", bin="SLC", FUN=
 			if("ref"%in%names(addArgs)){
 				ref<-addArgs$ref
 			}else{
-				ref<-"occurrence.reference_no"
+				ref<-"reference_no"
 			}
 			
 			sqsArgs<-addArgs[names(addArgs)%in%c("byList", "intact", "singleton")]
@@ -357,12 +377,12 @@ subsample <- function(dat, q, tax="genus", coll="collection_no", bin="SLC", FUN=
 	
 		for(k in 1:iter){
 			#1. produce one subsample
-	#		if(method=="cr" & !is.null(bin)){
+	#		if(type=="cr" & !is.null(bin)){
 	#			oneResult<-subsampleCR(binVar=dat[,bin], q=quoVar, intact=keep)
 	#			appliedArgs$dat<-dat[oneResult$rows,]
 	#		}
 			
-			if(method=="cr" & !is.null(bin)){
+			if(type=="cr" & !is.null(bin)){
 			
 				# output of cpp function
 				binCRres<-.Call('_divDyn_CRbinwise', PACKAGE = 'divDyn', binVar, quoVar)
@@ -388,12 +408,12 @@ subsample <- function(dat, q, tax="genus", coll="collection_no", bin="SLC", FUN=
 				
 			}
 			
-			if(method=="oxw"& !is.null(bin)){
+			if(type=="oxw"& !is.null(bin)){
 				oneResult<-subsampleOXW(binVar=dat[,bin], collVar=dat[, coll], q=quoVar, intact=keep,...)
 				appliedArgs$dat<-dat[oneResult$rows,]
 			}
 			
-			if(method=="sqs"& !is.null(bin)){
+			if(type=="sqs"& !is.null(bin)){
 			#	oneResult<-subsampleSQS2010(binVar=dat[,bin], freqVar=freqVar, collVar=dat[, coll], q=quoVar, intact=keep)
 				if(vers=="inexact"){
 					oneResult<-do.call(subsampleSQSinexact, args=sqsArgs)
@@ -470,7 +490,7 @@ subsample <- function(dat, q, tax="genus", coll="collection_no", bin="SLC", FUN=
 		
 	}
 	
-#	if(implement=="lapply" & method=="cr"){
+#	if(implement=="lapply" & type=="cr"){
 #		listSource<-rep(list(list(binVar,quoVar, keepRows)), iter)
 #		allResults<-lapply(listSource, function(x){
 #			# get one trial dataset
@@ -592,10 +612,17 @@ subsample <- function(dat, q, tax="genus", coll="collection_no", bin="SLC", FUN=
 					}
 					
 					if(output=="geom"){
+						# switch warnings off
+						warnVal<-options()$warn
+						options(warn=-1)
+						
 						loggedVars<-log(as.matrix(varDat))
 						loggedVars[is.infinite(loggedVars)]<-NA
 						totalResult[,i]<- apply(loggedVars, 1, mean, na.rm=T) 
 						totalResult[,i]<- exp(totalResult[,i])
+						
+						#warnings as before
+						options(warn=warnVal)
 						
 						if(!useFailed){
 							totalResult[failedBins,]<-NA
@@ -663,7 +690,7 @@ subsampleCR <- function(binVar,q,intact=NULL){
 
 
 
-#' @param x the exponent of by-list subsampling (rarefaction) method.
+#' @param x (\code{numeric}): Argument of the OxW type. The exponent of by-list subsampling, by default it is 1.
 #' @rdname subsample
 subsampleOXW<-function(binVar, collVar, q, intact=NULL,x=1){
 	
@@ -672,10 +699,8 @@ subsampleOXW<-function(binVar, collVar, q, intact=NULL,x=1){
 	appr="over"
 	
 	# the chosen quota
-	if(x!=0){
-		newQ<-q^x
-	}else{
-		newQ<-q
+	if(x==0){
+		appr <- "other"
 	}
 	rows<- 1:length(binVar)
 	
@@ -698,8 +723,8 @@ subsampleOXW<-function(binVar, collVar, q, intact=NULL,x=1){
 
 		# there are enough 
 		if(length(cumulative)>0){
-			if(cumulative[length(cumulative)]>newQ){
-				bSelect<-cumulative<=newQ
+			if(cumulative[length(cumulative)]>q){
+				bSelect<-cumulative<=q
 				# potential forking!!! 
 				if(appr=="over"){
 					if(sum(bSelect)!=length(bSelect)){
@@ -746,12 +771,14 @@ subsampleOXW<-function(binVar, collVar, q, intact=NULL,x=1){
 
 
 
-#' @param excludeDominant (logical) This parameter sets whether the dominant taxon should 
+#' @param excludeDominant \code{(logical)}: Parameter for the inexact method of SQS. This parameter sets whether the dominant taxon should 
 #'	be excluded from all calculations involving frequencies (this is the second correction of Alroy, 2010).
-#' @param largestColl (logical) This parameter sets whether the occurrences of taxa only ever
+#' 
+#' @param largestColl \code{(logical)}: Parameter for the inexact method of SQS. This parameter sets whether the occurrences of taxa only ever
 #'  found in the most diverse collection should be excluded from the count of 
-#'	single-publication occurrences. (this is the third correction of Alroy, 2010)
-#' @param fcorr (character value) either "good" or "alroy". This argument changes the frequency correction procedure of the 
+#'	single-publication occurrences. (this is the third correction of Alroy, 2010) Note that \code{largestColl=TRUE} is dependent on \code{excludeDominant=TRUE}. Setting \code{excludeDominant} to \code{FALSE} will turn this correction off.
+#' 
+#' @param fcorr \code{(character)}: Parameter for the inexact method of SQS. either "good" or "alroy". This argument changes the frequency correction procedure of the 
 #'  'inexact' version of SQS (Alroy 2010). As not all taxa are present in the samples, 
 #'  the sampled frequencies of taxa tend overestimate their frequencies in the sampling pool. 
 #'  In Alroy (2010) these are corrected using Good's u ("good", default), in the later versions 
@@ -868,6 +895,11 @@ frequencies<-function(dat,bin, tax, coll, ref="reference_no", singleton="ref", e
 				return(sum(tTax==2))
 			})
 			
+			# 'singRefTaxa' taxa that occurr only in single collections
+			singRefTaxa<-tapply(INDEX=occTax[,bin], X=occTax[,tax], function(x){
+				return(names(table(x)))
+				
+			})
 		
 		}
 	
@@ -919,9 +951,10 @@ frequencies<-function(dat,bin, tax, coll, ref="reference_no", singleton="ref", e
 				
 				# calculate u'
 				uP <- (O-p1-n1+tMax)/(O-n1)
-				
+		
 				# for Alroy's solution (exclude taxa found in the largest collection from the single-reference taxa)
 				correction<-((((p1-tMax)+p2)/2)/vectS)/(O-n1)
+				
 			}
 		
 		}else{
@@ -942,8 +975,8 @@ frequencies<-function(dat,bin, tax, coll, ref="reference_no", singleton="ref", e
 	return(freqVar)
 }
 
-#' @param singleton (character value): Either "ref" or "occ". If set to "occ", the coverage estimator (e.g. Good's u) will be calculated based on the number of single-occurrence taxa. 
-#' If set to "ref" the number of occurrences belonging to single-reference taxa will be used instead. In case of the inexact algorithm, if set to FALSE, then coverage corrections of frequencies will not be applied (not advised).
+#' @param singleton \code{(character)}: A parameter of SQS. Either \code{"ref"} or \code{"occ"}. If set to \code{"occ"}, the coverage estimator (e.g. Good's u) will be calculated based on the number of single-occurrence taxa. 
+#' If set to "ref" the number of occurrences belonging to single-reference taxa will be used instead. In case of the inexact algorithm, if set to \code{FALSE} or \code{NA}, then coverage corrections of frequencies will not be applied.
 #' @rdname subsample
 subsampleSQSexact<-function(binVar, q, taxVar, collVar, refVar, byList=FALSE, intact=NULL, singleton="ref"){
 	rows<- 1:length(binVar)
@@ -1057,12 +1090,12 @@ subsampleSQSexact<-function(binVar, q, taxVar, collVar, refVar, byList=FALSE, in
 }
 
 
-#' @param byList (character value): A parameter of SQS. Sets whether occurrences should be subsampled with (FALSE) or without (TRUE) breaking the collection integrity. (not yet for the exact algorithm.)
+#' @param byList (\code{character}): A parameter of the \code{"inexact"} method of SQS. Sets whether occurrences should be subsampled with (\code{FALSE}) or without (\code{TRUE}) breaking the collection integrity. (not yet for the exact algorithm.)
 #'	
-#' @param appr (character value): A parameter of SQS, either "over" (default) or ("under"). The current 
+#' @param appr (\code{character}): A parameter of the inexact method of SQS. Either "over" (default) or ("under"). The current 
 #' version is not concerned with small fluctuations around the drawn subsampling quorum. 
-#' Therefore, in the inexact algorithm, sampling is finished when the subset 
-#' either is immediately below the quorum ("under") or above it ("over").
+#' Therefore, in the \code{inexact} algorithm, sampling is finished when the subset 
+#' either is immediately below the quorum (\code{"under"}) or above it (\code{"over"}).
 #' @rdname subsample
 subsampleSQSinexact<-function(binVar, freqVar, q, collVar=NULL, byList=FALSE, intact=NULL, appr="over", trialRet="occ"){
 	

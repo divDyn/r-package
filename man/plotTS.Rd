@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotting.R
 \name{plotTS}
 \alias{plotTS}
-\title{Time series plotting using a custom timescale object}
+\title{Time series plotting using a custom time scale}
 \usage{
 plotTS(tsdat, boxes, ylim = c(0, 1), xlim = NULL, prop = 0.05, gap = 0,
   bottom = "bottom", top = "top", xlab = "age (Ma)", ylab = "",
@@ -10,37 +10,37 @@ plotTS(tsdat, boxes, ylim = c(0, 1), xlim = NULL, prop = 0.05, gap = 0,
   boxes.args = NULL, labels.args = NULL)
 }
 \arguments{
-\item{tsdat}{(data frame): time scale data frame}
+\item{tsdat}{\code{(data frame)}: The time scale data frame.}
 
-\item{boxes}{(character): column name indicating the names that should be plotted as a timescale}
+\item{boxes}{\code{(character)}: Column name indicating the names that should be plotted as boxes of the timescale.}
 
-\item{ylim}{(numeric): the vertical extent of the plot, analogous to the same argument of plot(). By default it is set to the [0,1] interval.}
+\item{ylim}{\code{(numeric)}: The vertical extent of the plot, analogous to the same argument of \code{\link[graphics]{plot}}. By default it is set to the \code{[0,1]} interval.}
 
-\item{xlim}{(numeric): the horizontal extent of the plot, analogous to the same argument of plot(). By default it is set to  plot the entire table. If a numeric vector of length=2 is supplied, it will be interpreted as the standard xlim argument and the plot will be displayed based on numerically constrained ages. If it an integer vector with length>2, the interval corresponding to the row indices of the table will be plotted.}
+\item{xlim}{\code{(numeric)}: The horizontal extent of the plot, analogous to the same argument of \code{\link[graphics]{plot}}. By default it is set to plot the entire table. If a numeric vector with two values is supplied, it will be interpreted as the standard \code{xlim} argument and the plot will be displayed based on numerically constrained ages. If it is an integer vector with more than two values are plotted, the interval corresponding to the row indices of the table will be plotted.}
 
-\item{prop}{(numeric value): proportion of the vertical extent of the plot for the timescale}
+\item{prop}{\code{(numeric)}: Proportion of the vertical extent of the plot to display the the time scale at the bottom.}
 
-\item{gap}{(numeric value): proportion of the vertical extent of the plot that should be a gap betwen the timescale and the plot.}
+\item{gap}{\code{(numeric)}: Proportion of the vertical extent of the plot that should be a gap betwen the time scale and the plot.}
 
-\item{bottom}{(character): column name of the table for the variable that contains the older ages of intervals.}
+\item{bottom}{\code{(character)}: Column name of the table for the variable that contains the older ages of intervals.}
 
-\item{top}{(character): column name of the table for the variable that contains the earliest ages of intervals.}
+\item{top}{\code{(character)}: Column name of the table for the variable that contains the earliest ages of intervals.}
 
-\item{shading}{(character): column name used for the shading.}
+\item{shading}{\code{(character)}: Column name used for the shading. By default, no shading will be drawn (\code{shading = NULL}).}
 
-\item{shading.col}{(character): name of colors that will be used for the shading, if shading is set.}
+\item{shading.col}{\code{(character)}: Name of colors that will be used for the shading, if shading is set. The provided colors will be repeated as many times as necessary.}
 
-\item{plot.args}{(list): list of arguments that will be passed to the main plot() function.  Can be useful for the suppression of axes, font change etc.}
+\item{plot.args}{\code{(list)}: Arguments that will be passed to the main \code{\link[graphics]{plot}} function.  Can be useful for the suppression of axes, font change etc.}
 
-\item{boxes.args}{(list): list of arguments that will be passed to the rect() function that draws the rectangles of time intervals.}
+\item{boxes.args}{\code{(list)}: Arguments that will be passed to the \code{\link[graphics]{rect}} function that draws the rectangles of time intervals.}
 
-\item{labels.args}{(list): list of arguments that will be passed to the text() function that draws the labels.}
+\item{labels.args}{\code{(list)}: Arguments that will be passed to the \code{\link[graphics]{text}} function that draws the labels.}
 }
 \description{
 This function allows the user to quickly plot a time scale data table
 }
 \details{
-As most analysis use an individually compiled time scale object, in order to ensure compatibility between the analyzed and plotted values, the time scale table used for the analysis should be plotted rather than a standardized table.
+As most analysis use an individually compiled time scale object, in order to ensure compatibility between the analyzed and plotted values, the time scale table used for the analysis could be plotted rather than a standardized table. Two example tables have been included in the package (\code{\link{stages}} and \code{\link{bins}}) that can serve as templates.
 }
 \examples{
 data(stages)

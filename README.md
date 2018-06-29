@@ -1,9 +1,10 @@
 # divDyn
 R package for analyzing diversity dynamics from fossil occurrence data
 
-The vignette is getting written. Until then, the features of the package are demonstrated with the function examples (check out ?divDyn, ?subsample and ?affinity).  
+If you are interested in what this package does, or have questions about use, please check out the first vignette: 'Handout to the R package 'divDyn' v0.4.0 for diversity dynamics from fossil occurrence data' here:
+https://github.com/adamkocsis/divDyn/blob/master/_archive/vignettes/Handout_0.4.0.pdf
 
-As the package is still getting developed, if you have any requirements or recommendations on what to add (or if you find a mistake), please contact me at adam.kocsis@fau.de.
+As the package is still getting developed, if you have any requirements or recommendations about what to add (or if you find a mistake), please contact me at adam.kocsis@fau.de.
 
 
 ## Installing and update
@@ -11,12 +12,12 @@ As the package now uses compiled code to make things run faster, there are two w
 1. The first option is to use the binaries I have built. 
 
 If you have a windows computer, you can install the package with the following R command:
-`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Win_x64_x86/divDyn_0.3.1.zip", repos=NULL)`
+`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Win_x64_x86/divDyn_0.4.0.zip", repos=NULL)`
 
-If you have a Mac running OS X, then use the following link:
+If you have a Mac running OS X, then use the following link (still older):
 `install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Mac_OSX/divDyn_0.3.1.tgz", repos=NULL)`
 
-I am now aware that the binary packages won't install on R 3.5.x as the internals are different from the 3.4.x versions that I compiled these packages with. If you have a brand new R, please downgrade, or perhaps try option 2. 
+I am now aware that the binary packages won't install on R 3.5.x as the internals are different from the 3.4.x versions that I compiled these binaries with. If you have a brand new R, please downgrade, or perhaps try option 2. 
 
 If you have Linux computer you probably know how to solve these problems. The sources of different versions are in the /_archive folder. Otherwise you can try option no. 2. 
 
@@ -30,6 +31,25 @@ You can access earlier versions by changing the version number appropriately.
  '*' if you use either a Mac or Linux, and point no. 2 doesn't work for you for some reason, then contact me  and I will compile a binary for you.
 
 # Change log
+## [0.4.0] - 2018.06.04
+### Added
+- the first vignette is now included
+- bug fix for the parts() function. Due to the overplotting of polygons, the RGBA colours were not appropriately visualized
+- bug fix to the omit() function's binref method.
+- the "total" method for the sampstat() function
+- documentation to the built in datasets
+- the map() function to resolve information downloaded from the PaleoDB
+- 'keys' to the stratigraphic and environmental resolution, based on the FossilWorks dynamic timescale ?keys
+- the 10 million year timescale of the Paleobiology Database, ?bin
+
+### Changed
+- The sampstat() function now outputs a data.frame, instead of a matrix.
+- the 'method' argument of subsample() was renamed to 'type' to avoid problems with argument distribution with the frequent 'method' argument name
+
+### Deleted 
+- The previously added bayesian method from the affinity() function. The method had problems and is under investigation.
+
+
 ## [0.3.1] - 2018.06.04
 ### Added
 - method argument for the affinity() function, allows implementation of a simple majority rule (method="majority") or the Bayesian approach of Simpson and Harnik (2009, method="bayesian")

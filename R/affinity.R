@@ -2,39 +2,46 @@
 #'
 #' This function will return the environmental affinities of taxa, given the sampling conditions implied by the supplied dataset.
 #'
-#' Sampling patterns have an overprinting effect on the frequency of taxon occurrences in different environments. The environmental affinity (sensu Kiessling and Aberhan, 2007 - Paleobiology 33, 414-434 and Kiessling and Kocsis, 2015 - Paleobiology 41, 402-414) expresses whether the taxa are more likely to occur in an environment, given the sampling patterns of the dataset at hand. NA output indicates that the environmental affinity is equivocal based on the selected method.
+#' Sampling patterns have an overprinting effect on the frequency of taxon occurrences in different environments. The environmental affinity (Foote, 2006; Kiessling and Aberhan, 2007; Kiessling and Kocsis, 2015) expresses whether the taxa are more likely to occur in an environment, given the sampling patterns of the dataset at hand. The function returns the likely preferred environment for each taxon as a vector. \code{NA} outputs indicate that the environmental affinity is equivocal based on the selected method.
 #'
-#' The following methods are implemented: 
+#' \strong{The following methods are implemented:}
 #'
-#' 'majority': environmental affinity will be assigned based on the sampled proportions, without assuming a equal sampling probabilities in the two environments (more occurrence in env. 1 means that taxon prefers env. 1)
+#' \code{'majority'}: Environmental affinity will be assigned based on the number of occurrences of the taxon in the different environments, without taking sampling of the entire dataset into account. If the taxon has more occurrences in \emph{environment 1}, the function will return \emph{environment 1} as the preferred habitat. 
 #'
-#' 'binom': The proportion of occurrences of a taxon in environment 1 and environment 2 will be compared to a null model which is based on the distribution of all occurrences from the stratigraphic range of the taxon. The alpha value indicates the significance of the binomial tests. 
+#' \code{'binom'}: The proportion of occurrences of a taxon in \emph{environment 1} and \emph{environment 2} will be compared to a null model, which is based on the distribution of all occurrences from the stratigraphic range of the taxon. The \code{alpha} value indicates the significance of the binomial tests, setting \code{alpha} to \code{1} will effectively switch the testing off: if the ratio of occurrences for the taxon is different from the ratio observed in the dataset, an affinity will be assigned. This is the default method.
 #' 
-#' 'bayesian': The same as 'binom', except that instead of a binomial test, Bayesian inference is used (Simpson and Harnik, 2009). Note: using choose(n, k)*p^k*(1-p)^(n-k) to calculate the conditional probability P(E|H1) (as it was published in Simpson and Harnik, 2009) did not produce a meaningful output. This is likely the case as this formula calculates the probability of the exact event of sampling k success out of n trials, which decreases systematically as n increases. However, using the CDF (pbinom(n, k, p)) to estimate P(E|H1) produces plausible final output. This corresponds to the event that given H1, out of n trials, k is the maximum number of env1 occurrences given its sampling conditions characterized by p (total dataset). The function is implemented thusly.
+#' \strong{References}
 #'
-#' @param dat (data.frame): the occurrence dataset containing the taxa with unknown environmental affinities.
-#' @param env (char): The name of the column with the occurrences' environmental values.
-#' @param method (character): The method used for affinity calculation. Can be either "binom", "bayesian" or "majority".
-#' @param tax (char): the column name of taxon names.
-#' @param bin (char): the column name of bin names.
-#' @param coll (char): the column name of collection numbers.
-#' @param alpha (num): the alpha value of the binomial tests. By default (alpha=1) binomial testing is off.
-#' @param reldat (data.frame): database with the same structure as 'dat'. Typically 'dat' is the subset of 'reldat'. If given, the occurrence distribution of 'reldat' is used 
+#' Foote, M. (2006). Substrate affinity and diversity dynamics of Paleozoic marine animals. Paleobiology, 32(3), 345-366.
+#'
+#' Kiessling, W., & Aberhan, M. (2007). Environmental determinants of marine benthic biodiversity dynamics through Triassic–Jurassic time. Paleobiology, 33(3), 414-434.
+#'
+#' Kiessling, W., & Kocsis, Á. T. (2015). Biodiversity dynamics and environmental occupancy of fossil azooxanthellate and zooxanthellate scleractinian corals. Paleobiology, 41(3), 402-414.
+#' 
+#' @param dat \code{(data.frame)} The occurrence dataset containing the taxa with unknown environmental affinities.
+#' @param env \code{(character)} The environmental variable of the occurrences.
+#' @param method \code{(character)} The method used for affinity calculations. Can be either \code{"binom"} or \code{"majority"}.
+#' @param tax \code{(character)} The column name of taxon names.
+#' @param bin \code{(character)} The column name of bin names.
+#' @param coll \code{(character)} The column name of collection numbers.
+#' @param alpha \code{(numeric)} The alpha value of the binomial tests. By default binomial testing is off (\code{alpha=1}).
+#' @param reldat \code{(data.frame)} Database with the same structure as \code{dat}. Typically \code{dat} is the subset of \code{reldat}. If given, the occurrence distribution of \code{reldat} is used 
 #' as the null model of sampling.
 #'
 #' @examples
 #'	data(corals)
 #'	# omit values where no occurrence environment entry is present, or where unknown
-#'	fossils<-subset(corals, slc!=95)
-#'	fossilEnv<-subset(fossils, bath!="uk")
+#'	  fossils<-subset(corals, slc!=95)
+#'	  fossilEnv<-subset(fossils, bath!="uk")
 #'	# calculate affinities
-#'	  aff1<-affinity(fossilEnv, env="bath", tax="genus", bin="slc", alpha=1)
-#'    aff2<-affinity(fossilEnv, env="bath", tax="genus", bin="slc", method="bayesian")
+#'	  aff<-affinity(fossilEnv, env="bath", tax="genus", bin="slc", alpha=1)
 #'	
 #' @export
 affinity<-function(dat, env, tax="genus",  bin="slc", coll="collection_no", method="binom", alpha=1,reldat=NULL){
 
 	if(is.null(alpha)& !is.null(reldat)) warning("Majority rule selected, reldat will be ignored.")
+	
+	match.arg(method, c("binom", "majority"))
 	
 	# omit everything from dat that is not necessary
 		dat<-unique(dat[,c(coll, tax,bin, env)])
@@ -202,21 +209,21 @@ affinity<-function(dat, env, tax="genus",  bin="slc", coll="collection_no", meth
 			}
 		} # end binom
 		
-		if(method=="bayesian"){
-	#		pEgivH1<- choose(all, first) * (pFirst^first)*(1-pFirst)^(all-first)
-			# le merném fogadni, bassza meg, hogy ezt használták...
-			pEgivH1 <- pbinom(first, all, pFirst)
-			pEgivH2 <- pbinom(second, all, pSecond)
-			
-		#	pEgivH2<- choose(all, second) * (pSecond^second)*(1-pSecond)^(all-second)
-			# Bayes' theorem
-			pPost<- (pEgivH1*pH1)/(pEgivH1*pH1+pEgivH2*pH2)
-			
-			if(round(pPost,10)>0.5) return(affLevels[1])
-			if(round(pPost,10)<0.5) return(affLevels[2])
-			if(round(pPost,10)==0.5) return(NA)
-		
-		}		
+	#	if(method=="bayesian"){
+	#		
+	#		pEgivH1 <- dbinom(first, all, pFirst)
+	#	#	pEgivH2 <- dbinom(second, all, pSecond)
+	#		pEgivH2 <- dbinom(second, all, pFirst)
+	#		
+	#
+	#		# Bayes' theorem
+	#		pPost<- (pEgivH1*pH1)/(pEgivH1*pH1+pEgivH2*pH2)
+	#		
+	#		if(round(pPost,10)<0.5) return(affLevels[1])
+	#		if(round(pPost,10)>0.5) return(affLevels[2])
+	#		if(round(pPost,10)==0.5) return(NA)
+	#	
+	#	}		
 	}
 	)
 	#table(affVarTaxon)

@@ -2,29 +2,29 @@
 #' 
 #' Function to generate range data from an occurrence dataset.
 #' 
+#' The function will output First and Last Appearance Data of the taxa in the dataset. Keep in mind that incomplete sampling will influence these data and will make the ranges appear shrunken.
+#'
 #' The following variables are produced:
 #'
-#' row names: the name of the taxon.
+#' attribute \code{row.names}: The names of the taxa.
 #'
-#' FAD: first appearance date in the given time slices.
+#' \code{FAD}: First appearance data, given in time slice numbers.
 #'
-#' LAD: last appearance date in the given time slices.
+#' \code{LAD}: Last appearance data, given in time slice numbers.
 #'
-#' range: the range of the taxo in the given time slices
+#' \code{range}: the range of the taxo in the given time slices
 #'
-#' FAD_DATE: optionally, first appearance dates in numeric ages.
+#' \code{myFAD}: optionally, first appearance dates in numeric ages.
 #'
-#' LAD_DATE: optionally, last appearance dates in numeric ages.
+#' \code{myLAD}: optionally, last appearance dates in numeric ages.
 #'
-#' DUR: optionally, the duration of taxa in numeric ages. It is given for single-interval taxa as well assuming that the taxa's range span over the entire time slice.
+#' \code{duration}: optionally, the duration of taxa in numeric ages. It is given for single-interval taxa as well assuming that the taxa's range span over the entire time slice.
 #'
-#' nThrough: the number of through-ranging taxa
-#'
-#' @param dat (data.frame): Occurrence data.
-#' @param tax (char): the column name of taxon names.
-#' @param bin (char): the column name of bin names.
-#' @param maxdate (char): optional, the column names of maximum radiometric dates of occurrences.
-#' @param mindate (char): optional, the column names of minimum radiometric dates of occurrences.
+#' @param dat \code{(data.frame)} Occurrence data.
+#' @param tax \code{(character)} The column name of taxon names.
+#' @param bin \code{(character)} The column name of bin names, has to be an integer 
+#' @param maxdate \code{(character)} Optional, the column names of maximum estimated ages of occurrences.
+#' @param mindate \code{(character)} Optional, the column names of minimum estimated ages of occurrences.
 #' @examples
 #'	data(corals)
 #'	fl <- fadLad(corals, tax="genus", bin="slc", maxdate="max_ma", mindate="min_ma")
@@ -90,21 +90,28 @@ fadLad<-function(dat, tax, bin, maxdate=NULL, mindate=NULL){
 
 
 
-#' Estimation of survivorship probabilities
+#' Proportions of survivorship
 #' 
-#' This function will calculate both forward and backward survivorship probabilities from a given occurrence dataset or FAD-LAD matrix.
+#' This function will calculate both forward and backward survivorship proportions from a given occurrence dataset or FAD-LAD matrix.
 #' 
-#' @param dat (data.frame): the data frame containing PBDB occurrences.
+#' Proportions of survivorship are great tools to visualize changes in the composition of a group over time (Raup, 1978). The curves show how a once coexisting set of taxa, called a cohort, looses its participants (forward survivorship) as time progress, or gains its elements as time is analyzed backwards.
+#' Each value corresponds to a cohort in a bin (\emph{a}) and one other bin (\emph{b}). The value expresses what proportion of the analyzed cohort (present together in bin \emph{a}) is present in bin \emph{b}.
 #' 
-#' @param tax (char): variable  name of the occurring taxa (variable type: factor) - such as "occurrence.genus_name"
+#' References:
+#'
+#' Raup, D. M. (1978). Cohort analysis of generic survivorship. Paleobiology, 4(1), 1-15.
 #' 
-#' @param bin (char): variable name of the time slice numbers of the particular occurrences (variable type: int)- such as "slc" or whatever. Bin numbers should be in ascending order,can contain NA's, it can start from a number other than 1 and must not start with 0.
-#' @param noNAStart (bool): useful when the dataset does not start from bin No. 1. Then noNAStart=TRUE will cut the first part of the resulting table, 
+#' @param dat \code{(data.frame)} The data frame containing fossil occurrences.
+#' 
+#' @param tax \code{(character)} The variable  name of the occurring taxa (variable type: \code{factor} or \code{character}).
+#' 
+#' @param bin \code{(character)} The variable name of the time slice numbers of the particular occurrences (variable type: \code{numeric}). Bin numbers should be in ascending order,can contain \code{NA}s, it can start from a number other than 1 and must not start with 0.
+#' @param noNAStart \code{(logical)} Useful when the dataset does not start from bin \code{1}. Then \code{noNAStart=TRUE} will cut the first part of the resulting table, 
 #' 						so the first row will contain the estimates for the lowest bin number.
 #' 
-#' @param fl (matrix or data.frame). If so desired, the function can be run on an FAD-LAD dataset. (fadLad)
+#' @param fl \code{(matrix} or \code{data.frame}). If so desired, the function can be run on an FAD-LAD dataset, output by the \code{\link{fadLad}} function. 
 #' 
-#' @param method (character value): either "forward" or "backward".
+#' @param method \code{(character)} Either \code{"forward"} or \code{"backward"}.
 #' 
 #' @examples
 #' data(corals)

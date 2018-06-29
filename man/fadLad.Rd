@@ -7,37 +7,37 @@
 fadLad(dat, tax, bin, maxdate = NULL, mindate = NULL)
 }
 \arguments{
-\item{dat}{(data.frame): Occurrence data.}
+\item{dat}{\code{(data.frame)} Occurrence data.}
 
-\item{tax}{(char): the column name of taxon names.}
+\item{tax}{\code{(character)} The column name of taxon names.}
 
-\item{bin}{(char): the column name of bin names.}
+\item{bin}{\code{(character)} The column name of bin names, has to be an integer}
 
-\item{maxdate}{(char): optional, the column names of maximum radiometric dates of occurrences.}
+\item{maxdate}{\code{(character)} Optional, the column names of maximum estimated ages of occurrences.}
 
-\item{mindate}{(char): optional, the column names of minimum radiometric dates of occurrences.}
+\item{mindate}{\code{(character)} Optional, the column names of minimum estimated ages of occurrences.}
 }
 \description{
 Function to generate range data from an occurrence dataset.
 }
 \details{
+The function will output First and Last Appearance Data of the taxa in the dataset. Keep in mind that incomplete sampling will influence these data and will make the ranges appear shrunken.
+
 The following variables are produced:
 
-row names: the name of the taxon.
+attribute \code{row.names}: The names of the taxa.
 
-FAD: first appearance date in the given time slices.
+\code{FAD}: First appearance data, given in time slice numbers.
 
-LAD: last appearance date in the given time slices.
+\code{LAD}: Last appearance data, given in time slice numbers.
 
-range: the range of the taxo in the given time slices
+\code{range}: the range of the taxo in the given time slices
 
-FAD_DATE: optionally, first appearance dates in numeric ages.
+\code{myFAD}: optionally, first appearance dates in numeric ages.
 
-LAD_DATE: optionally, last appearance dates in numeric ages.
+\code{myLAD}: optionally, last appearance dates in numeric ages.
 
-DUR: optionally, the duration of taxa in numeric ages. It is given for single-interval taxa as well assuming that the taxa's range span over the entire time slice.
-
-nThrough: the number of through-ranging taxa
+\code{duration}: optionally, the duration of taxa in numeric ages. It is given for single-interval taxa as well assuming that the taxa's range span over the entire time slice.
 }
 \examples{
 data(corals)

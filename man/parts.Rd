@@ -2,44 +2,44 @@
 % Please edit documentation in R/plotting.R
 \name{parts}
 \alias{parts}
-\title{Plot polygons of counts or proportions}
+\title{Plot time series counts or proportions as polygons}
 \usage{
 parts(x, b = NULL, ord = "up", prop = F, plot = TRUE, col = NULL,
   xlim = NULL, border = NULL, ylim = c(0, 1), na.valid = FALSE,
   labs = T, labs.args = NULL, vertical = F)
 }
 \arguments{
-\item{x}{(numeric vector): The independent variable through which the proportion is tracked. Identical entries are used to assess which values belong together to a set. Their values represent the x coordinate over the plot.}
+\item{x}{\code{(numeric)}: The independent variable through which the proportion is tracked. Identical entries are used to assess which values belong together to a set. Their values represent the x coordinate over the plot.}
 
-\item{b}{(character or factor): Category designation.}
+\item{b}{(\code{character} or \code{factor}): A single vector with the category designations. This vector will be segmented using the entries of \code{x}.}
 
-\item{ord}{The parameter of the variable order. Either "up" (increasing), "down" (decreasing) or the vector of categories in the desired order.}
+\item{ord}{\code{(character)}: The parameter of the variable order. Either \code{"up"} (increasing alphabetical order), \code{"down"} (decreasing alphabetical order) or the vector of categories in the desired order.}
 
-\item{prop}{(logical value): Should the diagram show proportions or counts?}
+\item{prop}{\code{(logical)}: Should the diagram show proportions (\code{TRUE}) or counts (\code{FALSE})?}
 
-\item{plot}{(logical value): If set to TRUE than the function will plot the output. If set to FALSE, then a matrix with the relevant values will be returned. This output is similar to the output of table(), but handles proportions instantly.}
+\item{plot}{\code{(logical)}: If set to \code{TRUE}, then the function will plot the output. If set to \code{FALSE}, then a matrix with the relevant values will be returned. This output is similar to the output of \code{\link[base]{table}}, but handles proportions instantly.}
 
-\item{col}{The colour of polygons. By default this is grayscale.}
+\item{col}{\code{(character)}: The color of polygons, has to a be a vector with as many entries as there are categories in \code{b}. By default \code{(col=NULL)} this is grayscale.}
 
-\item{xlim}{(numeric vector): Extension of polygons to cover plotting area. Two values, has to exceed the range of x.}
+\item{xlim}{\code{(numeric)}: Two values, analogous to the \code{xlim} argument of \code{\link[graphics]{plot}}, and has to exceed the range of \code{x}. The polygons that represent non-zero values with the lowest and highest values of \code{x} will be extended to these \code{x} coordinates.}
 
-\item{border}{The colour of the polygon borders.}
+\item{border}{\code{(character)}: The a single color of the polygon borders. By default (\code{border=NA}), no borders are drawn.}
 
-\item{ylim}{(numeric vector): If prop=TRUE, then the argument controls the position of the proportions in the plotting area. If prop=FALSE, then the entire plotting area will be shifted by the single ylim value.}
+\item{ylim}{\code{(numeric)}: If \code{prop=TRUE}, then the argument controls the position of the proportions in the plotting area (useful to show proportions as a sub plot in a plot). If \code{prop=FALSE}, then the entire plotting area will be shifted by a single \code{ylim} value.}
 
-\item{na.valid}{(logical value): if TRUE, than the missing values will be treated as an independent category. Entries where x is NA will be omitted either way.}
+\item{na.valid}{\code{(logical)}: If \code{TRUE}, than the missing values will be treated as an independent category. Entries where \code{x} is \code{NA} will be omitted either way.}
 
-\item{labs}{(logical value): should the category names be plotted?}
+\item{labs}{\code{(logical)}: Should the category names be plotted?}
 
-\item{labs.args}{(list): Lists of arguments for the text() function. If one entry for each argument is provided, then it will be applied to all labels. If the number of elements in an argument equals the number of categories to be plotted, then one to one assignment will be used (e.g. for 4 categories in total, if the labs.args list contains a col vector element of length 4, see examples.).}
+\item{labs.args}{\code{(list)}: Arguments for the \code{\link[graphics]{text}} function. If one entry for each argument is provided, then it will be applied to all labels. If the number of elements in an argument equals the number of categories to be plotted, then one to one assignment will be used. For example, for 4 categories in total, if the \code{labs.args} \code{list} contains a \code{col} vector element with 4 values, see examples).}
 
-\item{vertical}{(logical value): Horizontal or vertical plotting? If FALSE, the independent variable will be horizontal, if TRUE, the count/proportion variable will be horizontal. In the latter case xlim and ylim has reversed roles.}
+\item{vertical}{\code{(logical)}: Horizontal or vertical plotting? If \code{FALSE}, the independent variable will be horizontal, if \code{TRUE}, the count/proportion variable will be horizontal. In the latter case \code{xlim} and \code{ylim} has reversed roles.}
 }
 \description{
 This function plots the changing shares of categories in association with an independent variable.
 }
 \details{
-This function is useful for displaying the changing proportions of a category as time progresses.
+This function is useful for displaying the changing proportions of a category as time progresses. Check out the examples for the most frequent implementations.
 
 To be added: missing portions are omitted in this version, but should be represented as gaps in the polygons.
 }

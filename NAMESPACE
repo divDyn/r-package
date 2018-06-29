@@ -13,6 +13,7 @@ export(survivors)
 export(sampstat)
 export(omit)
 export(parts)
+export(map)
 
 importFrom("Rcpp")
 useDynLib(divDyn)

@@ -1,14 +1,14 @@
 #' Cleanse Species Vector
 #' 
-#' This function will get rid of 
+#' This function will take a vector of binomial names with various qualifiers of open nomenclatures, and removes them form the vector entries. Only the the genus and species names will remain.
 #'
 #' This version will not keep subgenera, and will assign species to the base genus. The following qualifiers will be omitted:
-#' "n.", "sp.", "?", "gen.", "aff.", "cf.", "ex", "gr.", "subgen.", "spp" and informal species designated with letters. Entries with "informal" and "indet." in them will also be invalidated. 
+#' \emph{"n."}, \emph{"sp."}, \emph{"?"}, \emph{"gen."}, \emph{"aff."}, \emph{"cf."}, \emph{"ex gr."}, \emph{"subgen."}, \emph{"spp"} and informal species designated with letters. Entries with \emph{"informal"} and \emph{"indet."} in them will also be invalidated. 
 #' 
-#' @param vec Character vector, the vector containing species names with qualifiers of open taxonomy.
+#' @param vec \code{(character)}: the vector containing species names with qualifiers of open taxonomy.
 #'
-#' @param mode Character value, either "simple" or "debug". "simple" will return the cleaned species name vector, "debug" returns a data table that allows one by one checking.
-#' @param collapse Character value, this argument will be passed to the paste function's argument of the same name. The character value to be inserted between the genus and species names.
+#' @param mode \code{(character)}: either \code{"simple"} or \code{"debug"}. \code{"simple"} will return the cleaned species name vector, \code{"debug"} returns a data table that allows one by one checking.
+#' @param collapse \code{(character)}: this argument will be passed to the paste function's argument of the same name. The character value to be inserted between the genus and species names.
 #'
 #' @examples
 #' examp <- c("Genus cf. species", "Genus spp.", "Family indet.", "Mygenus yourspecies", "Okgenus ? questionsp")
@@ -153,74 +153,73 @@ spCleanse <- function(vec, mode="simple", collapse="_"){
 
 #' Time series from metrics of diversity dynamics 
 #' 
-#' This function calculates 
-#' various metrics in the form of time series from resolved PBDB occurrences.
+#' This function calculates various metrics from occurrence datasets in the form of time series.
 #' 
 #' The following variables are produced:
 #'
-#' bin: the time slice number, or the numeric identifier of the time slice
+#' \code{bin}: Bin number, or the numeric identifier of the bin.
 #'
-#' tThrough: the number of through-ranging taxa
+#' \code{tThrough}: Number of through-ranging taxa, taxa that have first occurrences before, and last occurrences after the focal bin.
 #'
-#' tOri: the number of originating taxa
+#' \code{tOri}: Number of originating taxa, taxa that have first occurrences in the focal bin, and last occurrences after.
 #'
-#' tExt: the number of taxa getting extinct
+#' \code{tExt}: Number of taxa getting extinct. These are taxa that have first occurrences before the focal bin, and last occurrences after it.
 #'
-#' tSing: the number of stratigraphic singleton (single-interval) taxa
+#' \code{tSing}: Number of stratigraphic singleton (single-interval) taxa, taxa that only occur in the focal bin.
 #'
-#' t2d: the number of taxa that are present in the i-1th and the ith interval (lower two timers)
+#' \code{t2d}: Number of lower two timers (Alroy, 2008; 2014), taxa that are present in the \emph{i}-1th and the ith bin (focal bin). 
 #'
-#' t2u: the number of taxa that are present in the ith and the i+1th interval (upper two timers)
+#' \code{t2u}: Number of upper two timers (Alroy, 2008; 2014), taxa that are present in the \emph{i}th (focal) and the \emph{i}+1th bin. (Alroy, 2008; 2014)
 #'
-#' tGFu: upper gap-fillers ($later)
+#' \code{tGFu}: Number of upper gap-fillers (Alroy, 2014), taxa that occurr in bin \emph{i}+2 and \emph{i}-1, but were not found in \emph{i}+1. (Alroy, 2014)
 #'
-#' tGFd: lower gap-fillers ($later)
+#' \code{tGFd}: Number of lower gap-fillers (Alroy, 2014), taxa that occurr in bin \emph{i}-2 and \emph{i}+1, but were not found in \emph{i}-1. (Alroy, 2014)
 #'
-#' t3: the number of three timer taxa, present in time slice i-1, i, and i+1
+#' \code{t3}: Number of three timer taxa (Alroy, 2008; 2014), present in bin \emph{i}-1, \emph{i}, and \emph{i}+1. (Alroy, 2008; 2014)
 #'
-#' tPart: the part timer taxa, present in time slice i-1,and i+1, but not in i
+#' \code{tPart}: Part timer taxa (Alroy, 2008; 2014), present in bin \emph{i}-1,and \emph{i}+1, but not in bin \emph{i}. 
 #'
-#' extProp: proportional extinctions, including single-interval taxa
+#' \code{extProp}: Proportional extinctions including single-interval taxa: \emph{(tExt + tSing) / (tThrough + tOri + tExt + tSing)}.
 #'
-#' oriProp: proportional originations, including single-interval taxa
+#' \code{oriProp}: Proportional originations including single-interval taxa:  \emph{(tOri + tSing) / (tThrough + tOri + tExt + tSing)}.
 #' 
-#' extPC: the per capita extinction rates of foote (not normalized with interval length!)
+#' \code{extPC}: Per capita extinction rates of Foote (2000). \emph{-log(tExt/(tExt + tThrough))}.  Values are not normalized with bin lengths.
 #'
-#' oriPC: the per capita origination rates of foote (not normalized with interval length!)
+#' \code{oriPC}: Per capita origination rates of Foote (2000). \emph{-log(tOri/(tOri + tThrough))}. Values are not normalized with bin lengths.
 #'
-#' ext3t: the three-timer extinction rates 
+#' \code{ext3t}: Three-timer extinction rates of Alroy (2008). \emph{log(t2d/t3)}.
 #'
-#' ori3t: the three-timer origination rates 
+#' \code{ori3t}: Three-timer origination rates of Alroy (2008). \emph{log(t2u/t3)}.
 #'
-#' extC3t: the corrected three-timer extinction rates 
+#' \code{extC3t}: Corrected three-timer extinction rates of Alroy (2008). \emph{ext3t[\emph{i}] + log(samp3t[\emph{i}+1])}.
 #'
-#' oriC3t: the corrected three-timer origination rates
+#' \code{oriC3t}: Corrected three-timer origination rates of Alroy (2008). \emph{ori3t[\emph{i}] + log(samp3t[\emph{i}-1])}.
 #'
-#' divSIB: sampled-in-bin diversity (richness)
+#' \code{divSIB}: Sampled-in-bin diversity (richness), the number of genera sampled in the focal bin.
 #'
-#' divCSIB: corrected sampled-in-bin diversity (richness)
+#' \code{divCSIB}: Corrected sampled-in-bin diversity (richness). \emph{divSIB/samp3t*totSamp3t}, where \emph{totSamp3t} is total three-timer sampling completeness of the dataset (Alroy, 2008). 
 #'
-#' divBC: boundary-crosser diversity (richness)
+#' \code{divBC}: Boundary-crosser diversity (richness), the number of taxa with ranges crossing the boundaries of the interval. \emph{tExt + tOri + tThrough}.
 #'
-#' divRT: range-through diversity (richness)
+#' \code{divRT}: Range-through diversity (richness), all taxa in the interval, based on the range-through assumption. \emph{(tSing + tOri + tExt + tThrough)}.
 #'
-#' sampRange: sampling probability (Foote)
+#' \code{sampRange}: Range-based sampling probability (Foote), \emph{(divSIB - tExt - tOri- t-Sing)/tThrough}
 #'
-#' samp3t: three-timer sampling completeness (used as a correcting value in extC3t, oriC3t and divCSIB)
+#' \code{samp3t}: Three-timer sampling completeness of Alroy (2008). \emph{t3/(t3+tPart)}
 #'
-#' extGF: gap-filler extinction rates (Alroy, 2014)
+#' \code{extGF}: Gap-filler extinction rates of Alroy(2014). \emph{log((t2u + tPart)/(t3+tPart+tGFd))}
 #'
-#' oriGF: gap-filler origination rates (Alroy, 2014)
+#' \code{oriGF}: Gap-filler origination rates of Alroy(2014). \emph{log((t2u + tPart)/(t3+tPart+tGFd))}
 #'
-#' E2f3: second-for-third extinction propotions (Alroy, 2015)
+#' \code{E2f3}: Second-for-third extinction propotions of Alroy (2015). As these metrics are based on an algorithmic approach, for the equations please refer to the Alroy (2015, p. 634, right column and Eq. 5)). See source code (\url{http://www.github.com/adamkocsis/divDyn}) for the exact implementation, found in the \code{Metrics} function in the diversityDynamics.R file.
 #'
-#' O2f3: second-for-third origination propotions (Alroy, 2015)
+#' \code{O2f3}: Second-for-third origination propotions of Alroy (2015). Please see \code{E2f3}.
 #'
-#' ext2f3: second-for-third extinction rates (based on Alroy, 2015)
+#' \code{ext2f3}: Second-for-third extinction rates (based on Alroy, 2015). Transformed to the classical rate form with \emph{log(1/(1-E2f3))}.
 #'
-#' ori2f3: second-for-third origination rates (based on Alroy, 2015)
+#' \code{ori2f3}: Second-for-third origination rates (based on Alroy, 2015). Transformed to the classical rate form with \emph{log(1/(1-O2f3))}.
 #' 
-#' References:
+#' \strong{References:}
 #'
 #' Foote, M. (2000) Origination and Extinction Components of Taxonomic Diversity: General Problems. Paleobiology 26, 74-102. doi:10.1666/0094-8373(2000)26[74:OAECOT]2.0.CO;2).
 #'
@@ -228,24 +227,24 @@ spCleanse <- function(vec, mode="simple", collapse="_"){
 #'
 #' Alroy, J. (2014) Accurate and precise estimates of origination and extinction rates. Paleobiology 40, 374-397. doi: 10.1666/13036
 #'
-#' Alroy, J. (2015) A more precise speciation and extinction rate estimator. Paleobiology 41, 633–639. doi: 10.1017/pab.2015.26
+#' Alroy, J. (2015) A more precise speciation and extinction rate estimator. Paleobiology 41, 633-639. doi: 10.1017/pab.2015.26
 #'
-#' @param dat (data.frame): the data frame of fossil occurrences.
+#' @param dat \code{(data.frame)} Fossil occurrence table.
 #' 
-#' @param tax (character): variable  name of the occurring taxa (variable type: factor) - such as "occurrence.genus_name"
+#' @param tax \code{(character)} Variable name of the occurring taxa (variable type: \code{factor} or \code{character} - such as \code{"genus"}
 #' 
-#' @param bin (character): variable name of the time slice numbers of the particular occurrences. This variable should be numeric and should increase as time passes by (use negative values for age estimates!). 
+#' @param bin \code{(character)} Variable name of the bin numbers of the particular occurrences. This variable should be \code{numeric} and should increase as time passes by (use negative values for age estimates). 
 #'
-#' @param breaks (numeric): If NULL (default) the used values in the 'bin' variable will designate independent time slices that follow each other in succession. In case of positive integer bin identifiers, and if noNAStart=FALSE,  the index of the row will be the bin number. If a vector is provided, than the numeric entries in 'bin' will be binned similarly to the hist() function. The order of elements in this vector is arbitrary.
-#' @param noNAStart (logical): useful when the dataset does not start from bin No. 1, but positive integer bin numbers are provided. Then noNAStart=TRUE will cut the first part of the resulting table, so the first row will contain the estimates for the lowest bin number.
+#' @param breaks \code{(numeric)} If \code{NULL} (default) the used values in the \code{bin} variable will designate independent time slices that follow each other in succession. If a vector is provided, than the numeric entries in \code{bin} will be binned similarly to the \code{\link[graphics]{hist}} or \code{\link[base]{cut}} function. The order of elements in this vector is arbitrary.
+#' @param noNAStart (logical) Useful when the dataset does not start from bin no. 1, but positive integer bin numbers are provided. Then \code{noNAStart=TRUE} will cut the first part of the resulting table, so the first row will contain the estimates for the lowest bin number. In case of positive integer bin identifiers, and if \code{noNAStart=FALSE}, the index of the row will be the bin number. 
 #' 
-#' @param inf (logical): should infinites be converted to NAs?
-#' @param data.frame (logical): should be a data frame or a matrix?
+#' @param inf \code{(logical)} Should \code{Inf} values be converted to \code{NA}s?
+#' @param data.frame \code{(logical)} Should the output be a \code{data.frame} or a \code{matrix}?
 #' 
-#' @param om (character): the om parameter of the omit() function. If set to NULL (default), then no occurrences will be omitted before the execution of the function.
-#' @param filterNA (logical): the filterNA() parameter of the omit function.
-#' @param coll (character): the variable name of the collection identifiers. (optional, only for filtering!)
-#' @param ref (character): the variable name of the reference identifiers. (optional, only for filtering!)
+#' @param om \code{(character)} The \code{om} argument of the \code{omit()} function. If set to \code{NULL} (default), then no occurrences will be omitted before the execution of the function.
+#' @param filterNA \code{(logical)} The \code{filterNA} parameter of the \code{\link{omit}} function.
+#' @param coll \code{(character)} The variable name of the collection identifiers. (optional, only for use with the internal \code{\link{omit}} function)
+#' @param ref \code{(character)} The variable name of the reference identifiers. (optional, only for use with the internal \code{\link{omit}} function)
 #' @examples
 #'	# import data
 #'	  data(corals)
@@ -619,21 +618,21 @@ Metrics<- function(counts){
 }
 
 
-#' Omission of occurrences that belong to poorly sampled taxa
+#' Omission of taxa that have a poor occurrence record
 #' 
 #' Function to quickly omit single-collection and single-reference taxa.
 #' 
-#' The function returns a logical vector of the rows to be omitted. The function is embedded in the divDyn() function, but can be called independently.
+#' The function returns a \code{logical} vector, with a value for each row. \code{TRUE} values indicate rows to be omitted, \code{FALSE} values indicate rows to be kept. The function is embedded in the \code{\link{divDyn}} function, but can be called independently.
 #' 
-#' @param bin (character value): The name of the subsetting variable (has to be integer). For time series, this is the time-slice variable. If set to NULL, the function performs unbinned subsampling.
+#' @param bin \code{(character)} The name of the bin variable (has to be \code{numeric} for the function to run). For time series, this is the time slice variable.
 #' 
-#' @param tax (character value): The name of the taxon variable.
+#' @param tax \code{(character)} The name of the taxon variable.
 #' 
-#' @param dat (data.frame): Occurrence dataset, with bin, tax and coll as column names.
-#' @param coll (character value): the variable name of the collection identifiers. 
-#' @param ref (character value): the variable name of the reference identifiers. 
-#' @param om (character value): the type of omission. "coll" omits occurrences of taxa that occurr only in one collection. "ref" omits occurrences of taxa that were described only in one reference. "binref"  will omit the set of single reference taxa that were described by more than one references, but appear in only one reference in a time bin.
-#' @param filterNA (logical value): additional entries can be added to influence the dataset that might not have reference or collection information (NA entries). These occurrences are treated as single-collection or single-reference taxa if the na.rm argument is set to FALSE (default). Setting this argument to TRUE will keep these entries. (see example)
+#' @param dat \code{(data.frame)} Occurrence dataset, with \code{bin}, \code{tax} and \code{coll} as column names.
+#' @param coll \code{(character)} The variable name of the collection identifiers. 
+#' @param ref \code{(character)} The variable name of the reference identifiers (optional). 
+#' @param om \code{(character)} The type of omission. \code{"coll"} omits occurrences of taxa that occurr only in one collection. \code{"ref"} omits occurrences of taxa that were described only in one reference. \code{"binref"} will omit the set of single reference taxa that were described by more than one references, but appear in only one reference in a time bin.
+#' @param filterNA \code{(logical)} Additional entries can be added to influence the dataset that might not have reference or collection information (\code{NA} entries). These occurrences are treated as single-collection or single-reference taxa if the \code{na.rm} argument is set to \code{FALSE} (default). Setting this argument to \code{TRUE} will keep these entries. (see example)
 #' 
 #' @examples
 #' # omit single-reference taxa
@@ -706,21 +705,26 @@ omit <- function(dat, tax="genus", bin="bin", coll="collection_no", ref="referen
 	if(om=="binref"){
 		nonDupl <- !duplicated(dat[,c(tax, ref, bin)])
 		
-		rows<-1:nrow(dat)
-	
-		tap<-tapply(INDEX=dat[nonDupl,bin], X=rows[nonDupl], function(x){
-			sliceTax<-dat[x,tax]
-			
-			tabSing <- table(dat[x,tax])
 		
-			singTax<- names(tabSing)[tabSing==1]
+		activeDat <- dat[nonDupl, ]
+		
+		tap<-tapply(INDEX=activeDat[,bin], X=activeDat[,tax], function(x){
+					
+			tabSing <- table(x)
+		
+			nonSingTax<- names(tabSing)[tabSing!=1]
+			return(nonSingTax)
 			
-			x[sliceTax%in%singTax]
 		
 		})
+		# list of taxa that do not occur in in only reference/slice
+		taxaMoreThanOne <- unique(unlist(tap))
 		
-		boolEnd<-rep(FALSE, length(rows))
-		boolEnd[unlist(tap)]<-TRUE
+		tap2<-(1:nrow(dat))[!dat[, tax]%in%taxaMoreThanOne]
+		
+	
+		boolEnd<-rep(FALSE, nrow(dat))
+		boolEnd[tap2]<-TRUE
 		
 		# if na.rm TRUE than do not omit NA reference stuff
 		if(filterNA){

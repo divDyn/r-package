@@ -1,21 +1,21 @@
-#' Time series plotting using a custom timescale object
+#' Time series plotting using a custom time scale 
 #'
 #' This function allows the user to quickly plot a time scale data table
 #'
-#' As most analysis use an individually compiled time scale object, in order to ensure compatibility between the analyzed and plotted values, the time scale table used for the analysis should be plotted rather than a standardized table.
-#' @param tsdat (data frame): time scale data frame
-#' @param boxes (character): column name indicating the names that should be plotted as a timescale
-#' @param ylim (numeric): the vertical extent of the plot, analogous to the same argument of plot(). By default it is set to the [0,1] interval.
-#' @param xlim (numeric): the horizontal extent of the plot, analogous to the same argument of plot(). By default it is set to  plot the entire table. If a numeric vector of length=2 is supplied, it will be interpreted as the standard xlim argument and the plot will be displayed based on numerically constrained ages. If it an integer vector with length>2, the interval corresponding to the row indices of the table will be plotted.
-#' @param prop (numeric value): proportion of the vertical extent of the plot for the timescale
-#' @param gap (numeric value): proportion of the vertical extent of the plot that should be a gap betwen the timescale and the plot.
-#' @param bottom (character): column name of the table for the variable that contains the older ages of intervals.
-#' @param top (character): column name of the table for the variable that contains the earliest ages of intervals.
-#' @param shading (character): column name used for the shading.
-#' @param shading.col (character): name of colors that will be used for the shading, if shading is set.
-#' @param plot.args (list): list of arguments that will be passed to the main plot() function.  Can be useful for the suppression of axes, font change etc.
-#' @param labels.args (list): list of arguments that will be passed to the text() function that draws the labels. 
-#' @param boxes.args (list): list of arguments that will be passed to the rect() function that draws the rectangles of time intervals.
+#' As most analysis use an individually compiled time scale object, in order to ensure compatibility between the analyzed and plotted values, the time scale table used for the analysis could be plotted rather than a standardized table. Two example tables have been included in the package (\code{\link{stages}} and \code{\link{bins}}) that can serve as templates.
+#' @param tsdat \code{(data frame)}: The time scale data frame.
+#' @param boxes \code{(character)}: Column name indicating the names that should be plotted as boxes of the timescale.
+#' @param ylim \code{(numeric)}: The vertical extent of the plot, analogous to the same argument of \code{\link[graphics]{plot}}. By default it is set to the \code{[0,1]} interval.
+#' @param xlim \code{(numeric)}: The horizontal extent of the plot, analogous to the same argument of \code{\link[graphics]{plot}}. By default it is set to plot the entire table. If a numeric vector with two values is supplied, it will be interpreted as the standard \code{xlim} argument and the plot will be displayed based on numerically constrained ages. If it is an integer vector with more than two values are plotted, the interval corresponding to the row indices of the table will be plotted.
+#' @param prop \code{(numeric)}: Proportion of the vertical extent of the plot to display the the time scale at the bottom.
+#' @param gap \code{(numeric)}: Proportion of the vertical extent of the plot that should be a gap betwen the time scale and the plot.
+#' @param bottom \code{(character)}: Column name of the table for the variable that contains the older ages of intervals.
+#' @param top \code{(character)}: Column name of the table for the variable that contains the earliest ages of intervals.
+#' @param shading \code{(character)}: Column name used for the shading. By default, no shading will be drawn (\code{shading = NULL}).
+#' @param shading.col \code{(character)}: Name of colors that will be used for the shading, if shading is set. The provided colors will be repeated as many times as necessary.
+#' @param plot.args \code{(list)}: Arguments that will be passed to the main \code{\link[graphics]{plot}} function.  Can be useful for the suppression of axes, font change etc.
+#' @param labels.args \code{(list)}: Arguments that will be passed to the \code{\link[graphics]{text}} function that draws the labels. 
+#' @param boxes.args \code{(list)}: Arguments that will be passed to the \code{\link[graphics]{rect}} function that draws the rectangles of time intervals.
 #' @examples
 #'	data(stages)
 #'	  plotTS(stages, boxes="per", shading="series")
@@ -70,13 +70,14 @@ plotTS<-function(tsdat,  boxes, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 			stop("The referenced 'boxes' column does not exist.")
 		}
 	}
-	
-	if(length(shading)>1){
-		stop("Only one column can be used to plot the shades.")
-		
-	}else{
-		if(!shading%in%colnames(tsdat)){
-			stop("The referenced 'shading' column does not exist.")
+	if(!is.null(shading)){
+		if(length(shading)>1){
+			stop("Only one column can be used to plot the shades.")
+			
+		}else{
+			if(!shading%in%colnames(tsdat)){
+				stop("The referenced 'shading' column does not exist.")
+			}
 		}
 	}
 	
@@ -257,27 +258,29 @@ plotTS<-function(tsdat,  boxes, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 
 #' Quantile plot of time series 
 #'
-#' This intermediate-level function will plot a time series with the quantiles shown as shades (using alpha values) around the central tendency.
+#' This intermediate-level function will plot a time series with the quantiles shown with transparency values.
 #'
-#' @param interpolate (logical value): In case the symmetric method is chosen, the series of quantile values can be interpolated with a LOESS function. 
-#' @param x (numeric): The x coordinates.
-#' @param y (numeric matrix): The series of distributions to be plotted. Every row represents a distribution of values. The number of rows must equal to the length of x. 
-#' @param res (numeric value): If a single value is entered, than it represents the number of quantiles to be shown (coerced to 150, if higher is entered). If it is vector of values, it will be interpreted as the vector of quantiles to be shown. If method="symmetric", only an odd number of quantiles are plotted. 
-#' @param border (character value): the color of the quantile lines
-#' @param col (character value): the color of the quantiles, currently just a single color is allowed.
-#' @param method (character value): The default "symmetric" method will plot the mid quantile range with highest opacity and the shades will be more translucent at the tails of the distributions. The "decrease" method will decrease the opacity with higher quantiles, which can make the plots of bottom-bounded distributions easier to interpret.
-#' @param na.rm (logical value): If set to FALSE, than rows that are missing from the dataset will be plotted as gaps in the shading. If set to TRUE, than these gaps will be skipped. 
+#' @param interpolate \code{(logical)}: In case the symmetric method is chosen, the series of quantile values can be interpolated with a LOESS function. 
+#' @param x \code{(numeric)}: The x coordinates.
+#' @param y \code{(numeric matrix)}: The series of distributions to be plotted. Every row represents a distribution of values. The number of rows must equal to the length of \code{x}. 
+#' @param res \code{(numeric)}: If a single value is entered, than this argument represents the number of quantiles to be shown (coerced to 150, if higher is entered). If it is vector of values, it will be interpreted as the vector of quantiles to be shown. If \code{method="symmetric"}, only an odd number of quantiles are plotted. 
+#' @param border \code{(character)}: The color of the quantile lines. A single value, by default, no lines are drawn (\code{border=NA}).
+#' @param col \code{(character)}: The color of the quantiles, currently just a single color is allowed.
+#' @param method \code{(character)}: The default \code{"symmetric"} method will plot the mid quantile range with highest opacity and the shades will be more translucent at the tails of the distributions. The \code{"decrease"} method will decrease the opacity with higher quantiles, which can make more sense for bottom-bounded distributions (e.g. exponential).
+#' @param na.rm \code{(logical)}: If set to \code{FALSE}, than rows that are missing from the dataset will be plotted as gaps in the shading. If set to \code{TRUE}, than these gaps will be skipped. 
 #' @examples
+#' # some random values accross the Phanerozoic
 #'	data(stages)
 #'	plotTS(stages, boxes="per", shading="series", ylim=c(-5,5), ylab=c("normal distributions"))
 #'	  randVar <- t(sapply(1:95, FUN=function(x){rnorm(150, 0,1)}))
-#'	  shades(stages$mid, randVar, col="blue", res=20,method="symmetric")	  
+#'	  shades(stages$mid, randVar, col="blue", res=10,method="symmetric")
 #'	  
+#' # a bottom-bounded distribution (log normal)
 #'	plotTS(stages, boxes="per", shading="series", ylim=c(0,30), ylab="log-normal distributions")
 #'	  randVar <- t(sapply(1:95, FUN=function(x){rlnorm(150, 0,1)}))
 #'	  shades(stages$mid, randVar, col="blue", res=c(0,0.33, 0.66, 1),method="decrease")	 
 #' @export
-shades <- function(x, y, col, res=100, border=NA,interpolate=F, method="symmetric",na.rm=FALSE){
+shades <- function(x, y, col, res=10, border=NA,interpolate=F, method="symmetric",na.rm=FALSE){
 	if(nrow(y)!=length(x)) stop("length of x and y don't match")
 	
 	# omit missing?
@@ -428,39 +431,39 @@ shades <- function(x, y, col, res=100, border=NA,interpolate=F, method="symmetri
 	
 
 
-#' Plot polygons of counts or proportions 
+#' Plot time series counts or proportions as polygons
 #' 
 #' This function plots the changing shares of categories in association with an independent variable. 
 #' 
-#' This function is useful for displaying the changing proportions of a category as time progresses.
+#' This function is useful for displaying the changing proportions of a category as time progresses. Check out the examples for the most frequent implementations.
 #' 
 #' To be added: missing portions are omitted in this version, but should be represented as gaps in the polygons. 
 #' 
-#' @param x (numeric vector): The independent variable through which the proportion is tracked. Identical entries are used to assess which values belong together to a set. Their values represent the x coordinate over the plot.
+#' @param x \code{(numeric)}: The independent variable through which the proportion is tracked. Identical entries are used to assess which values belong together to a set. Their values represent the x coordinate over the plot.
 #' 
-#' @param b (character or factor): Category designation.
+#' @param b (\code{character} or \code{factor}): A single vector with the category designations. This vector will be segmented using the entries of \code{x}.
 #' 
-#' @param ord The parameter of the variable order. Either "up" (increasing), "down" (decreasing) or the vector of categories in the desired order.
+#' @param ord \code{(character)}: The parameter of the variable order. Either \code{"up"} (increasing alphabetical order), \code{"down"} (decreasing alphabetical order) or the vector of categories in the desired order.
 #' 
-#' @param col The colour of polygons. By default this is grayscale. 
+#' @param col \code{(character)}: The color of polygons, has to a be a vector with as many entries as there are categories in \code{b}. By default \code{(col=NULL)} this is grayscale.
 #' 
-#' @param border The colour of the polygon borders. 
+#' @param border \code{(character)}: The a single color of the polygon borders. By default (\code{border=NA}), no borders are drawn. 
 #' 
-#' @param prop (logical value): Should the diagram show proportions or counts?
+#' @param prop \code{(logical)}: Should the diagram show proportions (\code{TRUE}) or counts (\code{FALSE})?
 #' 
-#' @param xlim (numeric vector): Extension of polygons to cover plotting area. Two values, has to exceed the range of x. 
+#' @param xlim \code{(numeric)}: Two values, analogous to the \code{xlim} argument of \code{\link[graphics]{plot}}, and has to exceed the range of \code{x}. The polygons that represent non-zero values with the lowest and highest values of \code{x} will be extended to these \code{x} coordinates. 
 #' 
-#' @param ylim (numeric vector): If prop=TRUE, then the argument controls the position of the proportions in the plotting area. If prop=FALSE, then the entire plotting area will be shifted by the single ylim value.
+#' @param ylim \code{(numeric)}: If \code{prop=TRUE}, then the argument controls the position of the proportions in the plotting area (useful to show proportions as a sub plot in a plot). If \code{prop=FALSE}, then the entire plotting area will be shifted by a single \code{ylim} value.
 #' 
-#' @param labs (logical value): should the category names be plotted?
+#' @param labs \code{(logical)}: Should the category names be plotted?
 #' 
-#' @param na.valid (logical value): if TRUE, than the missing values will be treated as an independent category. Entries where x is NA will be omitted either way.
+#' @param na.valid \code{(logical)}: If \code{TRUE}, than the missing values will be treated as an independent category. Entries where \code{x} is \code{NA} will be omitted either way.
 #' 
-#' @param labs.args (list): Lists of arguments for the text() function. If one entry for each argument is provided, then it will be applied to all labels. If the number of elements in an argument equals the number of categories to be plotted, then one to one assignment will be used (e.g. for 4 categories in total, if the labs.args list contains a col vector element of length 4, see examples.).
+#' @param labs.args \code{(list)}: Arguments for the \code{\link[graphics]{text}} function. If one entry for each argument is provided, then it will be applied to all labels. If the number of elements in an argument equals the number of categories to be plotted, then one to one assignment will be used. For example, for 4 categories in total, if the \code{labs.args} \code{list} contains a \code{col} vector element with 4 values, see examples).
 #' 
-#' @param plot (logical value): If set to TRUE than the function will plot the output. If set to FALSE, then a matrix with the relevant values will be returned. This output is similar to the output of table(), but handles proportions instantly.
+#' @param plot \code{(logical)}: If set to \code{TRUE}, then the function will plot the output. If set to \code{FALSE}, then a matrix with the relevant values will be returned. This output is similar to the output of \code{\link[base]{table}}, but handles proportions instantly.
 #' 
-#' @param vertical (logical value): Horizontal or vertical plotting? If FALSE, the independent variable will be horizontal, if TRUE, the count/proportion variable will be horizontal. In the latter case xlim and ylim has reversed roles.
+#' @param vertical \code{(logical)}: Horizontal or vertical plotting? If \code{FALSE}, the independent variable will be horizontal, if \code{TRUE}, the count/proportion variable will be horizontal. In the latter case \code{xlim} and \code{ylim} has reversed roles.
 #' @examples
 #' 
 #' # dummy examples 
@@ -691,12 +694,23 @@ parts<-function(x, b=NULL, ord="up", prop=F, plot=TRUE,  col=NULL, xlim=NULL, bo
 	allCum <- allCum+ylim[1]
 		
 	for(i in length(bLevs):1){
-		plotY<-c(
-			allCum[1,bLevs[i]], 
-			allCum[,bLevs[i]], 
-			allCum[nrow(allCum),bLevs[i]],
-			rep(ylim[1], length(xLev)+2))
+		if(i>1){
+			plotY<-c(
+				allCum[1,bLevs[i]], 
+				allCum[,bLevs[i]], 
+				allCum[nrow(allCum),bLevs[i]],
+				allCum[nrow(allCum),bLevs[i-1]],
+				rev(allCum[,bLevs[i-1]]), 
+				allCum[1,bLevs[i-1]]
+			)
 		
+		}else{
+			plotY<-c(
+				allCum[1,bLevs[i]], 
+				allCum[,bLevs[i]], 
+				allCum[nrow(allCum),bLevs[i]],
+				rep(ylim[1], length(xLev)+2))
+		}
 		# the xlims
 		plotX<-c(xlim[1], xLev, xlim[2], xlim[2], rev(xLev), xlim[1])
 	

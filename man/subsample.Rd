@@ -10,9 +10,9 @@
 \title{Serial subsampling wrapper function}
 \usage{
 subsample(dat, q, tax = "genus", coll = "collection_no", bin = "SLC",
-  FUN = divDyn, iter = 50, method = "cr", intact = NULL,
-  duplicates = FALSE, output = "arit", implement = "for",
-  useFailed = FALSE, ...)
+  FUN = divDyn, iter = 50, type = "cr", intact = NULL,
+  duplicates = FALSE, output = "arit", useFailed = FALSE,
+  vers = "inexact", ...)
 
 subsampleCR(binVar, q, intact = NULL)
 
@@ -28,68 +28,78 @@ subsampleSQSinexact(binVar, freqVar, q, collVar = NULL, byList = FALSE,
   intact = NULL, appr = "over", trialRet = "occ")
 }
 \arguments{
-\item{dat}{(data.frame): Occurrence dataset, with bin, tax and coll as column names.}
+\item{dat}{(\code{data.frame}): Occurrence dataset, with \code{bin}, \code{tax} and \code{coll} as column names.}
 
-\item{q}{(numeric value): Subsampling level argument (mandatory). Depends on the subsampling function, it is the number of occurrences for "cr"}
+\item{q}{(\code{numeric)}: Subsampling level argument (mandatory). Depends on the subsampling function, it is the number of occurrences for \code{"cr"}, and the number of desired occurrences to the power of \code{x} for O^x^W. It is also the quorum of the SQS method.}
 
-\item{tax}{(character value): The name of the taxon variable.}
+\item{tax}{(\code{character}): The name of the taxon variable.}
 
-\item{coll}{(character value): the variable name of the collection identifiers.}
+\item{coll}{(\code{character}): The variable name of the collection identifiers.}
 
-\item{bin}{(character value): The name of the subsetting variable (has to be integer). For time series, this is the time-slice variable. If set to NULL, the function performs unbinned subsampling.}
+\item{bin}{(\code{character}): The name of the subsetting variable (has to be integer). For time series, this is the time-slice variable.}
 
-\item{FUN}{The function to be iteratively executed on the results of the subsampling trials. If set to NULL, no function will be executed, and the subsampled datasets will be returned as a list. By default set to the divDyn() function. The function must have an argument called 'dat', that represents the dataset resulting from a subsampling trial (or the entire dataset). Arguments of the subsample() function call will be searched for potential arguments of this function, which means that already provided variables (e.g. 'bin' and 'tax') will also be used. You can also provide additional arguments (similarly to the apply iterator). Functions that allow arguments to pass through (that have argument '...') are not allowed.}
+\item{FUN}{(\code{function}): The function to be iteratively executed on the results of the subsampling trials. If set to \code{NULL}, no function will be executed, and the subsampled datasets will be returned as a \code{list}. By default set to the \code{\link{divDyn}} function. The function must have an argument called \code{dat}, that represents the dataset resulting from a subsampling trial (or the entire dataset). Arguments of the \code{subsample} function call will be searched for potential arguments of this function, which means that already provided variables (e.g. \code{bin} and \code{tax}) will also be used. You can also provide additional arguments (similarly to the \code{\link[base]{apply}} iterator). Functions that allow arguments to pass through (that have argument '...') are not allowed, as well as functions that have the same arguments as \code{subsample} but would require different values.}
 
-\item{iter}{(numeric value): The number of iterations to be executed.}
+\item{iter}{(\code{numeric}): The number of iterations to be executed.}
 
-\item{method}{(character value): The type of subsampling to be implemented. By default this is classical rarefaction ("cr"). "oxw" stands for occurrence weighted by list subsampling. If set to "sqs", the program will execute the shareholder quorum subsampling algorithm as it was suggested by Alroy (2010).}
+\item{type}{(\code{character}): The type of subsampling to be implemented. By default this is classical rarefaction (\code{"cr"}). (\code{"oxw"}) stands for occurrence weighted by-list subsampling. If set to (\code{"sqs"}), the program will execute the shareholder quorum subsampling algorithm as it was suggested by Alroy (2010).}
 
-\item{intact}{(numeric vector): The bins, which will not be subsampled but will be added to the subsampling trials. Negative values will be treated as indications on which bins to omit. If the number of occurrences does not reach the subsampling quota, by default it will not be represented in the subsampling trials. You can force their inclusion with the intact argument.}
+\item{intact}{(\code{numeric}): The bins, which will not be subsampled but will be added to the subsampling trials. Negative values will be treated as indications on which bins to omit. If the number of occurrences does not reach the subsampling quota, by default it will not be represented in the subsampling trials. You can force their inclusion with the \code{intact} argument.}
 
-\item{duplicates}{(logical value): Toggles whether multiple entries from the same taxon ("tax") and collection ("coll") variables should be omitted. Useful for omitting occurrences of multiple species-level occurrences of the same genus.}
+\item{duplicates}{(\code{logical} ): Toggles whether multiple entries from the same taxon (\code{"tax"}) and collection (\code{"coll"}) variables should be omitted. Useful for omitting occurrences of multiple species-level occurrences of the same genus. It is set to \code{FALSE} by default.}
 
-\item{output}{(character value): If the function output are vectors or matrices, the 'arit' and 'geom' values will trigger simple averaging with arithmetic or geometric means. If the function output of a single trial is again a vector or a matrix, setting the output to 'dist' will return the calculated results of every trial, organized in a list of independent variables (e.g. if the function output is value, the return will contain a list vectors, if it is a vector, the output will be a list of vectors, if the function output is a data.frame, the output will be a list of matrices). If output="list", the structure of the original function output will be retained, and the results of the individual trials will be concatenated to a list.}
+\item{output}{(\code{character}): If the function output are vectors or matrices, the \code{"arit"} and \code{"geom"} values will trigger simple averaging with arithmetic or geometric means. If the function output of a single trial is again a \code{vector} or a \code{matrix}, setting the output to \code{"dist"} will return the calculated results of every trial, organized in a \code{list} of independent variables (e.g. if the function output is value, the return will contain a single \code{vector}, if it is a \code{vector}, the output will be a list of \code{vector}s, if the function output is a \code{data.frame}, the output will be a \code{list} of \code{matrix} class objects). If \code{output="list"}, the structure of the original function output will be retained, and the results of the individual trials will be concatenated to a \code{list}.}
 
-\item{implement}{(character value): Either "lapply", "for" or "foreach". The iterator function of the subsampling trials. Use "lapply" for speed, but this may result in memory issues. Currently only the "for" implementation is finished.}
+\item{useFailed}{(\code{logical}): If the bin does not reach the subsampling quota, should the bin be used?}
 
-\item{useFailed}{(logical): If the interval does not reach the subsampling quota, should the data be used?}
+\item{vers}{(\code{character}): A parameter of SQS. The implementation type either \code{"exact"} or \code{"inexact"}.}
 
-\item{...}{arguments passed to FUN and the method-specific subsampling functions:}
+\item{...}{arguments passed to \code{FUN} and the type-specific subsampling functions:}
 
-\item{x}{the exponent of by-list subsampling (rarefaction) method.}
+\item{x}{(\code{numeric}): Argument of the OxW type. The exponent of by-list subsampling, by default it is 1.}
 
-\item{singleton}{(character value): Either "ref" or "occ". If set to "occ", the coverage estimator (e.g. Good's u) will be calculated based on the number of single-occurrence taxa. 
-If set to "ref" the number of occurrences belonging to single-reference taxa will be used instead. In case of the inexact algorithm, if set to FALSE, then coverage corrections of frequencies will not be applied (not advised).}
+\item{singleton}{\code{(character)}: A parameter of SQS. Either \code{"ref"} or \code{"occ"}. If set to \code{"occ"}, the coverage estimator (e.g. Good's u) will be calculated based on the number of single-occurrence taxa. 
+If set to "ref" the number of occurrences belonging to single-reference taxa will be used instead. In case of the inexact algorithm, if set to \code{FALSE} or \code{NA}, then coverage corrections of frequencies will not be applied.}
 
-\item{excludeDominant}{(logical) This parameter sets whether the dominant taxon should 
+\item{excludeDominant}{\code{(logical)}: Parameter for the inexact method of SQS. This parameter sets whether the dominant taxon should 
 be excluded from all calculations involving frequencies (this is the second correction of Alroy, 2010).}
 
-\item{largestColl}{(logical) This parameter sets whether the occurrences of taxa only ever
+\item{largestColl}{\code{(logical)}: Parameter for the inexact method of SQS. This parameter sets whether the occurrences of taxa only ever
  found in the most diverse collection should be excluded from the count of 
-single-publication occurrences. (this is the third correction of Alroy, 2010)}
+single-publication occurrences. (this is the third correction of Alroy, 2010) Note that \code{largestColl=TRUE} is dependent on \code{excludeDominant=TRUE}. Setting \code{excludeDominant} to \code{FALSE} will turn this correction off.}
 
-\item{fcorr}{(character value) either "good" or "alroy". This argument changes the frequency correction procedure of the 
+\item{fcorr}{\code{(character)}: Parameter for the inexact method of SQS. either "good" or "alroy". This argument changes the frequency correction procedure of the 
 'inexact' version of SQS (Alroy 2010). As not all taxa are present in the samples, 
 the sampled frequencies of taxa tend overestimate their frequencies in the sampling pool. 
 In Alroy (2010) these are corrected using Good's u ("good", default), in the later versions 
 of SQS this metric is changed to a different method using single occurrence and double occurrence taxa ("alroy").}
 
-\item{byList}{(character value): A parameter of SQS. Sets whether occurrences should be subsampled with (FALSE) or without (TRUE) breaking the collection integrity. (not yet for the exact algorithm.)}
+\item{byList}{(\code{character}): A parameter of the \code{"inexact"} method of SQS. Sets whether occurrences should be subsampled with (\code{FALSE}) or without (\code{TRUE}) breaking the collection integrity. (not yet for the exact algorithm.)}
 
-\item{appr}{(character value): A parameter of SQS, either "over" (default) or ("under"). The current 
+\item{appr}{(\code{character}): A parameter of the inexact method of SQS. Either "over" (default) or ("under"). The current 
 version is not concerned with small fluctuations around the drawn subsampling quorum. 
-Therefore, in the inexact algorithm, sampling is finished when the subset 
-either is immediately below the quorum ("under") or above it ("over").}
+Therefore, in the \code{inexact} algorithm, sampling is finished when the subset 
+either is immediately below the quorum (\code{"under"}) or above it (\code{"over"}).}
 }
 \description{
-The function will take a desired function that takes an occurrence dataset as an argument, and reruns it iteratively on its subsets.
+The function will take a desired function that has an occurrence dataset as an argument, and reruns it iteratively on the subsets of the dataset.
 }
 \details{
-The procedure of 'subsampling' or 'sampling standarization' has to be applied in cases 
-In paleontological questions...
+Although the help file lists some functions, the only interface for the procedures is the \code{subsample} function that serves as a framework for additional functions. All user input happens with this function and only it is exported to the package namespace. Currently the Classical Rarefaction (\code{"cr"}, Raup, 1975), the occurrence weighted by-list subsampling (\code{"oxw"}, Alroy et al., 2001) and the Shareholder Quorum Subsampling methods are implemented (\code{"sqs"}, Alroy, 2010).
 
-The function is used to test whether a specific statement holds when sampling standardization is applied. The procedure calculates the variables in question given a certain sampling standardization and routine and level.
-The implementation of SQS has more variables than necessary, as I intended to reproduce the work of Alroy, which was a continuous process. This method will be simplified in the future after explicit simulation trials.
+For a detailed treatment on what the function does, please see the vignette ('Handout to the R package 'divDyn' v0.4.0 for diversity dynamics from fossil occurrence data').
+
+The subsampleXYZ functions produce a single trial result by returning the row indices of the original datasets.
+The CR and OxW types call the \code{subsampleCR}, \code{subsampleOXW} internally. SQS has two different implementations, the \code{"exact"} and \code{"inexact"} approach (Alroy, 2014). The \code{"inexact"} solution is set to be the default method, as it is computationally less demanding. 
+The \code{"inexact"} method calls the \code{frequencies} and the \code{subsampleSQSinexact} functions. The first calculates frequencies for each taxon and each bin, the second performs a single subsampling trial. The \code{"exact"} implementation calls the \code{subsampleSQSexact} internal function to perform the trials. You can study the source codes of these functions  at \url{http://www.github.org/adamkocsis/divDyn/R/} in the subsample.R file.
+
+\strong{References:}
+
+Alroy, J., Marshall, C. R., Bambach, R. K., Bezusko, K., Foote, M., Fürsich, F. T., … Webber, A. (2001). Effects of sampling standardization on estimates of Phanerozoic marine diversification. Proceedings of the National Academy of Science, 98(11), 6261-6266.
+
+Alroy, J. (2010). The Shifting Balance of Diversity Among Major Marine Animal Groups. Science, 329, 1191-1194. https://doi.org/10.1126/science.1189910
+
+Raup, D. M. (1975). Taxonomic Diversity Estimation Using Rarefaction. Paleobiology, 1, 333-342. https: //doi.org/10.2307/2400135
 }
 \examples{
 
@@ -138,16 +148,16 @@ lines(stages$mid, rarefDD$divSIB, lwd=2, col="black")
 lines(stages$mid, rarefSIB, lwd=2, col="blue")
     
 
-# Example 3 - different subsampling methods with default function (divDyn)
+# Example 3 - different subsampling types with default function (divDyn)
 # compare different subsampling types
   # classical rarefaction
   cr<-subsample(corals,iter=50, q=20,tax="genus", bin="slc", output="dist", intact=95)
   # by-list subsampling (unweighted) - 3 collections
-  UW<-subsample(corals,iter=50, q=3,tax="genus", bin="slc", output="dist", intact=95, method="oxw", x=0)
+  UW<-subsample(corals,iter=50, q=3,tax="genus", bin="slc", output="dist", intact=95, type="oxw", x=0)
   # occurrence weighted by list subsampling
-  OW<-subsample(corals,iter=50, q=20,tax="genus", bin="slc", output="dist", intact=95, method="oxw", x=1)
+  OW<-subsample(corals,iter=50, q=20,tax="genus", bin="slc", output="dist", intact=95, type="oxw", x=1)
  
-  SQS<-subsample(corals,iter=50, q=0.4,tax="genus", bin="slc", output="dist", intact=95, method="sqs", ref="reference_no")
+  SQS<-subsample(corals,iter=50, q=0.4,tax="genus", bin="slc", output="dist", intact=95, type="sqs", ref="reference_no")
 
 # plot
   plotTS(stages, shading="series", boxes="per", xlim=c(260,0), 

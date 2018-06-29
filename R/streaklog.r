@@ -2,14 +2,17 @@
 #' 
 #' The function returns where the continuous streaks start and how long they are, which can be used for efficient and flexible subsetting.
 #'
-#' The output list of streak() contains the following elements:
-#' starts: the indices where the streaks start.
-#' streaks: the lengths of the individual streaks (number of values).
-#' runs: the number of streaks.
+#' The output list of \code{streaklog} contains the following elements:
+#'
+#' \code{starts}: the indices where the streaks start.
+#'
+#' \code{streaks}: the lengths of the individual streaks (number of values).
+#'
+#' \code{runs}: the number of streaks.
 #'
 #' The function whichmaxstreak() will return the indices of those values that are in the longest continuous streak.
 #' 
-#' @param x a vector with gaps. Will be converted to a logical vector, with gaps indicated by values of FALSE.
+#' @param x (\code{vector}) A vector with missing values.
 #'
 #' @examples
 #'	# generate a sequence of values

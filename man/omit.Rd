@@ -2,31 +2,31 @@
 % Please edit documentation in R/diversityDynamics.r
 \name{omit}
 \alias{omit}
-\title{Omission of occurrences that belong to poorly sampled taxa}
+\title{Omission of taxa that have a poor occurrence record}
 \usage{
 omit(dat, tax = "genus", bin = "bin", coll = "collection_no",
   ref = "reference_no", om = "ref", filterNA = FALSE)
 }
 \arguments{
-\item{dat}{(data.frame): Occurrence dataset, with bin, tax and coll as column names.}
+\item{dat}{\code{(data.frame)} Occurrence dataset, with \code{bin}, \code{tax} and \code{coll} as column names.}
 
-\item{tax}{(character value): The name of the taxon variable.}
+\item{tax}{\code{(character)} The name of the taxon variable.}
 
-\item{bin}{(character value): The name of the subsetting variable (has to be integer). For time series, this is the time-slice variable. If set to NULL, the function performs unbinned subsampling.}
+\item{bin}{\code{(character)} The name of the bin variable (has to be \code{numeric} for the function to run). For time series, this is the time slice variable.}
 
-\item{coll}{(character value): the variable name of the collection identifiers.}
+\item{coll}{\code{(character)} The variable name of the collection identifiers.}
 
-\item{ref}{(character value): the variable name of the reference identifiers.}
+\item{ref}{\code{(character)} The variable name of the reference identifiers (optional).}
 
-\item{om}{(character value): the type of omission. "coll" omits occurrences of taxa that occurr only in one collection. "ref" omits occurrences of taxa that were described only in one reference. "binref"  will omit the set of single reference taxa that were described by more than one references, but appear in only one reference in a time bin.}
+\item{om}{\code{(character)} The type of omission. \code{"coll"} omits occurrences of taxa that occurr only in one collection. \code{"ref"} omits occurrences of taxa that were described only in one reference. \code{"binref"} will omit the set of single reference taxa that were described by more than one references, but appear in only one reference in a time bin.}
 
-\item{filterNA}{(logical value): additional entries can be added to influence the dataset that might not have reference or collection information (NA entries). These occurrences are treated as single-collection or single-reference taxa if the na.rm argument is set to FALSE (default). Setting this argument to TRUE will keep these entries. (see example)}
+\item{filterNA}{\code{(logical)} Additional entries can be added to influence the dataset that might not have reference or collection information (\code{NA} entries). These occurrences are treated as single-collection or single-reference taxa if the \code{na.rm} argument is set to \code{FALSE} (default). Setting this argument to \code{TRUE} will keep these entries. (see example)}
 }
 \description{
 Function to quickly omit single-collection and single-reference taxa.
 }
 \details{
-The function returns a logical vector of the rows to be omitted. The function is embedded in the divDyn() function, but can be called independently.
+The function returns a \code{logical} vector, with a value for each row. \code{TRUE} values indicate rows to be omitted, \code{FALSE} values indicate rows to be kept. The function is embedded in the \code{\link{divDyn}} function, but can be called independently.
 }
 \examples{
 # omit single-reference taxa

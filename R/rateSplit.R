@@ -1,26 +1,32 @@
-#' Test of rate split (selectivity testing)
+#' Test of rate split (selectivity)
 #'	
-#' This function will determine whether there are meaningful differences between the taxonomic rates in the individual time slices of two subsets of an occurrence database.
+#' This function will determine whether there are meaningful differences between the taxonomic rates in the individual time bins of two subsets of an occurrence database.
 #'	
-#' Splitting an occurrence database to its subsets secreases the amount of information passed to the rate calculations and therefore the precision of the individual estimates. In order to assess the subsets individually and compare them, it is advised to test whether they the split is meaningful, given the total data. Examples of this use can be found in Kiessling and Simpson (2011), Global Change Biology 17, 56-67 and Kiessling and Kocsis (2015), Paleobiology 41, 402-414.
+#' Splitting an occurrence database to its subsets secreases the amount of information passed to the rate calculations and therefore the precision of the individual estimates. Therefore, our ability to tell apart two similar values decreases with the number of sampled taxa. In order to assess the subsets individually and compare them, it is advised to test whether the split into two subsets is meaningful, given the total data. Examples of this use can be found in Kiessling and Simpson (2011) and Kiessling and Kocsis (2015).
+#' The meaningfulness of the split is dependent on the estimate accurracy and the magnitude of the difference. Two different methods are implemented: \code{binom} and \code{combine}.
+#'
+#' \strong{References}
+#'
+#' Kiessling, W., & Simpson, C. (2011). On the potential for ocean acidification to be a general cause of ancient reef crises. Global Change Biology, 17(1), 56-67.
+#'
+#' Kiessling, W., & Kocsis, A. T. (2015). Biodiversity dynamics and environmental occupancy of fossil azooxanthellate and zooxanthellate scleractinian corals. Paleobiology, 41(3), 402-414.
+#'
+#' @param sel \code{(character)}: Variable name to do the splitting of the dataset. Can have only two levels.
 #'	
-#' The meaningfulness of the split is dependent on the estimate accurracy and the magnitude of the difference.
-#' @param sel (character): Variable name to do the splitting of the dataset. Can have only two levels.
+#' @param output \code{(character)}: Either \code{"simple"} or \code{"full"}. \code{"simple"} returns the indices of the series where selectivity can be suggested. \code{"full"} returns a \code{matrix} of Akaike weights, or binomial probabilities.
 #'	
-#' @param output (character): Either "simple" or "full". Simple returns the indices of the series where selectivity can be suggested. "full" returns a matrix of Akaike weights, or binomial probabilities.
+#' @param method \code{(character)}: Either \code{"AIC"}, \code{"binom"} or \code{"combine"}. The \code{"AIC"} method calculates the Akaike weights of the single and dual rate models. The \code{"binom"} method assumes a binomial error distribution of the counts that are necessary for the rate calculations. The \code{"combine"} method shows slices that pass both tests, the \code{"AIC"} being usually the stronger.
 #'	
-#' @param method (character): Either "AIC", "binom" or "combine". The "AIC" method calculates the Akaike weights of the single and dual rate models. The "binom" method assumes a binomial error distribution of the counts that are necessary for the rate calculations. The "combine" method shows slices that pass both tests, the "AIC" being usually the stronger.
+#' @param alpha \code{(numeric)}: Threshold to discriminate between meaningful and meaningless split. If \code{method="AIC"}, the value corresponds to the minimum weight value the dual model should have. By default it is \code{0.89}, which corresponds to the likelihood ratio of 8. If \code{method="binom"}, the value corresponds to the alpha value of the binomial test (default: 0.05). If \code{method="combine"} than two alpha values are required (1st for the AIC, 2nd for the binomial test). If alpha is \code{NULL}, than the default values will be used.
 #'	
-#' @param alpha (num): Threshold for the between meaningful and meaningless split. If method=="AIC", the value corresponds to the minimum weight value the dual model should have , by default it is 0.89, which corresponds to the likelihood ratio of 8. If method=="binom", the value corresponds to the alpha value of the binomial test. If method=="combine" than two alpha values are required (1st for the AIC, 2nd for the binomial test). If alpha is NULL, than the default values will be used.
+#' @param AICc \code{(logical)}: Only applicable for the \code{"AIC"} method. Toggles whether the small sample corrected AIC (AICc) should be used instead of the regular one.
 #'	
-#' @param AICc (logical): Only applicable for the "AIC" method. Toggles whether the small sample corrected AIC (AICc) should be used instead of the regular one.
-#'	
-#' @param rate (character): The rate metric. Currently only the per capita rates of Foote (2000) are available.
-#' @param dat (data.frame): the data frame containing PBDB occurrences.
+#' @param rate \code{(character)}: The rate metric. Currently only the per capita rates of Foote (2000) are available (\code{rate="pc"}).
+#' @param dat \code{(data.frame)}: The fossil occurrence data.
 #'	 
-#' @param tax (char): variable  name of the occurring taxa (variable type: factor) - such as "occurrence.genus_name"
+#' @param tax \code{(character)}: Variable name of the occurring taxa (variable type: \code{factor} or \code{character}).
 #'	 
-#' @param bin (char): variable name of the time slice numbers of the particular occurrences (variable type: int)- such as "slc" or whatever. Bin numbers should be in ascending order,can contain NA's, it can start from a number other than 1 and must not start with 0.
+#' @param bin \code{(character)}: Variable name of the bin numbers of the particular occurrences (\code{numeric}). Bin numbers should be in ascending order,can contain \code{NA}s, it can start from a number other than 1 and must not start with 0.
 #' @examples
 #'	# example with the coral dataset of Kiessling and Kocsis (2015)
 #'	data(corals)
@@ -69,6 +75,12 @@ ratesplit<-function(dat,  sel, tax="genus", bin="slc", rate="pc", method="AIC",A
 #	
 #	na.rm=T
 #	
+	# defense
+	if(length(output)!=1 | length(method)!=1) stop("Enter only one value for the output and method arguments.")
+	if(!method%in%c("AIC", "binom", "combine")) stop("Invalid method.")
+	if(!output%in%c("simple", "full")) stop("Invalid output.")
+
+
 	# the types of entries
 	entries<-unique(dat[,sel])
 	
@@ -257,7 +269,8 @@ ratesplit<-function(dat,  sel, tax="genus", bin="slc", rate="pc", method="AIC",A
 		}
 		if(output=="full"){
 			res<-cbind(res, aicRes)
-		
+			names(res)<- c("binSignExt1", "binSignExt2", "binSignOri1", "binSignOri2", 
+			"aicSingleOri", "aicDualOri", "aicSingleExt", "aicDualExt")
 		}
 	}
 	
