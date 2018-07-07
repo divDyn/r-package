@@ -26,7 +26,7 @@
 #'	# calculate metrics of diversity dynamics
 #'    dd <- divDyn(corals, tax="genus", bin="slc")
 #'	  rarefDD <- crDD(corals, quota=100, iter=10, intactBins=95)
-#'
+#' 
 #'	# plotting
 #'	  plotTS(stages, shading="series", boxes="per", xlim=52:95, 
 #'	  ylab="range-through diversity (genera)", ylim=c(0,230))
@@ -166,7 +166,7 @@ crDD<-function (dat, quota, tax="genus", bin="slc", coll="collection_no",  iter=
 			#loop counting
 				
 				cat(k, paste("of ", iter, " iterations, ", "\r",sep="") )
-				flush.console()
+				utils::flush.console()
 		}
 	
 	#3. average the counts (using the geometric mean)

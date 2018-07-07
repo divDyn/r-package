@@ -64,7 +64,7 @@
 #'	
 #'	
 #' @export
-ratesplit<-function(dat,  sel, tax="genus", bin="slc", rate="pc", method="AIC",AICc=T, na.rm=T, alpha=NULL, output="simple"){
+ratesplit<-function(dat,  sel, tax="genus", bin="slc", rate="pc", method="AIC",AICc=TRUE, na.rm=TRUE, alpha=NULL, output="simple"){
 #	 #dummy data:
 # 	
 #	 dat<-corals
@@ -239,15 +239,15 @@ ratesplit<-function(dat,  sel, tax="genus", bin="slc", rate="pc", method="AIC",A
 				pr <- newBC[,2]/dualBC # boundary crossers 
 		
 			# Binomial test (specific for three columns) - extinctions
-				sigExt <- pbinom(kExt,nExt,pr,lower.tail=F)+dbinom(kExt,nExt,pr)
-				sigExt2 <- pbinom(nExt-kExt,nExt,1-pr,lower.tail=F)+dbinom(nExt-kExt,nExt,1-pr)
+				sigExt <- stats::pbinom(kExt,nExt,pr,lower.tail=F)+stats::dbinom(kExt,nExt,pr)
+				sigExt2 <- stats::pbinom(nExt-kExt,nExt,1-pr,lower.tail=F)+stats::dbinom(nExt-kExt,nExt,1-pr)
 				
 				# which are significant
 				binExt <- which(sigExt <= alphaBinom | sigExt2 <= alphaBinom)
 			
 			# Binomial test (specific for three columns) - originations
-				sigOri <- pbinom(kOri,nOri,pr,lower.tail=F)+dbinom(kOri,nOri,pr)
-				sigOri2 <- pbinom(nOri-kOri,nOri,1-pr,lower.tail=F)+dbinom(nOri-kOri,nOri,1-pr)
+				sigOri <- stats::pbinom(kOri,nOri,pr,lower.tail=F)+stats::dbinom(kOri,nOri,pr)
+				sigOri2 <- stats::pbinom(nOri-kOri,nOri,1-pr,lower.tail=F)+stats::dbinom(nOri-kOri,nOri,1-pr)
 				
 				# which are significant
 				binOri <- which(sigOri <= alphaBinom | sigOri2 <= alphaBinom)	

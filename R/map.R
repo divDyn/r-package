@@ -20,7 +20,7 @@
 #' # Example 1
 #' # x, as character
 #'    set.seed(1000)
-#'    toReplace <- sample(letters[1:6], 15, replace=T)
+#'    toReplace <- sample(letters[1:6], 15, replace=TRUE)
 #' # a and b should mean 'first', c and d 'second' others: NA
 #'    key<-list(first=c("a", "b"), second=c("c", "d"), default=NA)
 #' # do the replacement

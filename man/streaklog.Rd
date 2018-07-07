@@ -11,6 +11,8 @@ whichmaxstreak(x, which = -1)
 }
 \arguments{
 \item{x}{(\code{vector}) A vector with missing values.}
+
+\item{which}{\code{(integer)} In case multiple streaks of the same length are found, which of them should be returned by the vector (integer).}
 }
 \description{
 The function returns where the continuous streaks start and how long they are, which can be used for efficient and flexible subsetting.

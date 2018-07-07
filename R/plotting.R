@@ -8,6 +8,8 @@
 #' @param ylim \code{(numeric)}: The vertical extent of the plot, analogous to the same argument of \code{\link[graphics]{plot}}. By default it is set to the \code{[0,1]} interval.
 #' @param xlim \code{(numeric)}: The horizontal extent of the plot, analogous to the same argument of \code{\link[graphics]{plot}}. By default it is set to plot the entire table. If a numeric vector with two values is supplied, it will be interpreted as the standard \code{xlim} argument and the plot will be displayed based on numerically constrained ages. If it is an integer vector with more than two values are plotted, the interval corresponding to the row indices of the table will be plotted.
 #' @param prop \code{(numeric)}: Proportion of the vertical extent of the plot to display the the time scale at the bottom.
+#' @param xlab \code{(character)}: The label of the time axis.
+#' @param ylab \code{(character)}: The label of the data axis.
 #' @param gap \code{(numeric)}: Proportion of the vertical extent of the plot that should be a gap betwen the time scale and the plot.
 #' @param bottom \code{(character)}: Column name of the table for the variable that contains the older ages of intervals.
 #' @param top \code{(character)}: Column name of the table for the variable that contains the earliest ages of intervals.
@@ -17,12 +19,12 @@
 #' @param labels.args \code{(list)}: Arguments that will be passed to the \code{\link[graphics]{text}} function that draws the labels. 
 #' @param boxes.args \code{(list)}: Arguments that will be passed to the \code{\link[graphics]{rect}} function that draws the rectangles of time intervals.
 #' @examples
-#'	data(stages)
+#'	data(stages) 
 #'	  plotTS(stages, boxes="per", shading="series")
-#'
+#' 
 #'	# only the Mesozoic, custom axes
 #'	  plotTS(stages, boxes="period", shading="stage", xlim=52:81, 
-#'	    plot.args=list(axes=F, main="Mesozoic"))
+#'	    plot.args=list(axes=FALSE, main="Mesozoic"))
 #'	  axis(1, at=seq(250, 75, -25), labels=seq(250, 75, -25))
 #'	  axis(2)
 #'	
@@ -160,7 +162,7 @@ plotTS<-function(tsdat,  boxes, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 			type="n"
 		)
 		plotArgs<-c(plotArgs, plot.args)
-		do.call(plot, plotArgs)
+		do.call(graphics::plot, plotArgs)
 		
 	# the box drawing
 	boxLev<-unique(tsdat[,boxes])
@@ -204,7 +206,7 @@ plotTS<-function(tsdat,  boxes, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 	
 	# combine with outer arguments
 	boxArgs<-c(boxArgs, boxes.args)
-	do.call(rect, boxArgs)
+	do.call(graphics::rect, boxArgs)
 				
 		
 		
@@ -239,18 +241,18 @@ plotTS<-function(tsdat,  boxes, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 			curBottom<-max(tsdat[boolSel,bottom], na.rm=T)
 			curTop<-min(tsdat[boolSel,top], na.rm=T)
 			if(i%%length(shading.col)){
-				rect(xleft=curBottom, xright=curTop, ybottom=plotBottom, ytop=ylim[2], border=NA, col=shading.col[i%%length(shading.col)+1])
+				graphics::rect(xleft=curBottom, xright=curTop, ybottom=plotBottom, ytop=ylim[2], border=NA, col=shading.col[i%%length(shading.col)+1])
 			}else{
-				rect(xleft=curBottom, xright=curTop, ybottom=plotBottom, ytop=ylim[2], border=NA, col=shading.col[i%%length(shading.col)+1])
+				graphics::rect(xleft=curBottom, xright=curTop, ybottom=plotBottom, ytop=ylim[2], border=NA, col=shading.col[i%%length(shading.col)+1])
 			}
 		
 		}
-		rect(xright=xlim[2], xleft=xlim[1], ytop=ylim[2], ybottom=plotBottom)
+		graphics::rect(xright=xlim[2], xleft=xlim[1], ytop=ylim[2], ybottom=plotBottom)
 	}
 	# force box()	
 	if(gap>0){
-		rect(xleft=xlim[1], xright=xlim[2], ytop=plotBottom, ybottom=boxesTop,border="white")
-		abline(h=c(boxesTop, plotBottom))
+		graphics::rect(xleft=xlim[1], xright=xlim[2], ytop=plotBottom, ybottom=boxesTop,border="white")
+		graphics::abline(h=c(boxesTop, plotBottom))
 	}
 	
 }
@@ -280,7 +282,7 @@ plotTS<-function(tsdat,  boxes, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 #'	  randVar <- t(sapply(1:95, FUN=function(x){rlnorm(150, 0,1)}))
 #'	  shades(stages$mid, randVar, col="blue", res=c(0,0.33, 0.66, 1),method="decrease")	 
 #' @export
-shades <- function(x, y, col, res=10, border=NA,interpolate=F, method="symmetric",na.rm=FALSE){
+shades <- function(x, y, col, res=10, border=NA,interpolate=FALSE, method="symmetric",na.rm=FALSE){
 	if(nrow(y)!=length(x)) stop("length of x and y don't match")
 	
 	# omit missing?
@@ -312,9 +314,9 @@ shades <- function(x, y, col, res=10, border=NA,interpolate=F, method="symmetric
 		resolved<-apply(y, 1, function(x){
 			x<-x[!is.na(x)]
 			if(length(x)>3){
-				quant<-quantile(x,colQ)
-				lmod<-loess(quant ~ colQ, span=0.4)
-				tap<-predict(lmod, colQ)
+				quant<-stats::quantile(x,colQ)
+				lmod<-stats::loess(quant ~ colQ, span=0.4)
+				tap<-stats::predict(lmod, colQ)
 			return(tap)
 			}else{
 				return(rep(NA, colRes))
@@ -334,8 +336,8 @@ shades <- function(x, y, col, res=10, border=NA,interpolate=F, method="symmetric
 			
 		
 	
-		hex<-t(col2rgb(col))/255
-		hex<-rgb(red=hex[1],green=hex[2],blue=hex[3],alpha=1/(colRes/2))
+		hex<-t(grDevices::col2rgb(col))/255
+		hex<-grDevices::rgb(red=hex[1],green=hex[2],blue=hex[3],alpha=1/(colRes/2))
 
 	}else{
 		
@@ -357,7 +359,7 @@ shades <- function(x, y, col, res=10, border=NA,interpolate=F, method="symmetric
 		resolved<-apply(y, 1, function(x){
 			x<-x[!is.na(x)]
 			if(length(x)>3){
-				quant<-quantile(x,qS)
+				quant<-stats::quantile(x,qS)
 				return(quant)
 			}else{
 				return(rep(NA, res))
@@ -365,14 +367,14 @@ shades <- function(x, y, col, res=10, border=NA,interpolate=F, method="symmetric
 		
 		})
 		
-		hex<-t(col2rgb(col))/255
+		hex<-t(grDevices::col2rgb(col))/255
 		if(method=="symmetric"){
 	
-			hex<-rgb(red=hex[1],green=hex[2],blue=hex[3],alpha=1/(res/2))
+			hex<-grDevices::rgb(red=hex[1],green=hex[2],blue=hex[3],alpha=1/(res/2))
 		}
 		
 		if(method=="decrease"){
-			hex<-rgb(red=hex[1],green=hex[2],blue=hex[3],alpha=1/(res))
+			hex<-grDevices::rgb(red=hex[1],green=hex[2],blue=hex[3],alpha=1/(res))
 		
 		}
 	
@@ -412,8 +414,8 @@ shades <- function(x, y, col, res=10, border=NA,interpolate=F, method="symmetric
 			for(i in 1:(nrow(resSub)/2)){
 				xNew<-c(xSub,rev(xSub))
 				yNew<-c(resSub[i,],rev(resSub[nrow(resSub)-i+1,])	)
-			#	polygon(xNew,yNew, col=allCols[i+1], border=F)
-				polygon(xNew,yNew, col=hex, border=border)
+			#	graphics::polygon(xNew,yNew, col=allCols[i+1], border=F)
+				graphics::polygon(xNew,yNew, col=hex, border=border)
 			}
 		}
 		
@@ -421,7 +423,7 @@ shades <- function(x, y, col, res=10, border=NA,interpolate=F, method="symmetric
 		for(i in nrow(resSub):1){
 				xNew<-c(xSub,rev(xSub))
 				yNew<-c(resSub[1,],rev(resSub[nrow(resSub)-i+1,])	)
-				polygon(xNew,yNew, col=hex, border=border)
+				graphics::polygon(xNew,yNew, col=hex, border=border)
 			}
 		
 		}
@@ -478,20 +480,21 @@ shades <- function(x, y, col, res=10, border=NA,interpolate=F, method="symmetric
 #' 
 #'   # basic function
 #'     plot(NULL, NULL, ylim=c(0,1), xlim=c(0.5, 3.5))
-#'     parts(slc, va, prop=T)
+#'     parts(slc, va, prop=TRUE)
 #'  
 #'   # vertical plot
 #'     plot(NULL, NULL, xlim=c(0,1), ylim=c(0.5, 3.5))
-#'     parts(slc, va, col=c("red" ,"blue", "green", "orange"), xlim=c(0.5,3.5), labs=T, prop=T, vertical=T)
+#'     parts(slc, va, col=c("red" ,"blue", "green", "orange"), xlim=c(0.5,3.5), 
+#'       labs=TRUE, prop=TRUE, vertical=TRUE)
 #' 
 #'   # intensive argumentation
 #'     plot(NULL, NULL, ylim=c(0,10), xlim=c(0.5, 3.5))
 #'     parts(slc, va, ord=c("b", "c", "d", "a"), col=c("red" ,"blue", "green", "orange"), 
-#' 	  xlim=c(0.5,3.5), labs=T, prop=F, 
+#' 	  xlim=c(0.5,3.5), labs=TRUE, prop=FALSE, 
 #' 	  labs.args=list(cex=1.3, col=c("black", "orange", "red", "blue")))
 #' 
 #'   # just the values
-#'     parts(slc, va, prop=T,plot=F)
+#'     parts(slc, va, prop=TRUE,plot=FALSE)
 #' 	
 #' # real example
 #'   # the proportion of coral occurrences through time in terms of bathymetry
@@ -507,13 +510,14 @@ shades <- function(x, y, col, res=10, border=NA,interpolate=F, method="symmetric
 #'   types <- c("uk", "shal", "deep")
 #'   
 #'   parts(x=stages$mid[corals$slc], b=corals$bath, 
-#'    ord=types, col=cols, prop=T,border=NA, labs=F)
+#'    ord=types, col=cols, prop=TRUE,border=NA, labs=FALSE)
 #'    
 #'   # legend
-#'   legend("left", inset=c(0.1,0), legend=c("unknown", "shallow", "deep"), fill=cols, bg="white", cex=1.4) 
+#'   legend("left", inset=c(0.1,0), legend=c("unknown", "shallow", "deep"), fill=cols, 
+#'     bg="white", cex=1.4) 
 #' 
 #' @export
-parts<-function(x, b=NULL, ord="up", prop=F, plot=TRUE,  col=NULL, xlim=NULL, border=NULL, ylim=c(0,1), na.valid=FALSE, labs=T, labs.args=NULL, vertical=F){
+parts<-function(x, b=NULL, ord="up", prop=FALSE, plot=TRUE,  col=NULL, xlim=NULL, border=NULL, ylim=c(0,1), na.valid=FALSE, labs=T, labs.args=NULL, vertical=FALSE){
 	
 	# starting arguments
 	if(is.matrix(x)){
@@ -715,9 +719,9 @@ parts<-function(x, b=NULL, ord="up", prop=F, plot=TRUE,  col=NULL, xlim=NULL, bo
 		plotX<-c(xlim[1], xLev, xlim[2], xlim[2], rev(xLev), xlim[1])
 	
 		if(vertical){
-			polygon(plotY, plotX, col=col[bLevs[i]], border=border[bLevs[i]])
+			graphics::polygon(plotY, plotX, col=col[bLevs[i]], border=border[bLevs[i]])
 		}else{
-			polygon(plotX, plotY, col=col[bLevs[i]], border=border[bLevs[i]])
+			graphics::polygon(plotX, plotY, col=col[bLevs[i]], border=border[bLevs[i]])
 		}
 	}
 	
@@ -753,7 +757,7 @@ parts<-function(x, b=NULL, ord="up", prop=F, plot=TRUE,  col=NULL, xlim=NULL, bo
 			})
 			
 			# plot the labels
-			do.call(text, c(newArgs, plusArgs))
+			do.call(graphics::text, c(newArgs, plusArgs))
 		}
 	
 	}

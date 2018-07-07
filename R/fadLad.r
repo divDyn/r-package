@@ -25,7 +25,7 @@
 #' @param bin \code{(character)} The column name of bin names, has to be an integer 
 #' @param maxdate \code{(character)} Optional, the column names of maximum estimated ages of occurrences.
 #' @param mindate \code{(character)} Optional, the column names of minimum estimated ages of occurrences.
-#' @examples
+#' @examples 
 #'	data(corals)
 #'	fl <- fadLad(corals, tax="genus", bin="slc", maxdate="max_ma", mindate="min_ma")
 #' @export

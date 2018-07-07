@@ -8,7 +8,6 @@
 \describe{
 	\item{\code{genus}}{Genus names of the occurrences. Cross referenced with a compiled table, the simplified version of this can be found in the supplementary material of Kiessling and Kocsis (2015).}
 	\item{\code{collection_no}}{The number of the collection of the occurrence in the PaleoDB.}
-	\item{\code{authorizer}}{Authorizer of the occurrence record in the PaleoDB.}
 	\item{\code{family}}{Family name of the occurrence.}
 	\item{\code{abund_value}}{Abundance value.}
 	\item{\code{abund_unit}}{Unit of abundance values.}
@@ -29,8 +28,6 @@
 	\item{\code{late_interval}}{Late interval name registered in the PaleoDB dynamic time scale.}
 	\item{\code{max_ma}}{Maximum estimated age based on the PaleoDB dynamic time scale.}
 	\item{\code{min_ma}}{Minimum estimated age based on the PaleoDB dynamic time scale.}
-	\item{\code{zone}}{Registered biozone of the collection.}
-	\item{\code{formation}}{Registered formation of the collection.}
 	\item{\code{slc}}{Bin number in the stage-level timescale \code{\link{stages}}.}
 	\item{\code{Bin}}{Bin number in the PaleoDB 10 million year resolution timescale \code{\link{bins}}.}
 	\item{\code{env}}{Environment of the occurrence: reefal \code{(r)}, non-reefal \code{(nr)} or unknown (\code{uk}), based on \code{\link{keys}}.}

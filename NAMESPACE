@@ -16,4 +16,10 @@ export(parts)
 export(map)
 
 importFrom("Rcpp")
-useDynLib(divDyn)
+importFrom("grDevices", "col2rgb", "rgb")
+importFrom("graphics", "abline", "plot", "polygon", "rect", "text")
+importFrom("stats", "binom.test", "dbinom", "loess", "median",
+    "pbinom", "predict", "quantile")
+importFrom("utils", "flush.console")
+
+useDynLib(divDyn, .registration = TRUE)

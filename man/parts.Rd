@@ -4,9 +4,9 @@
 \alias{parts}
 \title{Plot time series counts or proportions as polygons}
 \usage{
-parts(x, b = NULL, ord = "up", prop = F, plot = TRUE, col = NULL,
+parts(x, b = NULL, ord = "up", prop = FALSE, plot = TRUE, col = NULL,
   xlim = NULL, border = NULL, ylim = c(0, 1), na.valid = FALSE,
-  labs = T, labs.args = NULL, vertical = F)
+  labs = T, labs.args = NULL, vertical = FALSE)
 }
 \arguments{
 \item{x}{\code{(numeric)}: The independent variable through which the proportion is tracked. Identical entries are used to assess which values belong together to a set. Their values represent the x coordinate over the plot.}
@@ -57,20 +57,21 @@ To be added: missing portions are omitted in this version, but should be represe
 
   # basic function
     plot(NULL, NULL, ylim=c(0,1), xlim=c(0.5, 3.5))
-    parts(slc, va, prop=T)
+    parts(slc, va, prop=TRUE)
  
   # vertical plot
     plot(NULL, NULL, xlim=c(0,1), ylim=c(0.5, 3.5))
-    parts(slc, va, col=c("red" ,"blue", "green", "orange"), xlim=c(0.5,3.5), labs=T, prop=T, vertical=T)
+    parts(slc, va, col=c("red" ,"blue", "green", "orange"), xlim=c(0.5,3.5), 
+      labs=TRUE, prop=TRUE, vertical=TRUE)
 
   # intensive argumentation
     plot(NULL, NULL, ylim=c(0,10), xlim=c(0.5, 3.5))
     parts(slc, va, ord=c("b", "c", "d", "a"), col=c("red" ,"blue", "green", "orange"), 
-	  xlim=c(0.5,3.5), labs=T, prop=F, 
+	  xlim=c(0.5,3.5), labs=TRUE, prop=FALSE, 
 	  labs.args=list(cex=1.3, col=c("black", "orange", "red", "blue")))
 
   # just the values
-    parts(slc, va, prop=T,plot=F)
+    parts(slc, va, prop=TRUE,plot=FALSE)
 	
 # real example
   # the proportion of coral occurrences through time in terms of bathymetry
@@ -86,9 +87,10 @@ To be added: missing portions are omitted in this version, but should be represe
   types <- c("uk", "shal", "deep")
   
   parts(x=stages$mid[corals$slc], b=corals$bath, 
-   ord=types, col=cols, prop=T,border=NA, labs=F)
+   ord=types, col=cols, prop=TRUE,border=NA, labs=FALSE)
    
   # legend
-  legend("left", inset=c(0.1,0), legend=c("unknown", "shallow", "deep"), fill=cols, bg="white", cex=1.4) 
+  legend("left", inset=c(0.1,0), legend=c("unknown", "shallow", "deep"), fill=cols, 
+    bg="white", cex=1.4) 
 
 }

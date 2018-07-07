@@ -4,20 +4,19 @@
 \alias{sampstat}
 \title{Basic sampling summary for every bin}
 \usage{
-sampstat(dat, tax = "genus", bin = "slc", coll = "collection_no",
-  ref = "reference_no", total = FALSE, noNAstart = FALSE,
-  duplicates = NULL)
+sampstat(dat, tax = "genus", bin = "slc", coll = NULL, ref = NULL,
+  total = FALSE, noNAstart = FALSE, duplicates = NULL)
 }
 \arguments{
-\item{dat}{\code{(data.frame)}: the occurrence dataset.}
+\item{dat}{\code{(data.frame)}: The occurrence dataset.}
 
-\item{tax}{\code{(character)}: the column name of taxon names.}
+\item{tax}{\code{(character)}: The column name of taxon names.}
 
-\item{bin}{\code{(character)}: the column name of bin names.}
+\item{bin}{\code{(character)}: The column name of bin names.}
 
-\item{coll}{\code{(character)}: the column name of collection numbers.}
+\item{coll}{\code{(character)}: The column name of collection numbers. (optional)}
 
-\item{ref}{\code{(character)}: the column name of reference numbers.}
+\item{ref}{\code{(character)}: The column name of reference numbers. (optional)}
 
 \item{total}{\code{(logical)}:  If \code{FALSE}, then the function will provide sampling statistics for the individual bins. \code{TRUE} on the other hand, will provide them for the total dataset.}
 
@@ -77,6 +76,7 @@ data(corals)
 basic<-sampstat(corals, tax="genus", bin="slc")
 
 # subsampling diagnostic
- subStats<-subsample(corals, method="cr", tax="genus", FUN=sampstat, bin="slc", q=100,noNAstart=F)
+ subStats<-subsample(corals, method="cr", tax="genus", FUN=sampstat, 
+   bin="slc", q=100,noNAstart=FALSE)
 
 }

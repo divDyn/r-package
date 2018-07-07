@@ -31,6 +31,7 @@ The function returns a \code{logical} vector, with a value for each row. \code{T
 \examples{
 # omit single-reference taxa
   data(corals)
+  data(stages)
   toOmit <- omit(corals, bin="slc", tax="genus", om="ref")
   dat <- corals[!toOmit,]
 

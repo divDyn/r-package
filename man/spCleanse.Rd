@@ -21,6 +21,7 @@ This version will not keep subgenera, and will assign species to the base genus.
 \emph{"n."}, \emph{"sp."}, \emph{"?"}, \emph{"gen."}, \emph{"aff."}, \emph{"cf."}, \emph{"ex gr."}, \emph{"subgen."}, \emph{"spp"} and informal species designated with letters. Entries with \emph{"informal"} and \emph{"indet."} in them will also be invalidated.
 }
 \examples{
-examp <- c("Genus cf. species", "Genus spp.", "Family indet.", "Mygenus yourspecies", "Okgenus ? questionsp")
+examp <- c("Genus cf. species", "Genus spp.", "Family indet.", 
+  "Mygenus yourspecies", "Okgenus ? questionsp")
 spCleanse(examp) 
 }

@@ -13,7 +13,7 @@
 #' The function whichmaxstreak() will return the indices of those values that are in the longest continuous streak.
 #' 
 #' @param x (\code{vector}) A vector with missing values.
-#'
+#' 
 #' @examples
 #'	# generate a sequence of values
 #'	  b<-40:1
@@ -72,6 +72,7 @@ streaklog<-function(x)
 	return(list(starts=starts, streaks=streaks,runs=runs))
 }
 
+#' @param which \code{(integer)} In case multiple streaks of the same length are found, which of them should be returned by the vector (integer).
 #' @rdname streaklog
 #' @export
 whichmaxstreak<-function(x, which=-1)

@@ -2,7 +2,7 @@
 R package for analyzing diversity dynamics from fossil occurrence data
 
 If you are interested in what this package does, or have questions about use, please check out the first vignette: 'Handout to the R package 'divDyn' v0.4.0 for diversity dynamics from fossil occurrence data' here:
-https://github.com/adamkocsis/divDyn/blob/master/_archive/vignettes/Handout_0.4.0.pdf
+https://github.com/adamkocsis/divDyn/blob/master/_archive/vignettes/Handout_0.4.1.pdf
 
 As the package is still getting developed, if you have any requirements or recommendations about what to add (or if you find a mistake), please contact me at adam.kocsis@fau.de.
 
@@ -11,27 +11,36 @@ As the package is still getting developed, if you have any requirements or recom
 As the package now uses compiled code to make things run faster, there are two ways to install.
 1. The first option is to use the binaries I have built. 
 
+I have updated the windows binaries so that they work with the latest internals (3.5.1). If you want to use the package, please update your R.
+
 If you have a windows computer, you can install the package with the following R command:
-`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Win_x64_x86/divDyn_0.4.0.zip", repos=NULL)`
+`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Win_x64_x86/divDyn_0.4.1.zip", repos=NULL)`
 
-If you have a Mac running OS X, then use the following link (still older):
+If you have a Mac running OS X, then use the following link (still older version, for R <3.5):
 `install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Mac_OSX/divDyn_0.3.1.tgz", repos=NULL)`
-
-I am now aware that the binary packages won't install on R 3.5.x as the internals are different from the 3.4.x versions that I compiled these binaries with. If you have a brand new R, please downgrade, or perhaps try option 2. 
 
 If you have Linux computer you probably know how to solve these problems. The sources of different versions are in the /_archive folder. Otherwise you can try option no. 2. 
 
 You can access earlier versions by changing the version number appropriately.
 
 2. The second option is to compile the code for yourself. To do this:
-- Install a compiler. For Windows, this would be included in Rtools (https://cran.r-project.org/bin/windows/Rtools/).
+- Install a compiler. For Windows, this would be included in Rtools (https://cran.r-project.org/bin/windows/Rtools/). 
 - Make sure that the 'devtools' package is installed
 - Run `devtools::install_github("adamkocsis/divDyn")`
 
  '*' if you use either a Mac or Linux, and point no. 2 doesn't work for you for some reason, then contact me  and I will compile a binary for you.
 
 # Change log
-## [0.4.0] - 2018.06.04
+## [0.4.1] - 2018.06.04
+### Added
+- function defenses
+- fixes to conform to the CRAN requirements
+
+### Changed
+- default settings for the sampstat() and subsample() functions to increase flexibility and user-friendliness
+- the intact argument of subsample() was separated to the rem and keep arguments, to enable negative time-slice identifiers.
+
+## [0.4.0] - 2018.06.29
 ### Added
 - the first vignette is now included
 - bug fix for the parts() function. Due to the overplotting of polygons, the RGBA colours were not appropriately visualized

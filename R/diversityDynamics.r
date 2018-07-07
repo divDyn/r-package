@@ -11,7 +11,8 @@
 #' @param collapse \code{(character)}: this argument will be passed to the paste function's argument of the same name. The character value to be inserted between the genus and species names.
 #'
 #' @examples
-#' examp <- c("Genus cf. species", "Genus spp.", "Family indet.", "Mygenus yourspecies", "Okgenus ? questionsp")
+#' examp <- c("Genus cf. species", "Genus spp.", "Family indet.", 
+#'   "Mygenus yourspecies", "Okgenus ? questionsp")
 #' spCleanse(examp) 
 #' @export
 # function to cleanse a noisy species name vector
@@ -637,6 +638,7 @@ Metrics<- function(counts){
 #' @examples
 #' # omit single-reference taxa
 #'   data(corals)
+#'   data(stages)
 #'   toOmit <- omit(corals, bin="slc", tax="genus", om="ref")
 #'   dat <- corals[!toOmit,]
 #' 

@@ -4,7 +4,7 @@
 \alias{shades}
 \title{Quantile plot of time series}
 \usage{
-shades(x, y, col, res = 10, border = NA, interpolate = F,
+shades(x, y, col, res = 10, border = NA, interpolate = FALSE,
   method = "symmetric", na.rm = FALSE)
 }
 \arguments{

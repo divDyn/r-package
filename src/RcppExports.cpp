@@ -29,14 +29,3 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-
-static const R_CallMethodDef CallEntries[] = {
-    {"_divDyn_Counts", (DL_FUNC) &_divDyn_Counts, 2},
-    {"_divDyn_CRbinwise", (DL_FUNC) &_divDyn_CRbinwise, 2},
-    {NULL, NULL, 0}
-};
-
-RcppExport void R_init_divDyn(DllInfo *dll) {
-    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
-    R_useDynamicSymbols(dll, FALSE);
-}

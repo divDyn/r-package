@@ -26,6 +26,10 @@ plotTS(tsdat, boxes, ylim = c(0, 1), xlim = NULL, prop = 0.05, gap = 0,
 
 \item{top}{\code{(character)}: Column name of the table for the variable that contains the earliest ages of intervals.}
 
+\item{xlab}{\code{(character)}: The label of the time axis.}
+
+\item{ylab}{\code{(character)}: The label of the data axis.}
+
 \item{shading}{\code{(character)}: Column name used for the shading. By default, no shading will be drawn (\code{shading = NULL}).}
 
 \item{shading.col}{\code{(character)}: Name of colors that will be used for the shading, if shading is set. The provided colors will be repeated as many times as necessary.}
@@ -43,12 +47,12 @@ This function allows the user to quickly plot a time scale data table
 As most analysis use an individually compiled time scale object, in order to ensure compatibility between the analyzed and plotted values, the time scale table used for the analysis could be plotted rather than a standardized table. Two example tables have been included in the package (\code{\link{stages}} and \code{\link{bins}}) that can serve as templates.
 }
 \examples{
-data(stages)
+data(stages) 
   plotTS(stages, boxes="per", shading="series")
 
 # only the Mesozoic, custom axes
   plotTS(stages, boxes="period", shading="stage", xlim=52:81, 
-    plot.args=list(axes=F, main="Mesozoic"))
+    plot.args=list(axes=FALSE, main="Mesozoic"))
   axis(1, at=seq(250, 75, -25), labels=seq(250, 75, -25))
   axis(2)
 

@@ -178,7 +178,7 @@ affinity<-function(dat, env, tax="genus",  bin="slc", coll="collection_no", meth
 			#first preference
 			if (first/all>pFirst)
 			{
-				if(binom.test(first, all, pFirst, "greater")$p.val<=alpha)
+				if(stats::binom.test(first, all, pFirst, "greater")$p.val<=alpha)
 				{
 				#	affVarTaxon[i]<-affLevels[1]
 					return(affLevels[1])
@@ -192,7 +192,7 @@ affinity<-function(dat, env, tax="genus",  bin="slc", coll="collection_no", meth
 			#second preference
 			if (second/all>pSecond)
 			{
-				if(binom.test(second, all, pSecond, "greater")$p.val<=alpha)
+				if(stats::binom.test(second, all, pSecond, "greater")$p.val<=alpha)
 				{
 				#	affVarTaxon[i]<-affLevels[2]
 					return(affLevels[2])

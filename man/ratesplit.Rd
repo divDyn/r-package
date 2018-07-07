@@ -5,7 +5,7 @@
 \title{Test of rate split (selectivity)}
 \usage{
 ratesplit(dat, sel, tax = "genus", bin = "slc", rate = "pc",
-  method = "AIC", AICc = T, na.rm = T, alpha = NULL,
+  method = "AIC", AICc = TRUE, na.rm = TRUE, alpha = NULL,
   output = "simple")
 }
 \arguments{

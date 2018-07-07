@@ -2,10 +2,10 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 Counts <- function(tax, bin) {
-    .Call('_divDyn_Counts', PACKAGE = 'divDyn', tax, bin)
+    .Call(`_divDyn_Counts`, tax, bin)
 }
 
 CRbinwise <- function(binVar, quota) {
-    .Call('_divDyn_CRbinwise', PACKAGE = 'divDyn', binVar, quota)
+    .Call(`_divDyn_CRbinwise`, binVar, quota)
 }
 
