@@ -1,7 +1,7 @@
 # divDyn
 R package for analyzing diversity dynamics from fossil occurrence data
 
-If you are interested in what this package does, or have questions about use, please check out the first vignette: 'Handout to the R package 'divDyn' v0.4.0 for diversity dynamics from fossil occurrence data' here:
+If you are interested in what this package does, or have questions about use, please check out the first vignette: 'Handout to the R package 'divDyn' v0.4.1 for diversity dynamics from fossil occurrence data' here:
 https://github.com/adamkocsis/divDyn/blob/master/_archive/vignettes/Handout_0.4.1.pdf
 
 As the package is still getting developed, if you have any requirements or recommendations about what to add (or if you find a mistake), please contact me at adam.kocsis@fau.de.
@@ -31,7 +31,7 @@ You can access earlier versions by changing the version number appropriately.
  '*' if you use either a Mac or Linux, and point no. 2 doesn't work for you for some reason, then contact me  and I will compile a binary for you.
 
 # Change log
-## [0.4.1] - 2018.06.04
+## [0.4.1] - 2018.07.07
 ### Added
 - function defenses
 - fixes to conform to the CRAN requirements
