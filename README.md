@@ -2,7 +2,7 @@
 R package for analyzing diversity dynamics from fossil occurrence data
 
 If you are interested in what this package does, or have questions about use, please check out the first vignette: 'Handout to the R package 'divDyn' v0.4.1 for diversity dynamics from fossil occurrence data' here:
-https://github.com/adamkocsis/divDyn/blob/master/_archive/vignettes/Handout_0.4.1.pdf
+https://github.com/adamkocsis/divDyn/blob/master/_archive/vignettes/Handout_0.4.2.pdf
 
 As the package is still getting developed, if you have any requirements or recommendations about what to add (or if you find a mistake), please contact me at adam.kocsis@fau.de.
 
@@ -14,7 +14,7 @@ As the package now uses compiled code to make things run faster, there are two w
 I have updated the windows binaries so that they work with the latest internals (3.5.1). If you want to use the package, please update your R.
 
 If you have a windows computer, you can install the package with the following R command:
-`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Win_x64_x86/divDyn_0.4.1.zip", repos=NULL)`
+`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Win_x64_x86/divDyn_0.4.2.zip", repos=NULL)`
 
 If you have a Mac running OS X, then use the following link (still older version, for R <3.5):
 `install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Mac_OSX/divDyn_0.3.1.tgz", repos=NULL)`
@@ -31,6 +31,21 @@ You can access earlier versions by changing the version number appropriately.
  '*' if you use either a Mac or Linux, and point no. 2 doesn't work for you for some reason, then contact me  and I will compile a binary for you.
 
 # Change log
+
+## [0.4.2] - 2018.07.24
+### Added
+- the ranges() function to plot occurrence data and stratigraphic ranges over time (see examples)
+- fadLad(): function defenses 
+- fadLad(): two bin columns are now allowed as input (for age uncertainty estimation)
+- fadLad(): the ages argument for inverting the time axis
+- fixes to conform to the CRAN requirements
+
+### Changed
+- plotTS() now allows "no-boxes" plotting, and multiple layers of boxes
+
+
+
+
 ## [0.4.1] - 2018.07.07
 ### Added
 - function defenses

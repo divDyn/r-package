@@ -25,7 +25,7 @@ subsampleSQSexact(binVar, q, taxVar, collVar = NULL, refVar = NULL,
   byList = FALSE, intact = NULL, singleton = "occ")
 
 subsampleSQSinexact(binVar, freqVar, q, collVar = NULL, byList = FALSE,
-  intact = NULL, appr = "over", trialRet = "occ")
+  intact = NULL, appr = "under", trialRet = "occ")
 }
 \arguments{
 \item{dat}{(\code{data.frame}): Occurrence dataset, with \code{bin}, \code{tax} and \code{coll} as column names.}

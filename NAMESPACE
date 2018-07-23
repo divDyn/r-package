@@ -14,6 +14,7 @@ export(sampstat)
 export(omit)
 export(parts)
 export(map)
+export(ranges)
 
 importFrom("Rcpp")
 importFrom("grDevices", "col2rgb", "rgb")

@@ -4,10 +4,10 @@
 \alias{plotTS}
 \title{Time series plotting using a custom time scale}
 \usage{
-plotTS(tsdat, boxes, ylim = c(0, 1), xlim = NULL, prop = 0.05, gap = 0,
-  bottom = "bottom", top = "top", xlab = "age (Ma)", ylab = "",
-  shading = NULL, shading.col = c("white", "gray80"), plot.args = NULL,
-  boxes.args = NULL, labels.args = NULL)
+plotTS(tsdat, boxes = NULL, ylim = c(0, 1), xlim = NULL, prop = 0.05,
+  gap = 0, bottom = "bottom", top = "top", xlab = "age (Ma)",
+  ylab = "", shading = NULL, shading.col = c("white", "gray80"),
+  plot.args = NULL, boxes.args = NULL, labels.args = NULL)
 }
 \arguments{
 \item{tsdat}{\code{(data frame)}: The time scale data frame.}

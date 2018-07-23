@@ -339,14 +339,7 @@ subsample <- function(dat, q, tax="genus", bin="SLC",  FUN=divDyn, coll=NULL, re
 	# SQS
 	if(type=="sqs" & !is.null(bin)){
 		
-		if(!"vers"%in%names(addArgs)){
-			vers<-"inexact"
-			
-		}else{
-			# extract argument if added
-			vers<-addArgs$vers
-			addArgs<-addArgs[names(addArgs)!="vers"]
-		}
+		
 		if(vers=="inexact"){	
 			
 			# present in the prepSQS
@@ -1041,8 +1034,12 @@ subsampleSQSexact<-function(binVar, q, taxVar, collVar=NULL, refVar=NULL, byList
 				})
 			}
 			if(singleton=="occ"){
-			
-				if(length(collVar)!=0) colTax<-paste(colls, taxa)
+				# if it provided, make sure that no duplicates are used
+				if(length(collVar)!=0){
+					colTax<-paste(colls, taxa)
+				}else{
+					colTax<-taxa
+				}
 				uVect<-sapply(1:sliceOcc, function(O){
 					firstTax<-taxa[1:O]
 					
@@ -1131,7 +1128,7 @@ subsampleSQSexact<-function(binVar, q, taxVar, collVar=NULL, refVar=NULL, byList
 #' Therefore, in the \code{inexact} algorithm, sampling is finished when the subset 
 #' either is immediately below the quorum (\code{"under"}) or above it (\code{"over"}).
 #' @rdname subsample
-subsampleSQSinexact<-function(binVar, freqVar, q, collVar=NULL, byList=FALSE, intact=NULL, appr="over", trialRet="occ"){
+subsampleSQSinexact<-function(binVar, freqVar, q, collVar=NULL, byList=FALSE, intact=NULL, appr="under", trialRet="occ"){
 	
 	rows<- 1:length(binVar)
 	#keep track of not enough

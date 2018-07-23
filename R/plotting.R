@@ -33,7 +33,7 @@
 #'	    ylab="variable", labels.args=list(cex=1.5, col="blue"), 
 #'	    boxes.args=list(col="gray95"))
 #' @export
-plotTS<-function(tsdat,  boxes, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
+plotTS<-function(tsdat,  boxes=NULL, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 	bottom="bottom", top="top",
 	xlab="age (Ma)", ylab="",
 	shading=NULL,shading.col=c("white", "gray80"),
@@ -64,14 +64,17 @@ plotTS<-function(tsdat,  boxes, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 		stop("ylim should be a numeric vector of length 2")
 	}
 	
-	if(length(boxes)>1){
-		stop("Only one column can be used to plot the boxes.")
-		
-	}else{
-		if(!boxes%in%colnames(tsdat)){
-			stop("The referenced 'boxes' column does not exist.")
-		}
+	
+	if(sum(boxes%in%colnames(tsdat))!=length(boxes)){
+		stop("The referenced 'boxes' column does not exist.")
 	}
+	
+	# no boxes
+	if(length(boxes)==0) prop <- 0
+	
+	# multiple layer of boxes
+	if(length(prop)==1) prop <-rep(prop, length(boxes))
+	
 	if(!is.null(shading)){
 		if(length(shading)>1){
 			stop("Only one column can be used to plot the shades.")
@@ -113,17 +116,42 @@ plotTS<-function(tsdat,  boxes, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 	}
 	
 	# the ylim adjustment
+	
 	if(!yLog){
 		boxesTop<-ylim[1]-diff(range(ylim))*gap
 		plotBottom<-ylim[1]
 	
-		ylim[1]<-ylim[1]-diff(range(ylim))*prop-diff(range(ylim))*gap
+		# in case there are boxes entries
+		if(length(boxes)>0){
+			vertVector<-boxesTop
+			
+			# for every box level, subtract the necessary amount
+			for(i in 1:length(boxes)){
+				vertVector<-c(vertVector, vertVector[i]-diff(range(ylim))*prop[i])
+			}
+			
+			ylim[1] <-vertVector[length(vertVector)]
+		}else{
+			ylim[1] <- boxesTop
+		}
+		
 	}else{
 		boxesTop<-exp(log(ylim[1])-diff(range(log(ylim)))*gap)
 		plotBottom<-ylim[1]
 	
-		ylim[1]<-exp(log(ylim[1])-diff(log(range(ylim)))*prop-diff(log(range(ylim)))*gap)
-
+		# in case there are boxes entries
+		if(length(boxes)>0){
+			vertVector<-boxesTop
+			
+			# for every box level, subtract the necessary amount
+			for(i in 1:length(boxes)){
+				vertVector<-c(vertVector, exp(log(vertVector[i])-diff(log(range(ylim)))*prop[i]))
+			}
+			
+			ylim[1] <-vertVector[length(vertVector)]
+		}else{
+			ylim[1] <- boxesTop
+		}
 	
 	}
 	
@@ -163,73 +191,79 @@ plotTS<-function(tsdat,  boxes, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 		)
 		plotArgs<-c(plotArgs, plot.args)
 		do.call(graphics::plot, plotArgs)
+	
+	if(!is.null(boxes)){
+		# for every level of boxes
+		for(j in 1:length(boxes)){
 		
-	# the box drawing
-	boxLev<-unique(tsdat[,boxes])
-	xLeft<-rep(NA, length(boxLev))
-	xRight<-rep(NA, length(boxLev))
-	yTop<-rep(NA, length(boxLev))
-	yBottom<-rep(NA, length(boxLev))
-	labMid<-rep(NA, length(boxLev))
-	for(i in 1:length(boxLev)){
-		# the rectangles
-			boolSel<-boxLev[i]==tsdat[,boxes]
-			curBottom<-max(tsdat[boolSel,bottom], na.rm=T)
-			curTop<-min(tsdat[boolSel,top], na.rm=T)
-			
-			# export the positions
-			xLeft[i]<-curBottom
-			xRight[i]<-curTop
-			yTop[i]<-boxesTop
-			yBottom[i]<-ylim[1]
-			labMid[i]<-mean(c(curBottom, curTop))
-		
-	}
-	
-	#boxes
-	# inner arguments
-	boxArgs<-list(
-		xleft=xLeft, 
-		xright=xRight, 
-		ytop= yTop,
-		ybottom=yBottom
-	)
-	
-	# process the supplied arguments, in case they are in the table
-	boolUnique<-boxes.args%in%colnames(tsdat)
-	if(sum(boolUnique)>0){
-		ind<-which(boolUnique)
-		for(i in ind){
-			boxes.args[[i]]<-unique(tsdat[,boxes.args[[i]]])
-		}
-	}
-	
-	# combine with outer arguments
-	boxArgs<-c(boxArgs, boxes.args)
-	do.call(graphics::rect, boxArgs)
+			# the box drawing
+			boxLev<-unique(tsdat[,boxes[j]])
+			xLeft<-rep(NA, length(boxLev))
+			xRight<-rep(NA, length(boxLev))
+			yTop<-rep(NA, length(boxLev))
+			yBottom<-rep(NA, length(boxLev))
+			labMid<-rep(NA, length(boxLev))
+			for(i in 1:length(boxLev)){
+				# the rectangles
+					boolSel<-boxLev[i]==tsdat[,boxes[j]]
+					curBottom<-max(tsdat[boolSel,bottom], na.rm=T)
+					curTop<-min(tsdat[boolSel,top], na.rm=T)
+					
+					# export the positions
+					xLeft[i]<-curBottom
+					xRight[i]<-curTop
+					yTop[i]<-vertVector[j]
+					yBottom[i]<-vertVector[j+1]
+					labMid[i]<-mean(c(curBottom, curTop))
 				
-		
-		
-	# the labels
-	# inner arguments
-	labArgs<-list(
-		label=boxLev, 
-		y=(boxArgs$ytop+boxArgs$ybottom)/2, 
-		x= labMid
-	)
-		
-	# combine inner and outer arguments
-	# process the supplied arguments, in case they are in the table
-	boolUnique<-labels.args%in%colnames(tsdat)
-	if(sum(boolUnique)>0){
-		ind<-which(boolUnique)
-		for(i in ind){
-			labels.args[[i]]<-unique(tsdat[,labels.args[[i]]])
+			}
+			
+			#boxes
+			# inner arguments
+			boxArgs<-list(
+				xleft=xLeft, 
+				xright=xRight, 
+				ytop= yTop,
+				ybottom=yBottom
+			)
+			
+			# process the supplied arguments, in case they are in the table
+			boolUnique<-boxes.args%in%colnames(tsdat)
+			if(sum(boolUnique)>0){
+				ind<-which(boolUnique)
+				for(i in ind){
+					boxes.args[[i]]<-unique(tsdat[,boxes.args[[i]]])
+				}
+			}
+			
+			# combine with outer arguments
+			boxArgs<-c(boxArgs, boxes.args)
+			do.call(graphics::rect, boxArgs)
+						
+			
+			
+			# the labels
+			# inner arguments
+			labArgs<-list(
+				label=boxLev, 
+				y=(boxArgs$ytop+boxArgs$ybottom)/2, 
+				x= labMid
+			)
+				
+			# combine inner and outer arguments
+			# process the supplied arguments, in case they are in the table
+			boolUnique<-labels.args%in%colnames(tsdat)
+			if(sum(boolUnique)>0){
+				ind<-which(boolUnique)
+				for(i in ind){
+					labels.args[[i]]<-unique(tsdat[,labels.args[[i]]])
+				}
+			}
+			
+			labArgs<-c(labArgs, labels.args)
+			do.call(text,labArgs)
 		}
-	}
-	
-	labArgs<-c(labArgs, labels.args)
-	do.call(text,labArgs)
+	} 
 	
 	# shading
 	if(!is.null(shading)){
@@ -254,6 +288,8 @@ plotTS<-function(tsdat,  boxes, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 		graphics::rect(xleft=xlim[1], xright=xlim[2], ytop=plotBottom, ybottom=boxesTop,border="white")
 		graphics::abline(h=c(boxesTop, plotBottom))
 	}
+	
+	clip(xlim[1], xlim[2], boxesTop, ylim[2])
 	
 }
 
@@ -282,7 +318,7 @@ plotTS<-function(tsdat,  boxes, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 #'	  randVar <- t(sapply(1:95, FUN=function(x){rlnorm(150, 0,1)}))
 #'	  shades(stages$mid, randVar, col="blue", res=c(0,0.33, 0.66, 1),method="decrease")	 
 #' @export
-shades <- function(x, y, col, res=10, border=NA,interpolate=FALSE, method="symmetric",na.rm=FALSE){
+shades <- function(x, y, col="black", res=10, border=NA,interpolate=FALSE, method="symmetric",na.rm=FALSE){
 	if(nrow(y)!=length(x)) stop("length of x and y don't match")
 	
 	# omit missing?
@@ -518,6 +554,8 @@ shades <- function(x, y, col, res=10, border=NA,interpolate=FALSE, method="symme
 #' 
 #' @export
 parts<-function(x, b=NULL, ord="up", prop=FALSE, plot=TRUE,  col=NULL, xlim=NULL, border=NULL, ylim=c(0,1), na.valid=FALSE, labs=T, labs.args=NULL, vertical=FALSE){
+	
+	if(is.factor(b)) b<-as.character(b)
 	
 	# starting arguments
 	if(is.matrix(x)){
@@ -765,4 +803,394 @@ parts<-function(x, b=NULL, ord="up", prop=FALSE, plot=TRUE,  col=NULL, xlim=NULL
 
 	
 	
+
+
+#' Plotting ranges and occurrence distributions through time
+#' 
+#' Visualization of occurrence data
+#' 
+#' This function will draw a visual representation of the occurrence dataset. The interpolated ranges will be drawn, as well as the occurrence points.
+#' 
+#' @param dat \code{(data.frame)}: The occurrence dataset or the FAD-LAD dataset that is to be plotted. The FAD dataset must have numeric variables named \code{"FAD"} and \code{"LAD"}. Taxon ranges will be searched for in the \code{row.names} attribute of the table. 
+#' 
+#' @param bin (\code{character}): The column containing the bin entries (positive ages are valid).
+#' 
+#' @param tax (\code{character}): The column containing the taxon entries.
+#' 
+#' @param group (\code{character}): By default, all ranges in the plot are treated as parts of the same group. However, one subsetting variable can be named, by which the ranges will be grouped. This has to be a column name in the dataset (see examples).
+#' 
+#' @param xlim (\code{numeric}) :This argument is used for the subsetting of the taxa. Only those taxa are shown that have ranges within the interval (but ranges are displayed outside of it, if you do not want to plot anything within an interval, use the \code{clip} function)
+#' 
+#' @param ylim (\code{numeric}): Ranges will be distributed equally between the assigned ylim values. If set to NULL, than it will be based on the plotting area of the open device.
+#' 
+#' @param occs (\code{logical}): Should the occurrence data be plotted? 
+#' 
+#' @param gap (\code{numeric}): Evaluated only when the \code{group} argument points to a valid column. The amount of space between the group-specific range charts, expressed as the proportion of the entire plotting area. 
+#' 
+#' @param total (\code{character}): The name of the range group to be plotted. When multiple groups are used (see \code{group} argument), this is set by the \code{character} values in the column.
+#' 
+#' @param filter (\code{character}): When xlim filters the taxa, how should they be filtered. \code{"include"} (default) will show all ranges that have parts within the xlim interval. \code{"orig"} will show only those taxa that originate within the interval.
+#'
+#' @param labs (\code{character}): Should the taxon labels be plotted?
+#' 
+#' @param total.args (\code{list}): Arguments that will be passed to the \code{\link[graphics]{text}} function that draws the \code{total} label. If valid grouping is present (see argument \code{group}), then vector entries will be distributed across the groups (see examples.)
+#' 
+#' @param ranges.args (\code{list}): Arguments that will be passed to the \code{\link[graphics]{segments}} function that draws ranges. If valid grouping is present (see argument \code{group}), then vector entries will be distributed across the groups (see examples.)
+#' 
+#' @param occs.args (\code{list}): Arguments that will be passed to the \code{\link[graphics]{points}} function that draws the occurence points. If valid grouping is present (see argument \code{group}), then vector entries will be distributed across the groups (see examples.)
+#' 
+#' @param labels.args (\code{list}): Arguments that will be passed to the \code{\link[graphics]{text}} function that draws the labels of taxa. If valid grouping is present (see argument \code{group}), then vector entries will be distributed across the groups (see examples.)
+#' 
+#' @param decreasing (\code{logical}): This parameter sets whether the series of ranges should start from the top \code{decreasing=TRUE} or bottom of the plot \code{decreasing=FALSE}. 
+#' 
+#' @examples
+#'  # import
+#'  data(stages)
+#'  data(corals)
+#'  
+#'  # assign age esimates to the occurrences
+#'  corals$est<-stages$mid[corals$slc]
+#'  
+#'  # all ranges
+#'  plotTS(stages, boxes="per", xlim=c(250,0))
+#'  ranges(corals, bin="est", tax="genus", occs=F)
+#'  
+#'  # closing on the Cretaceous, with occurrences
+#'  plotTS(stages, boxes="series", xlim=c(145,65), shading="short")
+#'  
+#'  ranges(corals, bin="est", tax="genus", occs=T, ranges.args=list(lwd=0.1))
+#'  
+#'  # z and az separately
+#'  plotTS(stages, boxes="series", xlim=c(145,65), shading="short")
+#'  ranges(corals, bin="est", tax="genus", occs=F, group="ecology", 
+#'    ranges.args=list(lwd=0.1))
+#'  	
+#'  # same, show only taxa that originate within the interval
+#'  plotTS(stages, boxes="series", xlim=c(105,60), shading="short")
+#'  ranges(corals, bin="est", tax="genus", occs=T, group="ecology", filt="orig" ,
+#'    labs=T, labels.args=list(cex=0.5))
+#'  
+#'    
+#' # fully customized/ annotated
+#' plotTS(stages, boxes="series", xlim=c(105,60), shading="short")
+#' ranges(
+#'   corals, # dataset
+#'   bin="est", # bin column
+#'   tax="genus", # taxon column
+#'   occs=T, # occurrence points will be plotted
+#'   group="growth", # separate ranges based on growth types
+#'   filt="orig" , # show only taxa that originate in the interval
+#'   ranges.args=list(
+#'     lwd=1, # set range width to 1
+#' 	col=c("darkgreen", "darkred") # set color of the ranges (by groups)
+#'   ), 
+#'   total.args=list(
+#'     cex=2, # set the size of the group identifier lablels
+#'     col=c("darkgreen", "darkred") # set the color of the group identifier labels
+#'   ),
+#'   labs=T, # taxon labels will be plotted
+#'   labels.args=list(
+#'     cex=0.4, # the sizes of the taxon labels
+#' 	col=c("darkgreen", "darkred") # set the color of the taxon labels by group
+#'   )
+#' ) 
+#'    
+#'  
+#' @export
+ranges <- function(dat, bin=NULL, tax=NULL, xlim=NULL, ylim=c(0,1), total="", filt="include", occs=FALSE, labs=FALSE, decreasing=TRUE, group=NULL, gap=0,  labels.args=NULL, ranges.args=NULL, occs.args=NULL, group.args=NULL, total.args=NULL){
+	
+#	dat<-corals
+#	bin<-"est"
+#	tax<-"genus"
+#	xlim<-NULL
+#	group<-NULL
+#	ylim<-c(0,1)
+#	occs<-TRUE
+#	labs<-FALSE
+#	decreasing<-TRUE
+#	gap <- 0
+#	labs.args<- NULL
+#	ranges.args<-NULL
+#	occs.args <- NULL
+#	filt<-"orig"
+	
+	# is input a FAD-LAD matrix, or an occurrence database
+	if(!is.null(dat$FAD) & !is.null(dat$LAD)){
+		# copy over
+		fl<- dat
+		
+		# suppress occurrence plotting
+		if(occs) message("Range-data were provided, occurrence plotting is not possible.")
+		occs <- FALSE
+	}else{
+		
+		if(is.null(bin)) stop("Argument bin is missing.")
+		if(is.null(tax)) stop("Argument tax is missing.")
+		if(!bin%in%colnames(dat)) stop("Column bin not found.")
+		if(!tax%in%colnames(dat)) stop("Column tax not found.")
+		
+		# calculate the FAD LAD 
+		fl<-fadLad(dat, tax=tax, bin=bin)
+	}
+	
+	
+	# get the 
+	if(is.null(xlim)){
+		rng <- par("usr")
+		xlim<-rng[1:2]
+	}
+	if(is.null(ylim)){
+		rng <- par("usr")
+		ylim<-rng[3:4]
+	}
+	
+	# determine orientation (1. ages)
+	ladGreater <- sum(fl$FAD<fl$LAD)>0
+	
+	# which taxa to keep
+	bKeep<-rep(TRUE, nrow(fl))
+	
+	if(filt=="include"){	
+		if(!ladGreater){
+			bKeep <- fl$FAD>= xlim[2] & fl$FAD <= xlim[1] |
+			fl$LAD>=xlim[2] & fl$LAD <=xlim[1] |
+			fl$FAD>xlim[1] & fl$LAD <=xlim[2]
+		}
+		if(ladGreater){
+			bKeep <- fl$LAD>= xlim[2] & fl$LAD <= xlim[1] |
+			fl$FAD>=xlim[2] & fl$FAD <=xlim[1] |
+			fl$LAD>xlim[1] & fl$FAD <=xlim[2]
+		
+		}
+	}
+	if(filt=="orig"){
+		if(!ladGreater){
+			bKeep <- fl$FAD >=xlim[2] & fl$FAD<=xlim[1]
+		}else{
+			bKeep <- fl$LAD >=xlim[2] & fl$LAD<=xlim[1]
+		}
+	
+	}
+		
+	# filter based on the limits of the plot
+	newFL<- fl[bKeep,]
+	
+	# recursive case
+	if(!is.null(group)){
+		
+		# create group sepcific subsets
+		groupLevs<-levels(factor(dat[, group]))
+		
+		# if no color is provided, use default
+		if(is.null(ranges.args$col) & is.null(labels.args$col) & is.null(occs.args$col) & length(groupLevs)<11){
+			ranges.args$col <- mainHex[1:length(groupLevs)]
+			labels.args$col <- mainHex[1:length(groupLevs)]
+			occs.args$col <- mainHex[1:length(groupLevs)]
+			total.args$col <- mainHex[1:length(groupLevs)]
+		} 
+		
+		# rearrange
+		ranges.argsDist<- distribute(ranges.args, length(groupLevs))
+		labels.argsDist<- distribute(labels.args, length(groupLevs))
+		occs.argsDist<- distribute(occs.args, length(groupLevs))
+		total.argsDist<- distribute(total.args, length(groupLevs))
+		
+		# add the group variable to FAD-LAD 
+		#only for occs!
+		groupVar<-dat[, group]
+		names(groupVar)<-dat[, tax] 
+		newFL$group <- groupVar[row.names(newFL)]
+		
+		# where to plot
+		yRange <- ylim[2]-ylim[1]
+		gapBetween <- gap*yRange
+		yAvailable <- yRange-(gapBetween*(length(groupLevs)-1))
+		
+		# the number of groups in the different taxa
+		taxNoGroup<-table(newFL$group)
+		
+		# how much of the plot is available for the group
+		yPartGroup<-yAvailable/sum(taxNoGroup)*taxNoGroup
+		
+		# calculate where the lots should be
+		ylimMat <- matrix(c(ylim[1], yPartGroup[1]), ncol=2, nrow=1)
+		
+		subDat<-dat[dat[, group]==groupLevs[1] & dat[, tax]%in%row.names(newFL), ]
+		
+		
+		ranges(subDat, bin=bin, tax=tax, xlim=xlim, ylim=ylimMat[1,], occs=occs, labs=labs, total=groupLevs[1], decreasing=decreasing, group=NULL, 
+			labels.args=labels.argsDist[[1]], ranges.args=ranges.argsDist[[1]], occs.args=occs.argsDist[[1]], total.args=total.argsDist[[1]])
+		
+		for(i in 2:length(groupLevs)){
+			# where should the plot be
+			first<-ylimMat[i-1,2]+gapBetween
+			second<-first+yPartGroup[i]
+			ylimMat<-rbind(ylimMat, c(first, second))
+			
+			subDat<-dat[dat[, group]==groupLevs[i] & dat[, tax]%in%row.names(newFL), ]
+		
+			ranges(subDat, bin=bin, tax=tax, xlim=xlim, ylim=ylimMat[i,],  occs=occs, labs=labs,  total=groupLevs[i],decreasing=decreasing, group=NULL,
+				labels.args=labels.argsDist[[i]], ranges.args=ranges.argsDist[[i]], occs.args=occs.argsDist[[i]],total.args=total.argsDist[[i]])
+		
+		
+		}
+		
+	# base case (one group)
+	}else{
+		# sort taxa by fad/lad
+		if(ladGreater) newOrd <- order(newFL$LAD, newFL$FAD)
+		if(!ladGreater) newOrd <- order(newFL$FAD, newFL$LAD)
+	
+	
+		# the reordered ranges
+		plotFL <- newFL[newOrd, ]
+		
+		# vertical positions of taxa
+		taxWhere<-seq(ylim[1], ylim[2], length.out=nrow(plotFL)+2)
+		
+		taxWhere<-taxWhere[c(-1, -length(taxWhere))]
+		
+		# reverse order for different look
+		if(!decreasing){
+			taxWhere <-rev(taxWhere)
+		}
+		
+		names(taxWhere)<-rownames(plotFL)
+		
+		# Drawing the ranges
+			# use the supported arguments
+			ranArgs<-ranges.args
+			
+			# overwrite with internals
+			ranArgs$x0 <-plotFL[,1]
+			ranArgs$x1 <-plotFL[,2]
+			ranArgs$y0 <-taxWhere
+			ranArgs$y1 <-taxWhere
+			
+			# function call
+			do.call(segments, ranArgs)
+			
+		# draw the labels
+		if(labs){
+			# use the supported arguments
+			textArgs<-labels.args
+			
+			# overwrite
+			textArgs$pos<-2
+			textArgs$label<-names(taxWhere)
+			textArgs$y<-taxWhere
+			
+			if(ladGreater){
+				textArgs$x<-plotFL$LAD
+			}else{
+				textArgs$x<-plotFL$FAD
+			}
+			# function call
+			do.call(text, textArgs)
+			
+		}
+		
+		# drawing the total name
+			totalArgs<-total.args
+			# add the label itself
+			totalArgs$label<-total
+			
+			# default settings
+			if(is.null(totalArgs$x)) totalArgs$x<-0.2
+			if(is.null(totalArgs$y)) totalArgs$y<-0.2
+			
+			totalArgs$x<-max(xlim)+diff(xlim)*totalArgs$x
+			if(decreasing) totalArgs$y<-min(ylim)+diff(ylim)*totalArgs$y
+			if(!decreasing) totalArgs$y<-max(ylim)-diff(ylim)*totalArgs$y
+			
+			do.call(text, totalArgs)
+		
+		# do the subsetting of the occurence dataset (for plotting)
+			plotDat <- dat[dat[,tax]%in%names(taxWhere), ]
+			plotCoords<-unique(cbind(plotDat[,bin], taxWhere[plotDat[,tax]]))
+			
+		# the occurrences
+		if(occs){
+			# use the supported arguments
+			occArgs<-occs.args
+			
+			# overwrite with internals
+			occArgs$x <-plotCoords[,1]
+			occArgs$y <-plotCoords[,2]
+			
+			# defaults
+			if(is.null(occArgs$pch)) occArgs$pch<-4
+			
+			# function call
+			do.call(points, occArgs)
+			
+		}
+		
+	}
+}
+
+
+
+distribute<-function(oneList, target){
+	
+	smallList<-lapply(oneList, FUN=function(x){
+		if(length(x)==1) fin <- rep(x, target)
+		if(length(x)==target) fin <- x
+		if(length(x)!= 1 & length(x)!=target){
+			fin <- x[1:target]
+		}
+		return(fin)
+	
+	})
+	
+	datF<-as.data.frame(smallList, stringsAsFactors=F)
+	
+	if(sum(is.na(datF))) warning("The number of supplied arguments doesn't match the number of groups")
+	
+	newList<-list()
+	for(i in 1:target){
+		one<-datF[i,, drop=FALSE]
+		one<-as.list(one)
+		newList<-c(newList, list(one))	
+	}
+	
+	if(length(newList)==0) newList<-NULL
+	
+	
+	return(newList)
+}
+
+	
+# default high contrast color palette
+mainHex<-c(
+	
+	# red
+	"#F21414",
+	
+	# green
+	"#07F80C",
+	
+	# blue
+	"#0712F8",
+	
+	# yellow
+	"#F8F500",
+	
+	# purple
+	"#9E00F8",
+	
+	# orange
+	"#FF9C00",
+	
+	# cyan
+	"#00F0FF",
+	
+	# pink
+	"#F00FE3",
+	
+	# brown
+	"#744932",
+	
+	# grass
+	"#A5EA21")
 	
