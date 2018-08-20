@@ -19,7 +19,7 @@ survivors(dat, tax = "genus", bin = "slc", method = "forward",
 \item{noNAStart}{\code{(logical)} Useful when the dataset does not start from bin \code{1}. Then \code{noNAStart=TRUE} will cut the first part of the resulting table, 
 so the first row will contain the estimates for the lowest bin number.}
 
-\item{fl}{\code{(matrix} or \code{data.frame}). If so desired, the function can be run on an FAD-LAD dataset, output by the \code{\link{fadLad}} function.}
+\item{fl}{\code{(matrix} or \code{data.frame}). If so desired, the function can be run on an FAD-LAD dataset, output by the \code{\link{fadlad}} function.}
 }
 \description{
 This function will calculate both forward and backward survivorship proportions from a given occurrence dataset or FAD-LAD matrix.
@@ -38,7 +38,7 @@ surv<-survivors(corals, tax="genus", bin="slc", method="forward")
 
 # plot
 data(stages)
-plotTS(stages, shading="series", boxes="per", xlim=c(260,0), 
+tsplot(stages, shading="series", boxes="per", xlim=c(260,0), 
   ylab="proportion of survivors present", ylim=c(0.01,1),plot.args=list(log="y"))
   
 for(i in 1:ncol(surv)) lines(stages$mid, surv[,i])

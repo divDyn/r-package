@@ -16,7 +16,7 @@
  		\item{\code{BIN}}{Integer number identifiers of the bins. §correct to num!}
 }}
 \source{
-§ executive committee of old PaleoDB, John Alroy, Additional variables were added by Wolfgang Kiessling.
+§ executive committee of old PaleoDB, John Alroy. Additional variables were added by Wolfgang Kiessling.
 }
 \usage{
 bins

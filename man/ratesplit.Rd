@@ -23,6 +23,8 @@ ratesplit(dat, sel, tax = "genus", bin = "slc", rate = "pc",
 
 \item{AICc}{\code{(logical)}: Only applicable for the \code{"AIC"} method. Toggles whether the small sample corrected AIC (AICc) should be used instead of the regular one.}
 
+\item{na.rm}{\code{(logical)}: Argument indicating whether the function should proceede when \code{NA}s are found in the \code{sel} column. Setting this argument to \code{TRUE} will proceede with the omission of these entries, while \code{FALSE} will coerce the function to output a single \code{NA} value.}
+
 \item{alpha}{\code{(numeric)}: Threshold to discriminate between meaningful and meaningless split. If \code{method="AIC"}, the value corresponds to the minimum weight value the dual model should have. By default it is \code{0.89}, which corresponds to the likelihood ratio of 8. If \code{method="binom"}, the value corresponds to the alpha value of the binomial test (default: 0.05). If \code{method="combine"} than two alpha values are required (1st for the AIC, 2nd for the binomial test). If alpha is \code{NULL}, than the default values will be used.}
 
 \item{output}{\code{(character)}: Either \code{"simple"} or \code{"full"}. \code{"simple"} returns the indices of the series where selectivity can be suggested. \code{"full"} returns a \code{matrix} of Akaike weights, or binomial probabilities.}
@@ -54,7 +56,7 @@ ddZ<-divDyn(z, tax="genus", bin="slc")
 ddAZ<-divDyn(az, tax="genus", bin="slc")
 
 # origination rate plot
-plotTS(stages, boxes="per", shading="series", xlim=54:95, 
+tsplot(stages, boxes="per", shading="series", xlim=54:95, 
   ylab="raw per capita originations")
 lines(stages$mid, ddZ$oriPC, lwd=2, lty=1, col="blue")
 lines(stages$mid, ddAZ$oriPC, lwd=2, lty=2, col="red")

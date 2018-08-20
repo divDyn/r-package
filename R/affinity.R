@@ -54,7 +54,7 @@ affinity<-function(dat, env, tax="genus",  bin="slc", coll="collection_no", meth
 		if(length(affLevels)!=2) stop("The 'env' variable contains more or less than 2 levels of entries. ")
 
 	# create an FAD-LAD matrix first
-		dFL<-fadLad(dat, tax, bin)
+		dFL<-fadlad(dat, tax, bin)
 	
 	# add the names to the matrix so that apply can process it
 		dFL$taxon<-rownames(dFL)

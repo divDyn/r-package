@@ -4,14 +4,12 @@
 #' 
 #'
 #'
-#' Although the help file lists some functions, the only interface for the procedures is the \code{subsample} function that serves as a framework for additional functions. All user input happens with this function and only it is exported to the package namespace. Currently the Classical Rarefaction (\code{"cr"}, Raup, 1975), the occurrence weighted by-list subsampling (\code{"oxw"}, Alroy et al., 2001) and the Shareholder Quorum Subsampling methods are implemented (\code{"sqs"}, Alroy, 2010).
+#' The \code{subsample} function implements the iterative framework of the sampling standardization procedure. 
+#' The function 1. takes the dataset \code{dat}, 2. runs function \code{FUN} on the dataset and creates a container for results of trials
+#' 3. runs one of the subsampling trial functions (e.g. \code{\link{subtrialCR}}) to get a subsampled 'trial dataset'
+#' 4. runs \code{FUN} on the trial dataset and
+#' 5. averages the results of the trials. For a detailed treatment on what the function does, please see the vignette ('Handout to the R package 'divDyn' v0.5.0 for diversity dynamics from fossil occurrence data'). Currently the Classical Rarefaction (\code{"cr"}, Raup, 1975), the occurrence weighted by-list subsampling (\code{"oxw"}, Alroy et al., 2001) and the Shareholder Quorum Subsampling methods are implemented (\code{"sqs"}, Alroy, 2010).
 #'
-#' For a detailed treatment on what the function does, please see the vignette ('Handout to the R package 'divDyn' v0.4.0 for diversity dynamics from fossil occurrence data').
-#'
-#' The subsampleXYZ functions produce a single trial result by returning the row indices of the original datasets.
-#' The CR and OxW types call the \code{subsampleCR}, \code{subsampleOXW} internally. SQS has two different implementations, the \code{"exact"} and \code{"inexact"} approach (Alroy, 2014). The \code{"inexact"} solution is set to be the default method, as it is computationally less demanding. 
-#' The \code{"inexact"} method calls the \code{frequencies} and the \code{subsampleSQSinexact} functions. The first calculates frequencies for each taxon and each bin, the second performs a single subsampling trial. The \code{"exact"} implementation calls the \code{subsampleSQSexact} internal function to perform the trials. You can study the source codes of these functions  at \url{http://github.com/adamkocsis/divDyn/} in the subsample.R file within the R folder.
-#' 
 #' \strong{References:}
 #'
 #' Alroy, J., Marshall, C. R., Bambach, R. K., Bezusko, K., Foote, M., Fürsich, F. T., … Webber, A. (2001). Effects of sampling standardization on estimates of Phanerozoic marine diversification. Proceedings of the National Academy of Science, 98(11), 6261-6266.
@@ -42,8 +40,7 @@
 #' @param duplicates (\code{logical} ): Toggles whether multiple entries from the same taxon (\code{"tax"}) and collection (\code{"coll"}) variables should be omitted. Useful for omitting occurrences of multiple species-level occurrences of the same genus. By default these are allowed through analyses (\code{duplicates=TRUE}), setting this to \code{FALSE} will require you to provide a collection variable. (\code{coll})
 #' @param coll (\code{character}): The variable name of the collection identifiers. 
 #' 
-#' @param vers (\code{character}): A parameter of SQS. The implementation type, either \code{"exact"} or \code{"inexact"}.
-#' @param ... arguments passed to \code{FUN} and the type-specific subsampling functions:
+#' @param ... arguments passed to \code{FUN} and the type-specific subsampling functions: \code{\link{subtrialCR}}, \code{\link{subtrialOXW}}, \code{\link{subtrialSQS}} 
 #' 
 #' @examples
 #' 
@@ -55,19 +52,16 @@
 #'   tax="genus", bin="slc", output="dist", keep=95)
 #' 	
 #' # plotting
-#'   plotTS(stages, shading="series", boxes="per", xlim=c(260,0), 
+#'   tsplot(stages, shading="series", boxes="per", xlim=c(260,0), 
 #'   ylab="range-through diversity (genera)", ylim=c(0,230))
 #'   lines(stages$mid, dd$divRT, lwd=2)
 #'   shades(stages$mid, rarefDD$divRT, col="blue")
 #'   legend("topleft", legend=c("raw","rarefaction"),
 #'     col=c("black", "blue"), lwd=c(2,2), bg="white")
 #'   
-#'   # compare with previous function (is obsolete)
-#'   rarefDD <- crDD(corals, quota=50, iter=100, intactBins=95)
-#'   lines(stages$mid,rarefDD$divRT, col="red", lwd=2)
 #'   
 #'   
-#' 
+#' \dontrun{
 #' # Example 2-SIB diversity 
 #' # draft a simple function to calculate SIB diversity
 #' sib<-function(dat, bin, tax){
@@ -85,12 +79,12 @@
 #'   tax="genus", bin="slc", output="arit", keep=95)
 #' 
 #' # plot
-#' plotTS(stages, shading="series", boxes="per", xlim=c(260,0), 
+#' tsplot(stages, shading="series", boxes="per", xlim=c(260,0), 
 #'   ylab="SIB diversity (genera)", ylim=c(0,230))
 #' 
 #' lines(stages$mid, rarefDD$divSIB, lwd=2, col="black")
 #' lines(stages$mid, rarefSIB, lwd=2, col="blue")
-#'     
+#' 
 #' 
 #' # Example 3 - different subsampling types with default function (divDyn)
 #' # compare different subsampling types
@@ -106,7 +100,7 @@
 #'   SQS<-subsample(corals,iter=50, q=0.4,tax="genus", bin="slc", output="dist", keep=95, type="sqs")
 #'
 #' # plot
-#'   plotTS(stages, shading="series", boxes="per", xlim=c(260,0), 
+#'   tsplot(stages, shading="series", boxes="per", xlim=c(260,0), 
 #'   ylab="range-through diversity (genera)", ylim=c(0,100))
 #'   shades(stages$mid, cr$divRT, col="red")
 #'   shades(stages$mid, UW$divRT, col="blue")
@@ -115,17 +109,17 @@
 #'   
 #'   legend("topleft", bg="white", legend=c("CR (20)", "UW (3)", "OW (20)", "SQS (0.4)"), 
 #'     col=c("red", "blue", "green", "cyan"), lty=c(1,1,1,1), lwd=c(2,2,2,2))
-#' 
+#' }
+#'
 #' @rdname subsample
 #' @export
-subsample <- function(dat, q, tax="genus", bin="SLC",  FUN=divDyn, coll=NULL, ref=NULL, iter=50,  type="cr", keep=NULL, rem=NULL, duplicates=TRUE,  output="arit",  useFailed=FALSE, vers="inexact",...){
+subsample <- function(dat, q, tax="genus", bin="SLC",  FUN=divDyn, coll=NULL, ref=NULL, iter=50,  type="cr", keep=NULL, rem=NULL, duplicates=TRUE,  output="arit",  useFailed=FALSE, ...){
 	
 #	bin <- "slc"
 #	tax<- "genus"
 #	dat <- corals
 #	q<-40
 #	output<- "arit"
-#	intact<-c(94,95)
 	# defense
 	
 	# temporary omission
@@ -158,7 +152,8 @@ subsample <- function(dat, q, tax="genus", bin="SLC",  FUN=divDyn, coll=NULL, re
 		#	if(sum(bVar<=0)>0 | sum(bVar%%1)>0) stop("The bin column may only contain positive integers")
 		
 		}
-	
+		
+		
 	# list additional arguments for defense of invalid combinations
 		addArgs<-list(...)
 
@@ -169,14 +164,23 @@ subsample <- function(dat, q, tax="genus", bin="SLC",  FUN=divDyn, coll=NULL, re
 		if(!is.null(addArgs$singleton)){
 			if(!addArgs$singleton%in%c("ref", "occ", FALSE)) stop("Invalid singleton value.")
 			if(is.null(ref) & addArgs$singleton=="ref") stop("You cannot calculate coverage based on references, if you do not provide a references variable.")
-			if(vers=="exact" & !addArgs$singleton %in% c("ref", "occ")) stop("You have to use singleton taxa (either 'ref' or 'occ')in the exact implementation of SQS.")
 		}
 		
 		if(!is.null(addArgs$byList)){
 			if(addArgs$byList & is.null(coll)) stop("You cannot do by-list subsampling without providing a collection variable.")
 		}
-		if(type=="oxw" & is.null(coll)) stop("You cannot do oxw subsampling without providing a collection variable.")
+		if(type=="oxw"){
+			if(is.null(coll))stop("You cannot do oxw subsampling without providing a collection 'coll' variable.")
+			if(sum(is.na(dat[!dat[,bin]%in%keep,coll]))>0) stop("Collection variable 'coll' includes NAs, please omit these rows manually,\n or indicate the bins where subsampling is not desired in 'keep'")
+		} 
 	
+	# cr and unit column
+		if("unit"%in%names(addArgs) & type=="cr"){
+			if(!addArgs$unit%in%colnames(dat)) stop("Invalid unit column.")
+			if(sum(is.na(dat[,addArgs$unit])>0)) stop("Variable 'unit' includes NAs, please omit these rows manually.")
+		} 
+		
+
 	# the bin levels
 		level<-unique(dat[,bin])
 		level<-level[!is.na(level)]
@@ -318,7 +322,15 @@ subsample <- function(dat, q, tax="genus", bin="SLC",  FUN=divDyn, coll=NULL, re
 		
 		# just organize
 		oneResult<-list()
-	
+		
+		if("unit"%in%names(addArgs)){
+			byUnit <- TRUE
+			unitVar <- dat[,addArgs$unit]
+			rows <- 1:nrow(dat)
+					
+		}else{
+			byUnit <- FALSE
+		}
 	}
 	
 	if(type=="oxw"){
@@ -330,8 +342,8 @@ subsample <- function(dat, q, tax="genus", bin="SLC",  FUN=divDyn, coll=NULL, re
 			intact=keep
 		)
 		
-		if("x"%in%addArgs){
-			oxwArgs<-c(oxwArgs, list(x=x))
+		if("x"%in%names(addArgs)){
+			oxwArgs<-c(oxwArgs, list(x=addArgs$x))
 		}
 	}
 	
@@ -339,48 +351,27 @@ subsample <- function(dat, q, tax="genus", bin="SLC",  FUN=divDyn, coll=NULL, re
 	# SQS
 	if(type=="sqs" & !is.null(bin)){
 		
+		# present in the prepSQS
+		prepSQSargs<-c("singleton","excludeDominant", "largestColl", "fcorr")
 		
-		if(vers=="inexact"){	
-			
-			# present in the prepSQS
-			prepSQSargs<-c("singleton","excludeDominant", "largestColl", "fcorr")
-			
-			# get the arguments for prepSQS
-			prepArgs<-addArgs[names(addArgs)%in%prepSQSargs]
-			prepArgs<-c(prepArgs, list("dat"=dat, "bin"=bin, "tax"=tax, "coll"=coll, "ref"=ref))
-			
-			# frequencies
-			freqVar<-do.call(frequencies, prepArgs)
-			
-			# argument distribution for the subsampler (sqsinexact)
-			sqsArgs<-addArgs[names(addArgs)%in%c("byList", "appr", "trialRet")]
-			
-			sqsArgs<-c(sqsArgs,list(
-				"binVar"=dat[,bin],
-				"freqVar"=freqVar,
-				"collVar"=dat[, coll],
-				"q"=quoVar,
-				"intact"=keep
-			))
-		}
+		# get the arguments for prepSQS
+		prepArgs<-addArgs[names(addArgs)%in%prepSQSargs]
+		prepArgs<-c(prepArgs, list("dat"=dat, "bin"=bin, "tax"=tax, "coll"=coll, "ref"=ref))
 		
-		if(vers=="exact"){
-			# distribute arguments
-			addArgs<-list(...)
-			
-			sqsArgs<-addArgs[names(addArgs)%in%c("byList", "intact", "singleton")]
-
-			sqsArgs<-c(sqsArgs, list(
-				"binVar"=dat[,bin],
-				"taxVar"=dat[,tax],
-				"collVar"=dat[,coll],
-				"refVar"=dat[,ref],
-				"q"=quoVar
-			
-			))
-
-		}
+		# frequencies
+		freqVar<-do.call(frequencies, prepArgs)
 		
+		# argument distribution for the subsampler (sqsinexact)
+		sqsArgs<-addArgs[names(addArgs)%in%c("byList", "appr", "trialRet")]
+		
+		sqsArgs<-c(sqsArgs,list(
+			"binVar"=dat[,bin],
+			"freqVar"=freqVar,
+			"collVar"=dat[, coll],
+			"q"=quoVar,
+			"intact"=keep
+		))
+	
 	}	
 	
 	# later: replace all character entries with integers. will allow faster implementation and later C++ conversion
@@ -389,40 +380,77 @@ subsample <- function(dat, q, tax="genus", bin="SLC",  FUN=divDyn, coll=NULL, re
 	failMat<-matrix(FALSE, ncol=iter, nrow=length(level))
 	rownames(failMat) <- level
 	
-	
 	#b. iteration
 	if(implement=="for"){
 	
 		for(k in 1:iter){
 			#1. produce one subsample
-	#		if(type=="cr" & !is.null(bin)){
-	#			oneResult<-subsampleCR(binVar=dat[,bin], q=quoVar, intact=keep)
-	#			appliedArgs$dat<-dat[oneResult$rows,]
-	#		}
-			
 			if(type=="cr" & !is.null(bin)){
 			
-				# output of cpp function
-				binCRres<-.Call('_divDyn_CRbinwise', PACKAGE = 'divDyn', binVar, quoVar)
-			
-				# increase indexing (R)
-				binCRres[,1]<-binCRres[,1]+1
-			
-				# rows where quota not reached
-				failOutput <- binCRres[,1]==-8
+				# switch, which subsampling method should be used - by-unit or by-row
+				#by-row method
+				if(!byUnit){
+					# output of cpp function
+					binCRres<-.Call('_divDyn_CRbinwise', PACKAGE = 'divDyn', binVar, quoVar)
 				
-				# bins where quota not reached
-				oneResult$fail<-binCRres[failOutput,2]
+					# increase indexing (R)
+					binCRres[,1]<-binCRres[,1]+1
 				
-				# the rows where 
-				usedRows<-rep(FALSE, nrow(dat))
+					# rows where quota not reached
+					failOutput <- binCRres[,1]==-8
+					
+					# bins where quota not reached
+					oneResult$fail<-binCRres[failOutput,2]
+					
+					# the rows where 
+					usedRows<-rep(FALSE, nrow(dat))
+					
+					# output by subsampling
+					usedRows[binCRres[!failOutput,1]] <- TRUE
+					
+					usedRows[keepRows] <- TRUE
+					# should be kept intact
+					appliedArgs$dat<-dat[usedRows,]
+				# by-unit
+				}else{
+								
+					tap <- tapply(INDEX=binVar, X=rows, function(x){
+						unitSlice<-unitVar[x]
+						
+						# random sample
+						uniqueUnit<-sample(unique(unitVar[x]))
+						
+						if(quoVar<=length(uniqueUnit)){
+							# rows corresponding t
+							return(x[unitSlice%in%uniqueUnit[1:quoVar]])
+						}else{
+							return(NULL)
+						}
+					
+					
+					})
+					
+					# what was not enough for the subsampling
+					failed<-unlist(lapply(tap, is.null))
+					failed<-as.numeric(names(failed[failed]))
+					failed<-failed[!failed%in%keep]
+					
+					# the rows that should be passed
+					trialRows <- rows%in%unlist(tap)
+					
+					# these rows should be present regardless of the subsampling
+					intactRows<-binVar%in%keep
+					
+					# combine the two
+					subsampleRows<-trialRows | intactRows
+					
+					# result
+					oneResult<-list(rows=subsampleRows, fail=failed)
+					
+					#the final output
+					appliedArgs$dat<-dat[oneResult$rows,]
 				
-				# output by subsampling
-				usedRows[binCRres[!failOutput,1]] <- TRUE
-				
-				usedRows[keepRows] <- TRUE
-				# should be kept intact
-				appliedArgs$dat<-dat[usedRows,]
+				}
 				
 			}
 			
@@ -433,16 +461,10 @@ subsample <- function(dat, q, tax="genus", bin="SLC",  FUN=divDyn, coll=NULL, re
 			}
 			
 			if(type=="sqs"& !is.null(bin)){
-			#	oneResult<-subsampleSQS2010(binVar=dat[,bin], freqVar=freqVar, collVar=dat[, coll], q=quoVar, intact=keep)
-				if(vers=="inexact"){
-					oneResult<-do.call(subsampleSQSinexact, args=sqsArgs)
-					appliedArgs$dat<-dat[oneResult$rows,]
-				}
-				if(vers=="exact"){
-					oneResult<-do.call(subsampleSQSexact, args=sqsArgs)
-					appliedArgs$dat<-dat[oneResult$rows,]
-				}
 			
+				oneResult<-do.call(subsampleSQSinexact, args=sqsArgs)
+				appliedArgs$dat<-dat[oneResult$rows,]
+				
 			}
 			
 			# add the failed stuff is so required
@@ -452,6 +474,8 @@ subsample <- function(dat, q, tax="genus", bin="SLC",  FUN=divDyn, coll=NULL, re
 			# keep track
 				failMat[as.character(oneResult$fail),k] <-TRUE
 			}
+			
+			
 			
 			#2. run the function on subsample
 			if(is.null(FUN)){
@@ -670,47 +694,294 @@ subsample <- function(dat, q, tax="genus", bin="SLC",  FUN=divDyn, coll=NULL, re
 	return(totalResult)
 }
 
+##########################################################################################
+# Subsampling trial functions follow:
 
-#' @rdname subsample
-subsampleCR <- function(binVar,q,intact=NULL){
-#	binVar <- dat[,bin]
+
+#' Subsampling trial functions
+#' 
+#' These functions create one subsampling trial dataset with a desired subsampling method
+#' 
+#' The essence of these functions are present within the subsampling wrapper function \code{\link{subsample}}. Each function implements a certain subsampling type.
+#' The return value of the funcfions by default is a \code{logical} vector indicating which rows of the original dataset should be present in the subsample. 
+#' The inexact method for SQS is implemented here as it is computationally less demanding. 
+#'
+#' \strong{References:}
+#'
+#' Alroy, J., Marshall, C. R., Bambach, R. K., Bezusko, K., Foote, M., Fürsich, F. T., … Webber, A. (2001). Effects of sampling standardization on estimates of Phanerozoic marine diversification. Proceedings of the National Academy of Science, 98(11), 6261-6266.
+#' 
+#' Alroy, J. (2010). The Shifting Balance of Diversity Among Major Marine Animal Groups. Science, 329, 1191-1194. https://doi.org/10.1126/science.1189910
+#'
+#' Raup, D. M. (1975). Taxonomic Diversity Estimation Using Rarefaction. Paleobiology, 1, 333-342. https: //doi.org/10.2307/2400135
+#' 
+#' @param q (\code{numeric)}: Subsampling level argument (mandatory). Depends on the subsampling function, it is the number of occurrences for \code{"cr"}, and the number of desired occurrences to the power of \code{x} for O^x^W. It is also the quorum of the SQS method.
+#' 
+#' @param dat (\code{data.frame}): Occurrence dataset, with \code{bin}, \code{tax} and \code{coll} as column names.
+#' 
+#' @param bin (\code{character}): The name of the subsetting variable (has to be integer). For time series, this is the time-slice variable. 
+#' @param useFailed (\code{logical}): If the bin does not reach the subsampling quota, should the bin be used? 
+#' @param keep (\code{numeric}): The bins, which will not be subsampled but will be added to the subsampling trials. NIf the number of occurrences does not reach the subsampling quota, by default it will not be represented in the subsampling trials. You can force their inclusion with the \code{keep} argument separetely (for all, see the \code{useFailed} argument).
+#' @param unit (\code{character}): Argument of the CR subsampling type. The name of the variable that designates the subsampling units. In every bin, CR selects a certain number (quota) of entries from the dataset. By default (\code{unit=NULL}), the units will be the rows, and the \code{q} number of rows will be selected in each bin.
+#' However, this can be a higher level category that has multiple entries in the each bin. If \code{unit} is a valid column of the dataset \code{dat}, then CR will select \code{q} number entries in this variable, and will return all the corresponding rows.
+#' @param showFailed (\code{logical}): Toggles the output of the function. If set to \code{TRUE} the output will be a list, including both the default output (logical vector of rows) and the \code{numeric} vector of bins that did not have enough entries to reach the quota \code{q}.
+#' @rdname subtrial
+#' @examples
+#' #one classical rarefaction trial
+#'   data(corals)
+#'   bRows<-subtrialCR(corals, bin="slc", unit="reference_no", q=5)
+#'   # control
+#'   unCor<-unique(corals[bRows,c("slc", "reference_no")])
+#'   table(unCor$slc)
+#' # classical rarefaction can also be used to do by reference subsampling of collections
+#'   fossils <- corals[corals$slc!=95, ]
+#'   # rows in the sampling standardization
+#'   threeCollPerRef <- subtrialCR(dat=fossils, unit="collection_no", 
+#'     bin="reference_no", q=3, useFailed=TRUE)
+#'   # check: table of collections/references in the new subset (with failed!!)
+#'   crosstab<-unique(fossils[threeCollPerRef,c("collection_no", "reference_no")])
+#'   table(crosstab$reference_no)
+#' @export
+subtrialCR<-function(dat, bin, q, unit=NULL, keep=NULL, useFailed=FALSE, showFailed=FALSE){
+	quoVar <- q
+	
+	if(is.null(unit)){
+		# order the rows 
+		oBin <- order(dat[,bin])
+		
+		# the only important variable
+		binVar <- dat[oBin,bin]
+		
+		# intact rows
+		keepRows<-binVar%in%keep
+		
+		# output of cpp function
+		binCRres<-.Call('_divDyn_CRbinwise', PACKAGE = 'divDyn', binVar, quoVar)
+		
+		# increase indexing (R)
+		binCRres[,1]<-binCRres[,1]+1
+		
+		# rows where quota not reached
+		failOutput <- binCRres[,1]==-8
+		
+		# bins where quota not reached
+		fail<-binCRres[failOutput,2]
+		
+		# the rows where 
+		usedRows<-rep(FALSE, nrow(dat))
+		
+		# output by subsampling
+		usedRows[binCRres[!failOutput,1]] <- TRUE
+		
+		usedRows[keepRows] <- TRUE
+		# should be kept intact
+		res<-list(rows=usedRows, fail=fail)
+	
+				
+	}else{
+		if(!unit%in%colnames(dat)) stop("variable unit not found in dat.")
+		
+		binVar<-dat[,bin]
+		unitVar <- dat[,unit]
+		
+		rows <- 1:nrow(dat)
+		
+		tap <- tapply(INDEX=binVar, X=rows, function(x){
+			unitSlice<-unitVar[x]
+			
+			# random sample
+			uniqueUnit<-sample(unique(unitVar[x]))
+			
+			if(quoVar<=length(uniqueUnit)){
+				# rows corresponding t
+				return(x[unitSlice%in%uniqueUnit[1:quoVar]])
+			}else{
+				return(NULL)
+			}
+		
+		
+		})
+		
+		# what was not enough for the subsampling
+		failed<-unlist(lapply(tap, is.null))
+		failed<-as.numeric(names(failed[failed]))
+		failed<-failed[!failed%in%keep]
+		
+		# the rows that should be passed
+		trialRows <- rows%in%unlist(tap)
+		
+		# these rows should be present regardless of the subsampling
+		intactRows<-binVar%in%keep
+		
+		# combine the two
+		subsampleRows<-trialRows | intactRows
+		
+		# result
+		res<-list(rows=subsampleRows, fail=failed)
+	
+	}
+	if(useFailed){
+		res$rows[dat[, bin]%in%res$fail] <- TRUE
+	}
+	if(showFailed){
+		return(res)
+	}else{
+		return(res$rows)
+	}
+}
+
+
+#' @param coll (\code{character}): The variable name of the collection identifiers. 
+#' @param x (\code{numeric}): Argument of the OxW type. The exponent of by-list subsampling, by default it is 1.
+#' @rdname subtrial
+#' @export
+subtrialOXW<-function(dat, bin, q, coll,x=1, keep=NULL, useFailed=FALSE, showFailed=FALSE){
+
+	binVar <- dat[,bin]
+	collVar <- dat[,coll]
+	
+	# future argument: appr represents how the subsampling quota is approached
+	# appr can be "over", "under", "optimize"
+	appr="over"
+	
+	# the chosen quota
+	if(x==0){
+		appr <- "other"
+	}
 	rows<- 1:length(binVar)
 	
-	tap<-tapply(INDEX=binVar, X=rows, FUN=function(x, q){
-		if(length(x)>=q){
-			return(sample(x, q, replace=F))
+	#keep track of not enough
+	ne<-NULL
+	tap<-tapply(X=rows, INDEX=binVar, FUN=function(y){
+	#	y<-rows[binVar==i]
+		# because indices are subsetted
+		collection<-collVar[y]
+		
+		# get the weight of each collection
+		expTab<-table(collection)^x
+		
+		# shuffle
+		expTab<-sample(expTab)
+		
+		# add up
+		cumulative<-cumsum(expTab)
+
+
+		# there are enough 
+		if(length(cumulative)>0){
+			if(cumulative[length(cumulative)]>q){
+				bSelect<-cumulative<=q
+				# potential forking!!! 
+				if(appr=="over"){
+					if(sum(bSelect)!=length(bSelect)){
+						bSelect[sum(bSelect)+1] <- TRUE
+					}
+				}
+				
+				# the collections to keep
+				keepCollections<-as.numeric(names(cumulative)[bSelect])
+				return(y[collection%in%keepCollections])
+				
+			}else{
+				return(NULL)
+			}
 		}else{
 			return(NULL)
+			
 		}
 	
-	}, q=q)
+	})
 	
 	# what was not enough for the subsampling
 	failed<-unlist(lapply(tap, is.null))
 	failed<-as.numeric(names(failed[failed]))
-	failed<-failed[!failed%in%intact]
+	failed<-failed[!failed%in%keep]
 	
 	# the rows that should be passed
 	trialRows <- rows%in%unlist(tap)
 	
 	# these rows should be present regardless of the subsampling
-	intactRows<-binVar%in%intact
+	intactRows<-binVar%in%keep
 	
 	# combine the two
 	subsampleRows<-trialRows | intactRows
-
 	
 	# result
 	res<-list(rows=subsampleRows, fail=failed)
 
-	# return
-	return(res)
+	if(useFailed){
+		res$rows[dat[, bin]%in%res$fail] <- TRUE
+	}
+	
+	if(showFailed){
+		return(res)
+	}else{
+		return(res$rows)
+	}
 }
 
 
+#' @param tax (\code{character}): The name of the taxon variable.
+#' @param ref (\code{character}): The name of the reference variable, optional - depending on the subsampling method.
+#' @param excludeDominant \code{(logical)}: Argument of SQS. This parameter sets whether the dominant taxon should 
+#'	be excluded from all calculations involving frequencies (this is the second correction of Alroy, 2010).
+#' 
+#' @param largestColl \code{(logical)}: Parameter of SQS. This parameter sets whether the occurrences of taxa only ever
+#'  found in the most diverse collection should be excluded from the count of 
+#'	single-publication occurrences. (this is the third correction of Alroy, 2010) Note that \code{largestColl=TRUE} is dependent on \code{excludeDominant=TRUE}. Setting \code{excludeDominant} to \code{FALSE} will turn this correction off.
+#' 
+#' @param fcorr \code{(character)}: Parameter for the inexact method of SQS. either "good" or "alroy". This argument changes the frequency correction procedure of the 
+#'  'inexact' version of SQS (Alroy 2010). As not all taxa are present in the samples, 
+#'  the sampled frequencies of taxa tend overestimate their frequencies in the sampling pool. 
+#'  In Alroy (2010) these are corrected using Good's u ("good", default), in the later versions 
+#'  of SQS this metric is changed to a different method using single occurrence and double occurrence taxa ("alroy"). 
+#' @param byList (\code{character}): A parameter of the \code{"inexact"} method of SQS. Sets whether occurrences should be subsampled with (\code{FALSE}) or without (\code{TRUE}) breaking the collection integrity. 
+#'	
+#' @param appr (\code{character}): A parameter of the inexact method of SQS. Either "over" (default) or ("under"). The current 
+#' version is not concerned with small fluctuations around the drawn subsampling quorum. 
+#' Therefore, in the inexact algorithm, sampling is finished when the subset 
+#' either is immediately below the quorum (\code{"under"}) or above it (\code{"over"}).
+#' @param singleton \code{(character)}: A parameter of SQS. Either \code{"ref"}, \code{"occ"} or \code{FALSE}. If set to \code{"occ"}, the coverage estimator (e.g. Good's u) will be calculated based on the number of single-occurrence taxa. 
+#' If set to "ref" the number of occurrences belonging to single-reference taxa will be used instead. In case of the inexact algorithm, if set to \code{FALSE} then coverage corrections of frequencies will not be applied.
+#' @rdname subtrial
+#' @export
+subtrialSQS <- function(dat,bin, tax, q, coll=NULL, ref=NULL, singleton="occ", excludeDominant=FALSE, 
+	largestColl=FALSE, fcorr="good",byList=FALSE, keep=NULL, useFailed=FALSE, showFailed=FALSE, appr="under"){
+	
+	if(byList & is.null(coll)) stop("You cannot do by-list subsampling without a collection variable!")
+	if(byList & !is.null(coll)){
+		if(!coll%in%colnames(dat)) stop("Please provide a valid collection variable name.")
+	} 
+	
+	
+	
+	# the quota variable
+	quoVar <- q
+	
+	
+	# the frequencies
+	freqVar <- frequencies(dat=dat,bin=bin, tax=tax, coll=coll, ref=ref, 
+		singleton=singleton, excludeDominant=excludeDominant, largestColl=largestColl, fcorr=fcorr)
 
-#' @param x (\code{numeric}): Argument of the OxW type. The exponent of by-list subsampling, by default it is 1.
-#' @rdname subsample
+	# the bins
+	binVar=dat[,bin]
+
+	# the collections (if present)
+	collVar=dat[, coll]
+
+	res <- subsampleSQSinexact(binVar=binVar, freqVar=freqVar, q=quoVar, collVar=collVar, byList=byList, intact=keep, appr=appr, trialRet="occ")
+	
+	if(useFailed){
+		res$rows[dat[, bin]%in%res$fail] <- TRUE
+	}
+	if(showFailed){
+		return(res)
+	}else{
+		return(res$rows)
+	}
+}
+
+##########################################################################################
+# Subsampling utility functions:
 subsampleOXW<-function(binVar, collVar, q, intact=NULL,x=1){
 	
 	# future argument: appr represents how the subsampling quota is approached
@@ -788,21 +1059,6 @@ subsampleOXW<-function(binVar, collVar, q, intact=NULL,x=1){
 }
 
 
-
-
-#' @param excludeDominant \code{(logical)}: Parameter for the inexact method of SQS. This parameter sets whether the dominant taxon should 
-#'	be excluded from all calculations involving frequencies (this is the second correction of Alroy, 2010).
-#' 
-#' @param largestColl \code{(logical)}: Parameter for the inexact method of SQS. This parameter sets whether the occurrences of taxa only ever
-#'  found in the most diverse collection should be excluded from the count of 
-#'	single-publication occurrences. (this is the third correction of Alroy, 2010) Note that \code{largestColl=TRUE} is dependent on \code{excludeDominant=TRUE}. Setting \code{excludeDominant} to \code{FALSE} will turn this correction off.
-#' 
-#' @param fcorr \code{(character)}: Parameter for the inexact method of SQS. either "good" or "alroy". This argument changes the frequency correction procedure of the 
-#'  'inexact' version of SQS (Alroy 2010). As not all taxa are present in the samples, 
-#'  the sampled frequencies of taxa tend overestimate their frequencies in the sampling pool. 
-#'  In Alroy (2010) these are corrected using Good's u ("good", default), in the later versions 
-#'  of SQS this metric is changed to a different method using single occurrence and double occurrence taxa ("alroy"). 
-#'@rdname subsample
 # excludeDominant sets the Alroy's 2nd correction, sets the frequency of the dominant taxon's to 0
 frequencies<-function(dat,bin, tax, coll=NULL, ref=NULL, singleton="occ", excludeDominant=FALSE, largestColl=FALSE, fcorr="good"){
 
@@ -1002,132 +1258,7 @@ frequencies<-function(dat,bin, tax, coll=NULL, ref=NULL, singleton="occ", exclud
 	return(freqVar)
 }
 
-#' @param singleton \code{(character)}: A parameter of SQS. Either \code{"ref"}, \code{"occ"} or \code{FALSE}. If set to \code{"occ"}, the coverage estimator (e.g. Good's u) will be calculated based on the number of single-occurrence taxa. 
-#' If set to "ref" the number of occurrences belonging to single-reference taxa will be used instead. In case of the inexact algorithm, if set to \code{FALSE} then coverage corrections of frequencies will not be applied.
-#' @rdname subsample
-subsampleSQSexact<-function(binVar, q, taxVar, collVar=NULL, refVar=NULL, byList=FALSE, intact=NULL, singleton="occ"){
-	rows<- 1:length(binVar)
-	#keep track of not enough
-	ne<-NULL
 
-	# by occurences approach
-	if(!byList){
-		# row indices of all time slices
-		tap<-tapply(X=rows, INDEX=binVar, FUN=function(y){
-		
-			shuffledRows<-sample(y)
-			taxa<-factor(taxVar[shuffledRows])
-			if(length(refVar)!=0) refs<-factor(refVar[shuffledRows])
-			if(length(collVar)!=0) colls<-factor(collVar[shuffledRows])
-			
-			# the number of occurrences in the slice
-			sliceOcc<-length(y)
-		
-			if(singleton=="ref"){
-				refTax<-paste(refs, taxa)
-				uVect<-sapply(1:sliceOcc, function(O){
-					firstTax<-taxa[1:O]
-					
-					# Alroy's u'
-					1-sum(table(firstTax[!duplicated(refTax[1:O])])==1)/O
-					
-				})
-			}
-			if(singleton=="occ"){
-				# if it provided, make sure that no duplicates are used
-				if(length(collVar)!=0){
-					colTax<-paste(colls, taxa)
-				}else{
-					colTax<-taxa
-				}
-				uVect<-sapply(1:sliceOcc, function(O){
-					firstTax<-taxa[1:O]
-					
-					# Good's u
-					1-sum(table(firstTax[!duplicated(colTax[1:O])])==1)/O
-					
-				})
-			}
-			
-			# where does uVect cross the quorum? 
-			zeroDiff<-uVect-q
-			
-			# failed trial (the target quorum is never reached)
-			if(sum(zeroDiff>=0)==0){
-				return(NULL)
-			}else{
-				
-				# exactly the quorum sampled
-				indices<-which(zeroDiff==0)
-				
-				# more likely going above and below
-				signs<-sign(zeroDiff)
-				
-			
-				signDiff<-c(NA,diff(signs))
-				
-				# all indices that are likely
-				indices<-unique(c(indices,which(signDiff!=0), which(signDiff!=0)-1))
-				
-				# which is the middle?
-				middle<-stats::median(indices)
-				
-				#more
-				if(!middle%in%indices){
-					closeness<-abs(indices-middle)
-					take<-which(min(closeness)==closeness)
-				
-					# single closest
-					if(length(take)==1){
-						middle<-indices[take]
-					}else{
-						# select a random one, it will probably notmatter
-						middle<-sample(indices[take],1)
-					}
-				
-				}
-			
-			
-				# return indices
-				return(shuffledRows[1:middle])
-			}
-			
-#		}
-		
-		})
-	}
-	
-	# what was not enough for the subsampling
-	failed<-unlist(lapply(tap, is.null))
-	failed<-as.numeric(names(failed[failed]))
-	failed<-failed[!failed%in%intact]
-	
-	# the rows that should be passed
-	trialRows <- rows%in%unlist(tap)
-	
-	# these rows should be present regardless of the subsampling
-	intactRows<-binVar%in%intact
-	
-	# combine the two
-	subsampleRows<-trialRows | intactRows
-
-	
-	# result
-	res<-list(rows=subsampleRows, fail=failed)
-
-	# return
-	return(res)
-
-}
-
-
-#' @param byList (\code{character}): A parameter of the \code{"inexact"} method of SQS. Sets whether occurrences should be subsampled with (\code{FALSE}) or without (\code{TRUE}) breaking the collection integrity. (not yet for the exact algorithm.)
-#'	
-#' @param appr (\code{character}): A parameter of the inexact method of SQS. Either "over" (default) or ("under"). The current 
-#' version is not concerned with small fluctuations around the drawn subsampling quorum. 
-#' Therefore, in the \code{inexact} algorithm, sampling is finished when the subset 
-#' either is immediately below the quorum (\code{"under"}) or above it (\code{"over"}).
-#' @rdname subsample
 subsampleSQSinexact<-function(binVar, freqVar, q, collVar=NULL, byList=FALSE, intact=NULL, appr="under", trialRet="occ"){
 	
 	rows<- 1:length(binVar)
@@ -1280,7 +1411,4 @@ subsampleSQSinexact<-function(binVar, freqVar, q, collVar=NULL, byList=FALSE, in
 	return(res)
 
 }
-
-
-
 

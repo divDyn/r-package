@@ -79,7 +79,7 @@ To be added: missing portions are omitted in this version, but should be represe
   data(stages)
 
   # time scale plot
-  plotTS(stages, shading="series", boxes="per", xlim=c(250,0), 
+  tsplot(stages, shading="series", boxes="per", xlim=c(250,0), 
     ylab="proportion of occurrences", ylim=c(0,1))
   
   # plot of proportions	

@@ -52,6 +52,7 @@
 #' @param coll \code{(character)}: The column name of collection numbers. (optional)
 #' @param ref \code{(character)}: The column name of reference numbers. (optional)
 #' @param total \code{(logical)}:  If \code{FALSE}, then the function will provide sampling statistics for the individual bins. \code{TRUE} on the other hand, will provide them for the total dataset.
+#' @param noNAStart (logical) Useful when the dataset does not start from bin no. 1, but positive integer bin numbers are provided. Then \code{noNAStart=TRUE} will cut the first part of the resulting table, so the first row will contain the estimates for the lowest bin number. In case of positive integer bin identifiers, and if \code{noNAStart=FALSE}, the index of the row will be the bin number. 
 #' @param duplicates \code{(logical)}: The function will check whether there are duplicate occurrences (multiple species/genera). When set to \code{NULL}, nothing will happen, but the function will notify you if duplicates are present. If set to \code{TRUE}, the function will not do anything with these, if set to \code{FALSE}, the duplicates will be omitted. 
 #' 
 #' @examples
@@ -61,15 +62,16 @@
 #'
 #' # subsampling diagnostic
 #'  subStats<-subsample(corals, method="cr", tax="genus", FUN=sampstat, 
-#'    bin="slc", q=100,noNAstart=FALSE)
+#'    bin="slc", q=100,noNAStart=FALSE)
 #'	
 #' @export
-sampstat <- function(dat, tax="genus", bin="slc", coll=NULL, ref=NULL, total=FALSE, noNAstart=FALSE, duplicates=NULL){
+sampstat <- function(dat, tax="genus", bin="slc", coll=NULL, ref=NULL, total=FALSE, noNAStart=FALSE, duplicates=NULL){
 	datUni<- unique(dat[c(tax, bin, coll, ref)])
 	if(nrow(datUni)!=nrow(dat)){
 		if(is.null(duplicates)){
-			message("The database contains duplicate occurrences (multiple species/genus).") 
+			if(!is.null(coll) | !is.null(ref))	message("The database contains duplicate occurrences (multiple species/genus).") 
 		}else{
+			if(!duplicates & (is.null(coll)& is.null(ref))) stop("duplicates=FALSE implies that a 'coll' or 'ref' value is present!")
 			if(!duplicates){
 				dat <- datUni
 			}
@@ -93,7 +95,9 @@ sampstat <- function(dat, tax="genus", bin="slc", coll=NULL, ref=NULL, total=FAL
 	}
 	
 	if(!total){
-	
+		
+		# final output variables depend on what was entered
+		needed <- NULL
 		# factorize everything
 		binVar<-dat[,bin]
 		
@@ -114,12 +118,14 @@ sampstat <- function(dat, tax="genus", bin="slc", coll=NULL, ref=NULL, total=FAL
 		
 		# the number of occurrences
 		occs<-table(binVar)
+		needed<- c(needed, "occs")
 		
 		# the number of collections)
 		if(!is.null(coll)){
-			collections<-table((binVar[!duplicated(paste(binVar, collVar))]))
+			colls<-table((binVar[!duplicated(paste(binVar, collVar))]))
+			needed<- c(needed, "colls")
 		}else{
-			collections<-rep(NA, length(occs))
+			colls<-rep(NA, length(occs))
 		}
 		
 	#	table(unique(dat[,c(bin, coll)])[,bin])
@@ -128,12 +134,14 @@ sampstat <- function(dat, tax="genus", bin="slc", coll=NULL, ref=NULL, total=FAL
 		# the number of references
 		if(!is.null(ref)){ 
 			refs<-table((binVar[!duplicated(paste(binVar, refVar))]))
+			needed<- c(needed, "refs")
 		}else{
 			refs<-rep(NA, length(occs))
 		}
 		
 		# number of sampled taxa
 		SIBs<-table((binVar[!duplicated(paste(taxVar, binVar))]))
+		needed<- c(needed, "SIBs")
 		
 		rows<-1:nrow(dat)
 		
@@ -183,39 +191,52 @@ sampstat <- function(dat, tax="genus", bin="slc", coll=NULL, ref=NULL, total=FAL
 		occ2 <- unlist(lapply(tot, function(x)x[[3]]))
 		ref2 <- unlist(lapply(tot, function(x)x[[4]]))
 		dom <- unlist(lapply(tot, function(x)x[[5]]))
+		needed <- c(needed, "occ1", "occ2", "dom")
+		
+		if(!is.null(ref)){ 
+			needed <- c(needed, "ref1", "ref2")
+		}
 		
 		# Good's u (occs)
 		u<-1-(occ1[names(occs)]/occs)
 		# Chao' estime
 		chao1occ<-SIBs+(occ1[names(occs)]^2)/(2*occ2[names(occs)])
+		needed <- c(needed, "u","chao1occ")
 		
 		# Alroy's u' (references)
 		if(!is.null(ref)){
 			uPrime<-1-(ref1[names(occs)]/occs)
 			chao1ref<-SIBs+(ref1[names(occs)]^2)/(2*ref2[names(occs)])
+			needed <- c(needed, "uPrime","chao1ref")
 		}else{
 			uPrime<-rep(NA, length(u))
 			chao1ref<-rep(NA, length(u))
 		
 		}
+		occ1 <- occ1[names(occs)]
+		ref1 <- ref1[names(occs)]
+		occ2 <- occ2[names(occs)]
+		ref2 <- ref2[names(occs)]
+		dom <- dom[names(occs)]
 		
-		# concatenate everything
+		# concatenate everything (also emtpy variables)
 		all<-cbind(
 			occs, 
-			collections, 
+			colls, 
 			refs, 
 			SIBs, 
-			occ1[names(occs)], 
-			ref1[names(occs)], 
-			occ2[names(occs)], 
-			ref2[names(occs)], 
-			dom[names(occs)],
+			occ1, 
+			ref1, 
+			occ2, 
+			ref2, 
+			dom,
 			u,
 			uPrime, 
 			chao1occ, 
 			chao1ref)
-		colnames(all)[c(2,3,5:9)]<-c("colls","refs", "occ1", "ref1", "occ2", "ref2", "dom")
 		rownames(all)<-names(occs)
+		
+		all<- all[, needed]
 		
 		# if the entries are positive integers, coerce indexing!
 		if(posint){
@@ -226,7 +247,7 @@ sampstat <- function(dat, tax="genus", bin="slc", coll=NULL, ref=NULL, total=FAL
 			all<-place
 		}
 		
-		if(noNAstart){
+		if(noNAStart){
 			firstVal<-min(binVar, na.rm=T)
 			all<-all[firstVal:length(occs),]
 			

@@ -5,7 +5,7 @@
 \title{Basic sampling summary for every bin}
 \usage{
 sampstat(dat, tax = "genus", bin = "slc", coll = NULL, ref = NULL,
-  total = FALSE, noNAstart = FALSE, duplicates = NULL)
+  total = FALSE, noNAStart = FALSE, duplicates = NULL)
 }
 \arguments{
 \item{dat}{\code{(data.frame)}: The occurrence dataset.}
@@ -19,6 +19,8 @@ sampstat(dat, tax = "genus", bin = "slc", coll = NULL, ref = NULL,
 \item{ref}{\code{(character)}: The column name of reference numbers. (optional)}
 
 \item{total}{\code{(logical)}:  If \code{FALSE}, then the function will provide sampling statistics for the individual bins. \code{TRUE} on the other hand, will provide them for the total dataset.}
+
+\item{noNAStart}{(logical) Useful when the dataset does not start from bin no. 1, but positive integer bin numbers are provided. Then \code{noNAStart=TRUE} will cut the first part of the resulting table, so the first row will contain the estimates for the lowest bin number. In case of positive integer bin identifiers, and if \code{noNAStart=FALSE}, the index of the row will be the bin number.}
 
 \item{duplicates}{\code{(logical)}: The function will check whether there are duplicate occurrences (multiple species/genera). When set to \code{NULL}, nothing will happen, but the function will notify you if duplicates are present. If set to \code{TRUE}, the function will not do anything with these, if set to \code{FALSE}, the duplicates will be omitted.}
 }
@@ -77,6 +79,6 @@ basic<-sampstat(corals, tax="genus", bin="slc")
 
 # subsampling diagnostic
  subStats<-subsample(corals, method="cr", tax="genus", FUN=sampstat, 
-   bin="slc", q=100,noNAstart=FALSE)
+   bin="slc", q=100,noNAStart=FALSE)
 
 }

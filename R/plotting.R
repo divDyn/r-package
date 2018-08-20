@@ -20,20 +20,20 @@
 #' @param boxes.args \code{(list)}: Arguments that will be passed to the \code{\link[graphics]{rect}} function that draws the rectangles of time intervals.
 #' @examples
 #'	data(stages) 
-#'	  plotTS(stages, boxes="per", shading="series")
+#'	  tsplot(stages, boxes="per", shading="series")
 #' 
 #'	# only the Mesozoic, custom axes
-#'	  plotTS(stages, boxes="period", shading="stage", xlim=52:81, 
+#'	  tsplot(stages, boxes="period", shading="stage", xlim=52:81, 
 #'	    plot.args=list(axes=FALSE, main="Mesozoic"))
 #'	  axis(1, at=seq(250, 75, -25), labels=seq(250, 75, -25))
 #'	  axis(2)
 #'	
 #'	# only the Triassic, use the supplied abbreviations
-#'	  plotTS(stages, boxes="short", shading="stage", xlim=c(250,199), 
+#'	  tsplot(stages, boxes="short", shading="stage", xlim=c(250,199), 
 #'	    ylab="variable", labels.args=list(cex=1.5, col="blue"), 
 #'	    boxes.args=list(col="gray95"))
 #' @export
-plotTS<-function(tsdat,  boxes=NULL, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
+tsplot<-function(tsdat,  boxes=NULL, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 	bottom="bottom", top="top",
 	xlab="age (Ma)", ylab="",
 	shading=NULL,shading.col=c("white", "gray80"),
@@ -309,12 +309,12 @@ plotTS<-function(tsdat,  boxes=NULL, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 #' @examples
 #' # some random values accross the Phanerozoic
 #'	data(stages)
-#'	plotTS(stages, boxes="per", shading="series", ylim=c(-5,5), ylab=c("normal distributions"))
+#'	tsplot(stages, boxes="per", shading="series", ylim=c(-5,5), ylab=c("normal distributions"))
 #'	  randVar <- t(sapply(1:95, FUN=function(x){rnorm(150, 0,1)}))
 #'	  shades(stages$mid, randVar, col="blue", res=10,method="symmetric")
 #'	  
 #' # a bottom-bounded distribution (log normal)
-#'	plotTS(stages, boxes="per", shading="series", ylim=c(0,30), ylab="log-normal distributions")
+#'	tsplot(stages, boxes="per", shading="series", ylim=c(0,30), ylab="log-normal distributions")
 #'	  randVar <- t(sapply(1:95, FUN=function(x){rlnorm(150, 0,1)}))
 #'	  shades(stages$mid, randVar, col="blue", res=c(0,0.33, 0.66, 1),method="decrease")	 
 #' @export
@@ -538,7 +538,7 @@ shades <- function(x, y, col="black", res=10, border=NA,interpolate=FALSE, metho
 #'   data(stages)
 #' 
 #'   # time scale plot
-#'   plotTS(stages, shading="series", boxes="per", xlim=c(250,0), 
+#'   tsplot(stages, shading="series", boxes="per", xlim=c(250,0), 
 #'     ylab="proportion of occurrences", ylim=c(0,1))
 #'   
 #'   # plot of proportions	
@@ -813,7 +813,7 @@ parts<-function(x, b=NULL, ord="up", prop=FALSE, plot=TRUE,  col=NULL, xlim=NULL
 #' 
 #' @param dat \code{(data.frame)}: The occurrence dataset or the FAD-LAD dataset that is to be plotted. The FAD dataset must have numeric variables named \code{"FAD"} and \code{"LAD"}. Taxon ranges will be searched for in the \code{row.names} attribute of the table. 
 #' 
-#' @param bin (\code{character}): The column containing the bin entries (positive ages are valid).
+#' @param bin (\code{character}): The column(s) containing the entries of the time dimension. Use one column name if you have one estimate for the occurrences and use two if you have a minimum and a maximum estimate. Reveresed axis (ages) are supported too.
 #' 
 #' @param tax (\code{character}): The column containing the taxon entries.
 #' 
@@ -823,24 +823,25 @@ parts<-function(x, b=NULL, ord="up", prop=FALSE, plot=TRUE,  col=NULL, xlim=NULL
 #' 
 #' @param ylim (\code{numeric}): Ranges will be distributed equally between the assigned ylim values. If set to NULL, than it will be based on the plotting area of the open device.
 #' 
-#' @param occs (\code{logical}): Should the occurrence data be plotted? 
+#' @param occs (\code{logical}): Should the occurrence data be plotted? If you entered two bin column names, than occurrences will be plotted with the ranges of the estimates (segments).
 #' 
 #' @param gap (\code{numeric}): Evaluated only when the \code{group} argument points to a valid column. The amount of space between the group-specific range charts, expressed as the proportion of the entire plotting area. 
 #' 
 #' @param total (\code{character}): The name of the range group to be plotted. When multiple groups are used (see \code{group} argument), this is set by the \code{character} values in the column.
 #' 
-#' @param filter (\code{character}): When xlim filters the taxa, how should they be filtered. \code{"include"} (default) will show all ranges that have parts within the xlim interval. \code{"orig"} will show only those taxa that originate within the interval.
+#' @param filt (\code{character}): When xlim filters the taxa, how should they be filtered. \code{"include"} (default) will show all ranges that have parts within the \code{xlim} interval. \code{"orig"} will show only those taxa that originate within the interval.
 #'
 #' @param labs (\code{character}): Should the taxon labels be plotted?
+#'
 #' 
 #' @param total.args (\code{list}): Arguments that will be passed to the \code{\link[graphics]{text}} function that draws the \code{total} label. If valid grouping is present (see argument \code{group}), then vector entries will be distributed across the groups (see examples.)
 #' 
 #' @param ranges.args (\code{list}): Arguments that will be passed to the \code{\link[graphics]{segments}} function that draws ranges. If valid grouping is present (see argument \code{group}), then vector entries will be distributed across the groups (see examples.)
 #' 
-#' @param occs.args (\code{list}): Arguments that will be passed to the \code{\link[graphics]{points}} function that draws the occurence points. If valid grouping is present (see argument \code{group}), then vector entries will be distributed across the groups (see examples.)
+#' @param occs.args (\code{list}): Arguments that will be passed to the \code{\link[graphics]{points}} or \code{\link[graphics]{segments}} functions that draw the occurence points/lines. If you provided two \code{bin} columns, occurrence lines will be drawn instead of points. If valid grouping is present (see argument \code{group}), then vector entries will be distributed across the groups (see examples.)
 #' 
 #' @param labels.args (\code{list}): Arguments that will be passed to the \code{\link[graphics]{text}} function that draws the labels of taxa. If valid grouping is present (see argument \code{group}), then vector entries will be distributed across the groups (see examples.)
-#' 
+#'
 #' @param decreasing (\code{logical}): This parameter sets whether the series of ranges should start from the top \code{decreasing=TRUE} or bottom of the plot \code{decreasing=FALSE}. 
 #' 
 #' @examples
@@ -848,56 +849,67 @@ parts<-function(x, b=NULL, ord="up", prop=FALSE, plot=TRUE,  col=NULL, xlim=NULL
 #'  data(stages)
 #'  data(corals)
 #'  
-#'  # assign age esimates to the occurrences
+#'  # all ranges - using the age uncertainties of the occurrences
+#'  tsplot(stages, boxes="per", xlim=c(250,0))
+#'  ranges(corals, bin=c("max_ma", "min_ma"), tax="genus", occs=FALSE)
+#'
+#'  # or use single estimates: assign age esimates to the occurrences
 #'  corals$est<-stages$mid[corals$slc]
 #'  
-#'  # all ranges
-#'  plotTS(stages, boxes="per", xlim=c(250,0))
-#'  ranges(corals, bin="est", tax="genus", occs=F)
+#'  # all ranges (including the recent!!)
+#'  tsplot(stages, boxes="per", xlim=c(250,0))
+#'  ranges(corals, bin="est", tax="genus", occs=FALSE)
 #'  
 #'  # closing on the Cretaceous, with occurrences
-#'  plotTS(stages, boxes="series", xlim=c(145,65), shading="short")
-#'  
-#'  ranges(corals, bin="est", tax="genus", occs=T, ranges.args=list(lwd=0.1))
+#'  tsplot(stages, boxes="series", xlim=c(145,65), shading="short")
+#'  ranges(corals, bin="est", tax="genus", occs=TRUE, ranges.args=list(lwd=0.1))
 #'  
 #'  # z and az separately
-#'  plotTS(stages, boxes="series", xlim=c(145,65), shading="short")
-#'  ranges(corals, bin="est", tax="genus", occs=F, group="ecology", 
+#'  tsplot(stages, boxes="series", xlim=c(145,65), shading="short")
+#'  ranges(corals, bin="est", tax="genus", occs=FALSE, group="ecology", 
 #'    ranges.args=list(lwd=0.1))
 #'  	
 #'  # same, show only taxa that originate within the interval
-#'  plotTS(stages, boxes="series", xlim=c(105,60), shading="short")
-#'  ranges(corals, bin="est", tax="genus", occs=T, group="ecology", filt="orig" ,
-#'    labs=T, labels.args=list(cex=0.5))
+#'  tsplot(stages, boxes="series", xlim=c(105,60), shading="short")
+#'  ranges(corals, bin="est", tax="genus", occs=TRUE, group="ecology", filt="orig" ,
+#'    labs=TRUE, labels.args=list(cex=0.5))
 #'  
+#' # same using the age uncertainties of the occurrence age estimates
+#' tsplot(stages, boxes="series", xlim=c(105,60), shading="short")
+#' ranges(corals, bin=c("max_ma", "min_ma"), tax="genus", occs=TRUE, group="ecology", filt="orig" , 
+#'    labs=TRUE, labels.args=list(cex=0.5))
 #'    
 #' # fully customized/ annotated
-#' plotTS(stages, boxes="series", xlim=c(105,60), shading="short")
+#' tsplot(stages, boxes="series", xlim=c(105,60), shading="short")
 #' ranges(
 #'   corals, # dataset
 #'   bin="est", # bin column
 #'   tax="genus", # taxon column
-#'   occs=T, # occurrence points will be plotted
+#'   occs=TRUE, # occurrence points will be plotted
 #'   group="growth", # separate ranges based on growth types
 #'   filt="orig" , # show only taxa that originate in the interval
 #'   ranges.args=list(
 #'     lwd=1, # set range width to 1
-#' 	col=c("darkgreen", "darkred") # set color of the ranges (by groups)
+#' 	   col=c("darkgreen", "darkred") # set color of the ranges (by groups)
 #'   ), 
 #'   total.args=list(
 #'     cex=2, # set the size of the group identifier lablels
 #'     col=c("darkgreen", "darkred") # set the color of the group identifier labels
 #'   ),
-#'   labs=T, # taxon labels will be plotted
+#'   occs.args=list(
+#'	   col=c("darkgreen", "darkred"),
+#'	   pch=3
+#'	 ),
+#'   labs=TRUE, # taxon labels will be plotted
 #'   labels.args=list(
 #'     cex=0.4, # the sizes of the taxon labels
 #' 	col=c("darkgreen", "darkred") # set the color of the taxon labels by group
 #'   )
 #' ) 
 #'    
-#'  
+#' 
 #' @export
-ranges <- function(dat, bin=NULL, tax=NULL, xlim=NULL, ylim=c(0,1), total="", filt="include", occs=FALSE, labs=FALSE, decreasing=TRUE, group=NULL, gap=0,  labels.args=NULL, ranges.args=NULL, occs.args=NULL, group.args=NULL, total.args=NULL){
+ranges <- function(dat, bin=NULL, tax=NULL, xlim=NULL, ylim=c(0,1), total="", filt="include", occs=FALSE, labs=FALSE, decreasing=TRUE, group=NULL, gap=0,  labels.args=NULL, ranges.args=NULL, occs.args=NULL, total.args=NULL){
 	
 #	dat<-corals
 #	bin<-"est"
@@ -926,11 +938,11 @@ ranges <- function(dat, bin=NULL, tax=NULL, xlim=NULL, ylim=c(0,1), total="", fi
 		
 		if(is.null(bin)) stop("Argument bin is missing.")
 		if(is.null(tax)) stop("Argument tax is missing.")
-		if(!bin%in%colnames(dat)) stop("Column bin not found.")
+		if(sum(bin%in%colnames(dat))!=length(bin)) stop("Column bin not found.")
 		if(!tax%in%colnames(dat)) stop("Column tax not found.")
 		
 		# calculate the FAD LAD 
-		fl<-fadLad(dat, tax=tax, bin=bin)
+		fl<-fadlad(dat, tax=tax, bin=bin, na.rm=T)
 	}
 	
 	
@@ -1105,24 +1117,52 @@ ranges <- function(dat, bin=NULL, tax=NULL, xlim=NULL, ylim=c(0,1), total="", fi
 			
 			do.call(text, totalArgs)
 		
-		# do the subsetting of the occurence dataset (for plotting)
-			plotDat <- dat[dat[,tax]%in%names(taxWhere), ]
-			plotCoords<-unique(cbind(plotDat[,bin], taxWhere[plotDat[,tax]]))
 			
 		# the occurrences
 		if(occs){
-			# use the supported arguments
-			occArgs<-occs.args
+			# do the subsetting of the occurence dataset (for plotting)
+			plotDat <- dat[dat[,tax]%in%names(taxWhere), ]
+			plotCoords<-unique(cbind(plotDat[,bin], taxWhere[plotDat[,tax]]))
 			
-			# overwrite with internals
-			occArgs$x <-plotCoords[,1]
-			occArgs$y <-plotCoords[,2]
+			# use the supplied arguments
+				occArgs<-occs.args
+				
+			# draw occurrence points
+			if(length(bin)==1){			
+		
+				
+				# overwrite with internals
+				occArgs$x <-plotCoords[,1]
+				occArgs$y <-plotCoords[,2]
+				
+				# defaults
+				if(is.null(occArgs$pch)) occArgs$pch<-16
+				
+				# function call
+				do.call(points, occArgs)
+			}
 			
-			# defaults
-			if(is.null(occArgs$pch)) occArgs$pch<-4
+			# draw occurrence ranges
+			if(length(bin)==2){
 			
-			# function call
-			do.call(points, occArgs)
+				occArgs$x0 <-plotCoords[,1]
+				occArgs$x1 <-plotCoords[,2]
+				occArgs$y0 <-plotCoords[,3]
+				occArgs$y1 <-plotCoords[,3]
+				
+				# if line width for occurrence not given
+				if(is.null(occArgs$lwd)){
+					# and if the width of the range is given
+					if(!is.null(ranArgs$lwd)){
+						occArgs$lwd<-ranArgs$lwd*4
+					} else{
+						occArgs$lwd<-4
+					}
+				}
+				
+				# function call
+				do.call(segments, occArgs)
+			}
 			
 		}
 		
@@ -1160,7 +1200,7 @@ distribute<-function(oneList, target){
 	return(newList)
 }
 
-	
+
 # default high contrast color palette
 mainHex<-c(
 	
@@ -1193,4 +1233,19 @@ mainHex<-c(
 	
 	# grass
 	"#A5EA21")
+
+
+#' Time series plotting using a custom time scale 
+#'
+#' Obsolete name for the \code{\link{tsplot}} function.
+#'
+#' Obsolete name for the \code{\link{tsplot}} function.
+#'
+#' @param ... Arguments of the \code{\link{tsplot}} function.
+#' @export	
+plotTS <- function(...){
+	warning("The function 'plotTS()' is renamed to 'tsplot' to make the interface easier to use.\n  Please change your scripts accordingly.\n  'plotTS' will be completely removed at the next major update.")
 	
+	tsplot(...)
+}
+

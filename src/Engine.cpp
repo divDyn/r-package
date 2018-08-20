@@ -67,7 +67,7 @@ NumericMatrix Counts(NumericVector tax, NumericVector bin)
 			
 			// Alroy counts
 			// only count these if it can be meaningful
-			if((i>0) & (i<nBins)){
+			if((i>0) & (i<(nBins-1))){
 				// t1 taxa
 				if((TotalMatrix(j,i-1)==0) & (TotalMatrix(j,i+1)==0) & (TotalMatrix(j,i)==1)){
 					t1(i)++;
@@ -119,7 +119,7 @@ NumericMatrix Counts(NumericVector tax, NumericVector bin)
 			}
 			
 			//s1d
-			if((i>1)& (i<(nBins-1))){	
+			if((i>0)& (i<(nBins-2))){	
 				if((TotalMatrix(j,i-1)==1) & (TotalMatrix(j,i)==1) & (TotalMatrix(j,i+1)==0) & (TotalMatrix(j,i+2)==0)){
 					s1d(i)++;
 				}
@@ -127,7 +127,7 @@ NumericMatrix Counts(NumericVector tax, NumericVector bin)
 			}
 			
 			//s2d
-			if((i>1)& (i<(nBins-1))){	
+			if((i>0)& (i<(nBins-2))){	
 				if((TotalMatrix(j,i-1)==1) & (TotalMatrix(j,i)==0) & (TotalMatrix(j,i+1)==1) & (TotalMatrix(j,i+2)==0)){
 					s2d(i)++;
 				}
@@ -135,7 +135,7 @@ NumericMatrix Counts(NumericVector tax, NumericVector bin)
 			}
 			
 			//s3d
-			if((i>1)& (i<(nBins-1))){	
+			if((i>0)& (i<(nBins-2))){	
 				if((TotalMatrix(j,i-1)==1) & (TotalMatrix(j,i)==0) & (TotalMatrix(j,i+1)==0) & (TotalMatrix(j,i+2)==1)){
 					s3d(i)++;
 				}

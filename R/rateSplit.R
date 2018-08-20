@@ -24,6 +24,7 @@
 #' @param rate \code{(character)}: The rate metric. Currently only the per capita rates of Foote (2000) are available (\code{rate="pc"}).
 #' @param dat \code{(data.frame)}: The fossil occurrence data.
 #'	 
+#' @param na.rm \code{(logical)}: Argument indicating whether the function should proceede when \code{NA}s are found in the \code{sel} column. Setting this argument to \code{TRUE} will proceede with the omission of these entries, while \code{FALSE} will coerce the function to output a single \code{NA} value.
 #' @param tax \code{(character)}: Variable name of the occurring taxa (variable type: \code{factor} or \code{character}).
 #'	 
 #' @param bin \code{(character)}: Variable name of the bin numbers of the particular occurrences (\code{numeric}). Bin numbers should be in ascending order,can contain \code{NA}s, it can start from a number other than 1 and must not start with 0.
@@ -41,7 +42,7 @@
 #'	ddAZ<-divDyn(az, tax="genus", bin="slc")
 #'	
 #'	# origination rate plot
-#'	plotTS(stages, boxes="per", shading="series", xlim=54:95, 
+#'	tsplot(stages, boxes="per", shading="series", xlim=54:95, 
 #'	  ylab="raw per capita originations")
 #'	lines(stages$mid, ddZ$oriPC, lwd=2, lty=1, col="blue")
 #'	lines(stages$mid, ddAZ$oriPC, lwd=2, lty=2, col="red")

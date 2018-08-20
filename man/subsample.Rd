@@ -2,30 +2,11 @@
 % Please edit documentation in R/subsample.R
 \name{subsample}
 \alias{subsample}
-\alias{subsampleCR}
-\alias{subsampleOXW}
-\alias{frequencies}
-\alias{subsampleSQSexact}
-\alias{subsampleSQSinexact}
 \title{Serial subsampling wrapper function}
 \usage{
 subsample(dat, q, tax = "genus", bin = "SLC", FUN = divDyn, coll = NULL,
   ref = NULL, iter = 50, type = "cr", keep = NULL, rem = NULL,
-  duplicates = TRUE, output = "arit", useFailed = FALSE,
-  vers = "inexact", ...)
-
-subsampleCR(binVar, q, intact = NULL)
-
-subsampleOXW(binVar, collVar, q, intact = NULL, x = 1)
-
-frequencies(dat, bin, tax, coll = NULL, ref = NULL, singleton = "occ",
-  excludeDominant = FALSE, largestColl = FALSE, fcorr = "good")
-
-subsampleSQSexact(binVar, q, taxVar, collVar = NULL, refVar = NULL,
-  byList = FALSE, intact = NULL, singleton = "occ")
-
-subsampleSQSinexact(binVar, freqVar, q, collVar = NULL, byList = FALSE,
-  intact = NULL, appr = "under", trialRet = "occ")
+  duplicates = TRUE, output = "arit", useFailed = FALSE, ...)
 }
 \arguments{
 \item{dat}{(\code{data.frame}): Occurrence dataset, with \code{bin}, \code{tax} and \code{coll} as column names.}
@@ -56,46 +37,17 @@ subsampleSQSinexact(binVar, freqVar, q, collVar = NULL, byList = FALSE,
 
 \item{useFailed}{(\code{logical}): If the bin does not reach the subsampling quota, should the bin be used?}
 
-\item{vers}{(\code{character}): A parameter of SQS. The implementation type, either \code{"exact"} or \code{"inexact"}.}
-
-\item{...}{arguments passed to \code{FUN} and the type-specific subsampling functions:}
-
-\item{x}{(\code{numeric}): Argument of the OxW type. The exponent of by-list subsampling, by default it is 1.}
-
-\item{singleton}{\code{(character)}: A parameter of SQS. Either \code{"ref"}, \code{"occ"} or \code{FALSE}. If set to \code{"occ"}, the coverage estimator (e.g. Good's u) will be calculated based on the number of single-occurrence taxa. 
-If set to "ref" the number of occurrences belonging to single-reference taxa will be used instead. In case of the inexact algorithm, if set to \code{FALSE} then coverage corrections of frequencies will not be applied.}
-
-\item{excludeDominant}{\code{(logical)}: Parameter for the inexact method of SQS. This parameter sets whether the dominant taxon should 
-be excluded from all calculations involving frequencies (this is the second correction of Alroy, 2010).}
-
-\item{largestColl}{\code{(logical)}: Parameter for the inexact method of SQS. This parameter sets whether the occurrences of taxa only ever
- found in the most diverse collection should be excluded from the count of 
-single-publication occurrences. (this is the third correction of Alroy, 2010) Note that \code{largestColl=TRUE} is dependent on \code{excludeDominant=TRUE}. Setting \code{excludeDominant} to \code{FALSE} will turn this correction off.}
-
-\item{fcorr}{\code{(character)}: Parameter for the inexact method of SQS. either "good" or "alroy". This argument changes the frequency correction procedure of the 
-'inexact' version of SQS (Alroy 2010). As not all taxa are present in the samples, 
-the sampled frequencies of taxa tend overestimate their frequencies in the sampling pool. 
-In Alroy (2010) these are corrected using Good's u ("good", default), in the later versions 
-of SQS this metric is changed to a different method using single occurrence and double occurrence taxa ("alroy").}
-
-\item{byList}{(\code{character}): A parameter of the \code{"inexact"} method of SQS. Sets whether occurrences should be subsampled with (\code{FALSE}) or without (\code{TRUE}) breaking the collection integrity. (not yet for the exact algorithm.)}
-
-\item{appr}{(\code{character}): A parameter of the inexact method of SQS. Either "over" (default) or ("under"). The current 
-version is not concerned with small fluctuations around the drawn subsampling quorum. 
-Therefore, in the \code{inexact} algorithm, sampling is finished when the subset 
-either is immediately below the quorum (\code{"under"}) or above it (\code{"over"}).}
+\item{...}{arguments passed to \code{FUN} and the type-specific subsampling functions: \code{\link{subtrialCR}}, \code{\link{subtrialOXW}}, \code{\link{subtrialSQS}}}
 }
 \description{
 The function will take a desired function that has an occurrence dataset as an argument, and reruns it iteratively on the subsets of the dataset.
 }
 \details{
-Although the help file lists some functions, the only interface for the procedures is the \code{subsample} function that serves as a framework for additional functions. All user input happens with this function and only it is exported to the package namespace. Currently the Classical Rarefaction (\code{"cr"}, Raup, 1975), the occurrence weighted by-list subsampling (\code{"oxw"}, Alroy et al., 2001) and the Shareholder Quorum Subsampling methods are implemented (\code{"sqs"}, Alroy, 2010).
-
-For a detailed treatment on what the function does, please see the vignette ('Handout to the R package 'divDyn' v0.4.0 for diversity dynamics from fossil occurrence data').
-
-The subsampleXYZ functions produce a single trial result by returning the row indices of the original datasets.
-The CR and OxW types call the \code{subsampleCR}, \code{subsampleOXW} internally. SQS has two different implementations, the \code{"exact"} and \code{"inexact"} approach (Alroy, 2014). The \code{"inexact"} solution is set to be the default method, as it is computationally less demanding. 
-The \code{"inexact"} method calls the \code{frequencies} and the \code{subsampleSQSinexact} functions. The first calculates frequencies for each taxon and each bin, the second performs a single subsampling trial. The \code{"exact"} implementation calls the \code{subsampleSQSexact} internal function to perform the trials. You can study the source codes of these functions  at \url{http://github.com/adamkocsis/divDyn/} in the subsample.R file within the R folder.
+The \code{subsample} function implements the iterative framework of the sampling standardization procedure. 
+The function 1. takes the dataset \code{dat}, 2. runs function \code{FUN} on the dataset and creates a container for results of trials
+3. runs one of the subsampling trial functions (e.g. \code{\link{subtrialCR}}) to get a subsampled 'trial dataset'
+4. runs \code{FUN} on the trial dataset and
+5. averages the results of the trials. For a detailed treatment on what the function does, please see the vignette ('Handout to the R package 'divDyn' v0.5.0 for diversity dynamics from fossil occurrence data'). Currently the Classical Rarefaction (\code{"cr"}, Raup, 1975), the occurrence weighted by-list subsampling (\code{"oxw"}, Alroy et al., 2001) and the Shareholder Quorum Subsampling methods are implemented (\code{"sqs"}, Alroy, 2010).
 
 \strong{References:}
 
@@ -115,19 +67,16 @@ data(stages)
   tax="genus", bin="slc", output="dist", keep=95)
 	
 # plotting
-  plotTS(stages, shading="series", boxes="per", xlim=c(260,0), 
+  tsplot(stages, shading="series", boxes="per", xlim=c(260,0), 
   ylab="range-through diversity (genera)", ylim=c(0,230))
   lines(stages$mid, dd$divRT, lwd=2)
   shades(stages$mid, rarefDD$divRT, col="blue")
   legend("topleft", legend=c("raw","rarefaction"),
     col=c("black", "blue"), lwd=c(2,2), bg="white")
   
-  # compare with previous function (is obsolete)
-  rarefDD <- crDD(corals, quota=50, iter=100, intactBins=95)
-  lines(stages$mid,rarefDD$divRT, col="red", lwd=2)
   
   
-
+\dontrun{
 # Example 2-SIB diversity 
 # draft a simple function to calculate SIB diversity
 sib<-function(dat, bin, tax){
@@ -145,12 +94,12 @@ rarefDD<-subsample(corals,iter=50, q=50,
   tax="genus", bin="slc", output="arit", keep=95)
 
 # plot
-plotTS(stages, shading="series", boxes="per", xlim=c(260,0), 
+tsplot(stages, shading="series", boxes="per", xlim=c(260,0), 
   ylab="SIB diversity (genera)", ylim=c(0,230))
 
 lines(stages$mid, rarefDD$divSIB, lwd=2, col="black")
 lines(stages$mid, rarefSIB, lwd=2, col="blue")
-    
+
 
 # Example 3 - different subsampling types with default function (divDyn)
 # compare different subsampling types
@@ -166,7 +115,7 @@ lines(stages$mid, rarefSIB, lwd=2, col="blue")
   SQS<-subsample(corals,iter=50, q=0.4,tax="genus", bin="slc", output="dist", keep=95, type="sqs")
 
 # plot
-  plotTS(stages, shading="series", boxes="per", xlim=c(260,0), 
+  tsplot(stages, shading="series", boxes="per", xlim=c(260,0), 
   ylab="range-through diversity (genera)", ylim=c(0,100))
   shades(stages$mid, cr$divRT, col="red")
   shades(stages$mid, UW$divRT, col="blue")
@@ -175,5 +124,6 @@ lines(stages$mid, rarefSIB, lwd=2, col="blue")
   
   legend("topleft", bg="white", legend=c("CR (20)", "UW (3)", "OW (20)", "SQS (0.4)"), 
     col=c("red", "blue", "green", "cyan"), lty=c(1,1,1,1), lwd=c(2,2,2,2))
+}
 
 }

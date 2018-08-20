@@ -28,6 +28,6 @@ Since the separation of the FossilWorks (\url{http://www.fossilworks.com/}) port
 \code{early_interval}/\code{max_interval} entries of the dynamic timescale that users can choose during collection entry. The table assigns these intervals to some corresponding stratigraphic units from different time scales.
 These entries were distilled from those collections that only have a \code{max_interval} value. As there is a mismatch between the data Paleobiology Database and FossilWorks this list is not comprehensive and a couple entries are probably missing. For this reason, this dataset is expected to be updated in the future.
 
-This particular version (v0.9) is based on a download of all collections in FossilWorks between the Ediacaran and the Holocene. The download took place on 22 June, 2018. The entries were transformed to \code{\link{keys}} to be used with the \code{\link{map}} function.
+This particular version (v0.9.1) is based on a download of all collections in FossilWorks between the Ediacaran and the Holocene. The download took place on 22 June, 2018. The entries were transformed to \code{\link{keys}} to be used with the \code{\link{map}} function.
 }
 \keyword{datasets}

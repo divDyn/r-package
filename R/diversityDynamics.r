@@ -255,7 +255,7 @@ spCleanse <- function(vec, mode="simple", collapse="_"){
 #'    dd <- divDyn(corals, tax="genus", bin="slc")
 #'
 #'	# plotting
-#'	  plotTS(stages, shading="series", boxes="per", xlim=c(260,0), 
+#'	  tsplot(stages, shading="series", boxes="per", xlim=c(260,0), 
 #'	    ylab="range-through diversity (genera)", ylim=c(0,230))
 #'	  lines(stages$mid, dd$divRT, lwd=2)
 #' 
@@ -644,7 +644,7 @@ Metrics<- function(counts){
 #' 
 #' # within divDyn
 #'   # plotting
-#'	  plotTS(stages, shading="series", boxes="per", xlim=c(260,0), 
+#'	  tsplot(stages, shading="series", boxes="per", xlim=c(260,0), 
 #'	    ylab="range-through diversity (genera)", ylim=c(0,230))
 #'   # multiple ref/slice required
 #'   ddNoSing <- divDyn(corals, tax="genus", bin="slc", om="binref")
