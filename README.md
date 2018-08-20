@@ -33,7 +33,7 @@ You can access earlier versions by changing the version number appropriately.
 # Change log
 
 
-## [0.5.0] - 2018.08.14
+## [0.5.0] - 2018.08.20
 ### Added
 - bug fix that made R crash randomly
 - subsampling trial functions (subtrialCR, subtrialOXW, subtrialSQS) and cleaned help files for 'subsample()'
@@ -42,11 +42,11 @@ You can access earlier versions by changing the version number appropriately.
 
 ### Changed
 - the functions 'plotTS()' and 'fadLad()' were renamed to 'tsplot()' and 'fadlad()' for easier typing. 
-- stratkeys and the corresponding keys updated to v0.9.1
-- the sampstat() function no longer outputs empty variables when the argument columns are set to NULL
+- 'stratkeys' and the corresponding 'keys' updated to v0.9.1
+- the 'sampstat()' function no longer outputs empty variables when the argument columns are set to NULL
 
 ### Deleted
-- the exact method implementation for SQS as it was incorrect and slow. The 'inexact' method was confirmed by the iNEXT package.
+- the 'exact' method implementation for SQS as it was slow and and incorrect. The 'inexact' method was confirmed with the iNEXT package.
 
 
 ## [0.4.2] - 2018.07.24
