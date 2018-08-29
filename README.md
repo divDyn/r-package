@@ -1,4 +1,4 @@
-# divDyn
+# divDyn (dumm)
 R package for analyzing diversity dynamics from fossil occurrence data
 
 If you are interested in what this package does, or have questions about use, please check out the first vignette: 'Handout to the R package 'divDyn' v0.5.0 for diversity dynamics from fossil occurrence data' here:
