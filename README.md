@@ -34,7 +34,7 @@ You can access earlier versions by changing the version number appropriately.
 
 ## [0.5.0-1] - 2018.08.29
 ### Changed
-- stratigraphic assignment objects (in 'keys') now have a -1 entries for empty strings
+- stratigraphic assignment objects (in 'keys') now have -1 entries for empty strings
 
 
 ## [0.5.0] - 2018.08.20
