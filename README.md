@@ -14,7 +14,7 @@ As the package now uses compiled code to make things run faster, there are two w
 I have updated the windows binaries so that they work with the latest internals (3.5.1). If you want to use the package, please update your R.
 
 If you have a windows computer, you can install the package with the following R command:
-`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Win_x64_x86/divDyn_0.5.0.zip", repos=NULL)`
+`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Win_x64_x86/divDyn_0.5.0-1.zip", repos=NULL)`
 
 If you have a Mac running OS X, then use the following link (still older version, for R <3.5):
 `install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Mac_OSX/divDyn_0.5.0.tgz", repos=NULL)`
@@ -31,6 +31,10 @@ You can access earlier versions by changing the version number appropriately.
  '*' if you use either a Mac or Linux, and point no. 2 doesn't work for you for some reason, then contact me  and I will compile a binary for you.
 
 # Change log
+
+## [0.5.0-1] - 2018.08.29
+### Changed
+- stratigraphic assignment objects (in 'keys') now have a -1 entries for empty strings
 
 
 ## [0.5.0] - 2018.08.20
