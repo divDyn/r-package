@@ -58,14 +58,14 @@
 #' @examples
 #'	data(corals)
 #'	# slice-specific sampling
-#'	basic<-sampstat(corals, tax="genus", bin="slc")
+#'	basic<-sampstat(corals, tax="genus", bin="stg")
 #'
 #' # subsampling diagnostic
 #'  subStats<-subsample(corals, method="cr", tax="genus", FUN=sampstat, 
-#'    bin="slc", q=100,noNAStart=FALSE)
+#'    bin="stg", q=100,noNAStart=FALSE)
 #'	
 #' @export
-sampstat <- function(dat, tax="genus", bin="slc", coll=NULL, ref=NULL, total=FALSE, noNAStart=FALSE, duplicates=NULL){
+sampstat <- function(dat, tax="genus", bin="stg", coll=NULL, ref=NULL, total=FALSE, noNAStart=FALSE, duplicates=NULL){
 	datUni<- unique(dat[c(tax, bin, coll, ref)])
 	if(nrow(datUni)!=nrow(dat)){
 		if(is.null(duplicates)){

@@ -4,7 +4,7 @@
 \alias{crDD}
 \title{Diversity dynamics with classical rarefaction (obsolete - will be omitted in version 0.5)}
 \usage{
-crDD(dat, quota, tax = "genus", bin = "slc", coll = "collection_no",
+crDD(dat, quota, tax = "genus", bin = "stg", coll = "collection_no",
   iter = 100, noNAStart, average = "geom", intactBins = NULL)
 }
 \arguments{
@@ -14,7 +14,7 @@ crDD(dat, quota, tax = "genus", bin = "slc", coll = "collection_no",
 
 \item{tax}{(char): variable  name of the occurring taxa (variable type: factor) - such as "occurrence.genus_name"}
 
-\item{bin}{(char): variable name of the time slice numbers of the particular occurrences (variable type: int)- such as "slc" or whatever. Bin numbers should be in ascending order,can contain NA's, it can start from a number other than 1 and must not start with 0.}
+\item{bin}{(char): variable name of the time slice numbers of the particular occurrences (variable type: int)- such as "stg" or whatever. Bin numbers should be in ascending order,can contain NA's, it can start from a number other than 1 and must not start with 0.}
 
 \item{coll}{(char): variable name of the collection ids.}
 
@@ -39,7 +39,7 @@ The output variables are the same as in the divDyn function. Likely updates: c++
   data(stages)
 
 # calculate metrics of diversity dynamics
-   dd <- divDyn(corals, tax="genus", bin="slc")
+   dd <- divDyn(corals, tax="genus", bin="stg")
   rarefDD <- crDD(corals, quota=100, iter=10, intactBins=95)
 
 # plotting

@@ -38,8 +38,8 @@
 #'	  az<-corals[corals$ecology=="az",]
 #'	
 #'	# calculate diversity dynamics
-#'	ddZ<-divDyn(z, tax="genus", bin="slc")
-#'	ddAZ<-divDyn(az, tax="genus", bin="slc")
+#'	ddZ<-divDyn(z, tax="genus", bin="stg")
+#'	ddAZ<-divDyn(az, tax="genus", bin="stg")
 #'	
 #'	# origination rate plot
 #'	tsplot(stages, boxes="per", shading="series", xlim=54:95, 
@@ -50,7 +50,7 @@
 #'	  lwd=2, lty=c(1,2), col=c("blue", "red"), bg="white")
 #'	
 #'	# The ratesplit function
-#'	rs<-ratesplit(rbind(z, az), sel="ecology", tax="genus", bin="slc")
+#'	rs<-ratesplit(rbind(z, az), sel="ecology", tax="genus", bin="stg")
 #'	rs
 #'	
 #'	# display selectivity with points
@@ -65,12 +65,12 @@
 #'	
 #'	
 #' @export
-ratesplit<-function(dat,  sel, tax="genus", bin="slc", rate="pc", method="AIC",AICc=TRUE, na.rm=TRUE, alpha=NULL, output="simple"){
+ratesplit<-function(dat,  sel, tax="genus", bin="stg", rate="pc", method="AIC",AICc=TRUE, na.rm=TRUE, alpha=NULL, output="simple"){
 #	 #dummy data:
 # 	
 #	 dat<-corals
 #	 tax<-"genus"
-#	 bin<-"slc"
+#	 bin<-"stg"
 #	 cRate<-"nFooteOri"
 #	 
 #	

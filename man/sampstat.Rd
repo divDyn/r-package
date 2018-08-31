@@ -4,7 +4,7 @@
 \alias{sampstat}
 \title{Basic sampling summary for every bin}
 \usage{
-sampstat(dat, tax = "genus", bin = "slc", coll = NULL, ref = NULL,
+sampstat(dat, tax = "genus", bin = "stg", coll = NULL, ref = NULL,
   total = FALSE, noNAStart = FALSE, duplicates = NULL)
 }
 \arguments{
@@ -75,10 +75,10 @@ Setting the \code{total} to \code{TRUE} will lead to the following results
 \examples{
 data(corals)
 # slice-specific sampling
-basic<-sampstat(corals, tax="genus", bin="slc")
+basic<-sampstat(corals, tax="genus", bin="stg")
 
 # subsampling diagnostic
  subStats<-subsample(corals, method="cr", tax="genus", FUN=sampstat, 
-   bin="slc", q=100,noNAStart=FALSE)
+   bin="stg", q=100,noNAStart=FALSE)
 
 }

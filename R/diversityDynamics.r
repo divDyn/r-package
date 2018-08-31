@@ -252,7 +252,7 @@ spCleanse <- function(vec, mode="simple", collapse="_"){
 #'	  data(stages)
 #'
 #'	# calculate metrics of diversity dynamics
-#'    dd <- divDyn(corals, tax="genus", bin="slc")
+#'    dd <- divDyn(corals, tax="genus", bin="stg")
 #'
 #'	# plotting
 #'	  tsplot(stages, shading="series", boxes="per", xlim=c(260,0), 
@@ -260,7 +260,7 @@ spCleanse <- function(vec, mode="simple", collapse="_"){
 #'	  lines(stages$mid, dd$divRT, lwd=2)
 #' 
 #'  # with omission of single reference taxa  
-#'    ddNoSing <- divDyn(corals, tax="genus", bin="slc", om="ref")
+#'    ddNoSing <- divDyn(corals, tax="genus", bin="stg", om="ref")
 #'    lines(stages$mid, ddNoSing$divRT, lwd=2, col="red")
 #'
 #'  # using the estimated ages (less robust) - 10 million years
@@ -639,7 +639,7 @@ Metrics<- function(counts){
 #' # omit single-reference taxa
 #'   data(corals)
 #'   data(stages)
-#'   toOmit <- omit(corals, bin="slc", tax="genus", om="ref")
+#'   toOmit <- omit(corals, bin="stg", tax="genus", om="ref")
 #'   dat <- corals[!toOmit,]
 #' 
 #' # within divDyn
@@ -647,11 +647,11 @@ Metrics<- function(counts){
 #'	  tsplot(stages, shading="series", boxes="per", xlim=c(260,0), 
 #'	    ylab="range-through diversity (genera)", ylim=c(0,230))
 #'   # multiple ref/slice required
-#'   ddNoSing <- divDyn(corals, tax="genus", bin="slc", om="binref")
+#'   ddNoSing <- divDyn(corals, tax="genus", bin="stg", om="binref")
 #'   lines(stages$mid, ddNoSing$divRT, lwd=2, col="red")
 #'
 #'   # with the recent included (NA reference value)
-#'   ddNoSingRec <- divDyn(corals, tax="genus", bin="slc",
+#'   ddNoSingRec <- divDyn(corals, tax="genus", bin="stg",
 #'     om="binref", filterNA=TRUE)
 #'   lines(stages$mid, ddNoSingRec$divRT, lwd=2, col="blue")
 #'   

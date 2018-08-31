@@ -545,7 +545,7 @@ shades <- function(x, y, col="black", res=10, border=NA,interpolate=FALSE, metho
 #'   cols <- c("#55555588","#88888888", "#BBBBBB88")
 #'   types <- c("uk", "shal", "deep")
 #'   
-#'   parts(x=stages$mid[corals$slc], b=corals$bath, 
+#'   parts(x=stages$mid[corals$stg], b=corals$bath, 
 #'    ord=types, col=cols, prop=TRUE,border=NA, labs=FALSE)
 #'    
 #'   # legend
@@ -854,7 +854,7 @@ parts<-function(x, b=NULL, ord="up", prop=FALSE, plot=TRUE,  col=NULL, xlim=NULL
 #'  ranges(corals, bin=c("max_ma", "min_ma"), tax="genus", occs=FALSE)
 #'
 #'  # or use single estimates: assign age esimates to the occurrences
-#'  corals$est<-stages$mid[corals$slc]
+#'  corals$est<-stages$mid[corals$stg]
 #'  
 #'  # all ranges (including the recent!!)
 #'  tsplot(stages, boxes="per", xlim=c(250,0))

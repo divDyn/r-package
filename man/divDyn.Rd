@@ -115,7 +115,7 @@ Alroy, J. (2015) A more precise speciation and extinction rate estimator. Paleob
   data(stages)
 
 # calculate metrics of diversity dynamics
-   dd <- divDyn(corals, tax="genus", bin="slc")
+   dd <- divDyn(corals, tax="genus", bin="stg")
 
 # plotting
   tsplot(stages, shading="series", boxes="per", xlim=c(260,0), 
@@ -123,7 +123,7 @@ Alroy, J. (2015) A more precise speciation and extinction rate estimator. Paleob
   lines(stages$mid, dd$divRT, lwd=2)
 
  # with omission of single reference taxa  
-   ddNoSing <- divDyn(corals, tax="genus", bin="slc", om="ref")
+   ddNoSing <- divDyn(corals, tax="genus", bin="stg", om="ref")
    lines(stages$mid, ddNoSing$divRT, lwd=2, col="red")
 
  # using the estimated ages (less robust) - 10 million years

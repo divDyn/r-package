@@ -20,7 +20,7 @@ subtrialSQS(dat, bin, tax, q, coll = NULL, ref = NULL, singleton = "occ",
 \arguments{
 \item{dat}{(\code{data.frame}): Occurrence dataset, with \code{bin}, \code{tax} and \code{coll} as column names.}
 
-\item{bin}{(\code{character}): The name of the subsetting variable (has to be integer). For time series, this is the time-slice variable.}
+\item{bin}{(\code{character}): The name of the subsetting variable (has to be integer). For time series, this is the time-slice variable. Rows with \code{NA} entries in this column will be omitted.}
 
 \item{q}{(\code{numeric)}: Subsampling level argument (mandatory). Depends on the subsampling function, it is the number of occurrences for \code{"cr"}, and the number of desired occurrences to the power of \code{x} for O^x^W. It is also the quorum of the SQS method.}
 
@@ -83,12 +83,12 @@ Raup, D. M. (1975). Taxonomic Diversity Estimation Using Rarefaction. Paleobiolo
 \examples{
 #one classical rarefaction trial
   data(corals)
-  bRows<-subtrialCR(corals, bin="slc", unit="reference_no", q=5)
+  bRows<-subtrialCR(corals, bin="stg", unit="reference_no", q=5)
   # control
-  unCor<-unique(corals[bRows,c("slc", "reference_no")])
-  table(unCor$slc)
+  unCor<-unique(corals[bRows,c("stg", "reference_no")])
+  table(unCor$stg)
 # classical rarefaction can also be used to do by reference subsampling of collections
-  fossils <- corals[corals$slc!=95, ]
+  fossils <- corals[corals$stg!=95, ]
   # rows in the sampling standardization
   threeCollPerRef <- subtrialCR(dat=fossils, unit="collection_no", 
     bin="reference_no", q=3, useFailed=TRUE)

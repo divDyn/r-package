@@ -2,7 +2,7 @@
 R package for analyzing diversity dynamics from fossil occurrence data
 
 If you are interested in what this package does, or have questions about use, please check out the first vignette: 'Handout to the R package 'divDyn' v0.5.0 for diversity dynamics from fossil occurrence data' here:
-https://github.com/adamkocsis/divDyn/blob/master/_archive/vignettes/Handout_0.5.0.pdf
+https://github.com/adamkocsis/divDyn/blob/master/_archive/vignettes/Handout_0.5.1.pdf
 
 As the package is still getting developed, if you have any requirements or recommendations about what to add (or if you find a mistake), please contact me at adam.kocsis@fau.de.
 
@@ -14,7 +14,7 @@ As the package now uses compiled code to make things run faster, there are two w
 I have updated the windows binaries so that they work with the latest internals (3.5.1). If you want to use the package, please update your R.
 
 If you have a windows computer, you can install the package with the following R command:
-`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Win_x64_x86/divDyn_0.5.0-1.zip", repos=NULL)`
+`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Win_x64_x86/divDyn_0.5.1.zip", repos=NULL)`
 
 If you have a Mac running OS X, then use the following link (still older version, for R <3.5):
 `install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Mac_OSX/divDyn_0.5.0.tgz", repos=NULL)`
@@ -32,15 +32,23 @@ You can access earlier versions by changing the version number appropriately.
 
 # Change log
 
+## [0.5.1] - 2018.08.31
+### Changed
+- example bin identifier changes (from 'slc' to 'stg')
+- the subsample(), subtrialCR(), subtrialOXW(), subtrialSQS() functions now automatically omit rows that have NA entries in the 'bin' variables.
+- the 'stages' object now contains dates from Gradstein et al. 2016
+- bin durations were added to both the 'stages' and 'bins' objects
+- the 'stratkeys' and 'keys' objects were updated to version 0.9.2
+
 ## [0.5.0-1] - 2018.08.29
 ### Changed
-- stratigraphic assignment objects (in 'keys') now have -1 entries for empty strings
+- stratigraphic assignment objects (in 'keys') now have a -1 entries for empty strings
 
 
 ## [0.5.0] - 2018.08.20
 ### Added
 - bug fix that made R crash randomly
-- subsampling trial functions (subtrialCR, subtrialOXW, subtrialSQS) and cleaned help files for 'subsample()'
+- subsampling trial functions (subtrialCR(), subtrialOXW(), subtrialSQS()) and cleaned help files for 'subsample()'
 - multiple bin entry support for 'ranges()'
 - proper Description in description file
 

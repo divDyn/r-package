@@ -10,7 +10,7 @@
 #' 
 #' @param tax (char): variable  name of the occurring taxa (variable type: factor) - such as "occurrence.genus_name"
 #' 
-#' @param bin (char): variable name of the time slice numbers of the particular occurrences (variable type: int)- such as "slc" or whatever. Bin numbers should be in ascending order,can contain NA's, it can start from a number other than 1 and must not start with 0.
+#' @param bin (char): variable name of the time slice numbers of the particular occurrences (variable type: int)- such as "stg" or whatever. Bin numbers should be in ascending order,can contain NA's, it can start from a number other than 1 and must not start with 0.
 #' @param coll (char): variable name of the collection ids. 
 #' @param iter (num): the number of resampling iterations.
 #' @param noNAStart (bool): useful when the dataset does not start from bin No. 1. Then noNAStart=TRUE will cut the first part of the resulting table, 
@@ -24,7 +24,7 @@
 #'	  data(stages)
 #'
 #'	# calculate metrics of diversity dynamics
-#'    dd <- divDyn(corals, tax="genus", bin="slc")
+#'    dd <- divDyn(corals, tax="genus", bin="stg")
 #'	  rarefDD <- crDD(corals, quota=100, iter=10, intactBins=95)
 #' 
 #'	# plotting
@@ -36,12 +36,12 @@
 #'	    col=c("black", "blue"), lwd=c(2,2), bg="white")
 #'
 #' @export
-crDD<-function (dat, quota, tax="genus", bin="slc", coll="collection_no",  iter=100, noNAStart, average="geom", intactBins=NULL){
+crDD<-function (dat, quota, tax="genus", bin="stg", coll="collection_no",  iter=100, noNAStart, average="geom", intactBins=NULL){
 
 #	#0. temporary variables
 #		dat<-pb.orig
 #		tax<-"clgen"
-#		bin<-"slcFine"
+#		bin<-"stgFine"
 #		coll<-"collection_no"
 #		quota<-100
 #		iter<-10

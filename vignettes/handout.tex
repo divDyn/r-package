@@ -26,7 +26,7 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{hyperref}
 \hypersetup{unicode=true,
-            pdftitle={Handout to the R package divDyn v0.5.0 for diversity dynamics from fossil occurrence data},
+            pdftitle={Handout to the R package divDyn v0.5.1 for diversity dynamics from fossil occurrence data},
             pdfauthor={Adam T. Kocsis, Carl J. Reddin, Wolfgang Kiessling},
             pdfborder={0 0 0},
             breaklinks=true}
@@ -116,7 +116,7 @@
 
 \setlength{\droptitle}{-2em}
 
-  \title{Handout to the R package `divDyn' v0.5.0 for diversity dynamics from
+  \title{Handout to the R package `divDyn' v0.5.1 for diversity dynamics from
 fossil occurrence data}
     \pretitle{\vspace{\droptitle}\centering\huge}
   \posttitle{\par}
@@ -125,7 +125,7 @@ fossil occurrence data}
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2018-08-20}
+    \date{2018-08-31}
 
 
 \begin{document}
@@ -176,9 +176,8 @@ effects on the resulting series.
 
 In order to demonstrate the workflow of binned analyses, we added an
 example table to the package. This table represents a somewhat altered
-form (see below) of the stage-level geological time scale of Gradstein
-et al. (2012). You can attach this table using the \texttt{data()}
-function.
+form (see below) of the stage-level geological time scale of Ogg et al.
+(2016). You can attach this table using the \texttt{data()} function.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -317,19 +316,19 @@ using the data() function:
 
 This dataset was resolved to the 10 my timescale of the PaleoDB
 (\texttt{BIN}, now only available through FossilWorks) and the
-stage-level time scale (variable \texttt{slc}) that is included in the
+stage-level time scale (variable \texttt{stg}) that is included in the
 package (see Section 2.1, \texttt{stages}). This latter is the basis of
-all inference and plotting. The values of the \texttt{slc} column of the
+all inference and plotting. The values of the \texttt{stg} column of the
 coral table refers to entries in the \texttt{num} column of the
 \texttt{stages} table. Please note that this dataset does not include
-Holocene occurrences. The occurrences designated with \texttt{slc==95}
+Holocene occurrences. The occurrences designated with \texttt{stg==95}
 are just single entries that include extant genera; therefore all other
 entries of this subset are missing, except for the variables linked to
 the taxa. The rest of the occurrences represent actual fossils.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{fossils <-}\StringTok{ }\NormalTok{corals[corals$slc!=}\DecValTok{95}\NormalTok{,]}
+\NormalTok{fossils <-}\StringTok{ }\NormalTok{corals[corals$stg!=}\DecValTok{95}\NormalTok{,]}
 \CommentTok{# the number of occurrences}
 \KeywordTok{nrow}\NormalTok{(fossils)}
 \end{Highlighting}
@@ -344,13 +343,13 @@ the taxa. The rest of the occurrences represent actual fossils.
 \subsection{3.1. Ranges}\label{ranges}
 
 We can gain preliminary knowledge by examining the basic patterns of the
-stratigraphic ranges . Probably the most apparent of these are the
+stratigraphic ranges. Probably the most apparent of these are the
 stratigraphic ranges of the taxa, which can be easily summarized in the
 FAD-LAD matrix:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{fl <-}\StringTok{ }\KeywordTok{fadlad}\NormalTok{(fossils, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{)}
+\NormalTok{fl <-}\StringTok{ }\KeywordTok{fadlad}\NormalTok{(fossils, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -363,7 +362,7 @@ the age (stage) mean age to the occurrences:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{fossils$mid <-}\StringTok{ }\NormalTok{stages$mid[fossils$slc]}
+\NormalTok{fossils$mid <-}\StringTok{ }\NormalTok{stages$mid[fossils$stg]}
 
 \KeywordTok{tsplot}\NormalTok{(stages, }\DataTypeTok{shading=}\StringTok{"series"}\NormalTok{, }\DataTypeTok{boxes=}\StringTok{"per"}\NormalTok{,}\DataTypeTok{xlim=}\KeywordTok{c}\NormalTok{(}\DecValTok{260}\NormalTok{,}\DecValTok{0}\NormalTok{))}
 
@@ -427,7 +426,7 @@ remaining bins.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{surv <-}\StringTok{ }\KeywordTok{survivors}\NormalTok{(corals, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{)}
+\NormalTok{surv <-}\StringTok{ }\KeywordTok{survivors}\NormalTok{(corals, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -484,7 +483,7 @@ characteristics with the \texttt{sampstat()} function.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{samp <-}\KeywordTok{sampstat}\NormalTok{(fossils, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }
+\NormalTok{samp <-}\KeywordTok{sampstat}\NormalTok{(fossils, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }
   \DataTypeTok{coll=}\StringTok{"collection_no"}\NormalTok{, }\DataTypeTok{ref=}\StringTok{"reference_no"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -536,7 +535,7 @@ dataset.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{samp <-}\KeywordTok{sampstat}\NormalTok{(fossils, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }
+\NormalTok{samp <-}\KeywordTok{sampstat}\NormalTok{(fossils, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }
   \DataTypeTok{coll=}\StringTok{"collection_no"}\NormalTok{, }\DataTypeTok{ref=}\StringTok{"reference_no"}\NormalTok{, }\DataTypeTok{total=}\OtherTok{TRUE}\NormalTok{, }\DataTypeTok{duplicates=}\OtherTok{FALSE}\NormalTok{)}
 \NormalTok{samp}
 \end{Highlighting}
@@ -563,11 +562,11 @@ entries have to be replaced by the age estimates.
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{# numerical ages, as bins}
-\NormalTok{fossils$slcMid <-}\StringTok{ }\NormalTok{stages$mid[fossils$slc]}
+\NormalTok{fossils$stgMid <-}\StringTok{ }\NormalTok{stages$mid[fossils$stg]}
 \CommentTok{#plotting}
 \KeywordTok{tsplot}\NormalTok{(stages, }\DataTypeTok{shading=}\StringTok{"series"}\NormalTok{, }\DataTypeTok{boxes=}\StringTok{"per"}\NormalTok{, }\DataTypeTok{xlim=}\DecValTok{51}\NormalTok{:}\DecValTok{95}\NormalTok{,}
   \DataTypeTok{ylab=}\StringTok{"number of occurences"}\NormalTok{, }\DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{3000}\NormalTok{))}
-\KeywordTok{parts}\NormalTok{(fossils$slcMid, fossils$bath)}
+\KeywordTok{parts}\NormalTok{(fossils$stgMid, fossils$bath)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -586,7 +585,7 @@ you use opacity (RGBA values for colors) and adding a proper legend.
 \NormalTok{plotnames <-}\KeywordTok{c}\NormalTok{(}\StringTok{"shallow"}\NormalTok{, }\StringTok{"deep"}\NormalTok{, }\StringTok{"unknown"}\NormalTok{)}
 \KeywordTok{tsplot}\NormalTok{(stages, }\DataTypeTok{shading=}\StringTok{"series"}\NormalTok{, }\DataTypeTok{boxes=}\StringTok{"per"}\NormalTok{, }\DataTypeTok{xlim=}\DecValTok{51}\NormalTok{:}\DecValTok{95}\NormalTok{,}
     \DataTypeTok{ylab=}\StringTok{"the number of occurrences"}\NormalTok{, }\DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{3000}\NormalTok{))}
-\KeywordTok{parts}\NormalTok{(fossils$slcMid, fossils$bath, }\DataTypeTok{col=}\NormalTok{cols, }\DataTypeTok{ord=}\NormalTok{reord, }\DataTypeTok{labs=}\NormalTok{F)}
+\KeywordTok{parts}\NormalTok{(fossils$stgMid, fossils$bath, }\DataTypeTok{col=}\NormalTok{cols, }\DataTypeTok{ord=}\NormalTok{reord, }\DataTypeTok{labs=}\NormalTok{F)}
 \KeywordTok{legend}\NormalTok{(}\StringTok{"topleft"}\NormalTok{, }\DataTypeTok{inset=}\KeywordTok{c}\NormalTok{(}\FloatTok{0.01}\NormalTok{, }\FloatTok{0.01}\NormalTok{), }
   \DataTypeTok{legend=} \NormalTok{plotnames, }\DataTypeTok{fill=}\NormalTok{cols, }\DataTypeTok{bg=}\StringTok{"white"}\NormalTok{)}
 \end{Highlighting}
@@ -602,7 +601,7 @@ rather than the counts, by adding \texttt{prop=T} to the function call:
 \begin{Highlighting}[]
 \KeywordTok{tsplot}\NormalTok{(stages, }\DataTypeTok{shading=}\StringTok{"series"}\NormalTok{, }\DataTypeTok{boxes=}\StringTok{"per"}\NormalTok{, }\DataTypeTok{xlim=}\DecValTok{51}\NormalTok{:}\DecValTok{95}\NormalTok{,}
     \DataTypeTok{ylab=}\StringTok{"proportion of occurrences"}\NormalTok{, }\DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{))}
-\KeywordTok{parts}\NormalTok{(fossils$slcMid, fossils$bath, }\DataTypeTok{prop=}\NormalTok{T, }\DataTypeTok{col=}\NormalTok{cols, }\DataTypeTok{ord=}\NormalTok{reord, }\DataTypeTok{labs=}\NormalTok{F)}
+\KeywordTok{parts}\NormalTok{(fossils$stgMid, fossils$bath, }\DataTypeTok{prop=}\NormalTok{T, }\DataTypeTok{col=}\NormalTok{cols, }\DataTypeTok{ord=}\NormalTok{reord, }\DataTypeTok{labs=}\NormalTok{F)}
 \KeywordTok{legend}\NormalTok{(}\StringTok{"bottomleft"}\NormalTok{, }\DataTypeTok{inset=}\KeywordTok{c}\NormalTok{(}\FloatTok{0.01}\NormalTok{, }\FloatTok{0.1}\NormalTok{), }
   \DataTypeTok{legend=} \NormalTok{plotnames, }\DataTypeTok{fill=}\NormalTok{cols, }\DataTypeTok{bg=}\StringTok{"white"}\NormalTok{)}
 \end{Highlighting}
@@ -630,9 +629,9 @@ can omit with \texttt{om="binref"}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{omitColl <-}\StringTok{ }\KeywordTok{omit}\NormalTok{(corals, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{om=}\StringTok{"coll"}\NormalTok{)}
-\NormalTok{omitRef <-}\StringTok{ }\KeywordTok{omit}\NormalTok{(corals, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{om=}\StringTok{"ref"}\NormalTok{)}
-\NormalTok{omitBinref <-}\StringTok{ }\KeywordTok{omit}\NormalTok{(corals, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{om=}\StringTok{"binref"}\NormalTok{)}
+\NormalTok{omitColl <-}\StringTok{ }\KeywordTok{omit}\NormalTok{(corals, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{om=}\StringTok{"coll"}\NormalTok{)}
+\NormalTok{omitRef <-}\StringTok{ }\KeywordTok{omit}\NormalTok{(corals, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{om=}\StringTok{"ref"}\NormalTok{)}
+\NormalTok{omitBinref <-}\StringTok{ }\KeywordTok{omit}\NormalTok{(corals, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{om=}\StringTok{"binref"}\NormalTok{)}
 \CommentTok{# the conserved number of occurrences will be}
 \KeywordTok{sum}\NormalTok{(!omitColl)}
 \end{Highlighting}
@@ -675,7 +674,7 @@ will not be used by the function.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{ddFirst<-}\KeywordTok{divDyn}\NormalTok{(corals, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{noNAStart=}\OtherTok{TRUE}\NormalTok{)}
+\NormalTok{ddFirst<-}\KeywordTok{divDyn}\NormalTok{(corals, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{noNAStart=}\OtherTok{TRUE}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -716,7 +715,7 @@ rows, which bins are not sampled.
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{# metrics}
-\NormalTok{ddRec <-}\KeywordTok{divDyn}\NormalTok{(corals, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{)}
+\NormalTok{ddRec <-}\KeywordTok{divDyn}\NormalTok{(corals, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{)}
 \CommentTok{# basic plot}
   \KeywordTok{tsplot}\NormalTok{(stages, }\DataTypeTok{shading=}\StringTok{"series"}\NormalTok{, }\DataTypeTok{boxes=}\StringTok{"per"}\NormalTok{, }\DataTypeTok{xlim=}\DecValTok{51}\NormalTok{:}\DecValTok{95}\NormalTok{,}
     \DataTypeTok{ylab=}\StringTok{"range-through richness (diversity)"}\NormalTok{, }\DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{250}\NormalTok{))}
@@ -737,7 +736,7 @@ arises when range-based methods are calculated from datasets where
 sampling probability changes abruptly. As we know the Recent much better
 in comparison to other intervals (sampling probability is much higher,
 around one), the number of ranges that connect first occurrences of taxa
-to the extant time interval (\texttt{slc\ ==\ 95}) is much higher than
+to the extant time interval (\texttt{stg\ ==\ 95}) is much higher than
 those that link two non-Recent time intervals. The results in spur of
 diversity as the Recent is approached. On the other hand, omitting the
 recent interval (effectively decreasing sampling probability to 0) leads
@@ -748,7 +747,7 @@ recent `occurrences':
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{# metrics}
-\NormalTok{dd <-}\KeywordTok{divDyn}\NormalTok{(fossils, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{)}
+\NormalTok{dd <-}\KeywordTok{divDyn}\NormalTok{(fossils, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{)}
 \CommentTok{# basic plot}
   \KeywordTok{tsplot}\NormalTok{(stages, }\DataTypeTok{shading=}\StringTok{"series"}\NormalTok{, }\DataTypeTok{boxes=}\StringTok{"per"}\NormalTok{, }\DataTypeTok{xlim=}\DecValTok{51}\NormalTok{:}\DecValTok{95}\NormalTok{,}
     \DataTypeTok{ylab=}\StringTok{"richness (diversity)"}\NormalTok{, }\DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{250}\NormalTok{))}
@@ -773,7 +772,7 @@ diversities.
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{# metrics}
-\NormalTok{dd <-}\KeywordTok{divDyn}\NormalTok{(fossils, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{)}
+\NormalTok{dd <-}\KeywordTok{divDyn}\NormalTok{(fossils, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{)}
 \CommentTok{# basic plot}
   \KeywordTok{tsplot}\NormalTok{(stages, }\DataTypeTok{shading=}\StringTok{"series"}\NormalTok{, }\DataTypeTok{boxes=}\StringTok{"per"}\NormalTok{, }\DataTypeTok{xlim=}\DecValTok{51}\NormalTok{:}\DecValTok{95}\NormalTok{,}
     \DataTypeTok{ylab=}\StringTok{"richness (diversity)"}\NormalTok{, }\DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{250}\NormalTok{))}
@@ -807,7 +806,7 @@ sampling completeness is an effective expression of changes in sampling
 \includegraphics{handout_files/figure-latex/samp3t-1.pdf}
 
 The SIB series can be partially corrected by the three-timer
-sampling-completeness (Alroy Â§ref ). Although this can be a convenient
+sampling-completeness (Alroy Â§ref). Although this can be a convenient
 correction it also increases the estimation error. Nevertheless, this is
 the least biased estimator for diversity.
 
@@ -952,8 +951,8 @@ the \emph{z} group separately and together:
   \NormalTok{az<-}\StringTok{ }\NormalTok{fossils[fossils$ecology==}\StringTok{"az"}\NormalTok{,]}
 
 \CommentTok{# calculate diversity dynamics}
-  \NormalTok{ddZ<-}\KeywordTok{divDyn}\NormalTok{(z, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{)}
-  \NormalTok{ddAZ<-}\KeywordTok{divDyn}\NormalTok{(az, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{)}
+  \NormalTok{ddZ<-}\KeywordTok{divDyn}\NormalTok{(z, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{)}
+  \NormalTok{ddAZ<-}\KeywordTok{divDyn}\NormalTok{(az, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{)}
 
 \CommentTok{# origination rate plot}
 \KeywordTok{tsplot}\NormalTok{(stages, }\DataTypeTok{boxes=}\StringTok{"per"}\NormalTok{, }\DataTypeTok{shading=}\StringTok{"series"}\NormalTok{, }\DataTypeTok{xlim=}\DecValTok{54}\NormalTok{:}\DecValTok{95}\NormalTok{, }
@@ -982,7 +981,7 @@ process for the symbiotic status is:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{rs<-}\KeywordTok{ratesplit}\NormalTok{(fossils, }\DataTypeTok{sel=}\StringTok{"ecology"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{)}
+\NormalTok{rs<-}\KeywordTok{ratesplit}\NormalTok{(fossils, }\DataTypeTok{sel=}\StringTok{"ecology"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{)}
 \NormalTok{rs}
 \end{Highlighting}
 \end{Shaded}
@@ -1010,7 +1009,7 @@ the \texttt{alpha} parameter that defaults to 0.05.
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{rsBin95<-}\KeywordTok{ratesplit}\NormalTok{(fossils, }\DataTypeTok{sel=}\StringTok{"ecology"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }
-  \DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{method=}\StringTok{"binom"}\NormalTok{)}
+  \DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{method=}\StringTok{"binom"}\NormalTok{)}
 \NormalTok{rsBin95}
 \end{Highlighting}
 \end{Shaded}
@@ -1026,7 +1025,7 @@ the \texttt{alpha} parameter that defaults to 0.05.
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{rsBin90<-}\KeywordTok{ratesplit}\NormalTok{(fossils, }\DataTypeTok{sel=}\StringTok{"ecology"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }
-  \DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{method=}\StringTok{"binom"}\NormalTok{, }\DataTypeTok{alpha=}\FloatTok{0.1}\NormalTok{)}
+  \DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{method=}\StringTok{"binom"}\NormalTok{, }\DataTypeTok{alpha=}\FloatTok{0.1}\NormalTok{)}
 \NormalTok{rsBin90}
 \end{Highlighting}
 \end{Shaded}
@@ -1053,7 +1052,7 @@ it is deemed useful for the question at hand.
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{rsAIC0}\FloatTok{.5}\NormalTok{<-}\KeywordTok{ratesplit}\NormalTok{(fossils, }\DataTypeTok{sel=}\StringTok{"ecology"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }
-  \DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{alpha=}\FloatTok{0.5}\NormalTok{)}
+  \DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{alpha=}\FloatTok{0.5}\NormalTok{)}
 \NormalTok{rsAIC0}\FloatTok{.5}
 \end{Highlighting}
 \end{Shaded}
@@ -1165,7 +1164,7 @@ requires positive ones!)
     \DataTypeTok{ylab=}\StringTok{"Diversity, range-through"}\NormalTok{, }\DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{300}\NormalTok{))}
   \KeywordTok{lines}\NormalTok{(-ddIDbin$bin, ddIDbin$divRT, }\DataTypeTok{col=}\StringTok{"black"}\NormalTok{, }\DataTypeTok{lwd=}\DecValTok{2}\NormalTok{)}
   \KeywordTok{lines}\NormalTok{(stages$mid[}\DecValTok{1}\NormalTok{:}\DecValTok{94}\NormalTok{], dd$divRT, }\DataTypeTok{col=}\StringTok{"red"}\NormalTok{, }\DataTypeTok{lwd=}\DecValTok{2}\NormalTok{)}
-\KeywordTok{legend}\NormalTok{(}\StringTok{"topleft"}\NormalTok{, }\DataTypeTok{legend=}\KeywordTok{c}\NormalTok{(}\StringTok{"unique mid entries"}\NormalTok{,  }\StringTok{"slc stages"}\NormalTok{),}
+\KeywordTok{legend}\NormalTok{(}\StringTok{"topleft"}\NormalTok{, }\DataTypeTok{legend=}\KeywordTok{c}\NormalTok{(}\StringTok{"unique mid entries"}\NormalTok{,  }\StringTok{"stg stages"}\NormalTok{),}
   \DataTypeTok{col=}\KeywordTok{c}\NormalTok{(}\StringTok{"black"}\NormalTok{, }\StringTok{"red"}\NormalTok{), }\DataTypeTok{lwd=}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{), }\DataTypeTok{bg=}\StringTok{"white"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -1190,7 +1189,7 @@ Keep in mind that the ages are still negative values!
 \CommentTok{# resolve time}
   \NormalTok{breakPoints <-}\StringTok{ }\KeywordTok{seq}\NormalTok{(-}\DecValTok{270}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{10}\NormalTok{)}
 \CommentTok{# and calculate diversity dynamics}
-  \NormalTok{ddMid10<-}\KeywordTok{divDyn}\NormalTok{(fossils, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"mid_ma"}\NormalTok{, }\DataTypeTok{breaks=}\NormalTok{breakPoints )}
+  \NormalTok{ddMid10<-}\KeywordTok{divDyn}\NormalTok{(fossils, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"mid_ma"}\NormalTok{, }\DataTypeTok{breaks=}\NormalTok{breakPoints)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1205,7 +1204,7 @@ bins, then the corresponding rows in the table will be empty.
 \KeywordTok{lines}\NormalTok{(-ddMid10$bin, ddMid10$divRT, }\DataTypeTok{col=}\StringTok{"blue"}\NormalTok{, }\DataTypeTok{lwd=}\DecValTok{2}\NormalTok{)}
 \CommentTok{# new legend}
 \KeywordTok{legend}\NormalTok{(}\StringTok{"topleft"}\NormalTok{, }\DataTypeTok{legend=}\KeywordTok{c}\NormalTok{(}\StringTok{"age estimates, 10MY"}\NormalTok{,  }
-  \StringTok{"slc stages"}\NormalTok{, }\StringTok{"unique mid entries"}\NormalTok{), }\DataTypeTok{col=}\KeywordTok{c}\NormalTok{(}\StringTok{"blue"}\NormalTok{, }\StringTok{"red"}\NormalTok{, }\StringTok{"black"}\NormalTok{),}
+  \StringTok{"stg stages"}\NormalTok{, }\StringTok{"unique mid entries"}\NormalTok{), }\DataTypeTok{col=}\KeywordTok{c}\NormalTok{(}\StringTok{"blue"}\NormalTok{, }\StringTok{"red"}\NormalTok{, }\StringTok{"black"}\NormalTok{),}
   \DataTypeTok{lwd=}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{), }\DataTypeTok{bg=}\StringTok{"white"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -1227,7 +1226,7 @@ over time.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{sam <-}\KeywordTok{sampstat}\NormalTok{(fossils, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{coll=}\StringTok{"collection_no"}\NormalTok{, }\DataTypeTok{duplicates=}\NormalTok{F)}
+\NormalTok{sam <-}\KeywordTok{sampstat}\NormalTok{(fossils, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{coll=}\StringTok{"collection_no"}\NormalTok{, }\DataTypeTok{duplicates=}\NormalTok{F)}
 \KeywordTok{cor.test}\NormalTok{(dd$divRT, sam$occs, }\DataTypeTok{method=}\StringTok{"spearman"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -1388,10 +1387,10 @@ results for the coral dataset:
   \KeywordTok{lines}\NormalTok{(stages$mid[}\DecValTok{1}\NormalTok{:}\DecValTok{94}\NormalTok{], dd$divCSIB, }\DataTypeTok{col=}\StringTok{"black"}\NormalTok{, }\DataTypeTok{lwd=}\DecValTok{2}\NormalTok{)}
 \CommentTok{# subsampling}
   \CommentTok{# with 40 occs.}
-  \NormalTok{subCR40 <-}\KeywordTok{subsample}\NormalTok{(fossils, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{q=}\DecValTok{40}\NormalTok{)}
+  \NormalTok{subCR40 <-}\KeywordTok{subsample}\NormalTok{(fossils, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{q=}\DecValTok{40}\NormalTok{)}
   \KeywordTok{lines}\NormalTok{(stages$mid[}\DecValTok{1}\NormalTok{:}\DecValTok{94}\NormalTok{], subCR40$divCSIB, }\DataTypeTok{col=}\StringTok{"blue"}\NormalTok{, }\DataTypeTok{lwd=}\DecValTok{2}\NormalTok{)}
   \CommentTok{# with 80 occs.}
-  \NormalTok{subCR80 <-}\KeywordTok{subsample}\NormalTok{(fossils, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{q=}\DecValTok{80}\NormalTok{)}
+  \NormalTok{subCR80 <-}\KeywordTok{subsample}\NormalTok{(fossils, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{q=}\DecValTok{80}\NormalTok{)}
   \KeywordTok{lines}\NormalTok{(stages$mid[}\DecValTok{1}\NormalTok{:}\DecValTok{94}\NormalTok{], subCR80$divCSIB, }\DataTypeTok{col=}\StringTok{"red"}\NormalTok{, }\DataTypeTok{lwd=}\DecValTok{2}\NormalTok{)}
 
 \CommentTok{# legend}
@@ -1421,10 +1420,10 @@ have to increase this number!
     \DataTypeTok{ylab=}\StringTok{"genus richness (corrected SIB)"}\NormalTok{, }\DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{200}\NormalTok{))}
   \KeywordTok{lines}\NormalTok{(stages$mid[}\DecValTok{1}\NormalTok{:}\DecValTok{94}\NormalTok{], dd$divCSIB, }\DataTypeTok{col=}\StringTok{"black"}\NormalTok{, }\DataTypeTok{lwd=}\DecValTok{2}\NormalTok{)}
 \NormalTok{## subsampled, stable  }
-  \NormalTok{subStab <-}\KeywordTok{subsample}\NormalTok{(fossils, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{iter=}\DecValTok{100}\NormalTok{, }\DataTypeTok{q=}\DecValTok{30}\NormalTok{)}
+  \NormalTok{subStab <-}\KeywordTok{subsample}\NormalTok{(fossils, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{iter=}\DecValTok{100}\NormalTok{, }\DataTypeTok{q=}\DecValTok{30}\NormalTok{)}
   \KeywordTok{lines}\NormalTok{(stages$mid[}\DecValTok{1}\NormalTok{:}\DecValTok{94}\NormalTok{], subStab$divCSIB, }\DataTypeTok{col=}\StringTok{"blue"}\NormalTok{, }\DataTypeTok{lwd=}\DecValTok{2}\NormalTok{)}
 \NormalTok{## subsampled, unstable  }
-  \NormalTok{subInstab <-}\KeywordTok{subsample}\NormalTok{(fossils, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{iter=}\DecValTok{5}\NormalTok{, }\DataTypeTok{q=}\DecValTok{30}\NormalTok{)}
+  \NormalTok{subInstab <-}\KeywordTok{subsample}\NormalTok{(fossils, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{iter=}\DecValTok{5}\NormalTok{, }\DataTypeTok{q=}\DecValTok{30}\NormalTok{)}
   \KeywordTok{lines}\NormalTok{(stages$mid[}\DecValTok{1}\NormalTok{:}\DecValTok{94}\NormalTok{], subInstab$divCSIB, }\DataTypeTok{col=}\StringTok{"red"}\NormalTok{, }\DataTypeTok{lwd=}\DecValTok{2}\NormalTok{)}
 \CommentTok{# legend}
   \KeywordTok{legend}\NormalTok{(}\StringTok{"topleft"}\NormalTok{, }\DataTypeTok{legend=}\KeywordTok{c}\NormalTok{(}\StringTok{"raw"}\NormalTok{, }\StringTok{"CR, q=30, stable"}\NormalTok{,}
@@ -1459,7 +1458,7 @@ defined in \texttt{tax} and \texttt{coll} variables. In case
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{## subsampled, stable  }
-  \NormalTok{subCRnd <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossils, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }
+  \NormalTok{subCRnd <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossils, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }
     \DataTypeTok{coll=}\StringTok{"collection_no"}\NormalTok{, }\DataTypeTok{iter=}\DecValTok{100}\NormalTok{, }\DataTypeTok{q=}\DecValTok{40}\NormalTok{, }\DataTypeTok{duplicates=}\OtherTok{FALSE}\NormalTok{)}
 \CommentTok{# basic plot}
   \KeywordTok{tsplot}\NormalTok{(stages, }\DataTypeTok{shading=}\StringTok{"series"}\NormalTok{, }\DataTypeTok{boxes=}\StringTok{"per"}\NormalTok{, }\DataTypeTok{xlim=}\DecValTok{51}\NormalTok{:}\DecValTok{95}\NormalTok{,}
@@ -1511,11 +1510,11 @@ occurrences.
   \KeywordTok{tsplot}\NormalTok{(stages, }\DataTypeTok{shading=}\StringTok{"series"}\NormalTok{, }\DataTypeTok{boxes=}\StringTok{"per"}\NormalTok{, }\DataTypeTok{xlim=}\DecValTok{51}\NormalTok{:}\DecValTok{95}\NormalTok{,}
     \DataTypeTok{ylab=}\StringTok{"number of occurrences"}\NormalTok{, }\DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{100}\NormalTok{))}
 \CommentTok{# subsampled, without failed  }
-  \NormalTok{withoutFail<-}\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }
+  \NormalTok{withoutFail<-}\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }
     \DataTypeTok{iter=}\DecValTok{100}\NormalTok{, }\DataTypeTok{q=}\DecValTok{80}\NormalTok{, }\DataTypeTok{useFailed=}\OtherTok{FALSE}\NormalTok{)}
   \KeywordTok{lines}\NormalTok{(stages$mid[}\DecValTok{1}\NormalTok{:}\DecValTok{94}\NormalTok{], withoutFail$divCSIB, }\DataTypeTok{col=}\StringTok{"black"}\NormalTok{, }\DataTypeTok{lwd=}\DecValTok{2}\NormalTok{)}
 \CommentTok{# subsampled, with failed }
-  \NormalTok{withFail <-}\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }
+  \NormalTok{withFail <-}\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }
     \DataTypeTok{iter=}\DecValTok{100}\NormalTok{, }\DataTypeTok{q=}\DecValTok{80}\NormalTok{, }\DataTypeTok{useFailed=}\OtherTok{TRUE}\NormalTok{)}
   \KeywordTok{lines}\NormalTok{(stages$mid[}\DecValTok{1}\NormalTok{:}\DecValTok{94}\NormalTok{], withFail$divCSIB, }\DataTypeTok{col=}\StringTok{"blue"}\NormalTok{, }\DataTypeTok{lwd=}\DecValTok{2}\NormalTok{)}
   \KeywordTok{legend}\NormalTok{(}\StringTok{"topleft"}\NormalTok{, }\DataTypeTok{legend=}\KeywordTok{c}\NormalTok{(}\StringTok{"CR, q=80, without failed"}\NormalTok{,}
@@ -1544,11 +1543,11 @@ original \texttt{corals} dataset to demonstrate how the argument works
   \KeywordTok{tsplot}\NormalTok{(stages, }\DataTypeTok{shading=}\StringTok{"series"}\NormalTok{, }\DataTypeTok{boxes=}\StringTok{"per"}\NormalTok{, }\DataTypeTok{xlim=}\DecValTok{51}\NormalTok{:}\DecValTok{95}\NormalTok{,}
     \DataTypeTok{ylab=}\StringTok{"per capita extinction rates"}\NormalTok{, }\DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{))}
 \NormalTok{## subsampled, excluding the recent occurrences  }
-  \NormalTok{sub <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(corals, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{iter=}\DecValTok{100}\NormalTok{, }
+  \NormalTok{sub <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(corals, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{iter=}\DecValTok{100}\NormalTok{, }
     \DataTypeTok{q=}\DecValTok{50}\NormalTok{, }\DataTypeTok{rem=} \DecValTok{95}\NormalTok{, }\DataTypeTok{duplicates=}\OtherTok{FALSE}\NormalTok{, }\DataTypeTok{coll=}\StringTok{"collection_no"}\NormalTok{)}
   \KeywordTok{lines}\NormalTok{(stages$mid[}\DecValTok{1}\NormalTok{:}\DecValTok{94}\NormalTok{], sub$extPC, }\DataTypeTok{col=}\StringTok{"black"}\NormalTok{, }\DataTypeTok{lwd=}\DecValTok{2}\NormalTok{)}
 \NormalTok{## subsampled, including the recent}
-  \NormalTok{subPR <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(corals, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{iter=}\DecValTok{100}\NormalTok{, }
+  \NormalTok{subPR <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(corals, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{iter=}\DecValTok{100}\NormalTok{, }
     \DataTypeTok{q=}\DecValTok{50}\NormalTok{, }\DataTypeTok{keep=} \DecValTok{95}\NormalTok{, }\DataTypeTok{duplicates=}\OtherTok{FALSE}\NormalTok{, }\DataTypeTok{coll=}\StringTok{"collection_no"}\NormalTok{)}
   \KeywordTok{lines}\NormalTok{(stages$mid, subPR$extPC, }\DataTypeTok{col=}\StringTok{"blue"}\NormalTok{, }\DataTypeTok{lwd=}\DecValTok{2}\NormalTok{)}
 \CommentTok{# legend}
@@ -1582,10 +1581,10 @@ means of the trials. They provide almost the same output:
   \KeywordTok{tsplot}\NormalTok{(stages, }\DataTypeTok{shading=}\StringTok{"series"}\NormalTok{, }\DataTypeTok{boxes=}\StringTok{"per"}\NormalTok{, }\DataTypeTok{xlim=}\DecValTok{51}\NormalTok{:}\DecValTok{95}\NormalTok{,}
     \DataTypeTok{ylab=}\StringTok{"richness of genera (corrected SIB)"}\NormalTok{, }\DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{100}\NormalTok{))}
 \NormalTok{## arithmetic mean output}
-  \NormalTok{subArit <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{iter=}\DecValTok{100}\NormalTok{, }\DataTypeTok{q=}\DecValTok{40}\NormalTok{, }\DataTypeTok{output=}\StringTok{"arit"}\NormalTok{)}
+  \NormalTok{subArit <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{iter=}\DecValTok{100}\NormalTok{, }\DataTypeTok{q=}\DecValTok{40}\NormalTok{, }\DataTypeTok{output=}\StringTok{"arit"}\NormalTok{)}
   \KeywordTok{lines}\NormalTok{(stages$mid[}\DecValTok{1}\NormalTok{:}\DecValTok{94}\NormalTok{], subArit$divCSIB, }\DataTypeTok{col=}\StringTok{"black"}\NormalTok{, }\DataTypeTok{lwd=}\DecValTok{2}\NormalTok{)}
 \NormalTok{## geometric mean output  }
-  \NormalTok{subGeom <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }
+  \NormalTok{subGeom <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }
     \DataTypeTok{iter=}\DecValTok{100}\NormalTok{, }\DataTypeTok{q=}\DecValTok{40}\NormalTok{, }\DataTypeTok{output=}\StringTok{"geom"}\NormalTok{)}
   \KeywordTok{lines}\NormalTok{(stages$mid[}\DecValTok{1}\NormalTok{:}\DecValTok{94}\NormalTok{], subGeom$divCSIB, }\DataTypeTok{col=}\StringTok{"blue"}\NormalTok{, }\DataTypeTok{lwd=}\DecValTok{2}\NormalTok{)}
   \KeywordTok{legend}\NormalTok{(}\StringTok{"topleft"}\NormalTok{, }\DataTypeTok{legend=}\KeywordTok{c}\NormalTok{(}\StringTok{"arithmetic means"}\NormalTok{, }\StringTok{"geometric means"}\NormalTok{),}
@@ -1607,7 +1606,7 @@ until now), the output is a list, where all variables are matrices.
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{## subsampled, dist output }
-  \NormalTok{subDist <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }
+  \NormalTok{subDist <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }
     \DataTypeTok{iter=}\DecValTok{100}\NormalTok{, }\DataTypeTok{q=}\DecValTok{40}\NormalTok{, }\DataTypeTok{output=}\StringTok{"dist"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -1693,7 +1692,7 @@ concatenated and the function will output them as a list of length
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{## subsampled }
-\NormalTok{subData <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }
+\NormalTok{subData <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }
   \DataTypeTok{iter=}\DecValTok{100}\NormalTok{, }\DataTypeTok{q=}\DecValTok{40}\NormalTok{,}\DataTypeTok{FUN=} \OtherTok{NULL}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -1732,11 +1731,11 @@ concatenated and the function will output them as a list of length
 ##  [9] "country"        "geoplate"       "lat"            "lng"           
 ## [13] "paleolat"       "paleolng"       "period"         "epoch"         
 ## [17] "subepoch"       "stage"          "early_interval" "late_interval" 
-## [21] "max_ma"         "min_ma"         "slc"            "Bin"           
+## [21] "max_ma"         "min_ma"         "stg"            "Bin"           
 ## [25] "env"            "lith"           "latgroup"       "bath"          
 ## [29] "gensp"          "ecology"        "ecologyMostZ"   "ecologyMostAZ" 
 ## [33] "ecologyBoth"    "growth"         "integration"    "mid"           
-## [37] "slcMid"         "mid_ma"
+## [37] "stgMid"         "mid_ma"
 \end{verbatim}
 
 The advantage of this option is that you can inspect the results of the
@@ -1752,7 +1751,7 @@ One of the functions we can check is the number of occurrences in the
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{OCC <-}\StringTok{ }\NormalTok{function(x) }\KeywordTok{table}\NormalTok{(x$slc)}
+\NormalTok{OCC <-}\StringTok{ }\NormalTok{function(x) }\KeywordTok{table}\NormalTok{(x$stg)}
 \CommentTok{# list of trials, each contains the number of occurrences in a bin (vector)}
 \NormalTok{subOccs <-}\StringTok{ }\KeywordTok{lapply}\NormalTok{(subData, OCC)}
 \CommentTok{# one trial}
@@ -1779,8 +1778,8 @@ formally called \texttt{dat}:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{OCC <-}\StringTok{ }\NormalTok{function(dat) }\KeywordTok{table}\NormalTok{(dat$slc)}
-\NormalTok{subOccsInternal <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }
+\NormalTok{OCC <-}\StringTok{ }\NormalTok{function(dat) }\KeywordTok{table}\NormalTok{(dat$stg)}
+\NormalTok{subOccsInternal <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }
   \DataTypeTok{iter=}\DecValTok{100}\NormalTok{, }\DataTypeTok{q=}\DecValTok{40}\NormalTok{,}\DataTypeTok{FUN=} \NormalTok{OCC, }\DataTypeTok{output=}\StringTok{"list"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -1817,7 +1816,7 @@ output will produce a matrix of occurrences:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{subDistOccs <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }
+\NormalTok{subDistOccs <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }
   \DataTypeTok{iter=}\DecValTok{100}\NormalTok{, }\DataTypeTok{q=}\DecValTok{40}\NormalTok{,}\DataTypeTok{FUN=} \NormalTok{OCC, }\DataTypeTok{output=}\StringTok{"dist"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -1857,7 +1856,7 @@ variable names:
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{PL <-}\StringTok{ }\NormalTok{function(dat)\{}
-  \NormalTok{tRes<-}\StringTok{ }\KeywordTok{tapply}\NormalTok{(}\DataTypeTok{INDEX=}\NormalTok{dat$slc, }\DataTypeTok{X=}\NormalTok{dat$paleolat, }\DataTypeTok{FUN=}\NormalTok{function(y)\{}
+  \NormalTok{tRes<-}\StringTok{ }\KeywordTok{tapply}\NormalTok{(}\DataTypeTok{INDEX=}\NormalTok{dat$stg, }\DataTypeTok{X=}\NormalTok{dat$paleolat, }\DataTypeTok{FUN=}\NormalTok{function(y)\{}
     \KeywordTok{max}\NormalTok{(}\KeywordTok{abs}\NormalTok{(y), }\DataTypeTok{na.rm=}\NormalTok{T)}
   \NormalTok{\})}
 \KeywordTok{return}\NormalTok{(tRes)}
@@ -1894,7 +1893,7 @@ by running:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{subMaxPaLat <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }
+\NormalTok{subMaxPaLat <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }
   \DataTypeTok{iter=}\DecValTok{100}\NormalTok{, }\DataTypeTok{q=}\DecValTok{20}\NormalTok{,}\DataTypeTok{FUN=}\NormalTok{PL)}
 \KeywordTok{tsplot}\NormalTok{(stages, }\DataTypeTok{shading=}\StringTok{"series"}\NormalTok{, }\DataTypeTok{boxes=}\StringTok{"per"}\NormalTok{, }\DataTypeTok{xlim=}\DecValTok{51}\NormalTok{:}\DecValTok{95}\NormalTok{,}
   \DataTypeTok{ylab=}\StringTok{"maximum sampling paleolatitude"}\NormalTok{, }\DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{90}\NormalTok{))}
@@ -1940,7 +1939,7 @@ whatever, while the all rows forming the units remain intact.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{subUWunit <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }
+\NormalTok{subUWunit <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }
   \DataTypeTok{iter=}\DecValTok{100}\NormalTok{, }\DataTypeTok{q=}\DecValTok{10}\NormalTok{, }\DataTypeTok{type=}\StringTok{"cr"}\NormalTok{, }\DataTypeTok{unit=}\StringTok{"collection_no"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -1968,7 +1967,7 @@ function}) is the same as with the CR method.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{subOW <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{coll=}\StringTok{"collection_no"}\NormalTok{,}
+\NormalTok{subOW <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{coll=}\StringTok{"collection_no"}\NormalTok{,}
   \DataTypeTok{iter=}\DecValTok{100}\NormalTok{, }\DataTypeTok{q=}\DecValTok{40}\NormalTok{, }\DataTypeTok{type=}\StringTok{"oxw"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -1978,7 +1977,7 @@ to the output of the corresponding level CR results:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{subCR <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{iter=}\DecValTok{100}\NormalTok{, }\DataTypeTok{q=}\DecValTok{40}\NormalTok{)}
+\NormalTok{subCR <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{iter=}\DecValTok{100}\NormalTok{, }\DataTypeTok{q=}\DecValTok{40}\NormalTok{)}
 \KeywordTok{tsplot}\NormalTok{(stages, }\DataTypeTok{shading=}\StringTok{"series"}\NormalTok{, }\DataTypeTok{boxes=}\StringTok{"per"}\NormalTok{, }\DataTypeTok{xlim=}\DecValTok{51}\NormalTok{:}\DecValTok{95}\NormalTok{,}
   \DataTypeTok{ylab=}\StringTok{"corrected SIB diversity"}\NormalTok{, }\DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{90}\NormalTok{))}
 \KeywordTok{lines}\NormalTok{(stages$mid[}\DecValTok{1}\NormalTok{:}\DecValTok{94}\NormalTok{], subCR$divCSIB, }\DataTypeTok{col=}\StringTok{"black"}\NormalTok{)}
@@ -2010,11 +2009,11 @@ collections.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{trialsUW <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{coll=}\StringTok{"collection_no"}\NormalTok{,}
+\NormalTok{trialsUW <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{coll=}\StringTok{"collection_no"}\NormalTok{,}
   \DataTypeTok{iter=}\DecValTok{100}\NormalTok{, }\DataTypeTok{q=}\DecValTok{20}\NormalTok{, }\DataTypeTok{type=}\StringTok{"oxw"}\NormalTok{, }\DataTypeTok{x=}\DecValTok{0}\NormalTok{, }\DataTypeTok{FUN=}\NormalTok{sampstat)}
 \CommentTok{# the number of sampled collections on average in each timeslice}
 \NormalTok{trialsUW[}\DecValTok{54}\NormalTok{:}\DecValTok{94}\NormalTok{, }\StringTok{"colls"}\NormalTok{]}
-\NormalTok{subUW <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{coll=}\StringTok{"collection_no"}\NormalTok{,}
+\NormalTok{subUW <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{coll=}\StringTok{"collection_no"}\NormalTok{,}
   \DataTypeTok{iter=}\DecValTok{100}\NormalTok{, }\DataTypeTok{q=}\DecValTok{10}\NormalTok{, }\DataTypeTok{type=}\StringTok{"oxw"}\NormalTok{, }\DataTypeTok{x=}\DecValTok{0}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -2026,7 +2025,7 @@ occurrences drawn with the \texttt{sampstat()} function
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{subST <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{coll=}\StringTok{"collection_no"}\NormalTok{, }
+\NormalTok{subST <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{coll=}\StringTok{"collection_no"}\NormalTok{, }
   \DataTypeTok{iter=}\DecValTok{100}\NormalTok{, }\DataTypeTok{q=}\DecValTok{20}\NormalTok{,}\DataTypeTok{FUN=}\NormalTok{sampstat, }\DataTypeTok{type=}\StringTok{"oxw"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -2038,10 +2037,10 @@ occurrences drawn with the \texttt{sampstat()} function
 \end{Shaded}
 
 \begin{verbatim}
-##  [1] 22.71 22.73 24.21 24.34 25.32 23.46 21.68 24.33 21.81 24.25 22.74
-## [12] 25.69 23.32 25.69 27.45 30.69 24.36 26.41 26.14 28.97 29.49 26.14
-## [23] 27.00 23.00 25.43 26.76 24.78 24.81 22.68 24.06 22.17 24.04 22.80
-## [34] 28.09 25.94 25.42 28.09 23.20 24.28 25.03 24.79
+##  [1] 22.75 22.66 24.94 23.97 24.53 22.91 21.64 23.44 22.12 23.31 22.78
+## [12] 26.24 23.07 26.45 29.39 32.39 24.24 25.42 25.29 26.95 26.98 26.03
+## [23] 27.03 23.25 25.81 26.87 25.76 24.02 22.67 24.59 22.23 23.91 22.95
+## [34] 26.67 26.27 25.76 27.70 24.28 23.94 25.56 24.98
 \end{verbatim}
 
 Although there are ways to improve the accuracy of the subsampling
@@ -2049,12 +2048,12 @@ process, the variation induced by this problem is only minuscule
 compared to those introduced by sampling and binning uncertainties.
 However, typically this \texttt{x} value is set to a value between 1 and
 2 (e.g.~1.4). In these cases, you have to calculate the intensity of
-sampling . Although there is some discrepancy between the methods, the
+sampling. Although there is some discrepancy between the methods, the
 overall trajectories are quite similar.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{subO2W <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{coll=}\StringTok{"collection_no"}\NormalTok{, }
+\NormalTok{subO2W <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{coll=}\StringTok{"collection_no"}\NormalTok{, }
   \DataTypeTok{iter=}\DecValTok{100}\NormalTok{, }\DataTypeTok{q=}\DecValTok{80}\NormalTok{, }\DataTypeTok{type=}\StringTok{"oxw"}\NormalTok{, }\DataTypeTok{x=}\DecValTok{2}\NormalTok{)}
 \KeywordTok{tsplot}\NormalTok{(stages, }\DataTypeTok{shading=}\StringTok{"series"}\NormalTok{, }\DataTypeTok{boxes=}\StringTok{"per"}\NormalTok{, }\DataTypeTok{xlim=}\DecValTok{51}\NormalTok{:}\DecValTok{95}\NormalTok{,}
   \DataTypeTok{ylab=}\StringTok{"corrected SIB genus richness"}\NormalTok{, }\DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{90}\NormalTok{))}
@@ -2087,7 +2086,7 @@ illustrated by rerunning CR iteratively with progressively lower quotas.
 \NormalTok{quotas<-}\KeywordTok{seq}\NormalTok{(}\DecValTok{70}\NormalTok{,}\DecValTok{10}\NormalTok{,-}\DecValTok{10}\NormalTok{)}
 \NormalTok{for(i in quotas)\{}
    \CommentTok{# actual CR }
-   \NormalTok{cr<-}\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{iter=}\DecValTok{50}\NormalTok{, }\DataTypeTok{q=}\NormalTok{i,}\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }
+   \NormalTok{cr<-}\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{iter=}\DecValTok{50}\NormalTok{, }\DataTypeTok{q=}\NormalTok{i,}\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }
     \DataTypeTok{useFailed=}\OtherTok{FALSE}\NormalTok{)}
   \CommentTok{# store output}
   \KeywordTok{assign}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{"cr"}\NormalTok{, i, }\DataTypeTok{sep=}\StringTok{""}\NormalTok{), cr)}
@@ -2143,10 +2142,10 @@ perform SQS. This is the default way to do SQS.
 \begin{Highlighting}[]
 \CommentTok{# sqs with 0.6 quorum}
 \NormalTok{sqs0}\FloatTok{.6} \NormalTok{<-}\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{iter=}\DecValTok{50}\NormalTok{, }\DataTypeTok{q=}\FloatTok{0.6}\NormalTok{,}
-  \DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{,  }\DataTypeTok{type=}\StringTok{"sqs"}\NormalTok{)}
+  \DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{,  }\DataTypeTok{type=}\StringTok{"sqs"}\NormalTok{)}
 \CommentTok{#sqs with 0.3 quorum}
 \NormalTok{sqs0}\FloatTok{.3} \NormalTok{<-}\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{iter=}\DecValTok{50}\NormalTok{, }\DataTypeTok{q=}\FloatTok{0.3}\NormalTok{,}
-  \DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{type=}\StringTok{"sqs"}\NormalTok{)}
+  \DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{type=}\StringTok{"sqs"}\NormalTok{)}
 
 \CommentTok{# plotting}
 \KeywordTok{tsplot}\NormalTok{(stages, }\DataTypeTok{shading=}\StringTok{"series"}\NormalTok{, }\DataTypeTok{boxes=}\StringTok{"per"}\NormalTok{, }\DataTypeTok{xlim=}\DecValTok{51}\NormalTok{:}\DecValTok{95}\NormalTok{,}
@@ -2184,13 +2183,13 @@ methods is very small:
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{sqsCollSing <-}\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{iter=}\DecValTok{50}\NormalTok{, }\DataTypeTok{q=}\FloatTok{0.4}\NormalTok{, }
-  \DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{type=}\StringTok{"sqs"}\NormalTok{, }
+  \DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{type=}\StringTok{"sqs"}\NormalTok{, }
   \DataTypeTok{singleton=}\StringTok{"occ"}\NormalTok{)}
 \NormalTok{sqsRefSing <-}\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{iter=}\DecValTok{50}\NormalTok{, }\DataTypeTok{q=}\FloatTok{0.4}\NormalTok{,}
-  \DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{type=}\StringTok{"sqs"}\NormalTok{, }\DataTypeTok{ref=}\StringTok{"reference_no"}\NormalTok{,}
+  \DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{type=}\StringTok{"sqs"}\NormalTok{, }\DataTypeTok{ref=}\StringTok{"reference_no"}\NormalTok{,}
   \DataTypeTok{singleton=}\StringTok{"ref"}\NormalTok{)}
 \NormalTok{sqsNoSing <-}\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{iter=}\DecValTok{50}\NormalTok{, }\DataTypeTok{q=}\FloatTok{0.4}\NormalTok{,}
-  \DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{type=}\StringTok{"sqs"}\NormalTok{, }\DataTypeTok{singleton=}\OtherTok{FALSE}\NormalTok{)}
+  \DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{type=}\StringTok{"sqs"}\NormalTok{, }\DataTypeTok{singleton=}\OtherTok{FALSE}\NormalTok{)}
 
 \CommentTok{# plotting}
 \KeywordTok{tsplot}\NormalTok{(stages, }\DataTypeTok{shading=}\StringTok{"series"}\NormalTok{, }\DataTypeTok{boxes=}\StringTok{"per"}\NormalTok{, }\DataTypeTok{xlim=}\DecValTok{51}\NormalTok{:}\DecValTok{95}\NormalTok{,}
@@ -2214,9 +2213,9 @@ which is only available if \texttt{excludeDominant=TRUE}.
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{sqsPure <-}\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{iter=}\DecValTok{50}\NormalTok{, }\DataTypeTok{q=}\FloatTok{0.5}\NormalTok{,}
-  \DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{type=}\StringTok{"sqs"}\NormalTok{)}
+  \DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{type=}\StringTok{"sqs"}\NormalTok{)}
 \NormalTok{sqsCorr <-}\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{iter=}\DecValTok{50}\NormalTok{, }\DataTypeTok{q=}\FloatTok{0.5}\NormalTok{,}
- \DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{ref=}\StringTok{"reference_no"}\NormalTok{,}\DataTypeTok{coll=}\StringTok{"collection_no"}\NormalTok{,}
+ \DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{ref=}\StringTok{"reference_no"}\NormalTok{,}\DataTypeTok{coll=}\StringTok{"collection_no"}\NormalTok{,}
  \DataTypeTok{type=}\StringTok{"sqs"}\NormalTok{, }\DataTypeTok{singleton=}\StringTok{"ref"}\NormalTok{, }\DataTypeTok{excludeDominant=}\NormalTok{T, }\DataTypeTok{largestColl=}\NormalTok{T)}
 
 \CommentTok{# plotting}
@@ -2240,7 +2239,7 @@ collection-by-collection. This can be enforced with the
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{sqsByColl <-}\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{iter=}\DecValTok{50}\NormalTok{, }\DataTypeTok{q=}\FloatTok{0.5}\NormalTok{,}
- \DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{ref=}\StringTok{"reference_no"}\NormalTok{,}\DataTypeTok{coll=}\StringTok{"collection_no"}\NormalTok{,}
+ \DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{ref=}\StringTok{"reference_no"}\NormalTok{,}\DataTypeTok{coll=}\StringTok{"collection_no"}\NormalTok{,}
  \DataTypeTok{type=}\StringTok{"sqs"}\NormalTok{, }\DataTypeTok{singleton=}\StringTok{"ref"}\NormalTok{, }\DataTypeTok{excludeDominant=}\NormalTok{T, }\DataTypeTok{largestColl=}\NormalTok{T, }\DataTypeTok{byList=}\OtherTok{TRUE}\NormalTok{)}
 
 \CommentTok{# plotting}
@@ -2315,7 +2314,7 @@ binary environmental variable in question:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{affMajor <-}\StringTok{ }\KeywordTok{affinity}\NormalTok{(knownBath, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }
+\NormalTok{affMajor <-}\StringTok{ }\KeywordTok{affinity}\NormalTok{(knownBath, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }
   \DataTypeTok{method=}\StringTok{"majority"}\NormalTok{, }\DataTypeTok{env=}\StringTok{"bath"}\NormalTok{)}
 \KeywordTok{table}\NormalTok{(affMajor)}
 \end{Highlighting}
@@ -2372,7 +2371,7 @@ approach is implemented by the default \texttt{"binom"} method.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{affBin1 <-}\StringTok{ }\KeywordTok{affinity}\NormalTok{(knownBath, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }
+\NormalTok{affBin1 <-}\StringTok{ }\KeywordTok{affinity}\NormalTok{(knownBath, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }
   \DataTypeTok{method=}\StringTok{"binom"}\NormalTok{, }\DataTypeTok{env=}\StringTok{"bath"}\NormalTok{)}
 \KeywordTok{table}\NormalTok{(affBin1)}
 \end{Highlighting}
@@ -2395,7 +2394,7 @@ affinity.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{affBin0}\FloatTok{.5} \NormalTok{<-}\StringTok{ }\KeywordTok{affinity}\NormalTok{(knownBath, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }
+\NormalTok{affBin0}\FloatTok{.5} \NormalTok{<-}\StringTok{ }\KeywordTok{affinity}\NormalTok{(knownBath, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }
   \DataTypeTok{method=}\StringTok{"binom"}\NormalTok{, }\DataTypeTok{env=}\StringTok{"bath"}\NormalTok{, }\DataTypeTok{alpha=}\FloatTok{0.5}\NormalTok{)}
 \KeywordTok{table}\NormalTok{(affBin0}\FloatTok{.5}\NormalTok{)}
 \end{Highlighting}
@@ -2409,7 +2408,7 @@ affinity.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{affBin0}\FloatTok{.1} \NormalTok{<-}\StringTok{ }\KeywordTok{affinity}\NormalTok{(knownBath, }\DataTypeTok{bin=}\StringTok{"slc"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }
+\NormalTok{affBin0}\FloatTok{.1} \NormalTok{<-}\StringTok{ }\KeywordTok{affinity}\NormalTok{(knownBath, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }
   \DataTypeTok{method=}\StringTok{"binom"}\NormalTok{, }\DataTypeTok{env=}\StringTok{"bath"}\NormalTok{, }\DataTypeTok{alpha=}\FloatTok{0.1}\NormalTok{)}
 \KeywordTok{table}\NormalTok{(affBin0}\FloatTok{.1}\NormalTok{)}
 \end{Highlighting}
@@ -2481,8 +2480,8 @@ Marine Animals. Paleobiology, 32(3), 345-366.
 Good, I. J. (1953). The Popoulation Frequencies of Species and the
 Estimation of Population Parameters. Biometrika, 40(3/4), 237-264.
 
-Gradstein, F. M., Ogg, J. G., \& Schmitz, M. (2012). The Geologic Time
-Scale 2012. Elsevier Science \& Technology Books.
+Ogg, J. G., G. Ogg, and F. M. Gradstein. 2016. A concise geologic time
+scale: 2016. Elsevier.
 
 Kiessling, W., \& Aberhan, M. (2007). Environmental determinants of
 marine benthic biodiversity dynamics through Triassic-Jurassic time.

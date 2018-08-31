@@ -23,14 +23,14 @@
 #' data(corals)
 #' 
 #' # binned data
-#'   flBinned <- fadlad(corals, tax="genus", bin="slc")
+#'   flBinned <- fadlad(corals, tax="genus", bin="stg")
 #' 
 #' # using basic bin lengths
 #'   flDual <- fadlad(corals, tax="genus", bin=c("max_ma", "min_ma"), ages=TRUE)
 #'
 #' # single age esimate 
 #'   data(stages)
-#'   corals$mid <- stages$mid[corals$slc]
+#'   corals$mid <- stages$mid[corals$stg]
 #'   flSingle <- fadlad(corals, tax="genus", bin="mid", ages=TRUE)
 #' 
 #' 
@@ -40,7 +40,7 @@ fadlad<-function(dat, tax, bin, ages=FALSE, na.rm=TRUE){
 	# for the prototype
 #	dat <- corals
 #	tax<- "genus"
-#	bin <- "slc"
+#	bin <- "stg"
 
 	# defense
 		if(!is.matrix(dat) & !is.data.frame(dat) ) stop("Invalid 'dat' argument.")
@@ -122,7 +122,7 @@ fadlad<-function(dat, tax, bin, ages=FALSE, na.rm=TRUE){
 #' 
 #' @examples
 #' data(corals)
-#' surv<-survivors(corals, tax="genus", bin="slc", method="forward")
+#' surv<-survivors(corals, tax="genus", bin="stg", method="forward")
 #' 
 #' # plot
 #' data(stages)
@@ -132,7 +132,7 @@ fadlad<-function(dat, tax, bin, ages=FALSE, na.rm=TRUE){
 #' for(i in 1:ncol(surv)) lines(stages$mid, surv[,i])
 #' 
 #' @export
-survivors<-function(dat, tax="genus", bin="slc", method="forward", noNAStart=FALSE,fl=NULL){
+survivors<-function(dat, tax="genus", bin="stg", method="forward", noNAStart=FALSE,fl=NULL){
 	
 	# calculate FAD-LAD matrix first, if not provided
 	if(is.null(fl)){

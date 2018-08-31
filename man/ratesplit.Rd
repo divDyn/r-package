@@ -4,7 +4,7 @@
 \alias{ratesplit}
 \title{Test of rate split (selectivity)}
 \usage{
-ratesplit(dat, sel, tax = "genus", bin = "slc", rate = "pc",
+ratesplit(dat, sel, tax = "genus", bin = "stg", rate = "pc",
   method = "AIC", AICc = TRUE, na.rm = TRUE, alpha = NULL,
   output = "simple")
 }
@@ -52,8 +52,8 @@ data(stages)
   az<-corals[corals$ecology=="az",]
 
 # calculate diversity dynamics
-ddZ<-divDyn(z, tax="genus", bin="slc")
-ddAZ<-divDyn(az, tax="genus", bin="slc")
+ddZ<-divDyn(z, tax="genus", bin="stg")
+ddAZ<-divDyn(az, tax="genus", bin="stg")
 
 # origination rate plot
 tsplot(stages, boxes="per", shading="series", xlim=54:95, 
@@ -64,7 +64,7 @@ legend("topright", inset=c(0.1,0.1), legend=c("z", "az"),
   lwd=2, lty=c(1,2), col=c("blue", "red"), bg="white")
 
 # The ratesplit function
-rs<-ratesplit(rbind(z, az), sel="ecology", tax="genus", bin="slc")
+rs<-ratesplit(rbind(z, az), sel="ecology", tax="genus", bin="stg")
 rs
 
 # display selectivity with points

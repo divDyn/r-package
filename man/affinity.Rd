@@ -4,7 +4,7 @@
 \alias{affinity}
 \title{Calculate environmental affinities of taxa}
 \usage{
-affinity(dat, env, tax = "genus", bin = "slc", coll = "collection_no",
+affinity(dat, env, tax = "genus", bin = "stg", coll = "collection_no",
   method = "binom", alpha = 1, reldat = NULL)
 }
 \arguments{
@@ -48,9 +48,9 @@ Kiessling, W., & Kocsis, Á. T. (2015). Biodiversity dynamics and environmental 
 \examples{
 data(corals)
 # omit values where no occurrence environment entry is present, or where unknown
-  fossils<-subset(corals, slc!=95)
+  fossils<-subset(corals, stg!=95)
   fossilEnv<-subset(fossils, bath!="uk")
 # calculate affinities
-  aff<-affinity(fossilEnv, env="bath", tax="genus", bin="slc", alpha=1)
+  aff<-affinity(fossilEnv, env="bath", tax="genus", bin="stg", alpha=1)
 
 }

@@ -4,7 +4,7 @@
 \alias{survivors}
 \title{Proportions of survivorship}
 \usage{
-survivors(dat, tax = "genus", bin = "slc", method = "forward",
+survivors(dat, tax = "genus", bin = "stg", method = "forward",
   noNAStart = FALSE, fl = NULL)
 }
 \arguments{
@@ -34,7 +34,7 @@ Raup, D. M. (1978). Cohort analysis of generic survivorship. Paleobiology, 4(1),
 }
 \examples{
 data(corals)
-surv<-survivors(corals, tax="genus", bin="slc", method="forward")
+surv<-survivors(corals, tax="genus", bin="stg", method="forward")
 
 # plot
 data(stages)

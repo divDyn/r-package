@@ -86,7 +86,7 @@ To be added: missing portions are omitted in this version, but should be represe
   cols <- c("#55555588","#88888888", "#BBBBBB88")
   types <- c("uk", "shal", "deep")
   
-  parts(x=stages$mid[corals$slc], b=corals$bath, 
+  parts(x=stages$mid[corals$stg], b=corals$bath, 
    ord=types, col=cols, prop=TRUE,border=NA, labs=FALSE)
    
   # legend

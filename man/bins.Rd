@@ -4,16 +4,17 @@
 \name{bins}
 \alias{bins}
 \title{The 10 million year resolution timescale of the Paleobiology Database}
-\format{A \code{data.frame} with 95 observations and 9 variables:
+\format{A \code{data.frame} with 49 observations and 9 variables:
 	\describe{
 		\item{X10}{The name of the bin: Period and number.}
 		\item{ocean}{The primary state of the oceans from the point of carbonate precipitation. \code{ar} indicates aragonitic, \code{cc} indicates calcitic conditions. Based on §}
 		\item{ocean2}{§}
 		\item{climate}{Primary climatic characteristic: \code{w} denotes warm, \code{c} denotes cold.}
 		\item{\code{bottom}}{Numeric ages of the bottom boundaries (earliest ages) of the bins.}
- 		\item{\code{mid}}{Numeric ages midpoints of the bins, the averages of \code{bottom} and \code{top}.}
- 		\item{\code{top}}{Numeric ages of the tops (latest ages) of the bins.}
- 		\item{\code{BIN}}{Integer number identifiers of the bins. §correct to num!}
+ 	\item{\code{mid}}{Numeric ages midpoints of the bins, the averages of \code{bottom} and \code{top}.}
+ 	\item{\code{top}}{Numeric ages of the tops (latest ages) of the bins.}
+	\item{\code{dur}}{Numeric ages of the durations fo the bins.}
+ 	\item{\code{bin}}{Integer number identifiers of the bins. §correct to num!}
 }}
 \source{
 § executive committee of old PaleoDB, John Alroy. Additional variables were added by Wolfgang Kiessling.

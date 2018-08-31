@@ -37,14 +37,14 @@ attribute \code{row.names}: The names of the taxa.
 data(corals)
 
 # binned data
-  flBinned <- fadlad(corals, tax="genus", bin="slc")
+  flBinned <- fadlad(corals, tax="genus", bin="stg")
 
 # using basic bin lengths
   flDual <- fadlad(corals, tax="genus", bin=c("max_ma", "min_ma"), ages=TRUE)
 
 # single age esimate 
   data(stages)
-  corals$mid <- stages$mid[corals$slc]
+  corals$mid <- stages$mid[corals$stg]
   flSingle <- fadlad(corals, tax="genus", bin="mid", ages=TRUE)
 
 

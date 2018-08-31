@@ -32,7 +32,7 @@
 #' 	\item{\code{late_interval}}{Late interval name registered in the PaleoDB dynamic time scale.}
 #' 	\item{\code{max_ma}}{Maximum estimated age based on the PaleoDB dynamic time scale.}
 #' 	\item{\code{min_ma}}{Minimum estimated age based on the PaleoDB dynamic time scale.}
-#' 	\item{\code{slc}}{Bin number in the stage-level timescale \code{\link{stages}}.}
+#' 	\item{\code{stg}}{Bin number in the stage-level timescale \code{\link{stages}}.}
 #' 	\item{\code{Bin}}{Bin number in the PaleoDB 10 million year resolution timescale \code{\link{bins}}.}
 #' 	\item{\code{env}}{Environment of the occurrence: reefal \code{(r)}, non-reefal \code{(nr)} or unknown (\code{uk}), based on \code{\link{keys}}.}
 #' 	\item{\code{lith}}{Substrate of the occurrence: carbonate \code{(c)}, siliciclastic \code{(s)} or unknown (\code{uk}), based on \code{\link{keys}}.}
@@ -59,8 +59,8 @@
 #'  
 #' @format A \code{list} of 7 \code{list}s:
 #' 	\describe{
-#' 		\item{\code{binInt}}{A \code{list} of \code{vector}s. Entries in the \code{early_interval} and \code{late_interval} variables of PaleoDB downloads indicate the collections' positions in the dynamic time scale. These entries were linked to 10 million year-resolution time scale stored in \code{\link{bins}}. These links were compiled using a download from the FossilWorks website (\url{http://www.fossilworks.com/}), on 08 June, 2018. You can check the lookup table \code{\link{stratkeys}} here. This is version 0.9.1}
-#' 		\item{\code{slcInt}}{A \code{list} of \code{vector}s. Entries in the \code{early_interval} and \code{late_interval} variables of PaleoDB downloads indicate the collections' positions in the dynamic time scale. These entries were linked to stage-resolution time scale stored in \code{\link{stages}}. See \code{binInt} for version information.} These entries are reliable only in the Post-Ordovician!
+#' 		\item{\code{binInt}}{A \code{list} of \code{vector}s. Entries in the \code{early_interval} and \code{late_interval} variables of PaleoDB downloads indicate the collections' positions in the dynamic time scale. These entries were linked to 10 million year-resolution time scale stored in \code{\link{bins}}. These links were compiled using a download from the FossilWorks website (\url{http://www.fossilworks.com/}), on 08 June, 2018. You can check the lookup table \code{\link{stratkeys}} here. This is version 0.9.2}
+#' 		\item{\code{stgInt}}{A \code{list} of \code{vector}s. Entries in the \code{early_interval} and \code{late_interval} variables of PaleoDB downloads indicate the collections' positions in the dynamic time scale. These entries were linked to stage-resolution time scale stored in \code{\link{stages}}. See \code{binInt} for version information.} These entries are reliable only in the Post-Ordovician!
 #' 		\item{\code{reefs}}{A \code{list} of \code{vector}s. Entries in the \code{environment} field of the PaleoDB download indicate information regarding the likely reefal origin of carbonatic rocks. See the vignette ('§PhaneroCurve') on the exact use of these data. v0.9.}
 #' 		\item{\code{lith}}{A \code{list} of \code{vector}s. Entries in the \code{lithology1} field of the PaleoDB download indicate information regarding the substrate of the embedding rocks. This key maps the entries to \code{siliciclastic}, \code{"carbonate"} or \code{"unknown"} substrates. v0.9.}
 #' 		\item{\code{lat}}{A \code{list} of \code{vector}s. Entries in the \code{paleolat} field of the PaleoDB download indicate information regarding paleolatitude of the occurrences. This key maps the entries to \code{"tropical"} or \code{"non-tropical"} latitudes. v0.9.}
@@ -71,13 +71,13 @@
 #' @source Stratigraphic assignments are based on the download of collection data from Fossilworks (\url{http://www.fossilworks.com/}) and the dynamic time scale of the Paleobiology Database, written by J. Alroy. The assignment of numeric values were done by A. Kocsis. Environmental variables were grouped by W. Kiessling.
 "keys"
 
-#' 95 bin Phanerozoic time scale based on the stratigraphic stages of Gradstein et al. (2012).
+#' 95 bin Phanerozoic time scale based on the stratigraphic stages of Ogg et al. (2016).
 #' 
 #' Stage-level timescale used in some analyses.
 #' 
-#' This is an example time scale object that can be used in the Phanerozoic scale analyses. Example occurrence datasets related to the package use the variable \code{slc} when referring to this timescale.
+#' This is an example time scale object that can be used in the Phanerozoic scale analyses. Example occurrence datasets related to the package use the variable \code{stg} when referring to this timescale.
 #' 
-#' @format A \code{data.frame} with 95 observations and 9 variables:
+#' @format A \code{data.frame} with 95 observations and 10 variables:
 #' 	\describe{
 #' 		\item{\code{per}}{Abbreviation of geologic periods.}
 #' 		\item{\code{period}}{Geologic periods.}
@@ -86,11 +86,12 @@
 #' 		\item{\code{short}}{Abbreviations of geologic stages.}
 #' 		\item{\code{bottom}}{Numeric ages of the bottoms boundaries (earliest ages) of the bins.}
 #' 		\item{\code{mid}}{Numeric age midpoints of the bins, the averages of \code{bottom} and \code{top}.}
-#' 		\item{\code{top}}{Numeric age of the tops (latest ages) of the bins.}
-#' 		\item{\code{num}}{Integer number identifiers of the bins.}
+#' 		\item{\code{top}}{Numeric ages of the tops (latest ages) of the bins.}
+#'		\item{\code{dur}}{Numeric ages of the durations fo the bins.}
+#' 		\item{\code{stg}}{Integer number identifiers of the bins.}
 #' 	}
 #' 
-#' @source Based on Gradstein et al. (2012), compiled by Wolfgang Kiessling.
+#' @source Based on Ogg et al. (2016), compiled by Wolfgang Kiessling.
 "stages"
 
 
@@ -100,16 +101,17 @@
 #' 
 #' This is an example time scale object that can be used in the Phanerozoic scale analyses. This time scale comprises 49 bins, roughly 10 million years of durations that result from the combination of certain standard stages.
 #' 
-#' @format A \code{data.frame} with 95 observations and 9 variables:
+#' @format A \code{data.frame} with 49 observations and 9 variables:
 #' 	\describe{
 #' 		\item{X10}{The name of the bin: Period and number.}
 #' 		\item{ocean}{The primary state of the oceans from the point of carbonate precipitation. \code{ar} indicates aragonitic, \code{cc} indicates calcitic conditions. Based on §}
 #' 		\item{ocean2}{§}
 #' 		\item{climate}{Primary climatic characteristic: \code{w} denotes warm, \code{c} denotes cold.}
 #' 		\item{\code{bottom}}{Numeric ages of the bottom boundaries (earliest ages) of the bins.}
-#'  		\item{\code{mid}}{Numeric ages midpoints of the bins, the averages of \code{bottom} and \code{top}.}
-#'  		\item{\code{top}}{Numeric ages of the tops (latest ages) of the bins.}
-#'  		\item{\code{BIN}}{Integer number identifiers of the bins. §correct to num!}
+#'  	\item{\code{mid}}{Numeric ages midpoints of the bins, the averages of \code{bottom} and \code{top}.}
+#'  	\item{\code{top}}{Numeric ages of the tops (latest ages) of the bins.}
+#'		\item{\code{dur}}{Numeric ages of the durations fo the bins.}
+#'  	\item{\code{bin}}{Integer number identifiers of the bins. §correct to num!}
 #' }
 #' 
 #' 
@@ -124,9 +126,9 @@
 #' \code{early_interval}/\code{max_interval} entries of the dynamic timescale that users can choose during collection entry. The table assigns these intervals to some corresponding stratigraphic units from different time scales.
 #' These entries were distilled from those collections that only have a \code{max_interval} value. As there is a mismatch between the data Paleobiology Database and FossilWorks this list is not comprehensive and a couple entries are probably missing. For this reason, this dataset is expected to be updated in the future. 
 #' 
-#' This particular version (v0.9.1) is based on a download of all collections in FossilWorks between the Ediacaran and the Holocene. The download took place on 22 June, 2018. The entries were transformed to \code{\link{keys}} to be used with the \code{\link{map}} function.
+#' This particular version (v0.9.2) is based on a download of all collections in FossilWorks between the Ediacaran and the Holocene. The download took place on 22 June, 2018. The entries were transformed to \code{\link{keys}} to be used with the \code{\link{map}} function. Some entries were corrected manually.
 #' 
-#' @format A \code{data.frame} with 758 observations of 7 variables:
+#' @format A \code{data.frame} with 761 observations of 8 variables:
 #' 	\describe{
 #' 		\item{\code{interval}}{The names of the registered intervals in the \code{early_interval}/\code{max_interval} and \code{late_interval}/\code{min_interval} columns.}
 #' 		\item{\code{period}}{The period containing the interval.}
@@ -134,7 +136,7 @@
 #' 		\item{\code{X10_my_bin}}{The 10 million year time scale interval containing the interval.}
 #' 		\item{\code{bin}}{Numeric identifier of the 10 million year interval in the \code{\link{bins}} object.}
 #' 		\item{\code{stage}}{The stage containing the interval.}	
-#' 		\item{\code{slc}}{Numeric identifier of the interval in the stage-level time scale provided as \code{\link{stages}} object.}
+#' 		\item{\code{stg}}{Numeric identifier of the interval in the stage-level time scale provided as \code{\link{stages}} object.}
 #' 	}
 #' 	
 #' @source \url{http://www.fossilworks.com/}

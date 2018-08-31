@@ -32,7 +32,7 @@ The function returns a \code{logical} vector, with a value for each row. \code{T
 # omit single-reference taxa
   data(corals)
   data(stages)
-  toOmit <- omit(corals, bin="slc", tax="genus", om="ref")
+  toOmit <- omit(corals, bin="stg", tax="genus", om="ref")
   dat <- corals[!toOmit,]
 
 # within divDyn
@@ -40,11 +40,11 @@ The function returns a \code{logical} vector, with a value for each row. \code{T
   tsplot(stages, shading="series", boxes="per", xlim=c(260,0), 
     ylab="range-through diversity (genera)", ylim=c(0,230))
   # multiple ref/slice required
-  ddNoSing <- divDyn(corals, tax="genus", bin="slc", om="binref")
+  ddNoSing <- divDyn(corals, tax="genus", bin="stg", om="binref")
   lines(stages$mid, ddNoSing$divRT, lwd=2, col="red")
 
   # with the recent included (NA reference value)
-  ddNoSingRec <- divDyn(corals, tax="genus", bin="slc",
+  ddNoSingRec <- divDyn(corals, tax="genus", bin="stg",
     om="binref", filterNA=TRUE)
   lines(stages$mid, ddNoSingRec$divRT, lwd=2, col="blue")
   

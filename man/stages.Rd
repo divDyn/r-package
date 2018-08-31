@@ -3,8 +3,8 @@
 \docType{data}
 \name{stages}
 \alias{stages}
-\title{95 bin Phanerozoic time scale based on the stratigraphic stages of Gradstein et al. (2012).}
-\format{A \code{data.frame} with 95 observations and 9 variables:
+\title{95 bin Phanerozoic time scale based on the stratigraphic stages of Ogg et al. (2016).}
+\format{A \code{data.frame} with 95 observations and 10 variables:
 	\describe{
 		\item{\code{per}}{Abbreviation of geologic periods.}
 		\item{\code{period}}{Geologic periods.}
@@ -13,11 +13,12 @@
 		\item{\code{short}}{Abbreviations of geologic stages.}
 		\item{\code{bottom}}{Numeric ages of the bottoms boundaries (earliest ages) of the bins.}
 		\item{\code{mid}}{Numeric age midpoints of the bins, the averages of \code{bottom} and \code{top}.}
-		\item{\code{top}}{Numeric age of the tops (latest ages) of the bins.}
-		\item{\code{num}}{Integer number identifiers of the bins.}
+		\item{\code{top}}{Numeric ages of the tops (latest ages) of the bins.}
+	\item{\code{dur}}{Numeric ages of the durations fo the bins.}
+		\item{\code{stg}}{Integer number identifiers of the bins.}
 	}}
 \source{
-Based on Gradstein et al. (2012), compiled by Wolfgang Kiessling.
+Based on Ogg et al. (2016), compiled by Wolfgang Kiessling.
 }
 \usage{
 stages
@@ -26,6 +27,6 @@ stages
 Stage-level timescale used in some analyses.
 }
 \details{
-This is an example time scale object that can be used in the Phanerozoic scale analyses. Example occurrence datasets related to the package use the variable \code{slc} when referring to this timescale.
+This is an example time scale object that can be used in the Phanerozoic scale analyses. Example occurrence datasets related to the package use the variable \code{stg} when referring to this timescale.
 }
 \keyword{datasets}

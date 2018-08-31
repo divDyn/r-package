@@ -4,7 +4,7 @@
 \alias{subsample}
 \title{Serial subsampling wrapper function}
 \usage{
-subsample(dat, q, tax = "genus", bin = "SLC", FUN = divDyn, coll = NULL,
+subsample(dat, q, tax = "genus", bin = "stg", FUN = divDyn, coll = NULL,
   ref = NULL, iter = 50, type = "cr", keep = NULL, rem = NULL,
   duplicates = TRUE, output = "arit", useFailed = FALSE, ...)
 }
@@ -15,7 +15,7 @@ subsample(dat, q, tax = "genus", bin = "SLC", FUN = divDyn, coll = NULL,
 
 \item{tax}{(\code{character}): The name of the taxon variable.}
 
-\item{bin}{(\code{character}): The name of the subsetting variable (has to be integer). For time series, this is the time-slice variable.}
+\item{bin}{(\code{character}): The name of the subsetting variable (has to be integer). For time series, this is the time-slice variable. Rows with \code{NA} entries in this column will be omitted.}
 
 \item{FUN}{(\code{function}): The function to be iteratively executed on the results of the subsampling trials. If set to \code{NULL}, no function will be executed, and the subsampled datasets will be returned as a \code{list}. By default set to the \code{\link{divDyn}} function. The function must have an argument called \code{dat}, that represents the dataset resulting from a subsampling trial (or the entire dataset). Arguments of the \code{subsample} function call will be searched for potential arguments of this function, which means that already provided variables (e.g. \code{bin} and \code{tax}) will also be used. You can also provide additional arguments (similarly to the \code{\link[base]{apply}} iterator). Functions that allow arguments to pass through (that have argument '...') are not allowed, as well as functions that have the same arguments as \code{subsample} but would require different values.}
 
@@ -62,9 +62,9 @@ Raup, D. M. (1975). Taxonomic Diversity Estimation Using Rarefaction. Paleobiolo
 data(corals)
 data(stages)
 # Example 1-calculate metrics of diversity dynamics
-  dd <- divDyn(corals, tax="genus", bin="slc")
+  dd <- divDyn(corals, tax="genus", bin="stg")
   rarefDD<-subsample(corals,iter=50, q=50,
-  tax="genus", bin="slc", output="dist", keep=95)
+  tax="genus", bin="stg", output="dist", keep=95)
 	
 # plotting
   tsplot(stages, shading="series", boxes="per", xlim=c(260,0), 
@@ -85,13 +85,13 @@ sib<-function(dat, bin, tax){
   })
   return(calc[as.character(stages$num)])
 }
-sibDiv<-sib(corals, bin="slc", tax="genus")
+sibDiv<-sib(corals, bin="stg", tax="genus")
 
 # calculate it with subsampling
 rarefSIB<-subsample(corals,iter=50, q=50,
-  tax="genus", bin="slc", output="arit", keep=95, FUN=sib)
+  tax="genus", bin="stg", output="arit", keep=95, FUN=sib)
 rarefDD<-subsample(corals,iter=50, q=50,
-  tax="genus", bin="slc", output="arit", keep=95)
+  tax="genus", bin="stg", output="arit", keep=95)
 
 # plot
 tsplot(stages, shading="series", boxes="per", xlim=c(260,0), 
@@ -104,15 +104,15 @@ lines(stages$mid, rarefSIB, lwd=2, col="blue")
 # Example 3 - different subsampling types with default function (divDyn)
 # compare different subsampling types
   # classical rarefaction
-  cr<-subsample(corals,iter=50, q=20,tax="genus", bin="slc", output="dist", keep=95)
+  cr<-subsample(corals,iter=50, q=20,tax="genus", bin="stg", output="dist", keep=95)
   # by-list subsampling (unweighted) - 3 collections
-  UW<-subsample(corals,iter=50, q=3,tax="genus", bin="slc", coll="collection_no", 
+  UW<-subsample(corals,iter=50, q=3,tax="genus", bin="stg", coll="collection_no", 
     output="dist", keep=95, type="oxw", x=0)
   # occurrence weighted by list subsampling
-  OW<-subsample(corals,iter=50, q=20,tax="genus", bin="slc", coll="collection_no", 
+  OW<-subsample(corals,iter=50, q=20,tax="genus", bin="stg", coll="collection_no", 
     output="dist", keep=95, type="oxw", x=1)
  
-  SQS<-subsample(corals,iter=50, q=0.4,tax="genus", bin="slc", output="dist", keep=95, type="sqs")
+  SQS<-subsample(corals,iter=50, q=0.4,tax="genus", bin="stg", output="dist", keep=95, type="sqs")
 
 # plot
   tsplot(stages, shading="series", boxes="per", xlim=c(260,0), 

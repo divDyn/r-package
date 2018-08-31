@@ -24,7 +24,7 @@
 #' 
 #' @param iter (\code{numeric}): The number of iterations to be executed.
 #' 
-#' @param bin (\code{character}): The name of the subsetting variable (has to be integer). For time series, this is the time-slice variable. 
+#' @param bin (\code{character}): The name of the subsetting variable (has to be integer). For time series, this is the time-slice variable. Rows with \code{NA} entries in this column will be omitted.
 #' 
 #' @param tax (\code{character}): The name of the taxon variable.
 #' @param ref (\code{character}): The name of the reference variable, optional - depending on the subsampling method.
@@ -47,9 +47,9 @@
 #' data(corals)
 #' data(stages)
 #' # Example 1-calculate metrics of diversity dynamics
-#'   dd <- divDyn(corals, tax="genus", bin="slc")
+#'   dd <- divDyn(corals, tax="genus", bin="stg")
 #'   rarefDD<-subsample(corals,iter=50, q=50,
-#'   tax="genus", bin="slc", output="dist", keep=95)
+#'   tax="genus", bin="stg", output="dist", keep=95)
 #' 	
 #' # plotting
 #'   tsplot(stages, shading="series", boxes="per", xlim=c(260,0), 
@@ -70,13 +70,13 @@
 #'   })
 #'   return(calc[as.character(stages$num)])
 #' }
-#' sibDiv<-sib(corals, bin="slc", tax="genus")
+#' sibDiv<-sib(corals, bin="stg", tax="genus")
 #' 
 #' # calculate it with subsampling
 #' rarefSIB<-subsample(corals,iter=50, q=50,
-#'   tax="genus", bin="slc", output="arit", keep=95, FUN=sib)
+#'   tax="genus", bin="stg", output="arit", keep=95, FUN=sib)
 #' rarefDD<-subsample(corals,iter=50, q=50,
-#'   tax="genus", bin="slc", output="arit", keep=95)
+#'   tax="genus", bin="stg", output="arit", keep=95)
 #' 
 #' # plot
 #' tsplot(stages, shading="series", boxes="per", xlim=c(260,0), 
@@ -89,15 +89,15 @@
 #' # Example 3 - different subsampling types with default function (divDyn)
 #' # compare different subsampling types
 #'   # classical rarefaction
-#'   cr<-subsample(corals,iter=50, q=20,tax="genus", bin="slc", output="dist", keep=95)
+#'   cr<-subsample(corals,iter=50, q=20,tax="genus", bin="stg", output="dist", keep=95)
 #'   # by-list subsampling (unweighted) - 3 collections
-#'   UW<-subsample(corals,iter=50, q=3,tax="genus", bin="slc", coll="collection_no", 
+#'   UW<-subsample(corals,iter=50, q=3,tax="genus", bin="stg", coll="collection_no", 
 #'     output="dist", keep=95, type="oxw", x=0)
 #'   # occurrence weighted by list subsampling
-#'   OW<-subsample(corals,iter=50, q=20,tax="genus", bin="slc", coll="collection_no", 
+#'   OW<-subsample(corals,iter=50, q=20,tax="genus", bin="stg", coll="collection_no", 
 #'     output="dist", keep=95, type="oxw", x=1)
 #'  
-#'   SQS<-subsample(corals,iter=50, q=0.4,tax="genus", bin="slc", output="dist", keep=95, type="sqs")
+#'   SQS<-subsample(corals,iter=50, q=0.4,tax="genus", bin="stg", output="dist", keep=95, type="sqs")
 #'
 #' # plot
 #'   tsplot(stages, shading="series", boxes="per", xlim=c(260,0), 
@@ -113,9 +113,9 @@
 #'
 #' @rdname subsample
 #' @export
-subsample <- function(dat, q, tax="genus", bin="SLC",  FUN=divDyn, coll=NULL, ref=NULL, iter=50,  type="cr", keep=NULL, rem=NULL, duplicates=TRUE,  output="arit",  useFailed=FALSE, ...){
+subsample <- function(dat, q, tax="genus", bin="stg",  FUN=divDyn, coll=NULL, ref=NULL, iter=50,  type="cr", keep=NULL, rem=NULL, duplicates=TRUE,  output="arit",  useFailed=FALSE, ...){
 	
-#	bin <- "slc"
+#	bin <- "stg"
 #	tax<- "genus"
 #	dat <- corals
 #	q<-40
@@ -145,12 +145,16 @@ subsample <- function(dat, q, tax="genus", bin="SLC",  FUN=divDyn, coll=NULL, re
 			if(quoVar<=1) stop("The quota has to be a natural number larger than 1.")
 		}
 		
-		# the bin identifier
+		# the bin identifier - omit BINS
 		if(!is.null(bin)){
-			bVar<-dat[,bin]
-			if(sum(is.na(bVar))>0) message("The bin column contains missing (NA) values.")
+			bVar<-is.na(dat[,bin])
+		
+			# omit NA values
+			if(sum(bVar)>0) dat <- dat[!bVar,]
 		#	if(sum(bVar<=0)>0 | sum(bVar%%1)>0) stop("The bin column may only contain positive integers")
 		
+		}else{
+			stop("You must provide a 'bin' variable.")
 		}
 		
 		
@@ -718,7 +722,7 @@ subsample <- function(dat, q, tax="genus", bin="SLC",  FUN=divDyn, coll=NULL, re
 #' 
 #' @param dat (\code{data.frame}): Occurrence dataset, with \code{bin}, \code{tax} and \code{coll} as column names.
 #' 
-#' @param bin (\code{character}): The name of the subsetting variable (has to be integer). For time series, this is the time-slice variable. 
+#' @param bin (\code{character}): The name of the subsetting variable (has to be integer). For time series, this is the time-slice variable. Rows with \code{NA} entries in this column will be omitted.
 #' @param useFailed (\code{logical}): If the bin does not reach the subsampling quota, should the bin be used? 
 #' @param keep (\code{numeric}): The bins, which will not be subsampled but will be added to the subsampling trials. NIf the number of occurrences does not reach the subsampling quota, by default it will not be represented in the subsampling trials. You can force their inclusion with the \code{keep} argument separetely (for all, see the \code{useFailed} argument).
 #' @param unit (\code{character}): Argument of the CR subsampling type. The name of the variable that designates the subsampling units. In every bin, CR selects a certain number (quota) of entries from the dataset. By default (\code{unit=NULL}), the units will be the rows, and the \code{q} number of rows will be selected in each bin.
@@ -728,12 +732,12 @@ subsample <- function(dat, q, tax="genus", bin="SLC",  FUN=divDyn, coll=NULL, re
 #' @examples
 #' #one classical rarefaction trial
 #'   data(corals)
-#'   bRows<-subtrialCR(corals, bin="slc", unit="reference_no", q=5)
+#'   bRows<-subtrialCR(corals, bin="stg", unit="reference_no", q=5)
 #'   # control
-#'   unCor<-unique(corals[bRows,c("slc", "reference_no")])
-#'   table(unCor$slc)
+#'   unCor<-unique(corals[bRows,c("stg", "reference_no")])
+#'   table(unCor$stg)
 #' # classical rarefaction can also be used to do by reference subsampling of collections
-#'   fossils <- corals[corals$slc!=95, ]
+#'   fossils <- corals[corals$stg!=95, ]
 #'   # rows in the sampling standardization
 #'   threeCollPerRef <- subtrialCR(dat=fossils, unit="collection_no", 
 #'     bin="reference_no", q=3, useFailed=TRUE)
@@ -744,6 +748,9 @@ subsample <- function(dat, q, tax="genus", bin="SLC",  FUN=divDyn, coll=NULL, re
 subtrialCR<-function(dat, bin, q, unit=NULL, keep=NULL, useFailed=FALSE, showFailed=FALSE){
 	quoVar <- q
 	
+	# omit NA bin entries
+	dat <- dat[!is.na(dat[,bin]),]
+
 	if(is.null(unit)){
 		# order the rows 
 		oBin <- order(dat[,bin])
@@ -835,6 +842,9 @@ subtrialCR<-function(dat, bin, q, unit=NULL, keep=NULL, useFailed=FALSE, showFai
 #' @rdname subtrial
 #' @export
 subtrialOXW<-function(dat, bin, q, coll,x=1, keep=NULL, useFailed=FALSE, showFailed=FALSE){
+	
+	# omit NA bin entries
+	dat <- dat[!is.na(dat[,bin]),]
 
 	binVar <- dat[,bin]
 	collVar <- dat[,coll]
@@ -952,8 +962,9 @@ subtrialSQS <- function(dat,bin, tax, q, coll=NULL, ref=NULL, singleton="occ", e
 		if(!coll%in%colnames(dat)) stop("Please provide a valid collection variable name.")
 	} 
 	
-	
-	
+	# omit NA bin entries
+	dat <- dat[!is.na(dat[,bin]),]
+
 	# the quota variable
 	quoVar <- q
 	

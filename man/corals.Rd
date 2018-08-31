@@ -28,7 +28,7 @@
 	\item{\code{late_interval}}{Late interval name registered in the PaleoDB dynamic time scale.}
 	\item{\code{max_ma}}{Maximum estimated age based on the PaleoDB dynamic time scale.}
 	\item{\code{min_ma}}{Minimum estimated age based on the PaleoDB dynamic time scale.}
-	\item{\code{slc}}{Bin number in the stage-level timescale \code{\link{stages}}.}
+	\item{\code{stg}}{Bin number in the stage-level timescale \code{\link{stages}}.}
 	\item{\code{Bin}}{Bin number in the PaleoDB 10 million year resolution timescale \code{\link{bins}}.}
 	\item{\code{env}}{Environment of the occurrence: reefal \code{(r)}, non-reefal \code{(nr)} or unknown (\code{uk}), based on \code{\link{keys}}.}
 	\item{\code{lith}}{Substrate of the occurrence: carbonate \code{(c)}, siliciclastic \code{(s)} or unknown (\code{uk}), based on \code{\link{keys}}.}
