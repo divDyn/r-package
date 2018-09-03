@@ -1,8 +1,8 @@
 # divDyn
 R package for analyzing diversity dynamics from fossil occurrence data
 
-If you are interested in what this package does, or have questions about use, please check out the first vignette: 'Handout to the R package 'divDyn' v0.5.1 for diversity dynamics from fossil occurrence data' here:
-https://github.com/adamkocsis/divDyn/blob/master/_archive/vignettes/Handout_0.5.1.pdf
+If you are interested in what this package does, or have questions about use, please check out the first vignette: 'Handout to the R package 'divDyn' v0.5.2 for diversity dynamics from fossil occurrence data' here:
+https://github.com/adamkocsis/divDyn/blob/master/_archive/vignettes/Handout_0.5.2.pdf
 
 As the package is still getting developed, if you have any requirements or recommendations about what to add (or if you find a mistake), please contact me at adam.kocsis@fau.de.
 
@@ -14,10 +14,10 @@ As the package now uses compiled code to make things run faster, there are two w
 I have updated the windows binaries so that they work with the latest internals (3.5.1). If you want to use the package, please update your R.
 
 If you have a windows computer, you can install the package with the following R command:
-`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Win_x64_x86/divDyn_0.5.1.zip", repos=NULL)`
+`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Win_x64_x86/divDyn_0.5.2.zip", repos=NULL)`
 
 If you have a Mac running OS X, then use the following link (still older version, for R <3.5):
-`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Mac_OSX/divDyn_0.5.0.tgz", repos=NULL)`
+`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Mac_OSX/divDyn_0.5.2.tgz", repos=NULL)`
 
 If you have Linux computer you probably know how to solve these problems. The sources of different versions are in the /_archive folder. Otherwise you can try option no. 2. 
 
