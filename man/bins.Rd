@@ -13,7 +13,7 @@
 		\item{\code{bottom}}{Numeric ages of the bottom boundaries (earliest ages) of the bins.}
  	\item{\code{mid}}{Numeric ages midpoints of the bins, the averages of \code{bottom} and \code{top}.}
  	\item{\code{top}}{Numeric ages of the tops (latest ages) of the bins.}
-	\item{\code{dur}}{Numeric ages of the durations fo the bins.}
+	\item{\code{dur}}{Numeric ages of the durations of the bins.}
  	\item{\code{bin}}{Integer number identifiers of the bins. §correct to num!}
 }}
 \source{

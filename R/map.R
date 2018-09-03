@@ -24,7 +24,7 @@
 #' # a and b should mean 'first', c and d 'second' others: NA
 #'    key<-list(first=c("a", "b"), second=c("c", "d"), default=NA)
 #' # do the replacement
-#'   map(toReplace, key)
+#'   categorize(toReplace, key)
 #' 
 #' # Example 2 - numeric entries and mixed types
 #' # basic vector to be grouped
@@ -32,16 +32,16 @@
 #' 
 #' # replacement rules: 5,6,7,8,9 should be "more", 11 should be "eleven" the rest: "other"
 #'   key2<-list(default="other", more=c(5,10),eleven=11)
-#'   map(toReplace2, key2)
+#'   categorize(toReplace2, key2)
 #' 
 #' # Example 3 - multiple occurrences of same values
 #' # a and b should mean first, a and should mean 'second' others: NA
 #'   key3<-list(first=c("a", "b"), second=c("a", "d"), default=NA)
 #' # do the replacement (all "a" entries will be replaced with "second")
-#'   map(toReplace, key3)
+#'   categorize(toReplace, key3)
 #'    
 #' @export
-map<- function(x, key, incbound="lower"){
+categorize<- function(x, key, incbound="lower"){
 	# assign the defaults
 	default<-key$default
 	if(is.null(default)) default <- NA
@@ -84,3 +84,4 @@ map<- function(x, key, incbound="lower"){
 	return(y)
 	
 }
+

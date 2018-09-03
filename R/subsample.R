@@ -29,7 +29,7 @@
 #' @param tax (\code{character}): The name of the taxon variable.
 #' @param ref (\code{character}): The name of the reference variable, optional - depending on the subsampling method.
 #' @param useFailed (\code{logical}): If the bin does not reach the subsampling quota, should the bin be used? 
-#' @param type (\code{character}): The type of subsampling to be implemented. By default this is classical rarefaction (\code{"cr"}). (\code{"oxw"}) stands for occurrence weighted by-list subsampling. If set to (\code{"sqs"}), the program will execute the shareholder quorum subsampling algorithm as it was suggested by Alroy (2010).
+#' @param type (\code{character}): The type of subsampling to be implemented. By default this is classical rarefaction (\code{"cr"}). (\code{"oxw"}) stands for occurrence weighted by-list subsampling. If set to (\code{"sqs"}), the program will execute the shareholder quorum subsampling algorithm as it was suggested by Alroy (2010). Setting the argument to \code{"none"} will invoke no subsamling, but the applied function will be iterated on the trials, nevertheless.
 #' 
 #' @param FUN (\code{function}): The function to be iteratively executed on the results of the subsampling trials. If set to \code{NULL}, no function will be executed, and the subsampled datasets will be returned as a \code{list}. By default set to the \code{\link{divDyn}} function. The function must have an argument called \code{dat}, that represents the dataset resulting from a subsampling trial (or the entire dataset). Arguments of the \code{subsample} function call will be searched for potential arguments of this function, which means that already provided variables (e.g. \code{bin} and \code{tax}) will also be used. You can also provide additional arguments (similarly to the \code{\link[base]{apply}} iterator). Functions that allow arguments to pass through (that have argument '...') are not allowed, as well as functions that have the same arguments as \code{subsample} but would require different values.
 #' 
@@ -135,8 +135,8 @@ subsample <- function(dat, q, tax="genus", bin="stg",  FUN=divDyn, coll=NULL, re
 		if(!output%in%c("arit", "geom", "list", "dist")) stop("Invalid output argument.")
 		
 		#type
-		if(!type%in%c("sqs", "cr", "oxw")) stop("Invalid subsampling type.")
-		
+		if(!type%in%c("sqs", "cr", "oxw", "none")) stop("Invalid subsampling type.")
+	
 		# type specific defense
 		if(type=="sqs"){
 			if(quoVar>1 | quoVar<=0) stop("Shareholder Quorum has to be in the 0-1 interval.")
@@ -145,6 +145,7 @@ subsample <- function(dat, q, tax="genus", bin="stg",  FUN=divDyn, coll=NULL, re
 			if(quoVar<=1) stop("The quota has to be a natural number larger than 1.")
 		}
 		
+
 		# the bin identifier - omit BINS
 		if(!is.null(bin)){
 			bVar<-is.na(dat[,bin])
@@ -377,6 +378,10 @@ subsample <- function(dat, q, tax="genus", bin="stg",  FUN=divDyn, coll=NULL, re
 		))
 	
 	}	
+
+	if(type=="none"){
+		oneResult<- list()
+	}
 	
 	# later: replace all character entries with integers. will allow faster implementation and later C++ conversion
 	
@@ -470,8 +475,13 @@ subsample <- function(dat, q, tax="genus", bin="stg",  FUN=divDyn, coll=NULL, re
 				appliedArgs$dat<-dat[oneResult$rows,]
 				
 			}
+
+			if(type=="none"){
+				appliedArgs$dat <- dat
+
+			}
 			
-			# add the failed stuff is so required
+			# add the failed stuff if so required
 			if(useFailed){
 				appliedArgs$dat<-rbind(appliedArgs$dat, dat[dat[,bin]%in%oneResult$fail,])
 			}else{
@@ -732,6 +742,7 @@ subsample <- function(dat, q, tax="genus", bin="stg",  FUN=divDyn, coll=NULL, re
 #' @examples
 #' #one classical rarefaction trial
 #'   data(corals)
+#' # return 5 references for each stage
 #'   bRows<-subtrialCR(corals, bin="stg", unit="reference_no", q=5)
 #'   # control
 #'   unCor<-unique(corals[bRows,c("stg", "reference_no")])

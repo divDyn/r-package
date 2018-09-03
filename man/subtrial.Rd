@@ -83,6 +83,7 @@ Raup, D. M. (1975). Taxonomic Diversity Estimation Using Rarefaction. Paleobiolo
 \examples{
 #one classical rarefaction trial
   data(corals)
+# return 5 references for each stage
   bRows<-subtrialCR(corals, bin="stg", unit="reference_no", q=5)
   # control
   unCor<-unique(corals[bRows,c("stg", "reference_no")])

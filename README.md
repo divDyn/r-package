@@ -1,7 +1,7 @@
 # divDyn
 R package for analyzing diversity dynamics from fossil occurrence data
 
-If you are interested in what this package does, or have questions about use, please check out the first vignette: 'Handout to the R package 'divDyn' v0.5.0 for diversity dynamics from fossil occurrence data' here:
+If you are interested in what this package does, or have questions about use, please check out the first vignette: 'Handout to the R package 'divDyn' v0.5.1 for diversity dynamics from fossil occurrence data' here:
 https://github.com/adamkocsis/divDyn/blob/master/_archive/vignettes/Handout_0.5.1.pdf
 
 As the package is still getting developed, if you have any requirements or recommendations about what to add (or if you find a mistake), please contact me at adam.kocsis@fau.de.
@@ -32,11 +32,19 @@ You can access earlier versions by changing the version number appropriately.
 
 # Change log
 
+## [0.5.2] - 2018.09.02
+### Added
+- x argument for sampstat() to calculate maximum quotas with OxW subsampling.
+- the "none" subsampling type to subsample(). This argument will skip the subsampling part, but reruns the *applied function* in the trials, nevertheless.
+
+### Changed
+- the map() function was renamed to categorize() to better reflect its intended use
+
 ## [0.5.1] - 2018.08.31
 ### Changed
 - example bin identifier changes (from 'slc' to 'stg')
 - the subsample(), subtrialCR(), subtrialOXW(), subtrialSQS() functions now automatically omit rows that have NA entries in the 'bin' variables.
-- the 'stages' object now contains dates from Gradstein et al. 2016
+- the 'stages' object now contains dates from Ogg et al. 2016
 - bin durations were added to both the 'stages' and 'bins' objects
 - the 'stratkeys' and 'keys' objects were updated to version 0.9.2
 

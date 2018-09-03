@@ -1,10 +1,10 @@
 ---
-title: "Handout to the R package 'divDyn' v0.5.1 for diversity dynamics from fossil occurrence data"
+title: "Handout to the R package 'divDyn' v0.5.2 for diversity dynamics from fossil occurrence data"
 author: "Adam T. Kocsis, Carl J. Reddin, Wolfgang Kiessling"
 date: '`r Sys.Date()`'
 output: pdf_document
 vignette: >
-  %\VignetteIndexEntry{Handout to the R package 'divDyn' v0.5.1 for diversity dynamics from fossil occurrence data}
+  %\VignetteIndexEntry{Handout to the R package 'divDyn' v0.5.2 for diversity dynamics from fossil occurrence data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

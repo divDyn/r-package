@@ -5,7 +5,7 @@
 \title{Basic sampling summary for every bin}
 \usage{
 sampstat(dat, tax = "genus", bin = "stg", coll = NULL, ref = NULL,
-  total = FALSE, noNAStart = FALSE, duplicates = NULL)
+  total = FALSE, noNAStart = FALSE, duplicates = NULL, x = NULL)
 }
 \arguments{
 \item{dat}{\code{(data.frame)}: The occurrence dataset.}
@@ -23,18 +23,26 @@ sampstat(dat, tax = "genus", bin = "stg", coll = NULL, ref = NULL,
 \item{noNAStart}{(logical) Useful when the dataset does not start from bin no. 1, but positive integer bin numbers are provided. Then \code{noNAStart=TRUE} will cut the first part of the resulting table, so the first row will contain the estimates for the lowest bin number. In case of positive integer bin identifiers, and if \code{noNAStart=FALSE}, the index of the row will be the bin number.}
 
 \item{duplicates}{\code{(logical)}: The function will check whether there are duplicate occurrences (multiple species/genera). When set to \code{NULL}, nothing will happen, but the function will notify you if duplicates are present. If set to \code{TRUE}, the function will not do anything with these, if set to \code{FALSE}, the duplicates will be omitted.}
+
+\item{x}{(\code{numeric}): Argument of the OxW subsampling type (\code{\link{subtrialOXW}}).Setting this parameter to a valid numeric value will return the maximum quota for \code{x}.}
 }
 \description{
 This function will return the basic sampling summaries of a dataset
 }
 \details{
-A number of sampling related variables are calculated with the function.
+A number of sampling related variables are calculated with the function. 
+The function also returns the maximum subsampling quota for OxW subsampling 
+(\code{\link{subtrialOXW}}) with a given \code{x} value.
 
 By setting \code{total} to \code{FALSE} (default), the following results are output:
 
 \code{occs}: The number of occurrences in each time bin.
 
 \code{colls}: The number of collections in each time bin.
+
+\code{xQuota}: The maximum quota for OxW subsampling (\code{\link{subtrialOXW}}) with the given \code{x} value. 
+	The number of occurrences in each collection is tabulated, and is raised to the power of \code{x}. 
+	The \code{xQuota} value is the sum of these values across all collections in a time slice.
 
 \code{refs}: The number of references in each time bin.
 
@@ -58,7 +66,7 @@ By setting \code{total} to \code{FALSE} (default), the following results are out
 
 \code{chao1ref}: Chao1 extrapolation estimator, based on the the number of single-reference and two-reference taxa (occ2).
 
-Setting the \code{total} to \code{TRUE} will lead to the following results
+Setting the \code{total} to \code{TRUE} will lead to the following results:
 
 \code{bins}: The total number of bins sampled.
 
@@ -70,15 +78,18 @@ Setting the \code{total} to \code{TRUE} will lead to the following results
 
 \code{taxa}:  The total number of sampled taxa.
 
-\code{gappiness}: The proportion of sampling gaps in the ranges of the taxa §.
+\code{gappiness}: The proportion of sampling gaps in the ranges of the taxa.
 }
 \examples{
 data(corals)
 # slice-specific sampling
-basic<-sampstat(corals, tax="genus", bin="stg")
+basic <- sampstat(corals, tax="genus", bin="stg")
 
 # subsampling diagnostic
- subStats<-subsample(corals, method="cr", tax="genus", FUN=sampstat, 
+ subStats <- subsample(corals, method="cr", tax="genus", FUN=sampstat, 
    bin="stg", q=100,noNAStart=FALSE)
+
+# maximum quota with x
+more <- sampstat(corals, tax="genus", bin="stg", coll="collection_no", x=1.4)
 
 }

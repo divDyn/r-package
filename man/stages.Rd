@@ -14,7 +14,7 @@
 		\item{\code{bottom}}{Numeric ages of the bottoms boundaries (earliest ages) of the bins.}
 		\item{\code{mid}}{Numeric age midpoints of the bins, the averages of \code{bottom} and \code{top}.}
 		\item{\code{top}}{Numeric ages of the tops (latest ages) of the bins.}
-	\item{\code{dur}}{Numeric ages of the durations fo the bins.}
+	\item{\code{dur}}{Numeric ages of the durations for the bins.}
 		\item{\code{stg}}{Integer number identifiers of the bins.}
 	}}
 \source{
@@ -29,4 +29,9 @@ Stage-level timescale used in some analyses.
 \details{
 This is an example time scale object that can be used in the Phanerozoic scale analyses. Example occurrence datasets related to the package use the variable \code{stg} when referring to this timescale.
 }
+\section{References}{
+
+Ogg, J. G., G. Ogg, and F. M. Gradstein. 2016. A concise geologic time scale: 2016. Elsevier.
+}
+
 \keyword{datasets}

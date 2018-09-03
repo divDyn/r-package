@@ -54,7 +54,7 @@
 #' Lists of entries treated as indicators of similar characteristics
 #' 
 #' Entries in the stratigraphic, lithological and environment fields of current Paleobiology Database downloads are too numerous to form the basis of analyses without transformations. 
-#' This variable includes potential groupings of entries that represent similar characteristics. These objects can be used by the \code{\link{map}} function to create new variables of stratigraphic, environmental and lithological information.
+#' This variable includes potential groupings of entries that represent similar characteristics. These objects can be used by the \code{\link{categorize}} function to create new variables of stratigraphic, environmental and lithological information.
 #' 
 #'  
 #' @format A \code{list} of 7 \code{list}s:
@@ -87,11 +87,13 @@
 #' 		\item{\code{bottom}}{Numeric ages of the bottoms boundaries (earliest ages) of the bins.}
 #' 		\item{\code{mid}}{Numeric age midpoints of the bins, the averages of \code{bottom} and \code{top}.}
 #' 		\item{\code{top}}{Numeric ages of the tops (latest ages) of the bins.}
-#'		\item{\code{dur}}{Numeric ages of the durations fo the bins.}
+#'		\item{\code{dur}}{Numeric ages of the durations for the bins.}
 #' 		\item{\code{stg}}{Integer number identifiers of the bins.}
 #' 	}
 #' 
 #' @source Based on Ogg et al. (2016), compiled by Wolfgang Kiessling.
+#' @section References:
+#' Ogg, J. G., G. Ogg, and F. M. Gradstein. 2016. A concise geologic time scale: 2016. Elsevier.
 "stages"
 
 
@@ -110,7 +112,7 @@
 #' 		\item{\code{bottom}}{Numeric ages of the bottom boundaries (earliest ages) of the bins.}
 #'  	\item{\code{mid}}{Numeric ages midpoints of the bins, the averages of \code{bottom} and \code{top}.}
 #'  	\item{\code{top}}{Numeric ages of the tops (latest ages) of the bins.}
-#'		\item{\code{dur}}{Numeric ages of the durations fo the bins.}
+#'		\item{\code{dur}}{Numeric ages of the durations of the bins.}
 #'  	\item{\code{bin}}{Integer number identifiers of the bins. §correct to num!}
 #' }
 #' 
@@ -126,7 +128,7 @@
 #' \code{early_interval}/\code{max_interval} entries of the dynamic timescale that users can choose during collection entry. The table assigns these intervals to some corresponding stratigraphic units from different time scales.
 #' These entries were distilled from those collections that only have a \code{max_interval} value. As there is a mismatch between the data Paleobiology Database and FossilWorks this list is not comprehensive and a couple entries are probably missing. For this reason, this dataset is expected to be updated in the future. 
 #' 
-#' This particular version (v0.9.2) is based on a download of all collections in FossilWorks between the Ediacaran and the Holocene. The download took place on 22 June, 2018. The entries were transformed to \code{\link{keys}} to be used with the \code{\link{map}} function. Some entries were corrected manually.
+#' This particular version (v0.9.2) is based on a download of all collections in FossilWorks between the Ediacaran and the Holocene. The download took place on 22 June, 2018. The entries were transformed to \code{\link{keys}} to be used with the \code{\link{categorize}} function. Some entries were corrected manually.
 #' 
 #' @format A \code{data.frame} with 761 observations of 8 variables:
 #' 	\describe{

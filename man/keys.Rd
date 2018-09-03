@@ -25,6 +25,6 @@ Lists of entries treated as indicators of similar characteristics
 }
 \details{
 Entries in the stratigraphic, lithological and environment fields of current Paleobiology Database downloads are too numerous to form the basis of analyses without transformations. 
-This variable includes potential groupings of entries that represent similar characteristics. These objects can be used by the \code{\link{map}} function to create new variables of stratigraphic, environmental and lithological information.
+This variable includes potential groupings of entries that represent similar characteristics. These objects can be used by the \code{\link{categorize}} function to create new variables of stratigraphic, environmental and lithological information.
 }
 \keyword{datasets}
