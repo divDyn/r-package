@@ -63,9 +63,9 @@ The following variables are produced:
 
 \code{oriProp}: Proportional originations including single-interval taxa:  \emph{(tOri + tSing) / (tThrough + tOri + tExt + tSing)}.
 
-\code{extPC}: Per capita extinction rates of Foote (2000). \emph{-log(tExt/(tExt + tThrough))}.  Values are not normalized with bin lengths.
+\code{extPC}: Per capita extinction rates of Foote (1999). \emph{-log(tExt/(tExt + tThrough))}.  Values are not normalized with bin lengths. Similar equations were used by Alroy (1996) but without taking the logarithm.
 
-\code{oriPC}: Per capita origination rates of Foote (2000). \emph{-log(tOri/(tOri + tThrough))}. Values are not normalized with bin lengths.
+\code{oriPC}: Per capita origination rates of Foote (1999). \emph{-log(tOri/(tOri + tThrough))}. Values are not normalized with bin lengths. Similar equations were used by Alroy (1996) but without taking the logarithm.
 
 \code{ext3t}: Three-timer extinction rates of Alroy (2008). \emph{log(t2d/t3)}.
 
@@ -101,7 +101,7 @@ The following variables are produced:
 
 \strong{References:}
 
-Foote, M. (2000) Origination and Extinction Components of Taxonomic Diversity: General Problems. Paleobiology 26, 74-102. doi:10.1666/0094-8373(2000)26[74:OAECOT]2.0.CO;2).
+Foote, M. (1999) Morphological Diversity In The Evolutionary Radiation Of Paleozoic and Post-Paleozoic Crinoids. Paleobiology 25, 1–115. doi:10.1017/S0094837300020236.
 
 Alroy, J. (2008) Dynamics of origination and extinction in the marine fossil record. Proceedings of the National Academy of Science 105, 11536-11542. doi: 10.1073/pnas.0802597105
 

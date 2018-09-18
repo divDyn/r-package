@@ -7,6 +7,8 @@
 #'
 #' \strong{References}
 #'
+#' Foote, M. (1999) Morphological Diversity In The Evolutionary Radiation Of Paleozoic and Post-Paleozoic Crinoids. Paleobiology 25, 1–115. doi:10.1017/S0094837300020236.
+#'
 #' Kiessling, W., & Simpson, C. (2011). On the potential for ocean acidification to be a general cause of ancient reef crises. Global Change Biology, 17(1), 56-67.
 #'
 #' Kiessling, W., & Kocsis, A. T. (2015). Biodiversity dynamics and environmental occupancy of fossil azooxanthellate and zooxanthellate scleractinian corals. Paleobiology, 41(3), 402-414.
@@ -21,13 +23,14 @@
 #'	
 #' @param AICc \code{(logical)}: Only applicable for the \code{"AIC"} method. Toggles whether the small sample corrected AIC (AICc) should be used instead of the regular one.
 #'	
-#' @param rate \code{(character)}: The rate metric. Currently only the per capita rates of Foote (2000) are available (\code{rate="pc"}).
+#' @param rate \code{(character)}: The rate metric. Currently only the per capita rates of Foote (1999) are available (\code{rate="pc"}).
 #' @param dat \code{(data.frame)}: The fossil occurrence data.
 #'	 
 #' @param na.rm \code{(logical)}: Argument indicating whether the function should proceede when \code{NA}s are found in the \code{sel} column. Setting this argument to \code{TRUE} will proceede with the omission of these entries, while \code{FALSE} will coerce the function to output a single \code{NA} value.
 #' @param tax \code{(character)}: Variable name of the occurring taxa (variable type: \code{factor} or \code{character}).
 #'	 
 #' @param bin \code{(character)}: Variable name of the bin numbers of the particular occurrences (\code{numeric}). Bin numbers should be in ascending order,can contain \code{NA}s, it can start from a number other than 1 and must not start with 0.
+#'
 #' @examples
 #'	# example with the coral dataset of Kiessling and Kocsis (2015)
 #'	data(corals)

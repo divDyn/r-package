@@ -1,36 +1,52 @@
 # divDyn
-R package for analyzing diversity dynamics from fossil occurrence data
+R package for analyzing diversity dynamics from fossil sampling data
 
-If you are interested in what this package does, or have questions about use, please check out the first vignette: 'Handout to the R package 'divDyn' v0.5.2 for diversity dynamics from fossil occurrence data' here:
-https://github.com/adamkocsis/divDyn/blob/master/_archive/vignettes/Handout_0.5.2.pdf
+## News
 
-As the package is still getting developed, if you have any requirements or recommendations about what to add (or if you find a mistake), please contact me at adam.kocsis@fau.de.
+- The package was also updated to version 0.6.0! It now includes additional diversity estimators including some recently developed by John Alroy. See the change log below for more information.
 
 
-## Installing and update
-As the package now uses compiled code to make things run faster, there are two ways to install.
-1. The first option is to use the binaries I have built. 
+## About the package
+
+If you are interested in what this package does, or have questions about its use, please check out the first vignette: 'Handout to the R package 'divDyn' v0.6.0 for diversity dynamics from fossil occurrence data' here:
+https://github.com/adamkocsis/divDyn/blob/master/_archive/vignettes/Handout_0.6.0.pdf
+
+As the package is still getting developed, plase note that some interface changes might occurr based on the feedback of people and my own experience on what is easier to use. If you have any requirements or recommendations about what to add (or more importantly, if you find a mistake), do not hesitate to contact me at adam.kocsis@fau.de.
+
+
+## Installing 
+2. If you have the appropriate architectures, you can use the binaries I have built. 
 
 I have updated the windows binaries so that they work with the latest internals (3.5.1). If you want to use the package, please update your R.
 
 If you have a windows computer, you can install the package with the following R command:
-`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Win_x64_x86/divDyn_0.5.2.zip", repos=NULL)`
+`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Win_x64_x86/divDyn_0.6.0.zip", repos=NULL)`
 
 If you have a Mac running OS X, then use the following link (still older version, for R <3.5):
 `install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Mac_OSX/divDyn_0.5.2.tgz", repos=NULL)`
 
-If you have Linux computer you probably know how to solve these problems. The sources of different versions are in the /_archive folder. Otherwise you can try option no. 2. 
+If you have Linux computer you probably know how to solve these problems. The sources of different versions are in the /_archive/sources folder. Otherwise you can try option no. 2. 
 
 You can access earlier versions by changing the version number appropriately.
 
-2. The second option is to compile the code for yourself. To do this:
+3. The second option is to install with the devtools package. To do this:
 - Install a compiler. For Windows, this would be included in Rtools (https://cran.r-project.org/bin/windows/Rtools/). 
 - Make sure that the 'devtools' package is installed
 - Run `devtools::install_github("adamkocsis/divDyn")`
 
  '*' if you use either a Mac or Linux, and point no. 2 doesn't work for you for some reason, then contact me  and I will compile a binary for you.
 
+
 # Change log
+
+## [0.6.0] - 2018.09.17
+### Added 
+- the indices() function to calculate some basic diversity indices within the package. Please feel encouraged to use the rest from the 'vegan' package.
+- the binstat() and sumstat() functions. Binstat calculates bin-specific indices and sampling metrics, sumstat() calculates those relevant for the entire occurrence database. Most functionality of the deprecated sampstat() function is in binstat. 
+
+## Changed
+- material in the sampstat() function was reorganized to two separate functions, see above
+
 
 ## [0.5.2] - 2018.09.02
 ### Added

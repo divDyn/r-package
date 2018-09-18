@@ -17,7 +17,7 @@ ratesplit(dat, sel, tax = "genus", bin = "stg", rate = "pc",
 
 \item{bin}{\code{(character)}: Variable name of the bin numbers of the particular occurrences (\code{numeric}). Bin numbers should be in ascending order,can contain \code{NA}s, it can start from a number other than 1 and must not start with 0.}
 
-\item{rate}{\code{(character)}: The rate metric. Currently only the per capita rates of Foote (2000) are available (\code{rate="pc"}).}
+\item{rate}{\code{(character)}: The rate metric. Currently only the per capita rates of Foote (1999) are available (\code{rate="pc"}).}
 
 \item{method}{\code{(character)}: Either \code{"AIC"}, \code{"binom"} or \code{"combine"}. The \code{"AIC"} method calculates the Akaike weights of the single and dual rate models. The \code{"binom"} method assumes a binomial error distribution of the counts that are necessary for the rate calculations. The \code{"combine"} method shows slices that pass both tests, the \code{"AIC"} being usually the stronger.}
 
@@ -37,6 +37,8 @@ Splitting an occurrence database to its subsets secreases the amount of informat
 The meaningfulness of the split is dependent on the estimate accurracy and the magnitude of the difference. Two different methods are implemented: \code{binom} and \code{combine}.
 
 \strong{References}
+
+Foote, M. (1999) Morphological Diversity In The Evolutionary Radiation Of Paleozoic and Post-Paleozoic Crinoids. Paleobiology 25, 1–115. doi:10.1017/S0094837300020236.
 
 Kiessling, W., & Simpson, C. (2011). On the potential for ocean acidification to be a general cause of ancient reef crises. Global Change Biology, 17(1), 56-67.
 

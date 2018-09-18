@@ -26,7 +26,7 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{hyperref}
 \hypersetup{unicode=true,
-            pdftitle={Handout to the R package divDyn v0.5.2 for diversity dynamics from fossil occurrence data},
+            pdftitle={Handout to the R package divDyn v0.6.0 for diversity dynamics from fossil sampling data},
             pdfauthor={Adam T. Kocsis, Carl J. Reddin, Wolfgang Kiessling},
             pdfborder={0 0 0},
             breaklinks=true}
@@ -116,8 +116,8 @@
 
 \setlength{\droptitle}{-2em}
 
-  \title{Handout to the R package `divDyn' v0.5.2 for diversity dynamics from
-fossil occurrence data}
+  \title{Handout to the R package divDyn v0.6.0 for diversity dynamics from
+fossil sampling data}
     \pretitle{\vspace{\droptitle}\centering\huge}
   \posttitle{\par}
     \author{Adam T. Kocsis, Carl J. Reddin, Wolfgang Kiessling}
@@ -125,7 +125,7 @@ fossil occurrence data}
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2018-09-03}
+    \date{2018-09-18}
 
 
 \begin{document}
@@ -478,12 +478,31 @@ robust exist to quantify the factors that influence diversity.
 The patterns of the data are constrained by sampling processes. These
 can have a direct influence on the patterns of diversity dynamics and
 therefore should be taken into consideration when the conclusions are
-drawn from the data. You can calculate the basic sampling
-characteristics with the \texttt{sampstat()} function.
+drawn from the data.
+
+The \texttt{sumstat()} function calculates basic sampling metrics that
+characterize the entire dataset.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{samp <-}\KeywordTok{sampstat}\NormalTok{(fossils, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }
+\NormalTok{samp <-}\KeywordTok{sumstat}\NormalTok{(fossils, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }
+  \DataTypeTok{coll=}\StringTok{"collection_no"}\NormalTok{, }\DataTypeTok{ref=}\StringTok{"reference_no"}\NormalTok{, }\DataTypeTok{duplicates=}\OtherTok{FALSE}\NormalTok{)}
+\NormalTok{samp}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   bins  occs taxa colls refs gappiness
+## 1   41 23229  760  5444 1203 0.5818335
+\end{verbatim}
+
+This includes the total number of occurrences, collections, references
+and statistics of gappiness. You can also calculate most of these basic
+sampling metrics for every bin with the \texttt{binstat()} function.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{samp <-}\KeywordTok{binstat}\NormalTok{(fossils, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }
   \DataTypeTok{coll=}\StringTok{"collection_no"}\NormalTok{, }\DataTypeTok{ref=}\StringTok{"reference_no"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -496,13 +515,42 @@ The message above indicates that multiple entries of the same genus are
 present in the same collections. As this is a species-level occurrence
 dataset, this is understandable. By default, these entries are omitted
 from the calculations above, but you can toggle this manually by setting
-the \texttt{duplicates} argument of sampstat() accordingly
-(\texttt{TRUE} will keep the duplicates, \texttt{FALSE} will omit them -
-without notification). With the default settings the function
-(\texttt{total=FALSE}) calculates the basic binwise statistics that do
-not require multi-bin pattern recognition (for instance for Alroy's
-(2008) three-timer sampling completeness, which is output by the
-\texttt{divDyn()} function). These can be plotted then in a
+the \texttt{duplicates} argument of binstat() accordingly (\texttt{TRUE}
+will keep the duplicates, \texttt{FALSE} will omit them - without
+notification).
+
+The function calculates the basic bin-wise statistics that do not
+require multi-bin pattern recognition (for instance for Alroy's (2008)
+three-timer sampling completeness, which is output by the
+\texttt{divDyn()} function). Optionally, additional metrics implemented
+in the \texttt{indices()} function can be applied to information in
+every bin, by adding \texttt{indices=TRUE} to the function call.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{samp <-}\KeywordTok{binstat}\NormalTok{(fossils, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }
+  \DataTypeTok{coll=}\StringTok{"collection_no"}\NormalTok{, }\DataTypeTok{ref=}\StringTok{"reference_no"}\NormalTok{, }\DataTypeTok{indices=}\OtherTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## The database contains duplicate occurrences (multiple species/genus).
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{colnames}\NormalTok{(samp)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "occs"      "colls"     "refs"      "SIBs"      "occ1"     
+##  [6] "occ2"      "ref1"      "ref2"      "u"         "chao1occ" 
+## [11] "uPrime"    "chao1ref"  "richness"  "shannon"   "hill2"    
+## [16] "dominance" "squares"   "chao2"     "SCOR"
+\end{verbatim}
+
+All results of the output of this function can be plotted then in a
 straightforward way, by referring to the elements of the data frame. For
 instance, the \texttt{occs} element contains the number of sampled
 occurrences and \texttt{coll} refers to the number of collections:
@@ -524,30 +572,12 @@ occurrences and \texttt{coll} refers to the number of collections:
 
 \includegraphics{handout_files/figure-latex/occsAndColls-1.pdf}
 
-The \texttt{sampstat()} function also calculates other basic statistics
+The \texttt{binstat()} function also calculates other basic statistics
 such as the numbers of references, sampled taxa, single-collection taxa,
 single-reference taxa, double collection and double reference taxa along
 with the sampling coverage estimator Good's \emph{u} (1953), the
 coverage estimator suggested by Alroy (\emph{u' }, 2010) that is based
-on the number of single-reference taxa. Setting the \texttt{total}
-argument to \texttt{TRUE} will output the statistics of the total
-dataset.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{samp <-}\KeywordTok{sampstat}\NormalTok{(fossils, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }
-  \DataTypeTok{coll=}\StringTok{"collection_no"}\NormalTok{, }\DataTypeTok{ref=}\StringTok{"reference_no"}\NormalTok{, }\DataTypeTok{total=}\OtherTok{TRUE}\NormalTok{, }\DataTypeTok{duplicates=}\OtherTok{FALSE}\NormalTok{)}
-\NormalTok{samp}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##   bins  occs taxa colls refs gappiness
-## 1   41 23229  760  5444 1203 0.5818335
-\end{verbatim}
-
-This includes the total number of occurrences, collections, references
-and statistics of gappiness.
+on the number of single-reference taxa.
 
 \subsubsection{3.2.2. Plotting of counts and
 proportions}\label{plotting-of-counts-and-proportions}
@@ -695,7 +725,7 @@ than running the basic \texttt{divDyn()} function.
 All calculations in this function depend on patterns of occurrences in
 the bin/taxon matrix. The numbers of taxa that belong to different
 categories form the basis of the metrics. These categories are explained
-by Foote (2000) and Alroy (2014) and are available in the help file
+by Foote (1999) and Alroy (2014) and are available in the help file
 \texttt{?divDyn}.
 
 \subsubsection{4.1.2. Different metrics of
@@ -848,7 +878,7 @@ turnover}\label{different-metrics-of-turnover}
 
 In the package, the proportional rates (\texttt{extProp} and
 \texttt{oriProp}) and per capita rates (\texttt{extPC} and
-\texttt{oriPC}) of Foote (2000), the three-timer rates (\texttt{ext3t}
+\texttt{oriPC}) of Foote (1999), the three-timer rates (\texttt{ext3t}
 and \texttt{ori3t}) of Alroy (2008), their corrected counterparts
 (\texttt{extC3t} and \texttt{oriC3t}), the gap-filler rates
 (\texttt{extGF} and \texttt{oriGF}) of Alroy (2014) and the improved
@@ -881,11 +911,11 @@ summarized as follows:
   Proportional `rates': These metrics express what proportion of the
   cohort of taxa disappears until the new interval.
 \item
-  The per capita rates of Foote (2000) use the range-through assumption
+  The per capita rates of Foote (1999) use the range-through assumption
   to establish ranges for the taxa in the dataset. The rate value
   expresses what proportion of the taxa decayed until the end of the
   interval. The method is biased by the Signor-Lipps effect and edge
-  effects.
+  effects (Foote 2000).
 \item
   The `three-timer' and `corrected three-timer' rates (Alroy, 2008) are
   different estimators of the per capita rates but will converge on them
@@ -971,7 +1001,7 @@ The question that arises in this case is whether some intervals can be
 characterized by actually higher origination rates (for \emph{az} taxa
 in the Cretaceous), or is this just a sampling artifact. The testing
 framework is implemented currently only for the per capita extinction
-rates of Foote (2000) in the \texttt{ratesplit} function. The function
+rates of Foote (1999) in the \texttt{ratesplit} function. The function
 will take the occurrence dataset as an argument and will calculate the
 rates values similarly to the \texttt{divDyn} function. The function
 requires a separator variable for the selection testing (\texttt{sel})
@@ -1226,7 +1256,7 @@ over time.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{sam <-}\KeywordTok{sampstat}\NormalTok{(fossils, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{coll=}\StringTok{"collection_no"}\NormalTok{, }\DataTypeTok{duplicates=}\NormalTok{F)}
+\NormalTok{sam <-}\KeywordTok{binstat}\NormalTok{(fossils, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{coll=}\StringTok{"collection_no"}\NormalTok{, }\DataTypeTok{duplicates=}\NormalTok{F)}
 \KeywordTok{cor.test}\NormalTok{(dd$divRT, sam$occs, }\DataTypeTok{method=}\StringTok{"spearman"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -2010,7 +2040,7 @@ collections.
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{trialsUW <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{coll=}\StringTok{"collection_no"}\NormalTok{,}
-  \DataTypeTok{iter=}\DecValTok{100}\NormalTok{, }\DataTypeTok{q=}\DecValTok{20}\NormalTok{, }\DataTypeTok{type=}\StringTok{"oxw"}\NormalTok{, }\DataTypeTok{x=}\DecValTok{0}\NormalTok{, }\DataTypeTok{FUN=}\NormalTok{sampstat)}
+  \DataTypeTok{iter=}\DecValTok{100}\NormalTok{, }\DataTypeTok{q=}\DecValTok{20}\NormalTok{, }\DataTypeTok{type=}\StringTok{"oxw"}\NormalTok{, }\DataTypeTok{x=}\DecValTok{0}\NormalTok{, }\DataTypeTok{FUN=}\NormalTok{binstat)}
 \CommentTok{# the number of sampled collections on average in each timeslice}
 \NormalTok{trialsUW[}\DecValTok{54}\NormalTok{:}\DecValTok{94}\NormalTok{, }\StringTok{"colls"}\NormalTok{]}
 \NormalTok{subUW <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{coll=}\StringTok{"collection_no"}\NormalTok{,}
@@ -2021,12 +2051,12 @@ collections.
 By this principle, it is not difficult to see that depending on the size
 of the collections, the actual number of occurrences will be somewhat
 higher than the quota. You can quickly check the exact number of
-occurrences drawn with the \texttt{sampstat()} function
+occurrences drawn with the \texttt{binstat()} function
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{subST <-}\StringTok{ }\KeywordTok{subsample}\NormalTok{(fossGen, }\DataTypeTok{bin=}\StringTok{"stg"}\NormalTok{, }\DataTypeTok{tax=}\StringTok{"genus"}\NormalTok{, }\DataTypeTok{coll=}\StringTok{"collection_no"}\NormalTok{, }
-  \DataTypeTok{iter=}\DecValTok{100}\NormalTok{, }\DataTypeTok{q=}\DecValTok{20}\NormalTok{,}\DataTypeTok{FUN=}\NormalTok{sampstat, }\DataTypeTok{type=}\StringTok{"oxw"}\NormalTok{)}
+  \DataTypeTok{iter=}\DecValTok{100}\NormalTok{, }\DataTypeTok{q=}\DecValTok{20}\NormalTok{,}\DataTypeTok{FUN=}\NormalTok{binstat, }\DataTypeTok{type=}\StringTok{"oxw"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2037,10 +2067,10 @@ occurrences drawn with the \texttt{sampstat()} function
 \end{Shaded}
 
 \begin{verbatim}
-##  [1] 22.79 22.61 24.57 24.48 26.54 23.20 21.75 23.54 21.99 23.80 22.93
-## [12] 25.08 23.13 26.90 28.95 32.90 24.98 26.18 25.91 27.98 27.33 26.30
-## [23] 26.38 22.87 26.49 27.43 26.54 24.50 22.93 23.29 22.58 23.72 22.60
-## [34] 27.07 25.70 25.74 27.65 23.76 24.92 25.61 24.41
+##  [1] 22.46 22.41 24.13 24.22 24.69 23.65 21.61 24.21 22.00 23.54 22.69
+## [12] 26.51 23.22 25.51 28.14 31.76 23.98 26.04 25.83 28.80 29.15 26.96
+## [23] 26.62 23.37 26.69 26.47 25.56 24.29 22.58 23.86 22.66 23.62 23.02
+## [34] 27.47 26.20 25.15 27.58 24.50 23.68 24.44 25.13
 \end{verbatim}
 
 Although there are ways to improve the accuracy of the subsampling
@@ -2077,8 +2107,9 @@ not reflect changes of richness appropriately, if two localities with
 different diversities are compared and their total richnesses are not
 equal. This can be visualized by progressively lowering the subsampling
 quota for CR, which will result in not just decreased levels of richness
-but also in a pronounced decrease in variation. This effect can be
-illustrated by rerunning CR iteratively with progressively lower quotas.
+but also in a pronounced decrease in variance (Alroy, 2010b). This
+effect can be illustrated by rerunning CR iteratively with progressively
+lower quotas.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2101,7 +2132,7 @@ results can be plotted with:
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{tsplot}\NormalTok{(stages, }\DataTypeTok{shading=}\StringTok{"series"}\NormalTok{, }\DataTypeTok{boxes=}\StringTok{"per"}\NormalTok{, }\DataTypeTok{xlim=}\DecValTok{51}\NormalTok{:}\DecValTok{95}\NormalTok{,}
-  \DataTypeTok{ylab=}\StringTok{"corrected SIB richness richness"}\NormalTok{, }\DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{90}\NormalTok{))}
+  \DataTypeTok{ylab=}\StringTok{"corrected SIB richness"}\NormalTok{, }\DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{90}\NormalTok{))}
 \NormalTok{for(i in quotas)\{}
   \NormalTok{current <-}\StringTok{ }\KeywordTok{get}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{"cr"}\NormalTok{, i, }\DataTypeTok{sep=}\StringTok{""}\NormalTok{))}
   \KeywordTok{lines}\NormalTok{(stages$mid[}\DecValTok{1}\NormalTok{:}\DecValTok{94}\NormalTok{], current $divCSIB, }\DataTypeTok{col=}\StringTok{"red"}\NormalTok{)}
@@ -2434,7 +2465,7 @@ Ancient Extinctions). We are thankful to all testers of the package,
 including Emilia Jarochowska, Vanessa Roden, Andreas Lauchstedt, and all
 participants of the first year International Master's Programme for
 Paleobiology at the GeoZentrum Nordbayern, FAU in Erlangen, Germany. We
-thank all enterers of the Paleobiology Database.
+also thank all enterers of the Paleobiology Database.
 
 \section{References}\label{references}
 
@@ -2450,6 +2481,10 @@ the Global Diversity of Marine Invertebrates. Science, 321(5885),
 Alroy, J. (2010). The Shifting Balance of Diversity Among Major Marine
 Animal Groups. Science, 329, 1191-1194.
 \url{https://doi.org/10.1126/science.1189910}
+
+Alroy, J. (2010b). Geographical, environmental and intrinsic biotic
+controls on Phanerozoic marine diversification. Palaeontology
+53:1211-1235.\url{https://doi.org/10.1111/j.1475-4983.2010.01011.x}
 
 Alroy, J. (2014). Accurate and precise estimates of origination and
 extinction rates. Paleobiology, 40(3), 374-397.
@@ -2469,6 +2504,9 @@ Stratigraphic Ranges of Taxa. Paleobiology, 22(2), 121-140.
 Chao, A., \& Jost, L. (2012). Coverage-based rarefaction and
 extrapolation: standardizing samples by completeness rather than size.
 Ecology, 93(12), 2533-2547. \url{https://doi.org/10.1890/11-1952.1}
+
+Foote, M. (1999). Morphological Diversity In The Evolutionary Radiation
+Of Paleozoic and Post-Paleozoic Crinoids. Paleobiology, 25(S2), 1-115.
 
 Foote, M. (2000). Origination and Extinction Components of Taxonomic
 Diversity: General Problems. Paleobiology, 26(4), 74-102.

@@ -1,10 +1,10 @@
 ---
-title: "Handout to the R package 'divDyn' v0.5.2 for diversity dynamics from fossil occurrence data"
+title: "Handout to the R package divDyn v0.6.0 for diversity dynamics from fossil sampling data"
 author: "Adam T. Kocsis, Carl J. Reddin, Wolfgang Kiessling"
 date: '`r Sys.Date()`'
 output: pdf_document
 vignette: >
-  %\VignetteIndexEntry{Handout to the R package 'divDyn' v0.5.2 for diversity dynamics from fossil occurrence data}
+  %\VignetteIndexEntry{Handout to the R package divDyn v0.6.0 for diversity dynamics from fossil sampling data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -197,14 +197,33 @@ Large synchronous changes in these curves represent times where major changes ha
 
 ### 3.2.1. Basic descriptors
 
-The patterns of the data are constrained by sampling processes. These can have a direct influence on the patterns of diversity dynamics and therefore should be taken into consideration when the conclusions are drawn from the data.  You can calculate the basic sampling characteristics with the ``sampstat()`` function.
+The patterns of the data are constrained by sampling processes. These can have a direct influence on the patterns of diversity dynamics and therefore should be taken into consideration when the conclusions are drawn from the data. 
 
-```{r sampstat, echo=TRUE, result=FALSE}
-samp <-sampstat(fossils, tax="genus", bin="stg", 
+The ``sumstat()`` function calculates basic sampling metrics that characterize the entire dataset.
+
+```{r sampTOT, echo=TRUE, result=TRUE}
+samp <-sumstat(fossils, tax="genus", bin="stg", 
+  coll="collection_no", ref="reference_no", duplicates=FALSE)
+samp
+```
+This includes the total number of occurrences, collections, references and statistics of gappiness. 
+ You can also calculate most of these basic sampling metrics for every bin with the ``binstat()`` function.
+
+```{r binstat, echo=TRUE, result=FALSE}
+samp <-binstat(fossils, tax="genus", bin="stg", 
   coll="collection_no", ref="reference_no")
 ```
-The message above indicates that multiple entries of the same genus are present in the same collections. As this is a species-level occurrence dataset, this is understandable. By default, these entries are omitted from the calculations above, but you can toggle this manually by setting the ``duplicates`` argument of sampstat() accordingly (``TRUE`` will keep the duplicates, ``FALSE`` will omit them - without notification). 
-With the default settings the function (``total=FALSE``) calculates the basic binwise statistics that do not require multi-bin pattern recognition (for instance for Alroy's (2008) three-timer sampling completeness, which is output by the ``divDyn()`` function). These can be plotted then in a straightforward way, by referring to the elements of the data frame. For instance, the ``occs`` element contains the number of sampled occurrences and ``coll`` refers to the number of collections:
+The message above indicates that multiple entries of the same genus are present in the same collections. As this is a species-level occurrence dataset, this is understandable. By default, these entries are omitted from the calculations above, but you can toggle this manually by setting the ``duplicates`` argument of binstat() accordingly (``TRUE`` will keep the duplicates, ``FALSE`` will omit them - without notification). 
+
+The function calculates the basic bin-wise statistics that do not require multi-bin pattern recognition (for instance for Alroy's (2008) three-timer sampling completeness, which is output by the ``divDyn()`` function). Optionally, additional metrics implemented in the ``indices()`` function can be applied to information in every bin, by adding ``indices=TRUE`` to the function call. 
+
+```{r binstatInd, echo=TRUE, result=FALSE}
+samp <-binstat(fossils, tax="genus", bin="stg", 
+  coll="collection_no", ref="reference_no", indices=TRUE)
+colnames(samp)
+```
+
+All results of the output of this function can be plotted then in a straightforward way, by referring to the elements of the data frame. For instance, the ``occs`` element contains the number of sampled occurrences and ``coll`` refers to the number of collections:
 
 ```{r occsAndColls, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5}
 par(mar=c(4,4,2,4))
@@ -219,14 +238,7 @@ lines(stages$mid[1:94], samp$occs)
   mtext(4, text="number of collections", col="blue", line=2)
 ```
 
-The ``sampstat()`` function also calculates other basic statistics such as the numbers of references, sampled taxa, single-collection taxa, single-reference taxa, double collection and double reference taxa along with the sampling coverage estimator Good's *u* (1953), the coverage estimator suggested by Alroy (*u' *, 2010) that is based on the number of single-reference taxa.
-Setting the ``total`` argument to ``TRUE`` will output the statistics of the total dataset.
-```{r sampTOT, echo=TRUE, result=TRUE}
-samp <-sampstat(fossils, tax="genus", bin="stg", 
-  coll="collection_no", ref="reference_no", total=TRUE, duplicates=FALSE)
-samp
-```
-This includes the total number of occurrences, collections, references and statistics of gappiness. 
+The ``binstat()`` function also calculates other basic statistics such as the numbers of references, sampled taxa, single-collection taxa, single-reference taxa, double collection and double reference taxa along with the sampling coverage estimator Good's *u* (1953), the coverage estimator suggested by Alroy (*u' *, 2010) that is based on the number of single-reference taxa.
 
 
 ### 3.2.2. Plotting of counts and proportions
@@ -297,7 +309,7 @@ The output of the ``divDyn()`` function is a ``data.frame`` class object that co
 You read this because you have interests in the changes of diversity. Calculating time series of diversity does not require additional action than running the basic ``divDyn()`` function.   
 
 ### 4.1.1.Taxon counts
-All calculations in this function depend on patterns of occurrences in the bin/taxon matrix. The numbers of taxa that belong to different categories form the basis of the metrics. These categories are explained by Foote (2000) and Alroy (2014) and are available in the help file ``?divDyn``. 
+All calculations in this function depend on patterns of occurrences in the bin/taxon matrix. The numbers of taxa that belong to different categories form the basis of the metrics. These categories are explained by Foote (1999) and Alroy (2014) and are available in the help file ``?divDyn``. 
 
 ### 4.1.2. Different metrics of richness
 Calculating time series of diversity does not require additional action than running the basic ``divDyn()`` function. In this package, among the traditional range-based methods the range-through (variable ``divRT``) and the boundary-crosser (``divBC``) diversities are implemented.
@@ -376,7 +388,7 @@ For convenience, these variables are named as ``extTYPE`` and ``oriTYPE`` for ex
 
 ### 4.2.1. Different metrics of turnover
 
-In the package, the proportional rates (``extProp`` and ``oriProp``) and per capita rates (``extPC`` and ``oriPC``) of Foote (2000), the three-timer rates (``ext3t`` and ``ori3t``) of Alroy (2008), their corrected counterparts (``extC3t`` and ``oriC3t``), the gap-filler rates (``extGF`` and ``oriGF``) of Alroy (2014) and the improved second-for-third (``ext2f3`` and ``ori2f3``) of Alroy (2015) are provided.
+In the package, the proportional rates (``extProp`` and ``oriProp``) and per capita rates (``extPC`` and ``oriPC``) of Foote (1999), the three-timer rates (``ext3t`` and ``ori3t``) of Alroy (2008), their corrected counterparts (``extC3t`` and ``oriC3t``), the gap-filler rates (``extGF`` and ``oriGF``) of Alroy (2014) and the improved second-for-third (``ext2f3`` and ``ori2f3``) of Alroy (2015) are provided.
 
 ```{r ddExt, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5}
 # basic plot
@@ -394,7 +406,7 @@ The documentation of the function (type in console ?divDyn) contains the formula
 
 * Proportional 'rates': These metrics express what proportion of the cohort of taxa disappears until the new interval.  
 
-* The per capita rates of Foote (2000) use the range-through assumption to establish ranges for the taxa in the dataset. The rate value expresses what proportion of the taxa decayed until the end of the interval.  The method is biased by the Signor-Lipps effect and edge effects.
+* The per capita rates of Foote (1999) use the range-through assumption to establish ranges for the taxa in the dataset. The rate value expresses what proportion of the taxa decayed until the end of the interval.  The method is biased by the Signor-Lipps effect and edge effects (Foote 2000).
 
 * The 'three-timer' and 'corrected three-timer' rates (Alroy, 2008) are different estimators of the per capita rates but will converge on them when sampling tends to completeness. They use moving windows around the focal interval to select data that is more relevant to the focal interval. This metric is unbiased by the Signor-Lipps and edge effects. The three-timer sampling completeness can be used to correct this metric, but it will not improve its susceptibility to random sampling error. 
 
@@ -428,7 +440,7 @@ legend("topright", inset=c(0.1,0.1), legend=c("total", "z", "az"),
   lwd=2, lty=c(1,1,2), col=c("black", "blue", "red"), bg="white")
 ```
 
-The question that arises in this case is whether some intervals can be characterized by actually higher origination rates (for *az* taxa in the Cretaceous), or is this just a sampling artifact. The testing framework is implemented currently only for the per capita extinction rates of Foote (2000) in the ``ratesplit`` function. The function will take the occurrence dataset as an argument and will calculate the rates values similarly to the ``divDyn`` function. The function requires a separator variable for the selection testing (``sel``) that will be used for splitting the dataset into two (this column has to have two possible states i.e. binary code). The implementation of the process for the symbiotic status is:
+The question that arises in this case is whether some intervals can be characterized by actually higher origination rates (for *az* taxa in the Cretaceous), or is this just a sampling artifact. The testing framework is implemented currently only for the per capita extinction rates of Foote (1999) in the ``ratesplit`` function. The function will take the occurrence dataset as an argument and will calculate the rates values similarly to the ``divDyn`` function. The function requires a separator variable for the selection testing (``sel``) that will be used for splitting the dataset into two (this column has to have two possible states i.e. binary code). The implementation of the process for the symbiotic status is:
 
 ```{r selFirst, echo=TRUE, results=TRUE, plot=TRUE, fig.height=5.5}
 rs<-ratesplit(fossils, sel="ecology", tax="genus", bin="stg")
@@ -588,7 +600,7 @@ This is fairly close to the stratigraphically constrained time series.
 Raw patterns of biodiversity are biased by heterogeneous, incomplete sampling. Consider the built-in example of the coral subset, where both the number of occurrences and the number of collections vary drastically over time. 
 
 ```{r sampCor, echo=TRUE, result=TRUE}
-sam <-sampstat(fossils, bin="stg", tax="genus", coll="collection_no", duplicates=F)
+sam <-binstat(fossils, bin="stg", tax="genus", coll="collection_no", duplicates=F)
 cor.test(dd$divRT, sam$occs, method="spearman")
 cor.test(dd$divSIB, sam$occs, method="spearman")
 ```
@@ -946,18 +958,18 @@ The simplest way of doing this is to raise the number of occurrences in a collec
 
 ```{r oxw, echo=TRUE, results =FALSE}
 trialsUW <- subsample(fossGen, bin="stg", tax="genus", coll="collection_no",
-  iter=100, q=20, type="oxw", x=0, FUN=sampstat)
+  iter=100, q=20, type="oxw", x=0, FUN=binstat)
 # the number of sampled collections on average in each timeslice
 trialsUW[54:94, "colls"]
 subUW <- subsample(fossGen, bin="stg", tax="genus", coll="collection_no",
   iter=100, q=10, type="oxw", x=0)
 ```
 
-By this principle, it is not difficult to see that depending on the size of the collections, the actual number of occurrences will be somewhat higher than the quota. You can quickly check the exact number of occurrences drawn with the ``sampstat()`` function
+By this principle, it is not difficult to see that depending on the size of the collections, the actual number of occurrences will be somewhat higher than the quota. You can quickly check the exact number of occurrences drawn with the ``binstat()`` function
 
 ```{r subST, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5}
 subST <- subsample(fossGen, bin="stg", tax="genus", coll="collection_no", 
-  iter=100, q=20,FUN=sampstat, type="oxw")
+  iter=100, q=20,FUN=binstat, type="oxw")
 
 ```
 ```{r subSTshow, echo=TRUE, results =TRUE, plot=TRUE, fig.height=5.5}
@@ -982,7 +994,7 @@ legend("topleft", legend=c("CR - 40", "OW - 40", "UW - 10", "O2W - 80"),
 ### 5.4.3. Shareholder Quorum Subsampling (SQS)
 
 As intuitive as the CR approach is to understand, the method has been criticized for be being 'unfair' (Alroy, 2010). The results of CR will not reflect changes of richness appropriately, if two localities with different diversities are compared and their total richnesses are not equal. 
-This can be visualized by progressively lowering the subsampling quota for CR, which will result in not just decreased levels of richness but also in a pronounced decrease in variation. This effect can be illustrated by rerunning CR iteratively with progressively lower quotas. 
+This can be visualized by progressively lowering the subsampling quota for CR, which will result in not just decreased levels of richness but also in a pronounced decrease in variance (Alroy, 2010b). This effect can be illustrated by rerunning CR iteratively with progressively lower quotas. 
 ```{r subCRmany, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5}
 # repeat CR subsampling for a set of quotas
 quotas<-seq(70,10,-10)
@@ -998,7 +1010,7 @@ The code above reruns the CR algorithm on the dataset with 70, 60, 50 ... and 10
 
 ```{r subCRmanyShow, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5}
 tsplot(stages, shading="series", boxes="per", xlim=51:95,
-  ylab="corrected SIB richness richness", ylim=c(0,90))
+  ylab="corrected SIB richness", ylim=c(0,90))
 for(i in quotas){
   current <- get(paste("cr", i, sep=""))
   lines(stages$mid[1:94], current $divCSIB, col="red")
@@ -1149,17 +1161,17 @@ Using the standard 95% percent as alpha level is an arbitrary choice. As the fos
 
 # Acknowledgements
 
-The package was developed in the context of a project on global paleobiogeography funded by the Deutsche Forschungsgemeinschaft (DFG project numbers Ko 5382/1-1 and Ko 5382/1-2). The package is also part of the DFG Research Unit 2332: TERSANE (TEmperature Related Stressors in Ancient Extinctions).  We are thankful to all testers of the package, including Emilia Jarochowska, Vanessa Roden, Andreas Lauchstedt,  and all participants of the first year International Master's Programme for Paleobiology at the GeoZentrum Nordbayern, FAU in Erlangen, Germany.
-We thank all enterers of the Paleobiology Database. 
+The package was developed in the context of a project on global paleobiogeography funded by the Deutsche Forschungsgemeinschaft (DFG project numbers Ko 5382/1-1 and Ko 5382/1-2). The package is also part of the DFG Research Unit 2332: TERSANE (TEmperature Related Stressors in Ancient Extinctions).  We are thankful to all testers of the package, including Emilia Jarochowska, Vanessa Roden, Andreas Lauchstedt,  and all participants of the first year International Master's Programme for Paleobiology at the GeoZentrum Nordbayern, FAU in Erlangen, Germany. We also thank all enterers of the Paleobiology Database. 
 
 # References
 
 Alroy, J. (2008). Dynamics of origination and extinction in the marine fossil record. Proceedings of the National Academy of Science, 105, 11536-11542.
 
-
 Alroy, J., Aberhan, M., Bottjer, D. J., Foote, M., Fürsich, F. T., Harries, P. J., … Visaggi, C. C. (2008). Phanerozoic Trends in the Global Diversity of Marine Invertebrates. Science, 321(5885), 97-100. https://doi.org/10.1126/science.1156963
 
 Alroy, J. (2010). The Shifting Balance of Diversity Among Major Marine Animal Groups. Science, 329, 1191-1194. https://doi.org/10.1126/science.1189910
+
+Alroy, J. (2010b). Geographical, environmental and intrinsic biotic controls on Phanerozoic marine diversification. Palaeontology 53:1211-1235.https://doi.org/10.1111/j.1475-4983.2010.01011.x
 
 Alroy, J. (2014). Accurate and precise estimates of origination and extinction rates. Paleobiology, 40(3), 374-397. https://doi.org/10.1666/13036
 
@@ -1170,6 +1182,8 @@ Bell, M. A. (2015). geoscale: Geological Time Scale Plotting. R package version 
 Foote, M., & Raup, D. M. (1996). Fossil Preservation and the Stratigraphic Ranges of Taxa. Paleobiology, 22(2), 121-140.
 
 Chao, A., & Jost, L. (2012). Coverage-based rarefaction and extrapolation: standardizing samples by completeness rather than size. Ecology, 93(12), 2533-2547. https://doi.org/10.1890/11-1952.1
+
+Foote, M. (1999). Morphological Diversity In The Evolutionary Radiation Of Paleozoic and Post-Paleozoic Crinoids. Paleobiology, 25(S2), 1-115.
 
 Foote, M. (2000). Origination and Extinction Components of Taxonomic Diversity: General Problems. Paleobiology, 26(4), 74-102.
 
