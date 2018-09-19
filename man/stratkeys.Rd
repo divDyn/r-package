@@ -15,7 +15,7 @@
 		\item{\code{stg}}{Numeric identifier of the interval in the stage-level time scale provided as \code{\link{stages}} object.}
 	}}
 \source{
-\url{http://www.fossilworks.com/}
+\url{http://fossilworks.org/}
 }
 \usage{
 stratkeys
@@ -24,7 +24,7 @@ stratkeys
 Table including the user-chosen interval data and the stratigraphic units of the dynamic timescale.
 }
 \details{
-Since the separation of the FossilWorks (\url{http://www.fossilworks.com/}) portal from the Paleobiology Database (\url{http://www.paleobiodb.org/}) the access to the stratigraphic information in the database have been problematic. This table includes groupings of 
+Since the separation of the FossilWorks (\url{http://fossilworks.org/}) portal from the Paleobiology Database (\url{http://www.paleobiodb.org/}) the access to the stratigraphic information in the database have been problematic. This table includes groupings of 
 \code{early_interval}/\code{max_interval} entries of the dynamic timescale that users can choose during collection entry. The table assigns these intervals to some corresponding stratigraphic units from different time scales.
 These entries were distilled from those collections that only have a \code{max_interval} value. As there is a mismatch between the data Paleobiology Database and FossilWorks this list is not comprehensive and a couple entries are probably missing. For this reason, this dataset is expected to be updated in the future.
 

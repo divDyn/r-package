@@ -1,5 +1,5 @@
 # divDyn
-R package for analyzing diversity dynamics from fossil sampling data
+The R package for quantifying diversity dynamics using fossil sampling data
 
 ## News
 
@@ -46,6 +46,9 @@ You can access earlier versions by changing the version number appropriately.
 
 ## Changed
 - material in the sampstat() function was reorganized to two separate functions, see above
+
+## Deleted
+- the deprecated crDD() function and the old plotTS() functions were deleted from the package
 
 
 ## [0.5.2] - 2018.09.02

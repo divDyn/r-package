@@ -1,6 +1,6 @@
 Package: divDyn
 Type: Package
-Title: Diversity Dynamics from Fossil Occurrence Data
+Title: Diversity Dynamics using Fossil Sampling Data
 Version: 0.6.0
 Author: Adam T. Kocsis, Carl J. Reddin, John Alroy, Wolfgang Kiessling
 Maintainer: Adam T. Kocsis <adamkocsis@fau.de>
@@ -9,7 +9,7 @@ License: CC BY 4.0
 Encoding: UTF-8
 LazyData: false
 Depends:
-    R (>= 3.5.0)
+    R (>= 3.3.0)
 Imports: 
 	Rcpp, 
 	stats,

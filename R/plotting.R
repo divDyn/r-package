@@ -1233,19 +1233,3 @@ mainHex<-c(
 	
 	# grass
 	"#A5EA21")
-
-
-#' Time series plotting using a custom time scale 
-#'
-#' Obsolete name for the \code{\link{tsplot}} function.
-#'
-#' Obsolete name for the \code{\link{tsplot}} function.
-#'
-#' @param ... Arguments of the \code{\link{tsplot}} function.
-#' @export	
-plotTS <- function(...){
-	warning("The function 'plotTS()' is renamed to 'tsplot' to make the interface easier to use.\n  Please change your scripts accordingly.\n  'plotTS' will be completely removed at the next major update.")
-	
-	tsplot(...)
-}
-
