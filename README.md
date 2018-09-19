@@ -1,5 +1,5 @@
 # divDyn
-The R package for quantifying diversity dynamics using fossil sampling data
+R package for quantifying diversity dynamics using fossil sampling data
 
 ## News
 
