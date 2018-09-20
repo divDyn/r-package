@@ -3,7 +3,7 @@ R package for quantifying diversity dynamics using fossil sampling data
 
 ## News
 
-- The package was also updated to version 0.6.0! It now includes additional diversity estimators including some recently developed by John Alroy. See the change log below for more information.
+- The package was updated to version 0.6.0! It now includes additional diversity estimators including some recently developed by John Alroy. See the change log below for more information.
 
 
 ## About the package
@@ -43,6 +43,8 @@ You can access earlier versions by changing the version number appropriately.
 ### Added 
 - the indices() function to calculate some basic diversity indices within the package. Please feel encouraged to use the rest from the 'vegan' package.
 - the binstat() and sumstat() functions. Binstat calculates bin-specific indices and sampling metrics, sumstat() calculates those relevant for the entire occurrence database. Most functionality of the deprecated sampstat() function is in binstat. 
+- forgotten proper cleanup of dynamic libraries upon package unload
+
 
 ## Changed
 - material in the sampstat() function was reorganized to two separate functions, see above

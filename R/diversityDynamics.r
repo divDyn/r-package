@@ -738,3 +738,8 @@ omit <- function(dat, tax="genus", bin="bin", coll="collection_no", ref="referen
 	return(boolEnd)
 
 }
+
+
+.onUnload <- function (libpath) {
+	library.dynam.unload("divDyn", libpath)
+}
