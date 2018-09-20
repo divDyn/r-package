@@ -1,9 +1,12 @@
 # divDyn
-R package for quantifying diversity dynamics using fossil sampling data
+R package for quantifying diversity dynamics using fossil sampling data (v0.6.0)
 
 ## News
-
-- The package was updated to version 0.6.0! It now includes additional diversity estimators including some recently developed by John Alroy. See the change log below for more information.
+- I uploaded the package to the CRAN servers, but it will likely take more than a week until you can use
+```
+install.packages("divDyn")
+``` 
+from your R console.
 
 
 ## About the package
@@ -15,7 +18,7 @@ As the package is still getting developed, plase note that some interface change
 
 
 ## Installing 
-2. If you have the appropriate architectures, you can use the binaries I have built. 
+1. If you have the appropriate architectures, you can use the binaries I have built. 
 
 I have updated the windows binaries so that they work with the latest internals (3.5.1). If you want to use the package, please update your R.
 
@@ -29,7 +32,7 @@ If you have Linux computer you probably know how to solve these problems. The so
 
 You can access earlier versions by changing the version number appropriately.
 
-3. The second option is to install with the devtools package. To do this:
+2. The second option is to install with the devtools package. To do this:
 - Install a compiler. For Windows, this would be included in Rtools (https://cran.r-project.org/bin/windows/Rtools/). 
 - Make sure that the 'devtools' package is installed
 - Run `devtools::install_github("adamkocsis/divDyn")`
