@@ -19,7 +19,7 @@ As the package is still getting developed, please note that some interface chang
 
 ## Installing 
 
-### 1. If you have the appropriate OS, you can use the binaries I have built. 
+### 1. Using the the binaries I have built
 
 I have updated the windows binaries so that they work with the latest internals (3.5.1). If you want to use the package, please update your R.
 
@@ -32,7 +32,7 @@ I have updated the windows binaries so that they work with the latest internals 
 
 - If you have Linux computer you probably know how to solve these problems (go to 2.)
 
-### 2. You can use the source package to install.
+### 2. Using the source tarball to install
 This you can do with running
 ```
 install.packages(
@@ -44,13 +44,14 @@ from the R console. Note that there is some code in the package that requires co
 
 The sources of the older versions are also in the _archive/source folder. You can access earlier versions by changing the version number in the command above in an appropriate way.
 
-### 3. The third option is to install with the devtools package.
+### 3. Using the repository files and devtools to install
 
 To do this:
+- You need a compiler, as for method 2
 - Make sure that the 'devtools' package is installed
 - Run `devtools::install_github("adamkocsis/divDyn")`
 
-If you do not want to mess around with compiler and such, then contact me and I will find a way to compile binaries for you!
+If you do not want to mess around with compiler and such, then contact me and I will find a way to compile binaries for you.
 
 
 # Change log
