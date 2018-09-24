@@ -2,11 +2,11 @@
 R package for quantifying diversity dynamics using fossil sampling data (v0.6.0)
 
 ## News
-- I uploaded the package to the CRAN servers, but it will likely take more than a week until you can use
-```
-install.packages("divDyn")
-``` 
-from your R console.
+- I uploaded the package to the CRAN servers, but it will likely take more than a week until you can use the regular package installing routines. The section 'Installing' below will guide you through the installation process in a different way. I will keep you posted when the binaries are accesible for the different architectures.
+
+- the preprint, descrbing the package is uploaded to bioRxiv. You can download it from here:
+http://biorxiv.org/cgi/content/short/423780v1
+If you decide to use the methods implemented in this package, please refer to this document.
 
 
 ## About the package
@@ -14,11 +14,11 @@ from your R console.
 If you are interested in what this package does, or have questions about its use, please check out the first vignette: 'Handout to the R package 'divDyn' v0.6.0 for diversity dynamics from fossil occurrence data' here:
 https://github.com/adamkocsis/divDyn/blob/master/_archive/vignettes/Handout_0.6.0.pdf
 
-As the package is still getting developed, plase note that some interface changes might occurr based on the feedback of people and my own experience on what is easier to use. If you have any requirements or recommendations about what to add (or more importantly, if you find a mistake), do not hesitate to contact me at adam.kocsis@fau.de.
+As the package is still getting developed, please note that some interface changes might occurr based on the feedback of people and my own experience on what is easier to use. If you have any requirements or recommendations about what to add (or more importantly, if you find a mistake), do not hesitate to contact me at adam.kocsis@fau.de.
 
 
 ## Installing 
-1. If you have the appropriate architectures, you can use the binaries I have built. 
+1. If you have the appropriate OS, you can use the binaries I have built. 
 
 I have updated the windows binaries so that they work with the latest internals (3.5.1). If you want to use the package, please update your R.
 
@@ -28,16 +28,23 @@ If you have a windows computer, you can install the package with the following R
 If you have a Mac running OS X, then use the following link (still older version, for R <3.5):
 `install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Mac_OSX/divDyn_0.5.2.tgz", repos=NULL)`
 
-If you have Linux computer you probably know how to solve these problems. The sources of different versions are in the /_archive/sources folder. Otherwise you can try option no. 2. 
+If you have Linux computer you probably know how to solve these problems (go to 2.)
 
-You can access earlier versions by changing the version number appropriately.
 
-2. The second option is to install with the devtools package. To do this:
-- Install a compiler. For Windows, this would be included in Rtools (https://cran.r-project.org/bin/windows/Rtools/). 
+2. You can use the source package to install. This you can do with running
+```
+install.packages("https://github.com/adamkocsis/divDyn/raw/master/_archive/source/divDyn_0.6.0.tar.gz", repos=NULL, type="source")
+```
+
+from the R console. Note that there is some code in the package that requires compilation. For windows, the most straightforward way is to use Rtools (https://cran.r-project.org/bin/windows/Rtools/), and XCode for Mac.
+
+The sources of the older versions are also in the _archive/source folder. You can access earlier versions by changing the version number in the command above in an appropriate way.
+
+3. The third option is to install with the devtools package. To do this:
 - Make sure that the 'devtools' package is installed
 - Run `devtools::install_github("adamkocsis/divDyn")`
 
- '*' if you use either a Mac or Linux, and point no. 2 doesn't work for you for some reason, then contact me  and I will compile a binary for you.
+If you do not want to mess around with compiler and such, then contact me and I will find a way to compile binaries for you!
 
 
 # Change log
