@@ -18,7 +18,7 @@ As the package is still getting developed, please note that some interface chang
 
 
 ## Installing 
-_. If you have the appropriate OS, you can use the binaries I have built. _
+*1. If you have the appropriate OS, you can use the binaries I have built. *
 
 I have updated the windows binaries so that they work with the latest internals (3.5.1). If you want to use the package, please update your R.
 
@@ -31,7 +31,7 @@ I have updated the windows binaries so that they work with the latest internals 
 
 - If you have Linux computer you probably know how to solve these problems (go to 2.)
 
-_2. You can use the source package to install._
+*2. You can use the source package to install.*
 This you can do with running
 ```
 install.packages(
@@ -43,7 +43,7 @@ from the R console. Note that there is some code in the package that requires co
 
 The sources of the older versions are also in the _archive/source folder. You can access earlier versions by changing the version number in the command above in an appropriate way.
 
-_3. The third option is to install with the devtools package._
+*3. The third option is to install with the devtools package.*
 
 To do this:
 - Make sure that the 'devtools' package is installed
