@@ -18,20 +18,21 @@ As the package is still getting developed, please note that some interface chang
 
 
 ## Installing 
-1. If you have the appropriate OS, you can use the binaries I have built. 
+_. If you have the appropriate OS, you can use the binaries I have built. _
 
 I have updated the windows binaries so that they work with the latest internals (3.5.1). If you want to use the package, please update your R.
 
-If you have a windows computer, you can install the package with the following R command:
-`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Win_x64_x86/divDyn_0.6.0.zip", repos=NULL)`
+- If you have a windows computer, you can install the package with the following R command:
+  `install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Win_x64_x86/divDyn_0.6.0.zip", repos=NULL)`
 
-If you have a Mac, then use the following link (still older version, for R <3.5):
-`install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Mac_OSX/divDyn_0.5.2.tgz", repos=NULL)`
+- If you have a Mac, then use the following link (still older version, for R <3.5).
+  `install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Mac_OSX/divDyn_0.5.2.tgz", repos=NULL)`
+  I know this is old, but will update it at the earliest convenience (I do not have a Mac). Until this is doen, please use install    method 2.
 
-If you have Linux computer you probably know how to solve these problems (go to 2.)
+- If you have Linux computer you probably know how to solve these problems (go to 2.)
 
-
-2. You can use the source package to install. This you can do with running
+_2. You can use the source package to install._
+This you can do with running
 ```
 install.packages(
   "https://github.com/adamkocsis/divDyn/raw/master/_archive/source/divDyn_0.6.0.tar.gz", 
@@ -42,7 +43,9 @@ from the R console. Note that there is some code in the package that requires co
 
 The sources of the older versions are also in the _archive/source folder. You can access earlier versions by changing the version number in the command above in an appropriate way.
 
-3. The third option is to install with the devtools package. To do this:
+_3. The third option is to install with the devtools package._
+
+To do this:
 - Make sure that the 'devtools' package is installed
 - Run `devtools::install_github("adamkocsis/divDyn")`
 
