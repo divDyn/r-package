@@ -28,7 +28,7 @@ I have updated the windows binaries so that they work with the latest internals 
 
 - If you have a Mac, then use the following link (still older version, for R <3.5).
   `install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Mac_OSX/divDyn_0.5.2.tgz", repos=NULL)`
-  I know this is old, but will update it at the earliest convenience (I do not have a Mac). Until this is doen, please use install    method 2.
+  I know this is old, but will update it at the earliest convenience (I do not have a Mac). Until I am done with this, please use install    method 2.
 
 - If you have Linux computer you probably know how to solve these problems (go to 2.)
 
