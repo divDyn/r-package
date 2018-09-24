@@ -25,7 +25,7 @@ I have updated the windows binaries so that they work with the latest internals 
 If you have a windows computer, you can install the package with the following R command:
 `install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Win_x64_x86/divDyn_0.6.0.zip", repos=NULL)`
 
-If you have a Mac running OS X, then use the following link (still older version, for R <3.5):
+If you have a Mac, then use the following link (still older version, for R <3.5):
 `install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Mac_OSX/divDyn_0.5.2.tgz", repos=NULL)`
 
 If you have Linux computer you probably know how to solve these problems (go to 2.)
@@ -38,7 +38,7 @@ install.packages(
   repos=NULL, type="source")
 ```
 
-from the R console. Note that there is some code in the package that requires compilation. For windows, the most straightforward way is to use Rtools (https://cran.r-project.org/bin/windows/Rtools/), and XCode for Mac.
+from the R console. Note that there is some code in the package that requires compilation. For windows, the most straightforward way is to use Rtools (https://cran.r-project.org/bin/windows/Rtools/), and XCode https://developer.apple.com/xcode/ for Mac.
 
 The sources of the older versions are also in the _archive/source folder. You can access earlier versions by changing the version number in the command above in an appropriate way.
 
