@@ -33,7 +33,9 @@ If you have Linux computer you probably know how to solve these problems (go to 
 
 2. You can use the source package to install. This you can do with running
 ```
-install.packages("https://github.com/adamkocsis/divDyn/raw/master/_archive/source/divDyn_0.6.0.tar.gz", repos=NULL, type="source")
+install.packages(
+  "https://github.com/adamkocsis/divDyn/raw/master/_archive/source/divDyn_0.6.0.tar.gz", 
+  repos=NULL, type="source")
 ```
 
 from the R console. Note that there is some code in the package that requires compilation. For windows, the most straightforward way is to use Rtools (https://cran.r-project.org/bin/windows/Rtools/), and XCode for Mac.
