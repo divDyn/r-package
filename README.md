@@ -2,7 +2,7 @@
 R package for quantifying diversity dynamics using fossil sampling data (v0.6.1)
 
 ## News
-- I re-uploaded the package to the CRAN servers, but it will likely take more than a week until you can use the regular package installing routines. The section 'Installing' below will guide you through the installation process in a different way. I will keep you posted when the binaries are accesible for the different architectures.
+- I re-uploaded the package to the CRAN servers (including a minor update with a new function and some help file corrections), but it will likely take more than a week until you can use the regular package installing routines. The section 'Installing' below will guide you through the installation process in a different way. I will keep you posted when the binaries are accesible for the different architectures.
 
 - The preprint describing the package is uploaded to bioRxiv. You can download it from here:
 http://biorxiv.org/cgi/content/short/423780v1.
