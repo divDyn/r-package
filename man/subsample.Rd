@@ -76,7 +76,7 @@ data(stages)
   
   
   
-\dontrun{
+\donttest{
 # Example 2-SIB diversity 
 # draft a simple function to calculate SIB diversity
 sib<-function(dat, bin, tax){

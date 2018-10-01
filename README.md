@@ -1,18 +1,21 @@
 # divDyn
-R package for quantifying diversity dynamics using fossil sampling data (v0.6.0)
+R package for quantifying diversity dynamics using fossil sampling data (v0.6.1)
 
 ## News
 - I uploaded the package to the CRAN servers, but it will likely take more than a week until you can use the regular package installing routines. The section 'Installing' below will guide you through the installation process in a different way. I will keep you posted when the binaries are accesible for the different architectures.
 
 - the preprint, descrbing the package is uploaded to bioRxiv. You can download it from here:
 http://biorxiv.org/cgi/content/short/423780v1
-If you decide to use the methods implemented in this package, please refer to this document.
+If you decide to use the methods implemented in this package, please refer to this document. The examples implemented in this manuscript are elaborated in this vignette:
+https://github.com/adamkocsis/ddPhanero/blob/master/doc/0.3/dd_phanero.pdf
+
+
 
 
 ## About the package
 
-If you are interested in what this package does, or have questions about its use, please check out the first vignette: 'Handout to the R package 'divDyn' v0.6.0 for diversity dynamics from fossil occurrence data' here:
-https://github.com/adamkocsis/divDyn/blob/master/_archive/vignettes/Handout_0.6.0.pdf
+If you are interested in what this package does, or have questions about its use, please check out the first vignette: 'Handout to the R package 'divDyn' v0.6.1 for diversity dynamics from fossil occurrence data' here:
+https://github.com/adamkocsis/divDyn/blob/master/_archive/vignettes/Handout_0.6.1.pdf
 
 As the package is still getting developed, please note that some interface changes might occurr based on the feedback of people and my own experience on what is easier to use. If you have any requirements or recommendations about what to add (or more importantly, if you find a mistake), do not hesitate to contact me at adam.kocsis@fau.de.
 
@@ -24,7 +27,7 @@ As the package is still getting developed, please note that some interface chang
 I have updated the windows binaries so that they work with the latest internals (3.5.1). If you want to use the package, please update your R.
 
 - If you have a windows computer, you can install the package with the following R command:
-  `install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Win_x64_x86/divDyn_0.6.0.zip", repos=NULL)`
+  `install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Win_x64_x86/divDyn_0.6.1.zip", repos=NULL)`
 
 - If you have a Mac, then use the following link (still older version, for R <3.5).
   `install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Mac_OSX/divDyn_0.5.2.tgz", repos=NULL)`
@@ -36,7 +39,7 @@ I have updated the windows binaries so that they work with the latest internals 
 This you can do with running
 ```
 install.packages(
-  "https://github.com/adamkocsis/divDyn/raw/master/_archive/source/divDyn_0.6.0.tar.gz", 
+  "https://github.com/adamkocsis/divDyn/raw/master/_archive/source/divDyn_0.6.1.tar.gz", 
   repos=NULL, type="source")
 ```
 
@@ -55,6 +58,15 @@ If you do not want to mess around with compiler and such, then contact me and I 
 
 
 # Change log
+
+## [0.6.1] - 2018.10.01
+### Added
+- the singletons() function to quickly return single-occurrence, single-reference, single-interval and similar taxa
+- citation file
+
+### Changed 
+- typo correction in the 'stages' table: 'Ordiovician' entries in the 'period' column were corrected to 'Ordovician'
+- minor changes in help files.
 
 ## [0.6.0] - 2018.09.17
 ### Added 
