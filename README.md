@@ -6,6 +6,7 @@ R package for quantifying diversity dynamics using fossil sampling data (v0.6.1)
 
 - The preprint describing the package is uploaded to bioRxiv. You can download it from here:
 http://biorxiv.org/cgi/content/short/423780v1
+
 If you decide to use the methods implemented in this package, please refer to this document. The examples implemented in this manuscript are elaborated in this vignette:
 https://github.com/adamkocsis/ddPhanero/blob/master/doc/0.3/dd_phanero.pdf
 
