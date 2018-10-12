@@ -1,15 +1,17 @@
 # divDyn
-R package for quantifying diversity dynamics using fossil sampling data (v0.6.1)
+R package for quantifying diversity dynamics using fossil sampling data
 
 ## News
-- I re-uploaded the package to the CRAN servers (including a minor update with a new function and some help file corrections), but it will likely take more than a week until you can use the regular package installing routines. The section 'Installing' below will guide you through the installation process in a different way. I will keep you posted when the binaries are accesible for the different architectures.
+- The package is published on the CRAN servers (v0.6.1). You can install it with the regular installation procedure, by running:
+`install.packages("divDyn")` 
+from the R console. 
+
+Note that it takes more than a week until something submitted to CRAN is actually available to the end-users. Therefore, I will upload the newest version to github first, which will be then accessible from CRAN. As the package is still under intensive development, I recommend you to use the newest updates. 
 
 - The preprint describing the package is uploaded to bioRxiv. You can download it from here:
 http://biorxiv.org/cgi/content/short/423780v1.
 If you decide to use the methods implemented in this package, please refer to this document. The examples implemented in this manuscript are elaborated in this vignette:
 https://github.com/adamkocsis/ddPhanero/blob/master/doc/0.3/dd_phanero.pdf
-
-
 
 
 ## About the package
@@ -22,7 +24,15 @@ As the package is still getting developed, please note that some interface chang
 
 ## Installing 
 
-### 1. Using the the binaries I have built
+### 1. From CRAN
+
+As the package is now published on CRAN, you can install the appropriate binaries by running 
+`install.packages("divDyn")`
+
+
+
+
+### 2. Using the the binaries I have built
 
 I have updated the windows binaries so that they work with the latest internals (3.5.1). If you want to use the package, please update your R.
 
@@ -35,7 +45,7 @@ I have updated the windows binaries so that they work with the latest internals 
 
 - If you have Linux computer you probably know how to solve these problems (go to 2.)
 
-### 2. Using the source tarball to install
+### 3. Using the source tarball to install
 This you can do with running
 ```
 install.packages(
@@ -47,7 +57,7 @@ from the R console. Note that there is some code in the package that requires co
 
 The sources of the older versions are also in the _archive/source folder. You can access earlier versions by changing the version number in the command above in an appropriate way.
 
-### 3. Using the repository files and devtools to install
+### 4. Using the repository files and devtools to install
 
 To do this:
 - You need a compiler, as for method 2
