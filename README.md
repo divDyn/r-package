@@ -3,10 +3,11 @@ R package for quantifying diversity dynamics using fossil sampling data
 
 ## News
 - The package is published on the CRAN servers (v0.6.1). You can install it with the regular installation procedure, by running:
-`install.packages("divDyn")` 
-from the R console. 
+```
+install.packages("divDyn")
+```
 
-Note that it takes more than a week until something submitted to CRAN is actually available to the end-users. Therefore, I will upload the newest version to github first, which will be then accessible from CRAN. As the package is still under intensive development, I recommend you to use the newest updates. 
+from the R console. Note that it takes more than a week until something submitted to CRAN is actually available to the end-users. Therefore, I will upload the newest version to github first, which will be then accessible from CRAN. As the package is still under intensive development, I recommend you to use the newest updates. 
 
 - The preprint describing the package is uploaded to bioRxiv. You can download it from here:
 http://biorxiv.org/cgi/content/short/423780v1.
