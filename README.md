@@ -66,7 +66,7 @@ If you do not want to mess around with compiler and such, then contact me and I 
 
 # Change log
 
-## [0.6.2] - 2018.10.15
+## [0.6.2] - 2018.10.22
 ### Added
 - The collapse() and seqduplicated() utility functions.
 - The 'zerodur' argumnet to the fadlad() function
