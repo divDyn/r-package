@@ -20,6 +20,19 @@ tsplot(stages, boxes="period", shading="stage", xlim=59:81)
 tsplot(stages, boxes="per", shading="series", 
   labels.args=list(col="red", font=3), shading.col=c("white", "wheat"))
 
+## ----tsplot4, echo= TRUE, plot=TRUE, fig.height=5.5----------------------
+tsplot(stages, boxes=c("per"), shading="per", boxes.col="periodCol")
+
+## ----tsplot5, echo= TRUE, plot=TRUE, fig.height=5.5----------------------
+tsplot(stages, boxes=c("short","period"), shading="short", 
+  xlim=59:69, boxes.col=c("col","periodCol"), labels.args=list(cex=0.5))
+
+## ----tsplot6, echo= TRUE, plot=TRUE, fig.height=5.5----------------------
+tsplot(stages, boxes=c("short","period"), shading="short", 
+  xlim=59:69, boxes.col=c("col","periodCol"),
+  labels.args=list(list(cex=0.5),list(cex=1)),
+  boxes.args=list(list(),list(density=80)))
+
 ## ----examp, echo= FALSE, results=TRUE------------------------------------
 structure <- data.frame(
   tax= c("Sp1", "Sp1", "Sp1", "Sp2","Sp3", "Sp2"),
@@ -325,7 +338,7 @@ legend("topleft", legend=c("unique mid entries",  "stg stages"),
 # resolve time
   breakPoints <- seq(-270, 0, 10)
 # and calculate diversity dynamics
-  ddMid10<-divDyn(fossils, tax="genus", bin="mid_ma", breaks=breakPoints)
+  ddMid10<-divDyn(fossils, tax="genus", bin="mid_ma", breaks=breakPoints )
 
 ## ----dd10Show, echo=TRUE, eval=FALSE-------------------------------------
 #  # lines
@@ -536,13 +549,13 @@ cor.test(maxPaLat, stages$mid[54:94], method="spearman")
 subMaxPaLat <- subsample(fossGen, bin="stg", tax="genus", 
   iter=100, q=20,FUN=PL)
 tsplot(stages, shading="series", boxes="per", xlim=51:95,
-  ylab="maximum sampling paleolatitude", ylim=c(0,90))
+  ylab="maximum sampled paleolatitude", ylim=c(0,90))
 lines(stages$mid[54:94], maxPaLat, col="blue")
 lines(stages$mid[54:94], subMaxPaLat, col="black")
 # legend
 legend("topleft", legend=c("max",
-"subsampled max"), col=c("blue","black"),
-bg="white")
+  "subsampled max"), col=c("blue","black"),
+  bg="white", lty=c(1,1))
 
 cor.test(subMaxPaLat, stages$mid[54:94], method="spearman")
 

@@ -1,4 +1,4 @@
-citHeader("To cite divDyn in publications use the following citation until the peer-reviewed article is published:")
+citHeader("To cite divDyn in publications, use the following citation until the peer-reviewed article is published:")
 
 citEntry(entry = "Article",
   title        = "The R package divDyn for quantifying diversity dynamics using fossil sampling data",

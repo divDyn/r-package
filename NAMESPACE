@@ -20,6 +20,8 @@ export(subtrialSQS)
 export(subtrialOXW)
 export(indices)
 export(singletons)
+export(seqduplicated)
+export(collapse)
 
 importFrom("Rcpp", evalCpp)
 importFrom("grDevices", "col2rgb", "rgb")

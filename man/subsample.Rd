@@ -83,7 +83,7 @@ sib<-function(dat, bin, tax){
   calc<-tapply(INDEX=dat[,bin], X=dat[,tax], function(y){
     length(levels(factor(y)))
   })
-  return(calc[as.character(stages$num)])
+  return(calc[as.character(stages$stg)])
 }
 sibDiv<-sib(corals, bin="stg", tax="genus")
 

@@ -29,3 +29,14 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// seqduplicated
+LogicalVector seqduplicated(NumericVector vect);
+RcppExport SEXP _divDyn_seqduplicated(SEXP vectSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type vect(vectSEXP);
+    rcpp_result_gen = Rcpp::wrap(seqduplicated(vect));
+    return rcpp_result_gen;
+END_RCPP
+}

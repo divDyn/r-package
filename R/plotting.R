@@ -13,10 +13,12 @@
 #' @param gap \code{(numeric)}: Proportion of the vertical extent of the plot that should be a gap betwen the time scale and the plot.
 #' @param bottom \code{(character)}: Column name of the table for the variable that contains the older ages of intervals.
 #' @param top \code{(character)}: Column name of the table for the variable that contains the earliest ages of intervals.
+#' @param boxes.col \code{(character)}: Column name of the colour codes for the boxes. Each entry in this column has to correspond to an entry in the \code{boxes} column. It also overrides the \code{col} entries in the \code{boxes.args} argument.
 #' @param shading \code{(character)}: Column name used for the shading. By default, no shading will be drawn (\code{shading = NULL}).
-#' @param shading.col \code{(character)}: Name of colors that will be used for the shading, if shading is set. The provided colors will be repeated as many times as necessary.
+#' @param shading.col \code{(character)}: Colors that will be used for the shading, if shading is set. It is either a single column of the \code{tsdat} object with color codes, or multiple color entries. The provided colors will be repeated as many times as necessary.
 #' @param plot.args \code{(list)}: Arguments that will be passed to the main \code{\link[graphics]{plot}} function.  Can be useful for the suppression of axes, font change etc.
-#' @param labels.args \code{(list)}: Arguments that will be passed to the \code{\link[graphics]{text}} function that draws the labels. 
+#' @param labels.args \code{(list)}: Arguments that will be passed to the \code{\link[graphics]{text}} function that draws the labels. Can be \code{list}s of \code{list}s if multiple series of ``boxes`` are used.
+#' @param labels \code{(logical)}: Should the labels within the boxes be drawn? Setting this argumnet to \code{FALSE} will not call the \code{\link[graphics]{text}} function that draws the labels. 
 #' @param boxes.args \code{(list)}: Arguments that will be passed to the \code{\link[graphics]{rect}} function that draws the rectangles of time intervals.
 #' @examples
 #'	data(stages) 
@@ -32,13 +34,19 @@
 #'	  tsplot(stages, boxes="short", shading="stage", xlim=c(250,199), 
 #'	    ylab="variable", labels.args=list(cex=1.5, col="blue"), 
 #'	    boxes.args=list(col="gray95"))
+#'
+#'  # colourful plot with two levels of hierarchy
+#'    tsplot(stages, boxes=c("short", "period"), shading="series",
+#'      boxes.col=c("col", "periodCol"), xlim=c(52:69))
 #' @export
-tsplot<-function(tsdat,  boxes=NULL, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
+tsplot<-function(tsdat,  ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 	bottom="bottom", top="top",
 	xlab="age (Ma)", ylab="",
+	boxes=NULL, boxes.col=NULL,
 	shading=NULL,shading.col=c("white", "gray80"),
 	plot.args=NULL,
 	boxes.args=NULL,
+	labels=TRUE, 
 	labels.args=NULL){
 	
 #	tsdat<-stages
@@ -60,10 +68,14 @@ tsplot<-function(tsdat,  boxes=NULL, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 	
 	
 	# length(ylim) should be 2, and numeric, default
-	if(!is.numeric(ylim)){
+	if(!is.numeric(ylim) | length(ylim)!=2){
 		stop("ylim should be a numeric vector of length 2")
 	}
 	
+	if(!labels & !is.null(labels.args)){
+		warning("Labels are set not to plotted, yet there are plotting arguments provided!")
+	}
+
 	
 	if(sum(boxes%in%colnames(tsdat))!=length(boxes)){
 		stop("The referenced 'boxes' column does not exist.")
@@ -72,6 +84,12 @@ tsplot<-function(tsdat,  boxes=NULL, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 	# no boxes
 	if(length(boxes)==0) prop <- 0
 	
+	if(!is.null(boxes.col)){
+		if(length(boxes)!=length(boxes.col)) stop("'boxes.col' should have the same length as 'boxes'")
+		if(sum(boxes.col%in%colnames(tsdat))!=length(boxes.col)) stop("One of the columns in 'boxes.col' is not found.")
+	}
+
+
 	# multiple layer of boxes
 	if(length(prop)==1) prop <-rep(prop, length(boxes))
 	
@@ -116,9 +134,15 @@ tsplot<-function(tsdat,  boxes=NULL, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 	}
 	
 	# the ylim adjustment
+	# conditional for axis reversal - change the offset direction
+		if(min(ylim[1])<max(ylim[2])){
+			 signChanger <-1
+		}else{
+			signChanger <- -1
+		}
 	
 	if(!yLog){
-		boxesTop<-ylim[1]-diff(range(ylim))*gap
+		boxesTop<-ylim[1]-(diff(range(ylim))*gap)*signChanger
 		plotBottom<-ylim[1]
 	
 		# in case there are boxes entries
@@ -127,7 +151,7 @@ tsplot<-function(tsdat,  boxes=NULL, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 			
 			# for every box level, subtract the necessary amount
 			for(i in 1:length(boxes)){
-				vertVector<-c(vertVector, vertVector[i]-diff(range(ylim))*prop[i])
+				vertVector<-c(vertVector, vertVector[i]-(diff(range(ylim))*prop[i]*signChanger))
 			}
 			
 			ylim[1] <-vertVector[length(vertVector)]
@@ -136,7 +160,7 @@ tsplot<-function(tsdat,  boxes=NULL, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 		}
 		
 	}else{
-		boxesTop<-exp(log(ylim[1])-diff(range(log(ylim)))*gap)
+		boxesTop<-exp(log(ylim[1])-(diff(range(log(ylim)))*gap*signChanger))
 		plotBottom<-ylim[1]
 	
 		# in case there are boxes entries
@@ -145,7 +169,7 @@ tsplot<-function(tsdat,  boxes=NULL, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 			
 			# for every box level, subtract the necessary amount
 			for(i in 1:length(boxes)){
-				vertVector<-c(vertVector, exp(log(vertVector[i])-diff(log(range(ylim)))*prop[i]))
+				vertVector<-c(vertVector, exp(log(vertVector[i])-(diff(log(range(ylim)))*prop[i]*signChanger)))
 			}
 			
 			ylim[1] <-vertVector[length(vertVector)]
@@ -197,7 +221,7 @@ tsplot<-function(tsdat,  boxes=NULL, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 		for(j in 1:length(boxes)){
 		
 			# the box drawing
-			boxLev<-unique(tsdat[,boxes[j]])
+			boxLev<-collapse(tsdat[,boxes[j]])
 			xLeft<-rep(NA, length(boxLev))
 			xRight<-rep(NA, length(boxLev))
 			yTop<-rep(NA, length(boxLev))
@@ -217,7 +241,7 @@ tsplot<-function(tsdat,  boxes=NULL, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 					labMid[i]<-mean(c(curBottom, curTop))
 				
 			}
-			
+
 			#boxes
 			# inner arguments
 			boxArgs<-list(
@@ -226,61 +250,109 @@ tsplot<-function(tsdat,  boxes=NULL, ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 				ytop= yTop,
 				ybottom=yBottom
 			)
+
+			# hierarchical input 
+			if(class(boxes.args[[1]])=="list"){
+				if(length(boxes.args)!=length(boxes)) stop("Number of lists in 'boxes.args' is not the same as the length of 'boxes'")
+				boxes.argsIn <- boxes.args[[j]]
+			}else{
+				boxes.argsIn <- boxes.args	
+			}
+					
 			
 			# process the supplied arguments, in case they are in the table
-			boolUnique<-boxes.args%in%colnames(tsdat)
+			boolUnique<-boxes.argsIn%in%colnames(tsdat)
 			if(sum(boolUnique)>0){
 				ind<-which(boolUnique)
 				for(i in ind){
-					boxes.args[[i]]<-unique(tsdat[,boxes.args[[i]]])
+					boxes.argsIn[[i]]<-unique(tsdat[,boxes.argsIn[[i]]])
 				}
+			}
+
+			if(!is.null(boxes.col)){
+				boolRequire <- !seqduplicated(tsdat[,boxes[j]])
+
+				# the color values of the box
+				boxes.argsIn$col <- tsdat[boolRequire, boxes.col[j]]
+
 			}
 			
 			# combine with outer arguments
-			boxArgs<-c(boxArgs, boxes.args)
+			boxArgs<-c(boxArgs, boxes.argsIn)
 			do.call(graphics::rect, boxArgs)
 						
 			
 			
 			# the labels
-			# inner arguments
-			labArgs<-list(
-				label=boxLev, 
-				y=(boxArgs$ytop+boxArgs$ybottom)/2, 
-				x= labMid
-			)
-				
-			# combine inner and outer arguments
-			# process the supplied arguments, in case they are in the table
-			boolUnique<-labels.args%in%colnames(tsdat)
-			if(sum(boolUnique)>0){
-				ind<-which(boolUnique)
-				for(i in ind){
-					labels.args[[i]]<-unique(tsdat[,labels.args[[i]]])
+			# should the labels be plotted
+			if(labels){
+				# inner arguments
+				labArgs<-list(
+					label=boxLev, 
+					y=(boxArgs$ytop+boxArgs$ybottom)/2, 
+					x= labMid
+				)
+
+				# hierarchical input 
+				if(class(labels.args[[1]])=="list"){
+					if(length(labels.args)!=length(boxes)) stop("Number of lists in 'labels.args' is not the same as the length of 'boxes'")
+					labels.argsIn <- labels.args[[j]]
+				}else{
+					labels.argsIn <- labels.args	
 				}
+					
+				# combine inner and outer arguments
+				# process the supplied arguments, in case they are in the table
+				boolUnique<-labels.argsIn%in%colnames(tsdat)
+				if(sum(boolUnique)>0){
+					ind<-which(boolUnique)
+					for(i in ind){
+						labels.argsIn[[i]]<-unique(tsdat[,labels.argsIn[[i]]])
+					}
+				}
+				
+				labArgs<-c(labArgs, labels.argsIn)
+				do.call(text,labArgs)
 			}
-			
-			labArgs<-c(labArgs, labels.args)
-			do.call(text,labArgs)
 		}
 	} 
 	
 	# shading
 	if(!is.null(shading)){
-		shadeLev<-unique(tsdat[,shading])
+		bDupl<-seqduplicated(tsdat[, shading])
+		shadeLev<-tsdat[!bDupl,shading]
+
+		# predefined color set
+		shadeLevCol <- NULL
+
+		#use a collumn to get this
+		if(length(shading.col)==1){
+			if(shading.col%in%colnames(tsdat)){
+				shadeLevCol<-tsdat[!bDupl,shading.col]
+
+			}
+		}
+			
 		for(i in 1:length(shadeLev)){
 			
 			# the rectangles
 			boolSel<-shadeLev[i]==tsdat[,shading]
 			curBottom<-max(tsdat[boolSel,bottom], na.rm=T)
 			curTop<-min(tsdat[boolSel,top], na.rm=T)
-			if(i%%length(shading.col)){
-				graphics::rect(xleft=curBottom, xright=curTop, ybottom=plotBottom, ytop=ylim[2], border=NA, col=shading.col[i%%length(shading.col)+1])
+			# no predefined colors
+			if(is.null(shadeLevCol)){
+				if(i%%length(shading.col)){
+					graphics::rect(xleft=curBottom, xright=curTop, ybottom=plotBottom, ytop=ylim[2], border=NA, col=shading.col[i%%length(shading.col)+1])
+				}else{
+					graphics::rect(xleft=curBottom, xright=curTop, ybottom=plotBottom, ytop=ylim[2], border=NA, col=shading.col[i%%length(shading.col)+1])
+				}
+			# predefined colors
 			}else{
-				graphics::rect(xleft=curBottom, xright=curTop, ybottom=plotBottom, ytop=ylim[2], border=NA, col=shading.col[i%%length(shading.col)+1])
+				graphics::rect(xleft=curBottom, xright=curTop, ybottom=plotBottom, ytop=ylim[2], border=NA, col=shadeLevCol[i])
 			}
 		
 		}
+	
 		graphics::rect(xright=xlim[2], xleft=xlim[1], ytop=ylim[2], ybottom=plotBottom)
 	}
 	# force box()	

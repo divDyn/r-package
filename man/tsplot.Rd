@@ -4,15 +4,14 @@
 \alias{tsplot}
 \title{Time series plotting using a custom time scale}
 \usage{
-tsplot(tsdat, boxes = NULL, ylim = c(0, 1), xlim = NULL, prop = 0.05,
-  gap = 0, bottom = "bottom", top = "top", xlab = "age (Ma)",
-  ylab = "", shading = NULL, shading.col = c("white", "gray80"),
-  plot.args = NULL, boxes.args = NULL, labels.args = NULL)
+tsplot(tsdat, ylim = c(0, 1), xlim = NULL, prop = 0.05, gap = 0,
+  bottom = "bottom", top = "top", xlab = "age (Ma)", ylab = "",
+  boxes = NULL, boxes.col = NULL, shading = NULL,
+  shading.col = c("white", "gray80"), plot.args = NULL, boxes.args = NULL,
+  labels = TRUE, labels.args = NULL)
 }
 \arguments{
 \item{tsdat}{\code{(data frame)}: The time scale data frame.}
-
-\item{boxes}{\code{(character)}: Column name indicating the names that should be plotted as boxes of the timescale.}
 
 \item{ylim}{\code{(numeric)}: The vertical extent of the plot, analogous to the same argument of \code{\link[graphics]{plot}}. By default it is set to the \code{[0,1]} interval.}
 
@@ -30,15 +29,21 @@ tsplot(tsdat, boxes = NULL, ylim = c(0, 1), xlim = NULL, prop = 0.05,
 
 \item{ylab}{\code{(character)}: The label of the data axis.}
 
+\item{boxes}{\code{(character)}: Column name indicating the names that should be plotted as boxes of the timescale.}
+
+\item{boxes.col}{\code{(character)}: Column name of the colour codes for the boxes. Each entry in this column has to correspond to an entry in the \code{boxes} column. It also overrides the \code{col} entries in the \code{boxes.args} argument.}
+
 \item{shading}{\code{(character)}: Column name used for the shading. By default, no shading will be drawn (\code{shading = NULL}).}
 
-\item{shading.col}{\code{(character)}: Name of colors that will be used for the shading, if shading is set. The provided colors will be repeated as many times as necessary.}
+\item{shading.col}{\code{(character)}: Colors that will be used for the shading, if shading is set. It is either a single column of the \code{tsdat} object with color codes, or multiple color entries. The provided colors will be repeated as many times as necessary.}
 
 \item{plot.args}{\code{(list)}: Arguments that will be passed to the main \code{\link[graphics]{plot}} function.  Can be useful for the suppression of axes, font change etc.}
 
 \item{boxes.args}{\code{(list)}: Arguments that will be passed to the \code{\link[graphics]{rect}} function that draws the rectangles of time intervals.}
 
-\item{labels.args}{\code{(list)}: Arguments that will be passed to the \code{\link[graphics]{text}} function that draws the labels.}
+\item{labels}{\code{(logical)}: Should the labels within the boxes be drawn? Setting this argumnet to \code{FALSE} will not call the \code{\link[graphics]{text}} function that draws the labels.}
+
+\item{labels.args}{\code{(list)}: Arguments that will be passed to the \code{\link[graphics]{text}} function that draws the labels. Can be \code{list}s of \code{list}s if multiple series of ``boxes`` are used.}
 }
 \description{
 This function allows the user to quickly plot a time scale data table
@@ -60,4 +65,8 @@ data(stages)
   tsplot(stages, boxes="short", shading="stage", xlim=c(250,199), 
     ylab="variable", labels.args=list(cex=1.5, col="blue"), 
     boxes.args=list(col="gray95"))
+
+ # colourful plot with two levels of hierarchy
+   tsplot(stages, boxes=c("short", "period"), shading="series",
+     boxes.col=c("col", "periodCol"), xlim=c(52:69))
 }

@@ -68,7 +68,7 @@
 #'   calc<-tapply(INDEX=dat[,bin], X=dat[,tax], function(y){
 #'     length(levels(factor(y)))
 #'   })
-#'   return(calc[as.character(stages$num)])
+#'   return(calc[as.character(stages$stg)])
 #' }
 #' sibDiv<-sib(corals, bin="stg", tax="genus")
 #' 
@@ -1311,11 +1311,17 @@ subsampleSQSinexact<-function(binVar, freqVar, q, collVar=NULL, byList=FALSE, in
 			if(length(cumulative)>0){
 				if(cumulative[length(cumulative)]>q){
 					bSelect<-cumulative<=q
+
 					# potential forking!!! 
 					if(appr=="over"){
 						if(sum(bSelect)!=length(bSelect)){
 							bSelect[sum(bSelect)+1] <- TRUE
 						}
+					}
+
+					# if first selected species have larger then quorum frequency 
+					if(appr=="under" & sum(bSelect)==0){
+						bSelect[1]<-TRUE	
 					}
 					
 					# the species to keep
@@ -1433,4 +1439,3 @@ subsampleSQSinexact<-function(binVar, freqVar, q, collVar=NULL, byList=FALSE, in
 	return(res)
 
 }
-

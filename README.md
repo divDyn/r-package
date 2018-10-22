@@ -2,51 +2,51 @@
 R package for quantifying diversity dynamics using fossil sampling data
 
 ## News
+
+- I posted a new update of the package (v0.6.2). As the package paper is under review, I will only send monthly updates to the CRAN until the paper is ready for resubmission. 
+
+- To avoid chaos, I created a separate entity for all divDyn related repositories. The new url is http://github.com/divDyn. 
+
 - The package is published on the CRAN servers (v0.6.1). You can install it with the regular installation procedure, by running:
 `install.packages("divDyn")` from the R console. Note that it takes more than a week until something submitted to CRAN is actually available to the end-users. Therefore, I will upload the newest version to github first, which will be then accessible from CRAN. As the package is still under intensive development, I recommend you to use the newest updates. 
 
 - The preprint describing the package is uploaded to bioRxiv. You can download it from here:
 http://biorxiv.org/cgi/content/short/423780v1.
 If you decide to use the methods implemented in this package, please refer to this document. The examples implemented in this manuscript are elaborated in this vignette:
-https://github.com/adamkocsis/ddPhanero/blob/master/doc/0.3/dd_phanero.pdf
+https://github.com/divDyn/ddPhanero/blob/master/doc/0.3/dd_phanero.pdf
 
 
 ## About the package
 
 If you are interested in what this package does, or have questions about its use, please check out the first vignette: 'Handout to the R package 'divDyn' v0.6.1 for diversity dynamics from fossil occurrence data' here:
-https://github.com/adamkocsis/divDyn/blob/master/_archive/vignettes/Handout_0.6.1.pdf
+https://github.com/divDyn/r_package/blob/master/_archive/vignettes/Handout_0.6.2.pdf
 
 As the package is still getting developed, please note that some interface changes might occurr based on the feedback of people and my own experience on what is easier to use. If you have any requirements or recommendations about what to add (or more importantly, if you find a mistake), do not hesitate to contact me at adam.kocsis@fau.de.
 
 
 ## Installing 
 
-### 1. From CRAN
+### 1. From CRAN (v0.6.1)
 
 As the package is now published on CRAN, you can install the appropriate binaries by running 
 `install.packages("divDyn")`
 
-
-
-
-### 2. Using the the binaries I have built
+### 2. Using the pre-built binaries (v0.6.2)
 
 I have updated the windows binaries so that they work with the latest internals (3.5.1). If you want to use the package, please update your R.
 
 - If you have a windows computer, you can install the package with the following R command:
-  `install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Win_x64_x86/divDyn_0.6.1.zip", repos=NULL)`
+  `install.packages("https://github.com/divDyn/r_package/raw/master/_bin/Win_x64_x86/divDyn_0.6.2.zip", repos=NULL)`
 
 - If you have a Mac, then use the following link (still older version, for R <3.5).
-  `install.packages("https://github.com/adamkocsis/divDyn/raw/master/_bin/Mac_OSX/divDyn_0.5.2.tgz", repos=NULL)`
-  I know this is old, but will update it at the earliest convenience (I do not have a Mac). Until I am done with this, please use install    method 2.
+  `install.packages("https://github.com/divDyn/r_package/raw/master/_bin/Mac_OSX/divDyn_0.5.2.tgz", repos=NULL)`
+  I know this is old, but will update it at the earliest convenience (I do not have a Mac). Until I am done with this, please use install method 3 or 4.
 
-- If you have Linux computer you probably know how to solve these problems (go to 2.)
-
-### 3. Using the source tarball to install
+### 3. Using the source tarball to install (v0.6.2)
 This you can do with running
 ```
 install.packages(
-  "https://github.com/adamkocsis/divDyn/raw/master/_archive/source/divDyn_0.6.1.tar.gz", 
+  "https://github.com/divDyn/r_package/raw/master/_archive/source/divDyn_0.6.2.tar.gz", 
   repos=NULL, type="source")
 ```
 
@@ -54,17 +54,31 @@ from the R console. Note that there is some code in the package that requires co
 
 The sources of the older versions are also in the _archive/source folder. You can access earlier versions by changing the version number in the command above in an appropriate way.
 
-### 4. Using the repository files and devtools to install
+### 4. Using the repository files and 'devtools' to install (v0.6.2)
 
 To do this:
 - You need a compiler, as for method 2
 - Make sure that the 'devtools' package is installed
-- Run `devtools::install_github("adamkocsis/divDyn")`
+- Run `devtools::install_github("divDyn/r_package")`
 
 If you do not want to mess around with compiler and such, then contact me and I will find a way to compile binaries for you.
 
 
 # Change log
+
+## [0.6.2] - 2018.10.15
+### Added
+- The collapse() and seqduplicated() utility functions.
+- The 'zerodur' argumnet to the fadlad() function
+- Hexadecimal colour values to the 'stages' table.
+- The 'boxes.col' argumnet is added to the tsplot() function to plot these colours.
+- The 'labels' argument to the the tsplot() function, that allows the user not to plot the labels within the boxes.
+
+### Changed/Fixed
+- The stage identification 'Thanetian' was changed to 'Selandian-Thanetian in the 'stages' object to better reflect what the interval really is. It also had a typo in the 'per' column, at the Ordovician/Silurian boundary. The abbreviation of the Bartonian stage was changed to 'Brt' as 'Bar' was already assigned to the Barremian, causing plotting errors.
+- Bug in the 'noNAStart' argument of the binstat() function, causing inappropriate function return
+- tsplot() now allows y-axis reversal, e.g. ylim=c(4,-1)
+- fix of bug in subsample() that resulted in an error message when the first randomly chosen species had higher adjusted frequency than the quorum
 
 ## [0.6.1] - 2018.10.01
 ### Added

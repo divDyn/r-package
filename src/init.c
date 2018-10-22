@@ -9,11 +9,13 @@
                                                                        
 /* .Call calls */                                                      
 extern SEXP _divDyn_Counts(SEXP, SEXP);                                
-extern SEXP _divDyn_CRbinwise(SEXP, SEXP);                             
+extern SEXP _divDyn_CRbinwise(SEXP, SEXP);         
+extern SEXP _divDyn_seqduplicated(SEXP);                     
                                                                        
 static const R_CallMethodDef CallEntries[] = {                         
     {"_divDyn_Counts",    (DL_FUNC) &_divDyn_Counts,    2},            
     {"_divDyn_CRbinwise", (DL_FUNC) &_divDyn_CRbinwise, 2},            
+    {"_divDyn_seqduplicated", (DL_FUNC) &_divDyn_seqduplicated, 1},        
     {NULL, NULL, 0}                                                    
 };                                                                     
                                                                        

@@ -94,6 +94,7 @@ binstat <- function(dat, tax="genus", bin="stg", coll=NULL, ref=NULL, noNAStart=
 	
 	# the number of occurrences
 	occs<-table(binVar)
+
 	needed<- c(needed, "occs")
 	
 	# the number of collections)
@@ -238,7 +239,7 @@ binstat <- function(dat, tax="genus", bin="stg", coll=NULL, ref=NULL, noNAStart=
 	
 	if(noNAStart){
 		firstVal<-min(binVar, na.rm=T)
-		all<-all[firstVal:length(occs),]
+		all<-all[as.character(firstVal:max(as.numeric(names(occs)), na.rm=T)),]
 		
 	}
 	all<-as.data.frame(all)

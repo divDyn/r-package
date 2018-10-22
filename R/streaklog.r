@@ -134,3 +134,86 @@ vectorFromLog<-function(streak, len=T){
 }
 
 
+#' Determination and omission of consecutive duplicates in a vector.
+#'
+#' \code{seqduplicated()} The function determines which elements of a vector are duplicates (similarly to \code{\link[base]{duplicated}}) in consecutive rows.
+#' 
+#' These functions are essentially about checking whether a value in a vector at index is the same as the value at the previous index. This seamingly primitive task had to be rewritten with Rcpp for speed and the appropriate handling of \code{NA} values. 
+#' @param x (\code{vector}): input object.
+#' @param na.rm (\code{logical}): Are \code{NA} entries to be treated as duplicates (\code{TRUE}) or just like a normal value (\code{FALSE})?
+#' @param na.breaks (\code{logical}): If \code{na.rm=TRUE} and the \code{NA} values are surrounded by the same values, should the streak be treated as broken? Running \code{seqduplicated(, na.rm=TRUE)} on \code{(2, 1,NA, 1)} while setting \code{na.breaks} to \code{TRUE} will return \code{(FALSE, FALSE, TRUE, FALSE)}, and with \code{TRUE} it will return \code{(FALSE, FALSE, TRUE, TRUE)}. The results with the same argumentation of \code{collapse()} will be \code{(2,1)} and \code{(2,1,1)}.
+#' @rdname collapse
+#' @examples
+#'   
+#' # example vector
+#'   examp <- c(4,3,3,3,2,2,1,NA,3,3,1,NA,NA,5, NA, 5)
+#' 
+#' # seqduplicated()
+#'   seqduplicated(examp)
+#' 
+#'   # contrast with 
+#'   duplicated(examp)
+#' 
+#'   # with NA removal
+#'   seqduplicated(examp, na.rm=TRUE)
+#' @export
+seqduplicated <- function(x, na.rm=FALSE, na.breaks=TRUE){
+	if(!is.vector(x)) stop("x has to be a vector.")
+	# cast to numeric
+	y <- as.integer(factor(x))
+	# has to treat NAs the same
+
+	if(na.rm & !na.breaks){
+		boolNA <- !is.na(y)
+		y<-y[boolNA]
+	}
+	logic<- .Call('_divDyn_seqduplicated', PACKAGE = 'divDyn', y)
+	
+	if(na.rm & !na.breaks){
+		oldLogic <- logic
+		logic <- rep(TRUE, length(x))
+		logic[boolNA] <- oldLogic
+	}
+	# treat NAs as duplicates
+	if(na.rm & na.breaks) logic[is.na(x)] <- TRUE
+
+	return(logic)
+}
+
+#' Determination and omission of consecutive duplicates in a vector.
+#'
+#' \code{collapse()} Omits duplicates similarly to \code{\link[base]{unique}}, but only in consecutive rows, so the sequence of state changes remains, but without duplicates.
+#'
+#' @rdname collapse
+#' @examples
+#'  
+#' # the same with collapse()
+#'   collapse(examp)
+#' 
+#'   # contrast with 
+#'   unique(examp)
+#' 
+#'   # with NA removal
+#'   collapse(examp, na.rm=TRUE)
+#'
+#'   # with NA removal, no breaking
+#'   collapse(examp, na.rm=TRUE, na.breaks=FALSE)
+#' 
+#' 
+#' @export
+collapse<- function(x, na.rm=FALSE, na.breaks=TRUE){
+	if(!is.vector(x)) stop("x has to be a vector.")
+
+	if(na.rm & !na.breaks) x<-x[!is.na(x)]
+	
+	# cast to numeric
+	y <- as.integer(factor(x))
+	# has to treat NAs the same
+
+	logic<- .Call('_divDyn_seqduplicated', PACKAGE = 'divDyn', y)
+
+	if(na.rm & na.breaks) logic[is.na(x)] <- TRUE
+
+	x[!logic]
+
+}

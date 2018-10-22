@@ -64,7 +64,7 @@
 #' 		\item{\code{reefs}}{A \code{list} of \code{vector}s. Entries in the \code{environment} field of the PaleoDB download indicate information regarding the likely reefal origin of carbonatic rocks. See the vignette ('§PhaneroCurve') on the exact use of these data. v0.9.}
 #' 		\item{\code{lith}}{A \code{list} of \code{vector}s. Entries in the \code{lithology1} field of the PaleoDB download indicate information regarding the substrate of the embedding rocks. This key maps the entries to \code{siliciclastic}, \code{"carbonate"} or \code{"unknown"} substrates. v0.9.}
 #' 		\item{\code{lat}}{A \code{list} of \code{vector}s. Entries in the \code{paleolat} field of the PaleoDB download indicate information regarding paleolatitude of the occurrences. This key maps the entries to \code{"tropical"} or \code{"non-tropical"} latitudes. v0.9.}
-#' 		\item{\code{grain}}{A \code{list} of \code{vector}s. Entries in the \code{lithology1} field of the PaleoDB download indicate information regarding the grain sizes of the depositional environment. This key maps the entries to \code{"coarse"}, \code{"fine"} or \code{"unknonwn"} grain sizes. v0.9.}
+#' 		\item{\code{grain}}{A \code{list} of \code{vector}s. Entries in the \code{lithology1} field of the PaleoDB download indicate information regarding the grain sizes of the depositional environment. This key maps the entries to \code{"coarse"}, \code{"fine"} or \code{"unknown"} grain sizes. v0.9.}
 #' 
 #' 	}
 #' 
@@ -73,15 +73,15 @@
 
 #' 95 bin Phanerozoic time scale based on the stratigraphic stages of Ogg et al. (2016).
 #' 
-#' Stage-level timescale used in some analyses.
+#' Stage-level (age-level) timescale used in some analyses.
 #' 
-#' This is an example time scale object that can be used in the Phanerozoic scale analyses. Example occurrence datasets related to the package use the variable \code{stg} when referring to this timescale.
+#' This is an example time scale object that can be used in the Phanerozoic-scale analyses. Example occurrence datasets related to the package use the variable \code{stg} when referring to this timescale.
 #' 
 #' @format A \code{data.frame} with 95 observations and 10 variables:
 #' 	\describe{
 #' 		\item{\code{per}}{Abbreviation of geologic periods.}
 #' 		\item{\code{period}}{Geologic periods.}
-#' 		\item{\code{series}}{Geologic series.}
+#' 		\item{\code{epoch}}{Geologic epochs.}
 #' 		\item{\code{stage}}{Names of geologic stages.}
 #' 		\item{\code{short}}{Abbreviations of geologic stages.}
 #' 		\item{\code{bottom}}{Numeric ages of the bottoms boundaries (earliest ages) of the bins.}
@@ -89,6 +89,9 @@
 #' 		\item{\code{top}}{Numeric ages of the tops (latest ages) of the bins.}
 #'		\item{\code{dur}}{Numeric ages of the durations for the bins.}
 #' 		\item{\code{stg}}{Integer number identifiers of the bins.}
+#'		\item{\code{periodCol}}{Hexadecimal color code of the periods.}
+#'		\item{\code{seriesCol}}{Hexadecimal color code of the series.}
+#'		\item{\code{col}}{Hexadecimal color code of the stages.}
 #' 	}
 #' 
 #' @source Based on Ogg et al. (2016), compiled by Wolfgang Kiessling.

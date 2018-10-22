@@ -1,10 +1,10 @@
 ---
-title: "Handout to the R package divDyn v0.6.1 for diversity dynamics using fossil sampling data"
+title: "Handout to the R package divDyn v0.6.2 for diversity dynamics using fossil sampling data"
 author: "Adam T. Kocsis, Carl J. Reddin, Wolfgang Kiessling"
 date: '`r Sys.Date()`'
 output: pdf_document
 vignette: >
-  %\VignetteIndexEntry{Handout to the R package divDyn v0.6.1 for diversity dynamics using fossil sampling data}
+  %\VignetteIndexEntry{Handout to the R package divDyn v0.6.2 for diversity dynamics using fossil sampling data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -21,11 +21,11 @@ The purpose of this vignette is to guide users through the basic capabilities of
 
 ## 1.1. Installation
 
-In order to install this beta version of the package, you have to download it from GitHub (http://www.github.com/adamkocsis/divDyn/). The installation instructions will be found on this webpage, but the package is planned to be uploaded to the CRAN servers as well. All questions should be addressed to Adam Kocsis, the creator and maintainer of the package (adam.kocsis@fau.de).
+To install this beta version of the package, you must download it either from the CRAN servers or its dedicated GitHub repository (http://www.github.com/divDyn/r_package/). All minor updates will be posted on GitHub as soon as they are finished, so please check this regularly. The version on CRAN will be lagging for some time, as it takes the servers many day to process everything and updates are expected to be frequent. All questions should be addressed to Adam Kocsis, the creator and maintainer of the package (adam.kocsis@fau.de).
 
 # 2. Necessary Data
 
-All functions in the 'divDyn' package are built on two fundamental data structures: a time scale table and an occurrence dataset. 
+Most functionality in the 'divDyn' package assumes that the time dimension broken down to discrete intervals. Accordingly, most functions are built on two fundamental data structures: a time scale table and an occurrence dataset. 
 
 ## 2.1. Time scales
 
@@ -62,6 +62,26 @@ tsplot(stages, boxes="per", shading="series",
   labels.args=list(col="red", font=3), shading.col=c("white", "wheat"))
 ```
 
+Although you can set it manually with the ``boxes.args`` argument, the time scale plotting function also features colored plotting of the boxes, via the argument ``boxes.col``. The ``stages`` object contains hexadecimal RGB codes for the system (period), series (epoch) and stage (age) entries of the ICS table of stratigraphy in the ``periodCol``, ``seriesCol`` and ``col`` columns, respectively. 
+```{r tsplot4, echo= TRUE, plot=TRUE, fig.height=5.5}
+tsplot(stages, boxes=c("per"), shading="per", boxes.col="periodCol")
+```
+
+
+Plotting of multiple levels as boxes is also supported now. Use vectors of column names if you want to add these.
+ 
+```{r tsplot5, echo= TRUE, plot=TRUE, fig.height=5.5}
+tsplot(stages, boxes=c("short","period"), shading="short", 
+  xlim=59:69, boxes.col=c("col","periodCol"), labels.args=list(cex=0.5))
+```
+Accordingly, the ``boxes.args`` and ``labels.args`` accept hierarchical input that corresponds to the levels of stratigraphic hierarchy.
+
+```{r tsplot6, echo= TRUE, plot=TRUE, fig.height=5.5}
+tsplot(stages, boxes=c("short","period"), shading="short", 
+  xlim=59:69, boxes.col=c("col","periodCol"),
+  labels.args=list(list(cex=0.5),list(cex=1)),
+  boxes.args=list(list(),list(density=80)))
+```
 Naturally, you can use other time scale plotting packages such as the 'geoscale' package developed by J. Bell (2015). These work great for Phanerozoic scale analyses, but be sure to check the compatibility of the time scale you use for the binning and the time scale used for plotting. As we have experience with problems that stemmed from the incompatibility of analyzing and plotting data, we recommend using your own timescale for plotting. 
 
 ## 2.2. Occurrence table
@@ -103,7 +123,7 @@ nrow(fossils)
 # 3. Basic patterns
 
 ## 3.1. Ranges  
-We can gain preliminary knowledge by examining the basic patterns of the stratigraphic ranges. Probably the most apparent of these are the stratigraphic ranges of the taxa, which can be easily summarized in the FAD-LAD matrix:
+We can gain preliminary knowledge by examining the basic patterns of the stratigraphic ranges . Probably the most apparent of these are the stratigraphic ranges of the taxa, which can be easily summarized in the FAD-LAD matrix:
 
 ```{r fadlad, echo= TRUE, results=FALSE }
 fl <- fadlad(fossils, bin="stg", tax="genus")
@@ -367,7 +387,7 @@ Although range-interpolation does not bias the 'SIB' metric, it is more affected
   lines(stages$mid[1:94], dd$samp3t, col="black", lwd=2)
 ```
 
-The SIB series can be partially corrected by the three-timer sampling-completeness (Alroy §ref). Although this can be a convenient correction it also increases the estimation error. Nevertheless, this is the least biased estimator for diversity. 
+The SIB series can be partially corrected by the three-timer sampling-completeness (Alroy §ref ). Although this can be a convenient correction it also increases the estimation error. Nevertheless, this is the least biased estimator for diversity. 
 
 ```{r ddCorr, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5}
 # basic plot
@@ -564,7 +584,7 @@ A potentially more promising solution is to assign the occurrences that go along
 # resolve time
   breakPoints <- seq(-270, 0, 10)
 # and calculate diversity dynamics
-  ddMid10<-divDyn(fossils, tax="genus", bin="mid_ma", breaks=breakPoints)
+  ddMid10<-divDyn(fossils, tax="genus", bin="mid_ma", breaks=breakPoints )
 ```
 
 In this case, the ``bin`` variable of the output will contain the mid ages of the bins. Do not worry about setting the exact values for the start and end of the age ranges. If no data occurs in the outlined bins, then the corresponding rows in the table will be empty. 
@@ -909,13 +929,13 @@ but it is questionable at this point, whether the increasing number of occurrenc
 subMaxPaLat <- subsample(fossGen, bin="stg", tax="genus", 
   iter=100, q=20,FUN=PL)
 tsplot(stages, shading="series", boxes="per", xlim=51:95,
-  ylab="maximum sampling paleolatitude", ylim=c(0,90))
+  ylab="maximum sampled paleolatitude", ylim=c(0,90))
 lines(stages$mid[54:94], maxPaLat, col="blue")
 lines(stages$mid[54:94], subMaxPaLat, col="black")
 # legend
 legend("topleft", legend=c("max",
-"subsampled max"), col=c("blue","black"),
-bg="white")
+  "subsampled max"), col=c("blue","black"),
+  bg="white", lty=c(1,1))
 
 cor.test(subMaxPaLat, stages$mid[54:94], method="spearman")
 ```
@@ -933,7 +953,7 @@ subUWunit <- subsample(fossGen, bin="stg", tax="genus",
 
 ### 5.4.2. Occurrence-weighted by-list subsampling (O^x^W)
 
-By-list subsampling methods use information about how the occurrences are clustered in lists. In the PaleoDB, these clusters are the collections that 'contain' the occurrences, which are direct products of sampling. Depending on whether we would like to emphasize the sampling of collections (related to beta diversity) or the number of entries in lists, you can use the O^x^W group of subsampling. Since the development of SQS (or CBR, see below) these methods have not been widely applied, but nevertheless, they could be useful in some projects.
+By-list subsampling methods use information about how the occurrences are clustered in lists. In the PaleoDB, these clusters are the collections that 'contain' the occurrences, which are direct products of sampling. Depending on whether we would like to emphasize the sampling of collections (related to beta diversity) or the number of entries in lists, you can use the O^x^W group of subsampling (Alroy et al., 2001). Since the development of SQS (or CBR, see below) these methods have not been widely applied, but nevertheless, they could be useful in some projects.
 The basis of these methods is that collection integrity cannot be broken during the subsampling procedure. Entire lists are drawn from the subsampling pool of each time bin, while the number of occurrences are tracked. These lists are the collections that should be indicated by setting the ``coll`` variable appropriately. When the quota is reached, no more occurrences are drawn. The rest of the process (assembly of the *trial dataset*, running the *applied function*) is the same as with the CR method.
 
 ```{r subOXW, echo=TRUE, results =FALSE}
@@ -977,7 +997,7 @@ subST[54:94, "occs"]
 ```
 
 Although there are ways to improve the accuracy of the subsampling process, the variation induced by this problem is only minuscule compared to those introduced by sampling and binning uncertainties.
-However, typically this ``x`` value is set to a value between 1 and 2 (e.g. 1.4). In these cases, you have to calculate the intensity of sampling. Although there is some discrepancy between the methods, the overall trajectories are quite similar.
+However, typically this ``x`` value is set to a value between 1 and 2 (e.g. 1.4). In these cases, you have to calculate the intensity of sampling . Although there is some discrepancy between the methods, the overall trajectories are quite similar.
 ```{r subO2, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5}
 subO2W <- subsample(fossGen, bin="stg", tax="genus", coll="collection_no", 
   iter=100, q=80, type="oxw", x=2)
@@ -1127,7 +1147,7 @@ affMajor <- affinity(knownBath, bin="stg", tax="genus",
 table(affMajor)
 ```
 
-The output of this function is a single character vector, values specifying the apparently preferred environments and the ``names`` attribute defining the taxon names. ``NA`` entries occur when the function is unable to define an affinity (i.e. the number of occurrences from both environments is the same). 
+The output of this function is a single character vector, values specifying the apparently preferred environments and the ``names`` attribute defining the taxon names. ``NA`` entries occur when the function is unable to define an affinity (i.e. the number of occurrences  from both environments is the same). 
 As you can see, an overwhelming majority of the taxa have shallow affinities based on this method, but this is not surprising, as most of the occurrences actually come from shallow environments.
 
 ```{r tabBath, echo=TRUE, results =TRUE}
@@ -1161,11 +1181,14 @@ Using the standard 95% percent as alpha level is an arbitrary choice. As the fos
 
 # Acknowledgements
 
-The package was developed in the context of a project on global paleobiogeography funded by the Deutsche Forschungsgemeinschaft (DFG project numbers Ko 5382/1-1 and Ko 5382/1-2). The package is also part of the DFG Research Unit 2332: TERSANE (TEmperature Related Stressors in Ancient Extinctions).  We are thankful to all testers of the package, including Emilia Jarochowska, Vanessa Roden, Andreas Lauchstedt,  and all participants of the first year International Master's Programme for Paleobiology at the GeoZentrum Nordbayern, FAU in Erlangen, Germany. We also thank all enterers of the Paleobiology Database. 
+The package was developed in the context of a project on global paleobiogeography funded by the Deutsche Forschungsgemeinschaft (DFG project numbers Ko 5382/1-1, Ko 5382/1-2, Ki 806/16-1). The package is also part of the DFG Research Unit 2332: TERSANE (TEmperature Related Stressors in ANcient Extinctions). We are thankful to all testers of the package, including Emilia Jarochowska, Vanessa Roden, Andreas Lauchstedt, Gwen Antell for suggestions, and all participants of the first year International Master's Programme for Paleobiology at the GeoZentrum Nordbayern, FAU in Erlangen, Germany. We also thank all enterers of the Paleobiology Database. 
 
 # References
 
 Alroy, J. (2008). Dynamics of origination and extinction in the marine fossil record. Proceedings of the National Academy of Science, 105, 11536-11542.
+
+Alroy, J., Marshall, C. R., Bambach, R. K., Bezusko, K., Foote, M., Fürsich, F. T., … Webber, A. (2001). Effects of sampling standardization on estimates of Phanerozoic marine diversification. Proceedings of the National Academy of Science, 98(11), 6261-6266. https://doi.org/10.1073/pnas.111144698
+
 
 Alroy, J., Aberhan, M., Bottjer, D. J., Foote, M., Fürsich, F. T., Harries, P. J., … Visaggi, C. C. (2008). Phanerozoic Trends in the Global Diversity of Marine Invertebrates. Science, 321(5885), 97-100. https://doi.org/10.1126/science.1156963
 

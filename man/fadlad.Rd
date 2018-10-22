@@ -4,7 +4,7 @@
 \alias{fadlad}
 \title{FAD - LAD matrix from occurrence data}
 \usage{
-fadlad(dat, tax, bin, ages = FALSE, na.rm = TRUE)
+fadlad(dat, tax, bin, ages = FALSE, na.rm = TRUE, zerodur = TRUE)
 }
 \arguments{
 \item{dat}{\code{(data.frame)}: Occurrence data.}
@@ -16,6 +16,8 @@ fadlad(dat, tax, bin, ages = FALSE, na.rm = TRUE)
 \item{ages}{\code{(logical)}: Are the bin entries ages (reversed time axis)? Setting ages to TRUE will replace the entries in 'bin' column(s) with their additive inverses.}
 
 \item{na.rm}{\code{(logical)}: Should taxa that have no valid FADs or LADs (due to only NA entries) be removed from the output?}
+
+\item{zerodur}{\code{(logical)}: If set to \code{TRUE}, single-interval taxa will 0 durations. Setting this argument to FALSE will add 1 to the durations of all taxa, which can be useful for binned data.}
 }
 \description{
 Function to generate range data from an occurrence dataset.

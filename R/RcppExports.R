@@ -9,3 +9,7 @@ CRbinwise <- function(binVar, quota) {
     .Call(`_divDyn_CRbinwise`, binVar, quota)
 }
 
+seqduplicated <- function(vect) {
+    .Call(`_divDyn_seqduplicated`, vect)
+}
+

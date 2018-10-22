@@ -19,6 +19,7 @@
 #' @param bin \code{(character)}: The column name of bin variable. If two column names are entered, then they will interpreted as the minimum and maximum age uncertainty. (see examples) 
 #' @param ages \code{(logical)}: Are the bin entries ages (reversed time axis)? Setting ages to TRUE will replace the entries in 'bin' column(s) with their additive inverses.
 #' @param na.rm \code{(logical)}: Should taxa that have no valid FADs or LADs (due to only NA entries) be removed from the output?
+#' @param zerodur \code{(logical)}: If set to \code{TRUE}, single-interval taxa will 0 durations. Setting this argument to FALSE will add 1 to the durations of all taxa, which can be useful for binned data.
 #' @examples 
 #' data(corals)
 #' 
@@ -36,7 +37,7 @@
 #' 
 #' @rdname fadlad
 #' @export
-fadlad<-function(dat, tax, bin, ages=FALSE, na.rm=TRUE){
+fadlad<-function(dat, tax, bin, ages=FALSE, na.rm=TRUE, zerodur=TRUE){
 	# for the prototype
 #	dat <- corals
 #	tax<- "genus"
@@ -81,6 +82,9 @@ fadlad<-function(dat, tax, bin, ages=FALSE, na.rm=TRUE){
 		
 	# calculate durations
 		fl$duration <- abs(fl[,"FAD"]-fl[,"LAD"])
+		if(!zerodur){
+			fl$duration <- fl$duration+1
+		}
 		
 	# add the species names
 	rownames(fl)<- names(tempFL)

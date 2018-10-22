@@ -341,3 +341,37 @@ NumericMatrix CRbinwise(NumericVector binVar, int quota){
 
 	return realEnd;
 }
+
+// collapsing a numeric vector - omit 
+
+// [[Rcpp::export]]
+LogicalVector seqduplicated(NumericVector vect){
+	
+	int length =vect.size();
+	LogicalVector newVect(length);
+	
+	newVect(0) = 0;
+
+
+	for(int i=1;i<length;i++){
+		// handling NAs
+		if(R_IsNA(vect(i)) || R_IsNA(vect(i-1))){
+			// both are NAs
+			if(R_IsNA(vect(i)) && R_IsNA(vect(i-1)))  newVect(i) = 1;
+
+			// first one is NA, the second one not
+			if(!R_IsNA(vect(i)) && R_IsNA(vect(i-1)))  newVect(i) = 0;
+
+			// second one is NA and the first one not
+			if(R_IsNA(vect(i)) && !R_IsNA(vect(i-1)))  newVect(i) = 0;
+
+		//regular values
+		}else{
+			newVect(i) = vect(i)==vect(i-1);
+		}
+		
+	}
+
+	return(newVect);
+
+}
