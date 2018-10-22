@@ -3,7 +3,7 @@ R package for quantifying diversity dynamics using fossil sampling data
 
 ## News
 
-- I posted a new update of the package (v0.6.2). As the package paper is under review, I will only send monthly updates to the CRAN until the paper is ready for resubmission. 
+- I posted a new update of the package (v0.6.2). As updates will be still quite frequent, I will only send monthly updates to CRAN. 
 
 - To avoid chaos, I created a separate entity for all divDyn related repositories. The new url is http://github.com/divDyn. 
 
