@@ -3,7 +3,7 @@ R package for quantifying diversity dynamics using fossil sampling data
 
 ## News
 
-- I posted a new update of the package (v0.6.3) that includes some of the new features while I finalize the next big release (0.7.0) in January 2019.
+- I posted a new update of the package (v0.6.3) that includes some of the new features while I finalize the next big release (v0.7.0, in January 2019).
 
 - The preprint describing the package is uploaded to bioRxiv. You can download it from here:
 http://biorxiv.org/cgi/content/short/423780v1.
@@ -13,7 +13,7 @@ https://github.com/divDyn/ddPhanero/blob/master/doc/0.3/dd_phanero.pdf
 
 ## About the package
 
-If you are interested in what this package does, or have questions about its use, please check out the first vignette: 'Handout to the R package 'divDyn' v0.6.1 for diversity dynamics from fossil occurrence data' here:
+If you are interested in what this package does, or have questions about its use, please check out the first vignette: 'Handout to the R package 'divDyn' v0.6.3 for diversity dynamics from fossil occurrence data' here:
 https://github.com/divDyn/r_package/blob/master/_archive/vignettes/Handout_0.6.3.pdf
 
 As the package is still getting developed, please note that some interface changes might occurr based on the feedback of people and my own experience on what is easier to use. If you have any requirements or recommendations about what to add (or more importantly, if you find a mistake), do not hesitate to contact me at adam.kocsis@fau.de.
@@ -75,13 +75,13 @@ If you do not want to mess around with compiler and such, then contact me and I 
 - bin processing in divDyn() had potential issues with negative integer bin numbers
 
 ### Deleted
-- The inf argument of divDyn(), that an unncessary complication
+- The inf argument of divDyn() 
 
 
 ## [0.6.2] - 2018.10.22
 ### Added
 - The collapse() and seqduplicated() utility functions.
-- The 'zerodur' argumnet to the fadlad() function
+- The 'zerodur' argument to the fadlad() function
 - Hexadecimal colour values to the 'stages' table.
 - The 'boxes.col' argument is added to the tsplot() function to plot these colours.
 - The 'labels' argument to the the tsplot() function, that allows the user not to plot the labels within the boxes.
