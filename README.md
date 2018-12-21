@@ -3,12 +3,7 @@ R package for quantifying diversity dynamics using fossil sampling data
 
 ## News
 
-- I posted a new update of the package (v0.6.2). As I expect updates to be quite frequent in the near future, only monthly updates will be sent to CRAN. Incremental changes will be accessible from this package repository.  
-
-- To avoid chaos, I created a separate entity for all divDyn related repositories. The new url is http://github.com/divDyn. 
-
-- The package is published on the CRAN servers (v0.6.1). You can install it with the regular installation procedure, by running:
-`install.packages("divDyn")` from the R console. Note that it takes more than a week until something submitted to CRAN is actually available to the end-users. Therefore, I will upload the newest version to github first, which will be then accessible from CRAN. As the package is still under intensive development, I recommend you to use the newest updates. 
+- I posted a new update of the package (v0.6.3) that includes some of the new features while I finalize the next big release (0.7.0) in January 2019.
 
 - The preprint describing the package is uploaded to bioRxiv. You can download it from here:
 http://biorxiv.org/cgi/content/short/423780v1.
@@ -19,7 +14,7 @@ https://github.com/divDyn/ddPhanero/blob/master/doc/0.3/dd_phanero.pdf
 ## About the package
 
 If you are interested in what this package does, or have questions about its use, please check out the first vignette: 'Handout to the R package 'divDyn' v0.6.1 for diversity dynamics from fossil occurrence data' here:
-https://github.com/divDyn/r_package/blob/master/_archive/vignettes/Handout_0.6.2.pdf
+https://github.com/divDyn/r_package/blob/master/_archive/vignettes/Handout_0.6.3.pdf
 
 As the package is still getting developed, please note that some interface changes might occurr based on the feedback of people and my own experience on what is easier to use. If you have any requirements or recommendations about what to add (or more importantly, if you find a mistake), do not hesitate to contact me at adam.kocsis@fau.de.
 
@@ -31,22 +26,22 @@ As the package is still getting developed, please note that some interface chang
 As the package is now published on CRAN, you can install the appropriate binaries by running 
 `install.packages("divDyn")`
 
-### 2. Using the pre-built binaries (v0.6.2)
+### 2. Using the pre-built binaries (v0.6.3)
 
 I have updated the windows binaries so that they work with the latest internals (3.5.1). If you want to use the package, please update your R.
 
 - If you have a windows computer, you can install the package with the following R command:
-  `install.packages("https://github.com/divDyn/r_package/raw/master/_bin/Win_x64_x86/divDyn_0.6.2.zip", repos=NULL)`
+  `install.packages("https://github.com/divDyn/r_package/raw/master/_bin/Win_x64_x86/divDyn_0.6.3.zip", repos=NULL)`
 
 - If you have a Mac, then use the following link (still older version, for R <3.5).
   `install.packages("https://github.com/divDyn/r_package/raw/master/_bin/Mac_OSX/divDyn_0.5.2.tgz", repos=NULL)`
   I know this is old, but will update it at the earliest convenience (I do not have a Mac). Until I am done with this, please use install method 3 or 4.
 
-### 3. Using the source tarball to install (v0.6.2)
+### 3. Using the source tarball to install (v0.6.3)
 This you can do with running
 ```
 install.packages(
-  "https://github.com/divDyn/r_package/raw/master/_archive/source/divDyn_0.6.2.tar.gz", 
+  "https://github.com/divDyn/r_package/raw/master/_archive/source/divDyn_0.6.3.tar.gz", 
   repos=NULL, type="source")
 ```
 
@@ -54,7 +49,7 @@ from the R console. Note that there is some code in the package that requires co
 
 The sources of the older versions are also in the _archive/source folder. You can access earlier versions by changing the version number in the command above in an appropriate way.
 
-### 4. Using the repository files and 'devtools' to install (v0.6.2)
+### 4. Using the repository files and 'devtools' to install (v0.6.3)
 
 To do this:
 - You need a compiler, as for method 2
@@ -66,12 +61,29 @@ If you do not want to mess around with compiler and such, then contact me and I 
 
 # Change log
 
+## [0.6.3] - 2018.12.21
+### Added
+- The modeltab() function 
+- the fill() utility function
+- proper NEWS file
+- the 'ages' argument to the divDyn() function
+- the 'misspell', 'subgenera' and 'stems' are added to the spCleanse() function, which was renamed to cleansp()
+- warnings to some functions that signs the presence of "" empty quotes taxa
+
+### Changed/Fixed
+- instead of zeros, the divDyn() function now outputs NAs where counting patterns are not applicable
+- bin processing in divDyn() had potential issues with negative integer bin numbers
+
+### Deleted
+- The inf argument of divDyn(), that an unncessary complication
+
+
 ## [0.6.2] - 2018.10.22
 ### Added
 - The collapse() and seqduplicated() utility functions.
 - The 'zerodur' argumnet to the fadlad() function
 - Hexadecimal colour values to the 'stages' table.
-- The 'boxes.col' argumnet is added to the tsplot() function to plot these colours.
+- The 'boxes.col' argument is added to the tsplot() function to plot these colours.
 - The 'labels' argument to the the tsplot() function, that allows the user not to plot the labels within the boxes.
 
 ### Changed/Fixed
@@ -94,7 +106,6 @@ If you do not want to mess around with compiler and such, then contact me and I 
 - the indices() function to calculate some basic diversity indices within the package. Please feel encouraged to use the rest from the 'vegan' package.
 - the binstat() and sumstat() functions. Binstat calculates bin-specific indices and sampling metrics, sumstat() calculates those relevant for the entire occurrence database. Most functionality of the deprecated sampstat() function is in binstat. 
 - forgotten proper cleanup of dynamic libraries upon package unload
-
 
 ## Changed
 - material in the sampstat() function was reorganized to two separate functions, see above
@@ -178,7 +189,6 @@ If you do not want to mess around with compiler and such, then contact me and I 
 
 ### Deleted 
 - The previously added bayesian method from the affinity() function. The method had problems and is under investigation.
-
 
 ## [0.3.1] - 2018.06.04
 ### Added

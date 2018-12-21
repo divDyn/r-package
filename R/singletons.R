@@ -2,7 +2,7 @@
 #' 
 #' The function returns lists of taxa that occurr with only one particular entry in a given variable. 
 #' 
-#' Singletons a are defined in number of ways in the literature. True singletons are fossils that have only one specimen, but one can talk about
+#' Singletons are defined in number of ways in the literature. True singletons are species that are represented by only one specimen, but one can talk about
 #' single-occurrence, single-interval, single-reference or single collection taxa as well. These can be returned with this function. 
 #' 
 #' As the time bin has particular importance, it is possible to filter singleton taxa in the context of a single bin. These can be returned with the \code{bybin} argument, that constrains and iterates the filtering to every bin.
@@ -10,9 +10,9 @@
 #' 
 #' 
 #' @param dat (\code{data.frame}): Occurrence dataset, with \code{bin}, \code{tax} and \code{coll} as column names.
-#' @param bin (\code{character}): The name of the subsetting variable (has to be integer). For time series, this is the time-slice variable. Rows with \code{NA} entries in this column will be omitted. This is required 
+#' @param bin (\code{character}): Lists of taxa can be tabulated in every bin. Rows with \code{NA} entries in this column will be omitted.
 #' @param tax (\code{character}): The name of the taxon variable.
-#' @param var (\code{character}): The variable that is used to define singletons. Use the reference variable for single-reference taxa, and the collection variable for single-collection taxa, the bin identifier for single-interval tax aand so forth. If you set this to the default \code{NULL}, the function will return single-occurrence taxa. 
+#' @param var (\code{character}): The variable that is used to define singletons. Use the reference variable for single-reference taxa, and the collection variable for single-collection taxa, the bin identifier for single-interval taxa and so forth. If you set this to the default \code{NULL}, the function will return single-occurrence taxa. 
 #' @param bybin (\code{logical}): The type of the filtering process. Was it supposed to be applied to bin-specific subsets (\code{TRUE}), or the whole data (\code{FALSE})? Setting this argument to \code{TRUE} will return a \code{list} class object, where every element of the list is a bin-specific \code{character} vector. This settig also removes all \code{NA} entries form \code{bin} variable.
 #' @param na.rm (\code{logical}): If \code{var} is not \code{NULL}, setting this argument to \code{TRUE} removes all rows where var is \code{NA}. Otherwise these will be returned as singletons.
 #' @examples

@@ -217,3 +217,49 @@ collapse<- function(x, na.rm=FALSE, na.breaks=TRUE){
 	x[!logic]
 
 }
+
+
+#' Filling of missing values in a vector, based on the marginal values of the gaps
+#'
+#' The function will loop through a vector and will substitute \code{NA} values with the value it last encountered or replaced.
+#'
+#' \code{NA}s won't be substituted when they are the first values the loop encounters. 
+#'
+#' @param x \code{(vector)}  Vector to be filled.
+#' 
+#' @param inc \code{(numeric)} Only if \code{x} is \code{numeric}, the function will increase the substituted value by this amount (useful for filling in sequences).
+#' 
+#' @param forward \code{(logical)} Should the loop go forward or backward?
+#' @examples
+#' # forward, replace with previous
+#' dummy<- c(TRUE, FALSE, NA, TRUE, FALSE, NA)
+#' fill(dummy)
+#' 
+#' # forward, replace with previous+1
+#' dummy2 <- c(1,NA, 3, 1, 2, NA, NA, 9, NA,3)
+#' fill(dummy2, inc=1)
+#' 
+#' # backward, replace with previous in loop direction
+#' fill(dummy2, inc=0, forward=FALSE)
+#' @export
+fill <- function(x,forward=TRUE, inc=0){
+	if(is.numeric(x)) x2 <- .Call('_divDyn_fillNumeric', PACKAGE = 'divDyn',x, dir=forward, inc)
+
+	if(is.character(x)) x2 <- .Call('_divDyn_fillCharacter', PACKAGE = 'divDyn',x, dir=forward)
+
+	if(is.logical(x)) x2 <- .Call('_divDyn_fillLogical', PACKAGE = 'divDyn',x, dir=forward)
+
+	if(is.factor(x)){
+		# convert to characte
+		x2<-as.character(x)
+
+		# the do recursion
+		x2 <- fill(x2)
+
+		# then covert back to factor
+		x2<-factor(x2)
+	}
+	return(x2)
+}
+
+

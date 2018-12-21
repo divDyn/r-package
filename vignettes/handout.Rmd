@@ -1,10 +1,10 @@
 ---
-title: "Handout to the R package divDyn v0.6.2 for diversity dynamics using fossil sampling data"
+title: "Handout to the R package divDyn v0.6.3 for diversity dynamics using fossil sampling data"
 author: "Adam T. Kocsis, Carl J. Reddin, Wolfgang Kiessling"
 date: '`r Sys.Date()`'
 output: pdf_document
 vignette: >
-  %\VignetteIndexEntry{Handout to the R package divDyn v0.6.2 for diversity dynamics using fossil sampling data}
+  %\VignetteIndexEntry{Handout to the R package divDyn v0.6.3 for diversity dynamics using fossil sampling data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -25,7 +25,7 @@ To install this beta version of the package, you must download it either from th
 
 # 2. Necessary Data
 
-Most functionality in the 'divDyn' package assumes that the time dimension broken down to discrete intervals. Accordingly, most functions are built on two fundamental data structures: a time scale table and an occurrence dataset. 
+Most functionality in the 'divDyn' package assumes that the time dimension is broken down to discrete intervals. Accordingly, most functions are built on two fundamental data structures: a time scale table and an occurrence dataset. 
 
 ## 2.1. Time scales
 
@@ -123,7 +123,7 @@ nrow(fossils)
 # 3. Basic patterns
 
 ## 3.1. Ranges  
-We can gain preliminary knowledge by examining the basic patterns of the stratigraphic ranges . Probably the most apparent of these are the stratigraphic ranges of the taxa, which can be easily summarized in the FAD-LAD matrix:
+We can gain preliminary knowledge by examining the basic patterns of the stratigraphic ranges. Probably the most apparent of these are the stratigraphic ranges of the taxa, which can be easily summarized in the FAD-LAD matrix:
 
 ```{r fadlad, echo= TRUE, results=FALSE }
 fl <- fadlad(fossils, bin="stg", tax="genus")
@@ -387,7 +387,7 @@ Although range-interpolation does not bias the 'SIB' metric, it is more affected
   lines(stages$mid[1:94], dd$samp3t, col="black", lwd=2)
 ```
 
-The SIB series can be partially corrected by the three-timer sampling-completeness (Alroy §ref ). Although this can be a convenient correction it also increases the estimation error. Nevertheless, this is the least biased estimator for diversity. 
+The SIB series can be partially corrected by the three-timer sampling-completeness (Alroy §ref). Although this can be a convenient correction it also increases the estimation error. Nevertheless, this is the least biased estimator for diversity. 
 
 ```{r ddCorr, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5}
 # basic plot
@@ -584,7 +584,7 @@ A potentially more promising solution is to assign the occurrences that go along
 # resolve time
   breakPoints <- seq(-270, 0, 10)
 # and calculate diversity dynamics
-  ddMid10<-divDyn(fossils, tax="genus", bin="mid_ma", breaks=breakPoints )
+  ddMid10<-divDyn(fossils, tax="genus", bin="mid_ma", breaks=breakPoints)
 ```
 
 In this case, the ``bin`` variable of the output will contain the mid ages of the bins. Do not worry about setting the exact values for the start and end of the age ranges. If no data occurs in the outlined bins, then the corresponding rows in the table will be empty. 
@@ -611,6 +611,43 @@ legend("topleft", legend=c("age estimates, 10MY",
 ```
 This is fairly close to the stratigraphically constrained time series. 
 
+## 4.4. Origination and extinction dates in binary response variables
+
+The occurrence dataset can be represented a taxon/bin matrix that taxa populate with presences or absences. Among the cells in this matrix, some mark the apparent origination or extinction dates of taxa. Two binary matrices can be outlined from this matrix: one for extinctions, and one for originations. Cells, where the taxa are assumed to be present are marked by 0s, and cells corresponding to the origination (or extinction) dates of taxa contains 1s (the rest are missing).  Linearizing these matrices to binary vectors allows the application of statistical modelling techniques to infer which entries in additional variables are associated with the apparent origination and extinction events. You can transform the occurrence dataset to a data frame of such structure with the ``modeltab()`` function:
+
+```{r modelta, echo=TRUE}
+# basic function call
+  mtab <-  modeltab(corals, tax="genus", bin="stg") 
+  mtab[mtab[,"genus"]=="Acanthogyra",]
+```
+
+The ``ext`` variable stands for extinctions and the ``ori`` column corresponds to originations. The basic output of the function only includes rows corresponding to the time bin/taxon matrix where the taxa are sampled. 
+
+However, one could argue that intervals where the taxa are assumed to be present (although they are not sampled) are legitimate observations that they do not go extinct or originate. You can add these interpolated points by setting the ``rt`` argument of the function to ``TRUE``:
+
+```{r modelta2, echo=TRUE}
+# basic function call
+  mtabrt <- modeltab(corals, tax="genus", bin="stg", rt=TRUE) 
+  mtabrt[mtabrt[,"genus"]=="Acanthogyra",]
+```
+
+Interpolated "occurrences" are marked with ``FALSE`` values in the ``occurrence`` variable of the output dataset. It is important to mention that this method is vulnerable to patterns of incomplete sampling, as the ``rt`` extension of ranges only uses interpolation, but no extrapolation. 
+Single-interval species require separate treatment as the ``ext`` and ``ori`` response cannot be anything else but ``TRUE``. For this reason, these taxa are omitted by the function by default (``singletons=FALSE``). If you want to include these entries for some reason, you can do so by setting the ``singletons`` argument to ``TRUE``.
+
+Additional variables can be directly added by specifying the original column names of the taxon-specific entries (that have one to one agreement with the taxon entries defined in the ``tax`` ) as the ``taxvars`` argument of ``modeltab()``:
+
+```{r modelta3, echo=TRUE}
+# function call with additional taxon-specific variables
+  modTab<- modeltab(corals, tax="genus", bin="stg", 
+    rt=TRUE, taxvars=c("ecology", "growth")) 
+  modTab[1:10,]
+```
+
+You are encouraged to use these structures as a framework for modelling the extinction and origination events by concatenating your own variables to this data.frame. Then you can use your preferred modelling technique, with calls such as: 
+
+```{r modelta4, echo=TRUE}
+  simpleMod<- glm(ext ~ ecology + growth, family="binomial", data=modTab)
+```
 # 5. Sampling standardization
 
 ## 5.1. Concepts
@@ -997,7 +1034,7 @@ subST[54:94, "occs"]
 ```
 
 Although there are ways to improve the accuracy of the subsampling process, the variation induced by this problem is only minuscule compared to those introduced by sampling and binning uncertainties.
-However, typically this ``x`` value is set to a value between 1 and 2 (e.g. 1.4). In these cases, you have to calculate the intensity of sampling . Although there is some discrepancy between the methods, the overall trajectories are quite similar.
+However, typically this ``x`` value is set to a value between 1 and 2 (e.g. 1.4). In these cases, you have to calculate the intensity of sampling. Although there is some discrepancy between the methods, the overall trajectories are quite similar.
 ```{r subO2, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5}
 subO2W <- subsample(fossGen, bin="stg", tax="genus", coll="collection_no", 
   iter=100, q=80, type="oxw", x=2)
@@ -1077,7 +1114,7 @@ sqsNoSing <-subsample(fossGen, iter=50, q=0.4,
 
 # plotting
 tsplot(stages, shading="series", boxes="per", xlim=51:95,
-  ylab="corrected SIB richness richness", ylim=c(0,100))
+  ylab="corrected SIB richness", ylim=c(0,100))
 lines(stages$mid[1:94], sqsRefSing$divCSIB, col="blue")
 lines(stages$mid[1:94], sqsCollSing$divCSIB, col="black")
 lines(stages$mid[1:94], sqsNoSing$divCSIB, col="red")
@@ -1094,7 +1131,7 @@ sqsCorr <-subsample(fossGen, iter=50, q=0.5,
 
 # plotting
 tsplot(stages, shading="series", boxes="per", xlim=51:95,
-  ylab="corrected SIB richness richness", ylim=c(0,100))
+  ylab="corrected SIB richness", ylim=c(0,100))
 lines(stages$mid[1:94], sqsPure$divCSIB, col="blue")
 lines(stages$mid[1:94], sqsCorr$divCSIB, col="black")
 legend("topleft", legend=c("uncorrected SQS", 
@@ -1111,7 +1148,7 @@ sqsByColl <-subsample(fossGen, iter=50, q=0.5,
 
 # plotting
 tsplot(stages, shading="series", boxes="per", xlim=51:95,
-  ylab="corrected SIB richness richness", ylim=c(0,100))
+  ylab="corrected SIB richness", ylim=c(0,100))
 lines(stages$mid[1:94], sqsByColl$divCSIB, col="blue")
 lines(stages$mid[1:94], sqsCorr$divCSIB, col="black")
 legend("topleft", legend=c("by-list SQS", 
@@ -1147,7 +1184,7 @@ affMajor <- affinity(knownBath, bin="stg", tax="genus",
 table(affMajor)
 ```
 
-The output of this function is a single character vector, values specifying the apparently preferred environments and the ``names`` attribute defining the taxon names. ``NA`` entries occur when the function is unable to define an affinity (i.e. the number of occurrences  from both environments is the same). 
+The output of this function is a single character vector, values specifying the apparently preferred environments and the ``names`` attribute defining the taxon names. ``NA`` entries occur when the function is unable to define an affinity (i.e. the number of occurrences from both environments is the same). 
 As you can see, an overwhelming majority of the taxa have shallow affinities based on this method, but this is not surprising, as most of the occurrences actually come from shallow environments.
 
 ```{r tabBath, echo=TRUE, results =TRUE}
@@ -1181,7 +1218,7 @@ Using the standard 95% percent as alpha level is an arbitrary choice. As the fos
 
 # Acknowledgements
 
-The package was developed in the context of a project on global paleobiogeography funded by the Deutsche Forschungsgemeinschaft (DFG project numbers Ko 5382/1-1, Ko 5382/1-2, Ki 806/16-1). The package is also part of the DFG Research Unit 2332: TERSANE (TEmperature Related Stressors in ANcient Extinctions). We are thankful to all testers of the package, including Emilia Jarochowska, Vanessa Roden, Andreas Lauchstedt, Gwen Antell for suggestions, and all participants of the first year International Master's Programme for Paleobiology at the GeoZentrum Nordbayern, FAU in Erlangen, Germany. We also thank all enterers of the Paleobiology Database. 
+The package was developed in the context of a project on global paleobiogeography funded by the Deutsche Forschungsgemeinschaft (DFG project numbers Ko 5382/1-1, Ko 5382/1-2, Ki 806/16-1). The package is also part of the DFG Research Unit 2332: TERSANE (TEmperature Related Stressors in ANcient Extinctions). We are thankful to all testers of the package, including Emilia Jarochowska, Vanessa Roden, Andreas Lauchstedt, Gwen Antell and Roger Benson for suggestions, and all participants of the first year International Master's Programme for Paleobiology at the GeoZentrum Nordbayern, FAU in Erlangen, Germany. We also thank all enterers of the Paleobiology Database. 
 
 # References
 

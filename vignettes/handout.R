@@ -338,7 +338,7 @@ legend("topleft", legend=c("unique mid entries",  "stg stages"),
 # resolve time
   breakPoints <- seq(-270, 0, 10)
 # and calculate diversity dynamics
-  ddMid10<-divDyn(fossils, tax="genus", bin="mid_ma", breaks=breakPoints )
+  ddMid10<-divDyn(fossils, tax="genus", bin="mid_ma", breaks=breakPoints)
 
 ## ----dd10Show, echo=TRUE, eval=FALSE-------------------------------------
 #  # lines
@@ -358,6 +358,25 @@ legend("topleft", legend=c("unique mid entries",  "stg stages"),
    legend("topleft", legend=c("age estimates, 10MY",  
     "stg stages", "unique mid entries"), 
     col=c("blue", "red", "black"), lwd=c(2,2,2), bg="white")
+
+## ----modelta, echo=TRUE--------------------------------------------------
+# basic function call
+  mtab <-  modeltab(corals, tax="genus", bin="stg") 
+  mtab[mtab[,"genus"]=="Acanthogyra",]
+
+## ----modelta2, echo=TRUE-------------------------------------------------
+# basic function call
+  mtabrt <- modeltab(corals, tax="genus", bin="stg", rt=TRUE) 
+  mtabrt[mtabrt[,"genus"]=="Acanthogyra",]
+
+## ----modelta3, echo=TRUE-------------------------------------------------
+# function call with additional taxon-specific variables
+  modTab<- modeltab(corals, tax="genus", bin="stg", 
+    rt=TRUE, taxvars=c("ecology", "growth")) 
+  modTab[1:10,]
+
+## ----modelta4, echo=TRUE-------------------------------------------------
+  simpleMod<- glm(ext ~ ecology + growth, family="binomial", data=modTab)
 
 ## ----sampCor, echo=TRUE, result=TRUE-------------------------------------
 sam <-binstat(fossils, bin="stg", tax="genus", coll="collection_no", duplicates=F)
@@ -652,7 +671,7 @@ sqsNoSing <-subsample(fossGen, iter=50, q=0.4,
 
 # plotting
 tsplot(stages, shading="series", boxes="per", xlim=51:95,
-  ylab="corrected SIB richness richness", ylim=c(0,100))
+  ylab="corrected SIB richness", ylim=c(0,100))
 lines(stages$mid[1:94], sqsRefSing$divCSIB, col="blue")
 lines(stages$mid[1:94], sqsCollSing$divCSIB, col="black")
 lines(stages$mid[1:94], sqsNoSing$divCSIB, col="red")
@@ -668,7 +687,7 @@ sqsCorr <-subsample(fossGen, iter=50, q=0.5,
 
 # plotting
 tsplot(stages, shading="series", boxes="per", xlim=51:95,
-  ylab="corrected SIB richness richness", ylim=c(0,100))
+  ylab="corrected SIB richness", ylim=c(0,100))
 lines(stages$mid[1:94], sqsPure$divCSIB, col="blue")
 lines(stages$mid[1:94], sqsCorr$divCSIB, col="black")
 legend("topleft", legend=c("uncorrected SQS", 
@@ -682,7 +701,7 @@ sqsByColl <-subsample(fossGen, iter=50, q=0.5,
 
 # plotting
 tsplot(stages, shading="series", boxes="per", xlim=51:95,
-  ylab="corrected SIB richness richness", ylim=c(0,100))
+  ylab="corrected SIB richness", ylim=c(0,100))
 lines(stages$mid[1:94], sqsByColl$divCSIB, col="blue")
 lines(stages$mid[1:94], sqsCorr$divCSIB, col="black")
 legend("topleft", legend=c("by-list SQS", 

@@ -40,3 +40,40 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// fillLogical
+LogicalVector fillLogical(LogicalVector logic, bool dir);
+RcppExport SEXP _divDyn_fillLogical(SEXP logicSEXP, SEXP dirSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type logic(logicSEXP);
+    Rcpp::traits::input_parameter< bool >::type dir(dirSEXP);
+    rcpp_result_gen = Rcpp::wrap(fillLogical(logic, dir));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fillCharacter
+StringVector fillCharacter(StringVector stri, bool dir);
+RcppExport SEXP _divDyn_fillCharacter(SEXP striSEXP, SEXP dirSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< StringVector >::type stri(striSEXP);
+    Rcpp::traits::input_parameter< bool >::type dir(dirSEXP);
+    rcpp_result_gen = Rcpp::wrap(fillCharacter(stri, dir));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fillNumeric
+NumericVector fillNumeric(NumericVector num, bool dir, NumericVector inc);
+RcppExport SEXP _divDyn_fillNumeric(SEXP numSEXP, SEXP dirSEXP, SEXP incSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type num(numSEXP);
+    Rcpp::traits::input_parameter< bool >::type dir(dirSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type inc(incSEXP);
+    rcpp_result_gen = Rcpp::wrap(fillNumeric(num, dir, inc));
+    return rcpp_result_gen;
+END_RCPP
+}

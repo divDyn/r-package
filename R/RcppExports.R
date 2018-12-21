@@ -13,3 +13,15 @@ seqduplicated <- function(vect) {
     .Call(`_divDyn_seqduplicated`, vect)
 }
 
+fillLogical <- function(logic, dir) {
+    .Call(`_divDyn_fillLogical`, logic, dir)
+}
+
+fillCharacter <- function(stri, dir) {
+    .Call(`_divDyn_fillCharacter`, stri, dir)
+}
+
+fillNumeric <- function(num, dir, inc) {
+    .Call(`_divDyn_fillNumeric`, num, dir, inc)
+}
+

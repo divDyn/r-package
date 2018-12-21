@@ -59,7 +59,8 @@ fadlad<-function(dat, tax, bin, ages=FALSE, na.rm=TRUE, zerodur=TRUE){
 	if(ages){
 		for(i in 1:length(bin)) binVar[,i] <- -binVar[,i]
 	}
-		
+	
+
 	# single iteration
 	tempFL<-tapply(INDEX=taxVar, X=1:nrow(dat), FUN=function(x){
 		# taxon specific part
@@ -93,6 +94,10 @@ fadlad<-function(dat, tax, bin, ages=FALSE, na.rm=TRUE, zerodur=TRUE){
 		fl<-fl[!is.na(fl[,"FAD"]),]
 	}
 	
+	if(any(""==rownames(fl))){
+		warning("Taxon name <\"\"> (empty quotes) is detected!")
+	}
+
 	return(fl)
 	
 }

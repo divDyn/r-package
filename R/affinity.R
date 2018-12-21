@@ -56,6 +56,10 @@ affinity<-function(dat, env, tax="genus",  bin="stg", coll="collection_no", meth
 	# create an FAD-LAD matrix first
 		dFL<-fadlad(dat, tax, bin)
 	
+		if(any(""==dat[,tax])){
+			rownames(dFL)[rownames(dFL)==""] <- "emptyQuotes"
+			dat[dat[,tax]=="",tax] <- "emptyQuotes"
+		}
 	# add the names to the matrix so that apply can process it
 		dFL$taxon<-rownames(dFL)
 	

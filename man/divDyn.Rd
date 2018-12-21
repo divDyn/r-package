@@ -4,16 +4,18 @@
 \alias{divDyn}
 \title{Time series from metrics of diversity dynamics}
 \usage{
-divDyn(dat, tax = "genus", bin = "bin", breaks = NULL,
-  coll = "collection_no", ref = "reference_no", om = NULL,
-  noNAStart = F, inf = F, data.frame = T, filterNA = FALSE)
+divDyn(dat, tax, bin, ages = FALSE, breaks = NULL, coll = "collection_no",
+  ref = "reference_no", om = NULL, noNAStart = FALSE, data.frame = TRUE,
+  filterNA = FALSE)
 }
 \arguments{
 \item{dat}{\code{(data.frame)} Fossil occurrence table.}
 
 \item{tax}{\code{(character)} Variable name of the occurring taxa (variable type: \code{factor} or \code{character} - such as \code{"genus"}}
 
-\item{bin}{\code{(character)} Variable name of the bin numbers of the particular occurrences. This variable should be \code{numeric} and should increase as time passes by (use negative values for age estimates).}
+\item{bin}{\code{(character)} Variable name of the bin numbers of the occurrences. This variable should be \code{numeric}.}
+
+\item{ages}{\code{(logical)} Argument for setting the direction of time in \code{bin}. The default setting, \code{FALSE} will execute the function with higher numbers corresponding to later intervals. \code{TRUE} will reverse the direction of values in the \code{bins} variable, making originations extinctions and vice versa (use this for age input!, e.g 400 Ma, see examples).}
 
 \item{breaks}{\code{(numeric)} If \code{NULL} (default) the used values in the \code{bin} variable will designate independent time slices that follow each other in succession. If a vector is provided, than the numeric entries in \code{bin} will be binned similarly to the \code{\link[graphics]{hist}} or \code{\link[base]{cut}} function. The order of elements in this vector is arbitrary.}
 
@@ -23,9 +25,7 @@ divDyn(dat, tax = "genus", bin = "bin", breaks = NULL,
 
 \item{om}{\code{(character)} The \code{om} argument of the \code{omit()} function. If set to \code{NULL} (default), then no occurrences will be omitted before the execution of the function.}
 
-\item{noNAStart}{(logical) Useful when the dataset does not start from bin no. 1, but positive integer bin numbers are provided. Then \code{noNAStart=TRUE} will cut the first part of the resulting table, so the first row will contain the estimates for the lowest bin number. In case of positive integer bin identifiers, and if \code{noNAStart=FALSE}, the index of the row will be the bin number.}
-
-\item{inf}{\code{(logical)} Should \code{Inf} values be converted to \code{NA}s?}
+\item{noNAStart}{(logical) Useful when the entries in the \code{bin} variable do not start from bin no. 1, but positive integer bin numbers are provided. Then \code{noNAStart=TRUE} will cut the first part of the resulting table, so the first row will contain the estimates for the lowest bin number. In case of positive integer bin identifiers, and if \code{noNAStart=FALSE}, the index of the row will be the bin number.}
 
 \item{data.frame}{\code{(logical)} Should the output be a \code{data.frame} or a \code{matrix}?}
 
@@ -127,11 +127,12 @@ Alroy, J. (2015) A more precise speciation and extinction rate estimator. Paleob
    lines(stages$mid, ddNoSing$divRT, lwd=2, col="red")
 
  # using the estimated ages (less robust) - 10 million years
-   # mean ages (should be negative to maintain order)
-   corals$me_ma <- -apply(corals[, c("max_ma", "min_ma")], 1, mean)
-   # divDyn
-   ddRadio10 <- divDyn(corals, tax="genus", bin="me_ma", breaks=seq(0,-250,-10))
-   lines(-ddRadio10$bin, ddRadio10$divRT, lwd=2, col="green")
+   # mean ages
+   corals$me_ma <- apply(corals[, c("max_ma", "min_ma")], 1, mean)
+   # ages reverse the direction of time! set ages to TRUE in this case
+   ddRadio10 <- divDyn(corals, tax="genus", bin="me_ma", 
+	breaks=seq(250,0,-10), ages=TRUE)
+   lines(ddRadio10$bin, ddRadio10$divRT, lwd=2, col="green")
       
  # legend
    legend("topleft", legend=c("all", "no single-ref. taxa", "all, estimated ages"), 
