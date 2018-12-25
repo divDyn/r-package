@@ -52,7 +52,7 @@ The sources of the older versions are also in the _archive/source folder. You ca
 ### 4. Using the repository files and 'devtools' to install (v0.6.3)
 
 To do this:
-- You need a compiler, as for method 2
+- You need a compiler, as for method 3
 - Make sure that the 'devtools' package is installed
 - Run `devtools::install_github("divDyn/r_package")`
 
