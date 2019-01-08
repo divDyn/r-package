@@ -24,6 +24,8 @@ export(seqduplicated)
 export(collapse)
 export(modeltab)
 export(fill)
+export(georange)
+export(tabinate)
 
 
 importFrom("Rcpp", evalCpp)

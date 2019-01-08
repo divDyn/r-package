@@ -1,5 +1,16 @@
 # Change log of the R package 'divDyn'
 
+## [0.7.0 (build 642)] - 2019.01.08 
+### Added
+- the georange() function for geographic range estimation from a set of coordinates (suggesting the vegan and the icosa packages)
+- the tabinate() function for iterating procedures on taxon/time slice subsets of the data
+
+### Changed
+- the internals of the binning procedure of divDyn()
+- updated ddPhanero vignette
+- To make the contents of the 'stages' object consistent with its name, the former geochronological entries are replaced with their chronostratigraphic counterparts. The columns per, period and periodCol were replaced with 'sys', 'system' and 'systemCol', table entries with 'Early' and 'Late' qualifiers were replaced with 'Lower' and 'Upper', respectively. The vignettes are adjusted to work with these changes. 
+
+
 ## [0.6.3] - 2018.12.12
 ### Added
 - The modeltab() function 

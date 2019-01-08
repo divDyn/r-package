@@ -6,9 +6,9 @@
 \title{95 bin Phanerozoic time scale based on the stratigraphic stages of Ogg et al. (2016).}
 \format{A \code{data.frame} with 95 observations and 10 variables:
 	\describe{
-		\item{\code{per}}{Abbreviation of geologic periods.}
-		\item{\code{period}}{Geologic periods.}
-		\item{\code{epoch}}{Geologic epochs.}
+		\item{\code{sys}}{Abbreviations of geologic systems.}
+		\item{\code{system}}{Geologic periods.}
+		\item{\code{series}}{Geologic series.}
 		\item{\code{stage}}{Names of geologic stages.}
 		\item{\code{short}}{Abbreviations of geologic stages.}
 		\item{\code{bottom}}{Numeric ages of the bottoms boundaries (earliest ages) of the bins.}
@@ -16,7 +16,7 @@
 		\item{\code{top}}{Numeric ages of the tops (latest ages) of the bins.}
 	\item{\code{dur}}{Numeric ages of the durations for the bins.}
 		\item{\code{stg}}{Integer number identifiers of the bins.}
-	\item{\code{periodCol}}{Hexadecimal color code of the periods.}
+	\item{\code{systemCol}}{Hexadecimal color code of the systems.}
 	\item{\code{seriesCol}}{Hexadecimal color code of the series.}
 	\item{\code{col}}{Hexadecimal color code of the stages.}
 	}}

@@ -3,45 +3,47 @@ R package for quantifying diversity dynamics using fossil sampling data
 
 ## News
 
-- I posted a new update of the package (v0.6.3) that includes some of the new features while I finalize the next big release (v0.7.0, in January 2019).
+- The next update of the package is here (v0.7.0)! It is submitted to the CRAN servers and should be available shortly. Until then, use the resources available here. 
 
-- The preprint describing the package is uploaded to bioRxiv. You can download it from here:
+- The preprint describing the package is accessible from bioRxiv. You can download it from here:
 http://biorxiv.org/cgi/content/short/423780v1.
-If you decide to use the methods implemented in this package, please refer to this document. The examples implemented in this manuscript are elaborated in this vignette:
-https://github.com/divDyn/ddPhanero/blob/master/doc/0.3/dd_phanero.pdf
+If you decide to use the methods implemented in this package, please refer to this document. The paper is getting finalized, and should be published within a month or two.
+
+The examples implemented in this manuscript are elaborated in this vignette:
+https://github.com/divDyn/ddPhanero/blob/master/doc/0.4/dd_phanero.pdf
 
 
 ## About the package
 
-If you are interested in what this package does, or have questions about its use, please check out the first vignette: 'Handout to the R package 'divDyn' v0.6.3 for diversity dynamics from fossil occurrence data' here:
-https://github.com/divDyn/r_package/blob/master/_archive/vignettes/Handout_0.6.3.pdf
+If you are interested in what this package does, or have questions about its use, please check out the first vignette: 'Handout to the R package 'divDyn' v0.7.0 for diversity dynamics from fossil occurrence data' here:
+https://github.com/divDyn/r_package/blob/master/_archive/vignettes/Handout_0.7.0.pdf
 
 As the package is still getting developed, please note that some interface changes might occurr based on the feedback of people and my own experience on what is easier to use. If you have any requirements or recommendations about what to add (or more importantly, if you find a mistake), do not hesitate to contact me at adam.kocsis@fau.de.
 
 
 ## Installing 
 
-### 1. From CRAN (v0.6.1)
+### 1. From CRAN (v0.6.3)
 
-As the package is now published on CRAN, you can install the appropriate binaries by running 
+You can install the appropriate binaries by running 
 `install.packages("divDyn")`
 
-### 2. Using the pre-built binaries (v0.6.3)
+### 2. Using the pre-built binaries (v0.7.0)
 
-I have updated the windows binaries so that they work with the latest internals (3.5.1). If you want to use the package, please update your R.
+I have updated the windows binaries so that they work with the latest internals (3.5.2). If you want to use the binaries, please update your R to at least 3.5.
 
 - If you have a windows computer, you can install the package with the following R command:
-  `install.packages("https://github.com/divDyn/r_package/raw/master/_bin/Win_x64_x86/divDyn_0.6.3.zip", repos=NULL)`
+  `install.packages("https://github.com/divDyn/r_package/raw/master/_bin/Win_x64_x86/divDyn_0.7.0.zip", repos=NULL)`
 
 - If you have a Mac, then use the following link (still older version, for R <3.5).
   `install.packages("https://github.com/divDyn/r_package/raw/master/_bin/Mac_OSX/divDyn_0.5.2.tgz", repos=NULL)`
   I know this is old, but will update it at the earliest convenience (I do not have a Mac). Until I am done with this, please use install method 3 or 4.
 
-### 3. Using the source tarball to install (v0.6.3)
+### 3. Using the source tarball to install (v0.7.0)
 This you can do with running
 ```
 install.packages(
-  "https://github.com/divDyn/r_package/raw/master/_archive/source/divDyn_0.6.3.tar.gz", 
+  "https://github.com/divDyn/r_package/raw/master/_archive/source/divDyn_0.7.0.tar.gz", 
   repos=NULL, type="source")
 ```
 
@@ -49,10 +51,10 @@ from the R console. Note that there is some code in the package that requires co
 
 The sources of the older versions are also in the _archive/source folder. You can access earlier versions by changing the version number in the command above in an appropriate way.
 
-### 4. Using the repository files and 'devtools' to install (v0.6.3)
+### 4. Using the repository files and 'devtools' to install (v0.7.0)
 
 To do this:
-- You need a compiler, as for method 2
+- You need a compiler, as for method 3
 - Make sure that the 'devtools' package is installed
 - Run `devtools::install_github("divDyn/r_package")`
 
@@ -60,6 +62,18 @@ If you do not want to mess around with compiler and such, then contact me and I 
 
 
 # Change log
+
+
+## [0.7.0 (build 642)] - 2019.01.08 
+### Added
+- the georange() function for geographic range estimation from a set of coordinates (suggesting the vegan and the icosa packages)
+- the tabinate() function for iterating procedures on taxon/time slice subsets of the data
+
+### Changed
+- the internals of the binning procedure of divDyn()
+- updated ddPhanero vignette
+- To make the contents of the 'stages' object consistent with its name, the former geochronological entries are replaced with their chronostratigraphic counterparts. The columns per, period and periodCol were replaced with 'sys', 'system' and 'systemCol', table entries with 'Early' and 'Late' qualifiers were replaced with 'Lower' and 'Upper', respectively. The vignettes are adjusted to work with these changes. 
+
 
 ## [0.6.3] - 2018.12.21
 ### Added

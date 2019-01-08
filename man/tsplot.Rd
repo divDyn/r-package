@@ -53,10 +53,10 @@ As most analysis use an individually compiled time scale object, in order to ens
 }
 \examples{
 data(stages) 
-  tsplot(stages, boxes="per", shading="series")
+  tsplot(stages, boxes="sys", shading="series")
 
 # only the Mesozoic, custom axes
-  tsplot(stages, boxes="period", shading="stage", xlim=52:81, 
+  tsplot(stages, boxes="system", shading="stage", xlim=52:81, 
     plot.args=list(axes=FALSE, main="Mesozoic"))
   axis(1, at=seq(250, 75, -25), labels=seq(250, 75, -25))
   axis(2)
@@ -67,6 +67,6 @@ data(stages)
     boxes.args=list(col="gray95"))
 
  # colourful plot with two levels of hierarchy
-   tsplot(stages, boxes=c("short", "period"), shading="series",
-     boxes.col=c("col", "periodCol"), xlim=c(52:69))
+   tsplot(stages, boxes=c("short", "system"), shading="series",
+     boxes.col=c("col", "systemCol"), xlim=c(52:69))
 }

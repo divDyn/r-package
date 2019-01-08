@@ -52,7 +52,7 @@
 #'   tax="genus", bin="stg", output="dist", keep=95)
 #' 	
 #' # plotting
-#'   tsplot(stages, shading="series", boxes="per", xlim=c(260,0), 
+#'   tsplot(stages, shading="series", boxes="sys", xlim=c(260,0), 
 #'   ylab="range-through diversity (genera)", ylim=c(0,230))
 #'   lines(stages$mid, dd$divRT, lwd=2)
 #'   shades(stages$mid, rarefDD$divRT, col="blue")
@@ -79,7 +79,7 @@
 #'   tax="genus", bin="stg", output="arit", keep=95)
 #' 
 #' # plot
-#' tsplot(stages, shading="series", boxes="per", xlim=c(260,0), 
+#' tsplot(stages, shading="series", boxes="sys", xlim=c(260,0), 
 #'   ylab="SIB diversity (genera)", ylim=c(0,230))
 #' 
 #' lines(stages$mid, rarefDD$divSIB, lwd=2, col="black")
@@ -100,7 +100,7 @@
 #'   SQS<-subsample(corals,iter=50, q=0.4,tax="genus", bin="stg", output="dist", keep=95, type="sqs")
 #'
 #' # plot
-#'   tsplot(stages, shading="series", boxes="per", xlim=c(260,0), 
+#'   tsplot(stages, shading="series", boxes="sys", xlim=c(260,0), 
 #'   ylab="range-through diversity (genera)", ylim=c(0,100))
 #'   shades(stages$mid, cr$divRT, col="red")
 #'   shades(stages$mid, UW$divRT, col="blue")

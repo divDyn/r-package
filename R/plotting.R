@@ -22,10 +22,10 @@
 #' @param boxes.args \code{(list)}: Arguments that will be passed to the \code{\link[graphics]{rect}} function that draws the rectangles of time intervals.
 #' @examples
 #'	data(stages) 
-#'	  tsplot(stages, boxes="per", shading="series")
+#'	  tsplot(stages, boxes="sys", shading="series")
 #' 
 #'	# only the Mesozoic, custom axes
-#'	  tsplot(stages, boxes="period", shading="stage", xlim=52:81, 
+#'	  tsplot(stages, boxes="system", shading="stage", xlim=52:81, 
 #'	    plot.args=list(axes=FALSE, main="Mesozoic"))
 #'	  axis(1, at=seq(250, 75, -25), labels=seq(250, 75, -25))
 #'	  axis(2)
@@ -36,8 +36,8 @@
 #'	    boxes.args=list(col="gray95"))
 #'
 #'  # colourful plot with two levels of hierarchy
-#'    tsplot(stages, boxes=c("short", "period"), shading="series",
-#'      boxes.col=c("col", "periodCol"), xlim=c(52:69))
+#'    tsplot(stages, boxes=c("short", "system"), shading="series",
+#'      boxes.col=c("col", "systemCol"), xlim=c(52:69))
 #' @export
 tsplot<-function(tsdat,  ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 	bottom="bottom", top="top",
@@ -50,7 +50,7 @@ tsplot<-function(tsdat,  ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 	labels.args=NULL){
 	
 #	tsdat<-stages
-#	boxes<-"per"
+#	boxes<-"sys"
 #	bottom="bottom"
 #	top="top"
 #	ylim=c(0,1)
@@ -381,12 +381,12 @@ tsplot<-function(tsdat,  ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 #' @examples
 #' # some random values accross the Phanerozoic
 #'	data(stages)
-#'	tsplot(stages, boxes="per", shading="series", ylim=c(-5,5), ylab=c("normal distributions"))
+#'	tsplot(stages, boxes="sys", shading="series", ylim=c(-5,5), ylab=c("normal distributions"))
 #'	  randVar <- t(sapply(1:95, FUN=function(x){rnorm(150, 0,1)}))
 #'	  shades(stages$mid, randVar, col="blue", res=10,method="symmetric")
 #'	  
 #' # a bottom-bounded distribution (log normal)
-#'	tsplot(stages, boxes="per", shading="series", ylim=c(0,30), ylab="log-normal distributions")
+#'	tsplot(stages, boxes="sys", shading="series", ylim=c(0,30), ylab="log-normal distributions")
 #'	  randVar <- t(sapply(1:95, FUN=function(x){rlnorm(150, 0,1)}))
 #'	  shades(stages$mid, randVar, col="blue", res=c(0,0.33, 0.66, 1),method="decrease")	 
 #' @export
@@ -610,7 +610,7 @@ shades <- function(x, y, col="black", res=10, border=NA,interpolate=FALSE, metho
 #'   data(stages)
 #' 
 #'   # time scale plot
-#'   tsplot(stages, shading="series", boxes="per", xlim=c(250,0), 
+#'   tsplot(stages, shading="series", boxes="sys", xlim=c(250,0), 
 #'     ylab="proportion of occurrences", ylim=c(0,1))
 #'   
 #'   # plot of proportions	
@@ -922,14 +922,14 @@ parts<-function(x, b=NULL, ord="up", prop=FALSE, plot=TRUE,  col=NULL, xlim=NULL
 #'  data(corals)
 #'  
 #'  # all ranges - using the age uncertainties of the occurrences
-#'  tsplot(stages, boxes="per", xlim=c(250,0))
+#'  tsplot(stages, boxes="sys", xlim=c(250,0))
 #'  ranges(corals, bin=c("max_ma", "min_ma"), tax="genus", occs=FALSE)
 #'
 #'  # or use single estimates: assign age esimates to the occurrences
 #'  corals$est<-stages$mid[corals$stg]
 #'  
 #'  # all ranges (including the recent!!)
-#'  tsplot(stages, boxes="per", xlim=c(250,0))
+#'  tsplot(stages, boxes="sys", xlim=c(250,0))
 #'  ranges(corals, bin="est", tax="genus", occs=FALSE)
 #'  
 #'  # closing on the Cretaceous, with occurrences

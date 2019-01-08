@@ -118,7 +118,7 @@ Alroy, J. (2015) A more precise speciation and extinction rate estimator. Paleob
    dd <- divDyn(corals, tax="genus", bin="stg")
 
 # plotting
-  tsplot(stages, shading="series", boxes="per", xlim=c(260,0), 
+  tsplot(stages, shading="series", boxes="sys", xlim=c(260,0), 
     ylab="range-through diversity (genera)", ylim=c(0,230))
   lines(stages$mid, dd$divRT, lwd=2)
 

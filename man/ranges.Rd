@@ -54,14 +54,14 @@ This function will draw a visual representation of the occurrence dataset. The i
  data(corals)
  
  # all ranges - using the age uncertainties of the occurrences
- tsplot(stages, boxes="per", xlim=c(250,0))
+ tsplot(stages, boxes="sys", xlim=c(250,0))
  ranges(corals, bin=c("max_ma", "min_ma"), tax="genus", occs=FALSE)
 
  # or use single estimates: assign age esimates to the occurrences
  corals$est<-stages$mid[corals$stg]
  
  # all ranges (including the recent!!)
- tsplot(stages, boxes="per", xlim=c(250,0))
+ tsplot(stages, boxes="sys", xlim=c(250,0))
  ranges(corals, bin="est", tax="genus", occs=FALSE)
  
  # closing on the Cretaceous, with occurrences

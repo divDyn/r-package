@@ -101,7 +101,7 @@
 #'    dd <- divDyn(corals, tax="genus", bin="stg")
 #'
 #'	# plotting
-#'	  tsplot(stages, shading="series", boxes="per", xlim=c(260,0), 
+#'	  tsplot(stages, shading="series", boxes="sys", xlim=c(260,0), 
 #'	    ylab="range-through diversity (genera)", ylim=c(0,230))
 #'	  lines(stages$mid, dd$divRT, lwd=2)
 #' 
@@ -126,6 +126,13 @@
 divDyn <- function(dat, tax, bin, ages=FALSE, breaks=NULL, coll="collection_no", ref="reference_no", om=NULL,noNAStart=FALSE, data.frame=TRUE, filterNA=FALSE)
 {
 	
+#	# tral run
+#	dat<-corals
+#	bin<-"stg"
+#	tax<- "genus"
+#	ages <- FALSE
+#	breaks<-NULL
+
 	# checking the binning argument
 	# is numeric
 	if(!is.numeric(dat[,bin])){
@@ -134,78 +141,13 @@ divDyn <- function(dat, tax, bin, ages=FALSE, breaks=NULL, coll="collection_no",
 	
 	if(ages){
 		dat[, bin] <- -dat[,bin]
+		if(!is.null(breaks)) breaks <- -breaks
 	}
 	
-	# what do you want to do with the bin numbers?
-	# nothing, individual time slices
-	if(is.null(breaks)){
-		# smallest bin value
-		minBin<-min(dat[,bin], na.rm=T)
-			
-		# if bin values are positive integers
-		if(sum(dat[,bin]%%1, na.rm=T)==0 & minBin>0){
-			
-			binID<-NULL
-			
-		# non-integers: factorization
-		}else{
-
-			#### redo
-			# potential bin names in order
-			levs <- sort(unique(dat[,bin]))
-
-			# their index in the processed script
-			vals <- 1:length(levs)
-			names(vals)<-levs
-
-			# NA bin entries
-			charBins <- as.character(dat[,bin])
-			naBins <- is.na(charBins)
-			
-			# replace bin numbers with positive integers
-			dat[!naBins,bin] <- vals[charBins[!naBins]]+4 # add some offset 
-		
-			# use later
-			binID <-c(rep(NA, 4), levs)
-
-
-		}
-	
-	# use a predefined binning of numeric values
-	}else{	
-		if(!is.numeric(breaks)) stop("The breaks argument has to be a numeric vector. ")
-		
-		# revert the breaks too, in case ages are provided
-		if(ages) breaks <- -breaks
-		# order the breaking vector 
-		breaks<-sort(breaks)
-		
-		# calculate the bin averages
-		both<-cbind(c(breaks,NA),c(NA, breaks))
-		means<-apply(both, 1, mean)
-		means<-means[!is.na(means)]
-		
-		# bin the variable
-		fact<-cut(dat[,bin], breaks)
-		
-		# the function will use this to output the data
-		newBin<-as.numeric(fact)
-		
-		if(length(unique(newBin))<4) stop("At least 4 time slices are necessary.")
-		
-		# replace bin numbers with positive integers
-		dat[,bin] <- newBin
-		
-		# save the relevant means, use the binID later to identify the position
-	
-		to<-max(newBin,na.rm=T)
-		binID<-c(rep(NA,4),means[1:to])
-		
-		 # add 4 as an offset
-		 dat[,bin]<-dat[,bin]+4
-		
-	}
-	
+	# appropriate treatment of binning data
+	off <- 4
+	aubi <- autoBin(dat[,bin], breaks=breaks, offset=off)
+	dat[,bin] <- aubi$y
 	
 	# the omission phase
 	if(!is.null(om)){
@@ -226,19 +168,6 @@ divDyn <- function(dat, tax, bin, ages=FALSE, breaks=NULL, coll="collection_no",
 		warning("Taxon name <\"\"> (empty quotes) is detected!")
 	}
 
-	#the maximum number of time slices
-	nVectorLength<-max(binVar, na.rm=T)
-	
-	#starting interval
-	nStart<-min(binVar, na.rm=T)
-	
-	#ending interval
-	nEnd<-max(binVar, na.rm=T)
-	
-	#the vector of time slice numbers
-	nTimeSlice<-c(rep(NA, nStart-1), nStart:nEnd)
-	
-	
 	# factorize
 	taxVar <- as.numeric(factor(taxVar))
 	
@@ -254,25 +183,18 @@ divDyn <- function(dat, tax, bin, ages=FALSE, breaks=NULL, coll="collection_no",
 	
 	# replace infinites with NAs
 	metrics[!is.finite(metrics)]<-NA
-		
-	# cbind all together
-	dCountsAndMetrics<-cbind(bin=nTimeSlice,  counts, metrics)
-	
-	if(!is.null(binID)){
-		dCountsAndMetrics[,"bin"]<-binID
-		
-		# and get rid of the NAs
-		dCountsAndMetrics<-dCountsAndMetrics[5:nrow(dCountsAndMetrics),]
 
-		nStart <- 1
-		nEnd <- nEnd-4
-	}
-	if(ages){
-		dCountsAndMetrics[,"bin"]<- -dCountsAndMetrics[,"bin"]
-	}
+	# concatenate the columns
+	dCountsAndMetrics<-cbind(counts, metrics)
 		
+	# delete the safety offset
+	dCountsAndMetrics<- dCountsAndMetrics[(off+1):nrow(dCountsAndMetrics), ]
+
+	# cbind all together
+	dCountsAndMetrics<-cbind(bin=aubi$z, dCountsAndMetrics)
+	
 	#create the returning table
-	dCountsAndMetrics<-dCountsAndMetrics[,c(
+	columns <- c(
 		"bin",
 		"t2d",
 		"t2u",
@@ -304,7 +226,8 @@ divDyn <- function(dat, tax, bin, ages=FALSE, breaks=NULL, coll="collection_no",
 		"ori2f3",
 		"samp3t",
 		"sampRange"
-	)]
+	)
+	dCountsAndMetrics<-dCountsAndMetrics[,columns]
 	
 	if(data.frame){				
 		dCountsAndMetrics<-as.data.frame(dCountsAndMetrics, stringsAsFactors=F)
@@ -314,27 +237,36 @@ divDyn <- function(dat, tax, bin, ages=FALSE, breaks=NULL, coll="collection_no",
 	#!!!nTot3tSampComp
 
 	# coerce NAs in variables and intervals where they were not supposed to be
-		# starting part of the table, only if there is no pseudofactorization involved, i.e. index conservation
-		if(nStart>1 & is.null(binID)) dCountsAndMetrics[1:nStart-1,] <- NA
-	
 		# first row
-		dCountsAndMetrics[nStart,c("t2d","t3","tPart","tGFd","tGFu", "tThrough", "tExt", "divBC", "O2f3")] <- NA
-		dCountsAndMetrics[nStart+1,c("tGFd","oriGF", "ori2f3", "O2f3")] <- NA
+		dCountsAndMetrics[1,c("t2d","t3","tPart","tGFd","tGFu", "tThrough", "tExt", "divBC", "O2f3")] <- NA
+		dCountsAndMetrics[2,c("tGFd","oriGF", "ori2f3", "O2f3")] <- NA
 	
 		# last row
+		nEnd<-nrow(dCountsAndMetrics)
 		dCountsAndMetrics[nEnd,c("t2u","t3","tPart","tGFd","tGFu", "ext2f3", "tOri", "tThrough", "E2f3")] <- NA
 		dCountsAndMetrics[nEnd-1,c("tGFu","extGF", "ext2f3", "E2f3")] <- NA
 
-	#want to see the NA's at the beginnning? (when the time series does not start with bin 1)
-		
+	#want to see the NA's at the beginnning? 
 	# only use noNAStart when the simple indices are used	
-	if (noNAStart==TRUE & is.null(binID))
-	{
-		dCountsAndMetrics<-dCountsAndMetrics[nStart:nEnd,]
-		rownames(dCountsAndMetrics)<-NULL
+	if (!noNAStart){
+		# only if it is applicable - e.g. 
+		firstBin <- min(dCountsAndMetrics[,"bin"]) 
+		
+		# (when the time series does not start with bin 1 and integers)
+		if(sum((dCountsAndMetrics[,"bin"]%%1)==0)==nEnd & firstBin>0){
+			empty <- matrix(NA, nrow=firstBin-1, ncol=ncol(dCountsAndMetrics))
+			colnames(empty) <- columns
+			dCountsAndMetrics<-rbind(empty,dCountsAndMetrics)
+			rownames(dCountsAndMetrics)<-NULL
+		}
+		
 	}
-			
 	
+	# cosmetic changes		
+	if(ages){
+		dCountsAndMetrics[,"bin"]<- -dCountsAndMetrics[,"bin"]
+	}
+		
 	#return the table					
 	return(dCountsAndMetrics)
 }
@@ -510,7 +442,7 @@ Metrics<- function(counts){
 #' 
 #' # within divDyn
 #'   # plotting
-#'	  tsplot(stages, shading="series", boxes="per", xlim=c(260,0), 
+#'	  tsplot(stages, shading="series", boxes="sys", xlim=c(260,0), 
 #'	    ylab="range-through diversity (genera)", ylim=c(0,230))
 #'   # multiple ref/slice required
 #'   ddNoSing <- divDyn(corals, tax="genus", bin="stg", om="binref")
@@ -606,6 +538,73 @@ omit <- function(dat, tax="genus", bin="bin", coll="collection_no", ref="referen
 }
 
 
+# The autobin utility function to perform the reliable discretization of the time dimension
+# 	# testing and developmental snippets:
+# 	library(divDyn)
+# 	data(corals)
+# 	
+# 	# start with the different stage identifiers
+# 	x<- corals$stg-50
+# 	x<- apply(corals[, c("min_ma", "max_ma")], 1,mean)
+# 	offset <- 4
+# 	breaks<-NULL
+# 	breaks<-seq(300, 0, -25)
+# 	
+# before function is run, do reversion of time axis if necessary!
+autoBin<-function(x, offset=4,breaks=NULL){
+	# only allow to pass through if it is numeric
+	if(!is.numeric(x)) stop("The provided time vector is not numeric.")
+
+	# when there are no breaks (bin identifiers were supposed to be used as provided)
+	if(is.null(breaks)){
+		# get levels
+		z <- sort(unique(x))
+
+		# if there are integer entries coerce continuous numbering for the output
+		# and use only shifts of values, rather than replacement (much faster)
+		if(sum(z%%1==0)==length(z)) {
+			minZ<-min(z)
+			maxZ<-max(z)
+			z<-minZ:maxZ
+
+			# shift the ranks 
+			y<- x-minZ+1+offset
+
+		}else{
+
+			ranks <- rank(z)+offset
+			names(ranks) <- z
+	
+			# the NAs
+			notNA <- !is.na(x)
+			y<-rep(NA, length(x))
+	
+			# create the new bin vector
+			y[notNA]<-ranks[as.character(x[notNA])]
+		}
+	# breaks are present
+	}else{
+		# first, sort the breaks
+		breaks<-sort(breaks)
+		# cut the vector
+		y <- cut(x, breaks=breaks, labels=FALSE)
+		z<-apply(
+			cbind(
+				breaks[1:(length(breaks)-1)],
+				breaks[2:length(breaks)]),
+			1, mean)
+
+		y<- y+offset
+	}
+	return(list(y=y, z=z))
+}
+
+# after function is run, constrain the omission of NAs
+
+
 .onUnload <- function (libpath) {
 	library.dynam.unload("divDyn", libpath)
 }
+
+
+

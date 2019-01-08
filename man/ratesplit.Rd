@@ -58,7 +58,7 @@ ddZ<-divDyn(z, tax="genus", bin="stg")
 ddAZ<-divDyn(az, tax="genus", bin="stg")
 
 # origination rate plot
-tsplot(stages, boxes="per", shading="series", xlim=54:95, 
+tsplot(stages, boxes="sys", shading="series", xlim=54:95, 
   ylab="raw per capita originations")
 lines(stages$mid, ddZ$oriPC, lwd=2, lty=1, col="blue")
 lines(stages$mid, ddAZ$oriPC, lwd=2, lty=2, col="red")
