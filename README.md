@@ -3,11 +3,11 @@ R package for quantifying diversity dynamics using fossil sampling data
 
 ## News
 
-- The next update of the package (v0.7.0) is here! It is submitted to the CRAN servers and should be available shortly. Until then, use the resources available here. 
+- The next update of the package (v0.7.0) is here! It is submitted and available from the CRAN servers.. 
 
 - The preprint describing the package is accessible from bioRxiv. You can download it from here:
 http://biorxiv.org/cgi/content/short/423780v1.
-If you decide to use the methods implemented in this package, please refer to this document. The paper is getting finalized, and should be published within a month or two. The examples implemented in this manuscript are elaborated in this vignette: https://github.com/divDyn/ddPhanero/blob/master/doc/0.4/dd_phanero.pdf
+If you decide to use the methods implemented in this package, please refer to this document. The paper is getting finalized, and should be published within a month or two. The examples implemented in this manuscript are elaborated in this vignette: https://github.com/divDyn/ddPhanero/blob/master/doc/dd_phanero.pdf
 
 
 ## About the package
@@ -20,7 +20,7 @@ As the package is still getting developed, please note that some interface chang
 
 ## Installing 
 
-### 1. From CRAN (v0.6.3)
+### 1. From CRAN (v0.7.0)
 
 You can install the appropriate binaries by running 
 `install.packages("divDyn")`
@@ -60,6 +60,9 @@ If you do not want to mess around with compiler and such, then contact me and I 
 
 # Change log
 
+## [0.7.0 (build 643)]  - 2019.01.08 
+### Fixed
+- the affinity() funciton now handles NA entries in the bin column explicitly
 
 ## [0.7.0 (build 642)]  - 2019.01.08 
 ### Added
