@@ -13,7 +13,7 @@ If you decide to use the methods implemented in this package, please refer to th
 ## About the package
 
 If you are interested in what this package does, or have questions about its use, please check out the first vignette: 'Handout to the R package 'divDyn' v0.7.0 for diversity dynamics from fossil occurrence data' here:
-https://github.com/divDyn/r_package/blob/master/_archive/vignettes/Handout_0.7.0.pdf
+https://github.com/divDyn/r_package/blob/master/vignettes/handout.pdf
 
 As the package is still getting developed, please note that some interface changes might occurr based on the feedback of people and my own experience on what is easier to use. If you have any requirements or recommendations about what to add (or more importantly, if you find a mistake), do not hesitate to contact me at adam.kocsis@fau.de.
 
@@ -30,17 +30,17 @@ You can install the appropriate binaries normally, by running
 I have updated the windows binaries so that they work with the latest internals (3.5.2). If you want to use the binaries, please update your R to at least 3.5.
 
 - If you have a windows computer, you can install the package with the following R command:
-  `install.packages("https://github.com/divDyn/r_package/raw/master/_bin/Win_x64_x86/divDyn_0.7.0.zip", repos=NULL)`
+  `install.packages("https://github.com/divDyn/assets/raw/master/r_archive/bin/Win_x64_x86/divDyn_0.7.0.zip", repos=NULL)`
 
 - If you have a Mac, then use the following link (still older version, for R <3.5).
-  `install.packages("https://github.com/divDyn/r_package/raw/master/_bin/Mac_OSX/divDyn_0.5.2.tgz", repos=NULL)`
+  `install.packages("https://github.com/divDyn/assets/raw/master/r_archive/bin/Mac_OSX/divDyn_0.5.2.tgz", repos=NULL)`
   I know this is old, but will update it at the earliest convenience (I do not have a Mac). Until I am done with this, please use install method 3 or 4.
 
 ### 3. Using the source tarball to install (v0.7.0)
 This you can do with running
 ```
 install.packages(
-  "https://github.com/divDyn/r_package/raw/master/_archive/source/divDyn_0.7.0.tar.gz", 
+  "https://github.com/divDyn/assets/raw/master/r_archive/source/divDyn_0.7.0.tar.gz", 
   repos=NULL, type="source")
 ```
 
