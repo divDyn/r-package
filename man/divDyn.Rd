@@ -4,9 +4,9 @@
 \alias{divDyn}
 \title{Time series from metrics of diversity dynamics}
 \usage{
-divDyn(dat, tax, bin, ages = FALSE, breaks = NULL, coll = "collection_no",
-  ref = "reference_no", om = NULL, noNAStart = FALSE, data.frame = TRUE,
-  filterNA = FALSE)
+divDyn(dat, tax, bin, ages = FALSE, breaks = NULL,
+  coll = "collection_no", ref = "reference_no", om = NULL,
+  noNAStart = FALSE, data.frame = TRUE, filterNA = FALSE)
 }
 \arguments{
 \item{dat}{\code{(data.frame)} Fossil occurrence table.}

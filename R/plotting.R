@@ -20,9 +20,13 @@
 #' @param labels.args \code{(list)}: Arguments that will be passed to the \code{\link[graphics]{text}} function that draws the labels. Can be \code{list}s of \code{list}s if multiple series of ``boxes`` are used.
 #' @param labels \code{(logical)}: Should the labels within the boxes be drawn? Setting this argumnet to \code{FALSE} will not call the \code{\link[graphics]{text}} function that draws the labels. 
 #' @param boxes.args \code{(list)}: Arguments that will be passed to the \code{\link[graphics]{rect}} function that draws the rectangles of time intervals.
+#' @param rplab \code{logical}: When the right boundary of the plot does not match with any of the boundaries of the time scale boxes (and \code{labels=TRUE}), should the label of the partially drawn box be plotted?
+#' @param lplab \code{logical}: When the left boundary of the plot does not match with any of the boundaries of the time scale boxes (and \code{labels=TRUE}), should the label of the partially drawn box be plotted?
 #' @examples
 #'	data(stages) 
 #'	  tsplot(stages, boxes="sys", shading="series")
+#'  # same with colours
+#'	  tsplot(stages, boxes="sys", shading="series", boxes.col="systemCol") 
 #' 
 #'	# only the Mesozoic, custom axes
 #'	  tsplot(stages, boxes="system", shading="stage", xlim=52:81, 
@@ -47,7 +51,8 @@ tsplot<-function(tsdat,  ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 	plot.args=NULL,
 	boxes.args=NULL,
 	labels=TRUE, 
-	labels.args=NULL){
+	labels.args=NULL,
+	lplab=TRUE, rplab=TRUE){
 	
 #	tsdat<-stages
 #	boxes<-"sys"
@@ -58,10 +63,18 @@ tsplot<-function(tsdat,  ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 #	ylab=""
 #	shading="series"
 #	shading.col=c("white", "gray80")
+#	xlim <- c(100,50)
+#	boxes.col<-NULL
+#	prop <- 0.05
+#	gap<-0
 #	
 #	boxes.args<-NULL
 #	plot.args<-NULL
+#	labels<-TRUE
 #	labels.args<-NULL
+#	rplab=TRUE
+#	lplab=TRUE
+
 	tsCols<-colnames(tsdat)
 	if(!bottom%in%tsCols) stop("The 'bottom' column is not found.")
 	if(!top%in%tsCols) stop("The 'top' column is not found.")
@@ -241,6 +254,39 @@ tsplot<-function(tsdat,  ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 					labMid[i]<-mean(c(curBottom, curTop))
 				
 			}
+			
+			# many cases the plot boundary does not coincide with the bounding boxes, and the labels are not positioned right
+			# do the plot boundaries coincide with the boxes?
+			#left edge
+			# if not, then 
+			  
+			if(!any(xlim[1]==xLeft)){
+				# only if the plot boundary is within the timescale itslef
+				if(xlim[1]<max(xLeft)){
+					# index of value that needs to be adjusted
+					leftAdjust<-max(which(xlim[1]<xLeft))
+					# put the value in the middle between the plot boundary and the box boundary
+					if(lplab) labMid[leftAdjust] <-  (xlim[1]+xRight[leftAdjust])/2
+
+					# if this is the case, the box left boundary has to be adjusted too
+					xLeft[leftAdjust] <- xlim[1]
+				}
+			}
+			# same with right edge
+			
+			if(!any(xlim[2]==xRight)){
+				# only if the plot boundary is within the timescale itslef
+				if(xlim[2]>min(xRight)){
+					# index of value that needs to be adjusted
+					rightAdjust<-min(which(xlim[2]>xRight))
+					# put the value in the middle between the plot boundary and the box boundary
+					if(rplab)  labMid[rightAdjust] <-  (xlim[2]+xLeft[rightAdjust])/2
+				
+					# if this is the case, the box right boundary has to be adjusted too
+						xRight[rightAdjust] <- xlim[2]
+				}
+			}
+
 
 			#boxes
 			# inner arguments
@@ -286,6 +332,7 @@ tsplot<-function(tsdat,  ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 			# the labels
 			# should the labels be plotted
 			if(labels){
+
 				# inner arguments
 				labArgs<-list(
 					label=boxLev, 

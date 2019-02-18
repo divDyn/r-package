@@ -4,9 +4,9 @@
 \alias{parts}
 \title{Plot time series counts or proportions as polygons}
 \usage{
-parts(x, b = NULL, ord = "up", prop = FALSE, plot = TRUE, col = NULL,
-  xlim = NULL, border = NULL, ylim = c(0, 1), na.valid = FALSE,
-  labs = T, labs.args = NULL, vertical = FALSE)
+parts(x, b = NULL, ord = "up", prop = FALSE, plot = TRUE,
+  col = NULL, xlim = NULL, border = NULL, ylim = c(0, 1),
+  na.valid = FALSE, labs = T, labs.args = NULL, vertical = FALSE)
 }
 \arguments{
 \item{x}{\code{(numeric)}: The independent variable through which the proportion is tracked. Identical entries are used to assess which values belong together to a set. Their values represent the x coordinate over the plot.}

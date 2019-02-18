@@ -1,5 +1,22 @@
 # Change log of the R package 'divDyn'
 
+## [0.7.1 (build 669)]  - 2019.02.18 
+### Added
+- A lot of people reported problems with the direction of time in the divDyn() function. A startup message is added as a reminder of the arbitrary decision I had to make when designing the function. 
+- The affinity() function is extended with the na.rm argument. Setting this argument to TRUE will remove all NAs found in relevant columns of the data table. Otherwise the function will halt if these are found. 
+- The "binom" method of the affinity() function is now generalized to more than two entry types. Binomial test are run for that type, that has the highest odd ratio of occurrences when contrasted to the reference dataset.
+- The 'bycoll' argument is now added to the affinity() function. This allows the calculation of affinities based on the collection counts rather than occurrence counts.
+- Some code was added to the tpslot() funciton to correctly plot the labels of the time scale boxes when the boundaris of the plot does not coincide with the boxes. The plotting of the labels of these partially drawn boxes can be switched on and off with the added 'rtlab' and 'ltlab' arguments.
+
+### Changed
+- Package suggested citation now directs to the paper in Methods in Ecology and Evolution.  
+- The default of the affinity() function is now set to NULL.
+
+### Fixed
+- The main divDyn() function produced warnings ('In cbind(bin = aubi$z, dCountsAndMetrics)'') when the automatic binning was used (breaks argument) and the provided interval had younger parts than the occurrence data. The results are the same, but this case does not produce warnings anymore.
+- Problems with the 'reldat' argument of the affinity() function
+
+
 ## [0.7.0 (build 642)] - 2019.01.08 
 ### Added
 - the georange() function for geographic range estimation from a set of coordinates (suggesting the vegan and the icosa packages)

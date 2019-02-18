@@ -148,7 +148,11 @@ divDyn <- function(dat, tax, bin, ages=FALSE, breaks=NULL, coll="collection_no",
 	off <- 4
 	aubi <- autoBin(dat[,bin], breaks=breaks, offset=off)
 	dat[,bin] <- aubi$y
-	
+
+	# in case the scale defined by breaks has younger parts than the data
+	maxVal<- max(aubi$y, na.rm=TRUE)-off
+
+
 	# the omission phase
 	if(!is.null(om)){
 		dat<-dat[!omit(dat, tax=tax, bin=bin,om=om, ref=ref, coll=coll, filterNA=filterNA),]
@@ -191,7 +195,7 @@ divDyn <- function(dat, tax, bin, ages=FALSE, breaks=NULL, coll="collection_no",
 	dCountsAndMetrics<- dCountsAndMetrics[(off+1):nrow(dCountsAndMetrics), ]
 
 	# cbind all together
-	dCountsAndMetrics<-cbind(bin=aubi$z, dCountsAndMetrics)
+	dCountsAndMetrics<-cbind(bin=aubi$z[1:maxVal], dCountsAndMetrics)
 	
 	#create the returning table
 	columns <- c(
@@ -600,11 +604,6 @@ autoBin<-function(x, offset=4,breaks=NULL){
 }
 
 # after function is run, constrain the omission of NAs
-
-
-.onUnload <- function (libpath) {
-	library.dynam.unload("divDyn", libpath)
-}
 
 
 

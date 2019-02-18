@@ -12,10 +12,10 @@ subtrialCR(dat, bin, q, unit = NULL, keep = NULL, useFailed = FALSE,
 subtrialOXW(dat, bin, q, coll, x = 1, keep = NULL, useFailed = FALSE,
   showFailed = FALSE)
 
-subtrialSQS(dat, bin, tax, q, coll = NULL, ref = NULL, singleton = "occ",
-  excludeDominant = FALSE, largestColl = FALSE, fcorr = "good",
-  byList = FALSE, keep = NULL, useFailed = FALSE, showFailed = FALSE,
-  appr = "under")
+subtrialSQS(dat, bin, tax, q, coll = NULL, ref = NULL,
+  singleton = "occ", excludeDominant = FALSE, largestColl = FALSE,
+  fcorr = "good", byList = FALSE, keep = NULL, useFailed = FALSE,
+  showFailed = FALSE, appr = "under")
 }
 \arguments{
 \item{dat}{(\code{data.frame}): Occurrence dataset, with \code{bin}, \code{tax} and \code{coll} as column names.}

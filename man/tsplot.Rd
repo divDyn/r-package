@@ -7,8 +7,9 @@
 tsplot(tsdat, ylim = c(0, 1), xlim = NULL, prop = 0.05, gap = 0,
   bottom = "bottom", top = "top", xlab = "age (Ma)", ylab = "",
   boxes = NULL, boxes.col = NULL, shading = NULL,
-  shading.col = c("white", "gray80"), plot.args = NULL, boxes.args = NULL,
-  labels = TRUE, labels.args = NULL)
+  shading.col = c("white", "gray80"), plot.args = NULL,
+  boxes.args = NULL, labels = TRUE, labels.args = NULL,
+  lplab = TRUE, rplab = TRUE)
 }
 \arguments{
 \item{tsdat}{\code{(data frame)}: The time scale data frame.}
@@ -44,6 +45,10 @@ tsplot(tsdat, ylim = c(0, 1), xlim = NULL, prop = 0.05, gap = 0,
 \item{labels}{\code{(logical)}: Should the labels within the boxes be drawn? Setting this argumnet to \code{FALSE} will not call the \code{\link[graphics]{text}} function that draws the labels.}
 
 \item{labels.args}{\code{(list)}: Arguments that will be passed to the \code{\link[graphics]{text}} function that draws the labels. Can be \code{list}s of \code{list}s if multiple series of ``boxes`` are used.}
+
+\item{lplab}{\code{logical}: When the left boundary of the plot does not match with any of the boundaries of the time scale boxes (and \code{labels=TRUE}), should the label of the partially drawn box be plotted?}
+
+\item{rplab}{\code{logical}: When the right boundary of the plot does not match with any of the boundaries of the time scale boxes (and \code{labels=TRUE}), should the label of the partially drawn box be plotted?}
 }
 \description{
 This function allows the user to quickly plot a time scale data table
@@ -54,6 +59,8 @@ As most analysis use an individually compiled time scale object, in order to ens
 \examples{
 data(stages) 
   tsplot(stages, boxes="sys", shading="series")
+ # same with colours
+  tsplot(stages, boxes="sys", shading="series", boxes.col="systemCol") 
 
 # only the Mesozoic, custom axes
   tsplot(stages, boxes="system", shading="stage", xlim=52:81, 

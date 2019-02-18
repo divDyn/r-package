@@ -4,9 +4,10 @@
 \alias{subsample}
 \title{Serial subsampling wrapper function}
 \usage{
-subsample(dat, q, tax = "genus", bin = "stg", FUN = divDyn, coll = NULL,
-  ref = NULL, iter = 50, type = "cr", keep = NULL, rem = NULL,
-  duplicates = TRUE, output = "arit", useFailed = FALSE, ...)
+subsample(dat, q, tax = "genus", bin = "stg", FUN = divDyn,
+  coll = NULL, ref = NULL, iter = 50, type = "cr", keep = NULL,
+  rem = NULL, duplicates = TRUE, output = "arit",
+  useFailed = FALSE, ...)
 }
 \arguments{
 \item{dat}{(\code{data.frame}): Occurrence dataset, with \code{bin}, \code{tax} and \code{coll} as column names.}

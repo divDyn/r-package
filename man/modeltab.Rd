@@ -4,7 +4,8 @@
 \alias{modeltab}
 \title{Origination/extinction response table for statistical modelling.}
 \usage{
-modeltab(dat, tax, bin, taxvars = NULL, rt = FALSE, singletons = FALSE)
+modeltab(dat, tax, bin, taxvars = NULL, rt = FALSE,
+  singletons = FALSE)
 }
 \arguments{
 \item{dat}{\code{(data.frame)} Fossil occurrence table.}

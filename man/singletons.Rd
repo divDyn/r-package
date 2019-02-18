@@ -4,8 +4,8 @@
 \alias{singletons}
 \title{List of singleton taxa}
 \usage{
-singletons(dat, tax = "clgen", var = NULL, bin = NULL, bybin = FALSE,
-  na.rm = TRUE)
+singletons(dat, tax = "clgen", var = NULL, bin = NULL,
+  bybin = FALSE, na.rm = TRUE)
 }
 \arguments{
 \item{dat}{(\code{data.frame}): Occurrence dataset, with \code{bin}, \code{tax} and \code{coll} as column names.}

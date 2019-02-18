@@ -1,6 +1,6 @@
-#' Calculate environmental affinities of taxa
+#' Environmental affinities of taxa
 #'
-#' This function will return the environmental affinities of taxa, given the sampling conditions implied by the supplied dataset.
+#' This function will return the preferred environment of the taxa, given the distribution of occurrences.
 #'
 #' Sampling patterns have an overprinting effect on the frequency of taxon occurrences in different environments. The environmental affinity (Foote, 2006; Kiessling and Aberhan, 2007; Kiessling and Kocsis, 2015) expresses whether the taxa are more likely to occur in an environment, given the sampling patterns of the dataset at hand. The function returns the likely preferred environment for each taxon as a vector. \code{NA} outputs indicate that the environmental affinity is equivocal based on the selected method.
 #'
@@ -8,7 +8,7 @@
 #'
 #' \code{'majority'}: Environmental affinity will be assigned based on the number of occurrences of the taxon in the different environments, without taking sampling of the entire dataset into account. If the taxon has more occurrences in \emph{environment 1}, the function will return \emph{environment 1} as the preferred habitat. 
 #'
-#' \code{'binom'}: The proportion of occurrences of a taxon in \emph{environment 1} and \emph{environment 2} will be compared to a null model, which is based on the distribution of all occurrences from the stratigraphic range of the taxon. The \code{alpha} value indicates the significance of the binomial tests, setting \code{alpha} to \code{1} will effectively switch the testing off: if the ratio of occurrences for the taxon is different from the ratio observed in the dataset, an affinity will be assigned. This is the default method.
+#' \code{'binom'}: The proportion of occurrences of a taxon in \emph{environment 1} and \emph{environment 2} will be compared to a null model, which is based on the distribution of all occurrences from the stratigraphic range of the taxon (in \code{dat} or if provided, in \code{reldat}). Then a binomial test is run on with the numbers of the most likely preference (against all else). The \code{alpha} value indicates the significance of the binomial tests, setting \code{alpha} to \code{1} will effectively switch the testing off: if the ratio of occurrences for the taxon is different from the ratio observed in the dataset, an affinity will be assigned. This is the default method. If an environment is not sampled at all in the dataset to which the taxon's occurrences are compared to, the binomial method returns \code{NA} for the taxon's affinity. 
 #' 
 #' \strong{References}
 #'
@@ -23,10 +23,12 @@
 #' @param method \code{(character)} The method used for affinity calculations. Can be either \code{"binom"} or \code{"majority"}.
 #' @param tax \code{(character)} The column name of taxon names.
 #' @param bin \code{(character)} The column name of bin names.
-#' @param coll \code{(character)} The column name of collection numbers.
-#' @param alpha \code{(numeric)} The alpha value of the binomial tests. By default binomial testing is off (\code{alpha=1}).
-#' @param reldat \code{(data.frame)} Database with the same structure as \code{dat}. Typically \code{dat} is the subset of \code{reldat}. If given, the occurrence distribution of \code{reldat} is used 
-#' as the null model of sampling.
+#' @param coll \code{(character)} The column name of collection identifiers (optional). If this is provided, then then the multiple entries of a taxon within the collections will be treated as 1.
+#' @param alpha \code{(numeric)} The alpha value of the binomial tests. By default binomial testing is off (\code{alpha=1}) and the methods returns that environment as the preferred one, which has the highest likelihood (odds ratio). 
+#' @param reldat \code{(data.frame)} Database with the same structure as \code{dat}.  \code{dat} is typically a subset of \code{reldat}. If given, the occurrence distribution of \code{reldat} is used 
+#' as the null model of sampling. Defaults to \code{NULL}, which means that \code{dat} itself will be used as \code{reldat}.
+#' @param na.rm \code{(logical)} Should the \code{NA} entries in the relevant columns of \code{dat} be omitted automatically?
+#' @param bycoll \code{(logical)} If set to \code{TRUE}, the number of collections (or samples, in \code{coll}) will be used rather than the number of occurrences.
 #'
 #' @examples
 #'	data(corals)
@@ -37,201 +39,207 @@
 #'	  aff<-affinity(fossilEnv, env="bath", tax="genus", bin="stg", alpha=1)
 #'	
 #' @export
-affinity<-function(dat, env, tax="genus",  bin="stg", coll="collection_no", method="binom", alpha=1,reldat=NULL){
+affinity<-function(dat, tax, bin, env, coll=NULL, method="binom", alpha=1,reldat=NULL, na.rm=FALSE, bycoll=FALSE){
+# version 2.0
+#	dat <- fossilEnv
+#	env <- "bath"
+#	tax <- "genus"
+#	bin <- "stg"
+#	method <- "binom"
+#	alpha <- 1
+#	reldat <- NULL
+#	coll <- NULL
+#	na.rm<-TRUE
 
-	if(is.null(alpha)& !is.null(reldat)) warning("Majority rule selected, reldat will be ignored.")
+	if(method=="majority" & !is.null(reldat)) warning("Majority rule selected, reldat will be ignored.")
+	
+	if(bycoll) if(any(!coll%in%colnames(dat))) stop("The \'coll\' argument has to be a column name of \'dat\' if \'bycoll=TRUE\'.")
+
+	# omit everything from dat that is not necessary
+		dat<-unique(dat[,c(coll, tax,bin, env)]) # this can be faster!!
 	
 	match.arg(method, c("binom", "majority"))
 	
-	# omit everything from dat that is not necessary
-		dat<-unique(dat[,c(coll, tax,bin, env)])
+	# omit NA bins
+	naBin <- is.na(dat[,bin])
+	naTax <- is.na(dat[,tax])
+	naEnv <- is.na(dat[,env])
+	if(!is.null(coll)) naColl <- is.na(dat[,coll])
+
+	if(!na.rm){
+		# stop execution
+		if(any(naBin)) stop("The \'bin\' variable contains NAs. Omit these or set \'na.rm=TRUE\'")
+		if(any(naTax)) stop("The \'tax\' variable contains NAs. Omit these or set \'na.rm=TRUE\'")
+		if(any(naEnv)) stop("The \'env\' variable contains NAs. Omit these or set \'na.rm=TRUE\'")
+		if(!is.null(coll)) if(any(naColl)) stop("The \'coll\' variable contains NAs. Omit these or set \'na.rm=TRUE\'")
+	}else{
+		# go forward
+		if(!is.null(coll)){
+			dat <- dat[!naBin & !naTax & !naEnv & !naColl, ]
+		}else{
+			dat <- dat[!naBin & !naTax & !naEnv, ]
+		}
+	}
 	
 	# the affinity variable
-		affDat<-dat[, env]
-		
-		if(0!=sum(is.na(affDat))) stop("The 'env' variable contains NAs, please omit these entries first.")
-		affLevels<-unique(affDat)
-		if(length(affLevels)!=2) stop("The 'env' variable contains more or less than 2 levels of entries. ")
-
+		affLevels<-levels(factor(dat[,env]))
+	
 	# create an FAD-LAD matrix first
 		dFL<-fadlad(dat, tax, bin)
 	
+	# by this time fadLad will probably give a warning, but process this nevertheless
 		if(any(""==dat[,tax])){
 			rownames(dFL)[rownames(dFL)==""] <- "emptyQuotes"
 			dat[dat[,tax]=="",tax] <- "emptyQuotes"
 		}
-	# add the names to the matrix so that apply can process it
+	
+	# add the names to the matrix so apply can process it
 		dFL$taxon<-rownames(dFL)
-	
-	#the bins
+
+	# the bins
 		allBins<-sort(unique(dat[,bin]))
-		allBins<-allBins[!is.na(allBins)]
+		
+	# make a 3D array - bin, taxon, environment
+		occArr <- array(0, dim=c(length(allBins), nrow(dFL), length(affLevels)))
+		dimnames(occArr) <- list(allBins, rownames(dFL), affLevels)
+
+	# NOTE: nothing needs to be done if bycoll=TRUE - if coll is provided, every occurrence will mean one collection, anyway
+	# fill it with values
+	for(i in 1:length(affLevels)){
+		# environment-specific subset
+		firstDat<-dat[dat[,env]==affLevels[i],]
 	
-	# tables of occurences
-	# occs of the first env.
-		firstDat<-dat[dat[,env]==affLevels[1],]
+		# tabulate
 		fTab<-table(firstDat[,bin], firstDat[,tax])
 		class(fTab)<-"matrix"
-		
-		# redo
-		firstTab<-matrix(0, nrow=length(allBins), ncol=nrow(dFL))
-		rownames(firstTab)<-allBins
-		colnames(firstTab)<-rownames(dFL)
-		firstTab[rownames(fTab), colnames(fTab)]<-fTab
-		
-	# occs of the second env.
-		secondDat<-dat[dat[,env]==affLevels[2],]
-		sTab<-table(secondDat[,bin], secondDat[,tax])
-		class(sTab)<-"matrix"
 
-		# redo
-		secondTab<-matrix(0, nrow=length(allBins), ncol=nrow(dFL))
-		rownames(secondTab)<-allBins
-		colnames(secondTab)<-rownames(dFL)
-		secondTab[rownames(sTab), colnames(sTab)]<-sTab
-		
-	# in case a relative dataset is added
-		if(!is.null(reldat)){
-			relLev<-reldat[,env]
-			if(sum(!affLevels%in%relLev)==2) stop("The 'env' variable in 'reldat' does not contain the 'env' entries of 'dat'. ")
-			
-			# not all bins are represented!
-			if(sum(allBins%in%reldat[,bin])!=length(allBins)) stop("The 'bin' variable of 'reldat' does cover the range of 'bin' in 'dat'.")
-			dRel<-unique(reldat[,c(coll, tax,bin, env)])
-			
-		# occs of the first env.
-			firstRelDat<-dRel[dRel[,env]==affLevels[1],]
-			firstRel<-table(firstRelDat[,bin])
-			class(firstRel)<-"numeric"
-	
-		# occs of the second env.
-			secondRelDat<-dRel[dRel[,env]==affLevels[2],]
-			secondRel<-table(secondRelDat[,bin])
-			class(secondRel)<-"matrix"
-
-		}else{
-			firstRel<-apply(firstTab, 1, sum)
-			secondRel<-apply(secondTab, 1, sum)
-		}
-			
-	# prepare for bayesian
-	if(method=="bayesian"){
-		# prior probability of belonging to First
-		pH1<- 0.5
-		
-		# prior probability of affinity to second
-		pH2<- 0.5
+		# add to the array
+		occArr[rownames(fTab), colnames(fTab),i]<-fTab
 	}
-	
+
+	# reference/relative dataset
+		# as dat is not used from now on, use that to save time and memory
+		# in case a relative dataset is added
+		if(!is.null(reldat)){
+			dat <- reldat
+		}
+		
+		# by-collection
+		if(bycoll){
+			# omit occurrence-level data, use only collections
+			dat <- unique(dat[,c(bin, env, coll)])
+		}
+
+		# tabulate
+		relTab <- table(dat[,bin], dat[,env])
+		class(relTab) <-"matrix"
+		
+		# check if reldat was a different dataset
+		if(!is.null(reldat)){
+			# POTENTIAL FORKING POINT!
+			# select only those columns that are present in the analyzed dataset
+			if(any(!affLevels%in%colnames(relTab))) stop("The provided \'reldat\' does not contain all \'env\' entries of \'dat\'")
+			if(any(!allBins%in%rownames(relTab))) stop("The provided \'reldat\' does not contain all \'bin\' entries of \'dat\'")
+		}
+
+		# pass only the relevant entries
+		relTab<-relTab[as.character(allBins),affLevels]
+
+		
 	# calculate the affinity of every taxon
 	affVarTaxon<-apply(dFL, 1, FUN=function(x){
 
 #	affVarTaxon<-character(length(dFL$taxon))
 #	for (i in 1:length(affVarTaxon)){
-	#	x<- dFL[i,,drop=F]
-	
-	
+#		x<- dFL[i,]
+
 	#subset of the taxons ranges
 		# bins where the taxon is present
 		vectRange<-as.numeric(x[1]):as.numeric(x[2])
 		
-		# total number of occurrences from the first environment
-		firstRelSum<-sum(firstRel[as.character(vectRange)], na.rm=T)
-		
-		# total number of occurrences from the second environment
-		secondRelSum<-sum(secondRel[as.character(vectRange)], na.rm=T)
-	
-		# expected probabilities of occurrence based on the total dataset (reldat)
-		pFirst<-firstRelSum/(firstRelSum+secondRelSum)
-		pSecond<-secondRelSum/(firstRelSum+secondRelSum)
+		# what you relate to
+			thisRel <- relTab[as.character(vectRange), , drop=FALSE]
+			
+			# the occurrence probabilities
+			relProbs<-apply(thisRel, 2, sum)/sum(thisRel)
+			
+		# taxon occurrences in the different evnironment	
+			taxOccBin <- occArr[as.character(vectRange), as.character(x[length(x)]),, drop=FALSE]
+			taxOcc <- apply(taxOccBin, c(2,3), sum)
 
-		# occurrences of taxon in the first environment
-		first<-sum(firstTab[as.character(vectRange), as.character(x[length(x)])], na.rm=T)
-		
-		# occurrences of taxon in the second environment
-		second<-sum(secondTab[as.character(vectRange), as.character(x[length(x)])], na.rm=T)
-		
-		# total
-		all<-first+second
-		
+		# all occurrences of the taxon
+			all <- sum(taxOcc)
+
 		#no occurrences from known habitats
-		if (first==0 & second==0)
-		{
-		#	affVarTaxon[i]<-"non"
+		if (sum(taxOcc)==0)		{
 			return(NA)
+#			affVarTaxon[i] <- NA
 		}
 		
 		# otherwise, continue
-		
 		# majority rule
 		if(method=="majority"){
-			if(first>second){
-				return(affLevels[1])
+			# highest number of occurrences
+ 			maxVal<-max(taxOcc, na.rm=T)
+
+ 			# which
+			mostOcc <- which(maxVal==taxOcc)
+
+			# if undecided, return NA
+			if(length(mostOcc)>1){
+				return(NA)
+#				affVarTaxon[i] <- NA
 			}else{
-				if(second>first){
-					return(affLevels[2])
-				}else{
-					return(NA)
-				}
+				return(affLevels[mostOcc])
 			}
 		} # end majority
 		
 		# binomial basic
 		if(method=="binom"){
-		
-			#first preference
-			if (first/all>pFirst)
-			{
-				if(stats::binom.test(first, all, pFirst, "greater")$p.val<=alpha)
-				{
-				#	affVarTaxon[i]<-affLevels[1]
-					return(affLevels[1])
-				}else{
-				#	affVarTaxon[i]<-"non"
-					return(NA)
-				}
-			
-			}
-			
-			#second preference
-			if (second/all>pSecond)
-			{
-				if(stats::binom.test(second, all, pSecond, "greater")$p.val<=alpha)
-				{
-				#	affVarTaxon[i]<-affLevels[2]
-					return(affLevels[2])
-				}else{
-				#	affVarTaxon[i]<-"non"
-					return(NA)
-				}
-			
-			}
-			
-			if((second/all>pSecond)==(first/all>pFirst)){
-			#	affVarTaxon[i]<-"non"
+
+			# an important imperative: if the environment is not sampled, then
+			# what do we know about the taxon's affinity?
+			if(any(relProbs==0)) return(NA)
+
+			# 1. which is the most likely (odds ratios) 
+			# taxon probabilities
+			taxProbs <- taxOcc/all
+
+			# the odds ratios
+			OR <-taxProbs/relProbs
+
+			# which environment has the highest odds ratio?
+			# replace infinties with NAs
+			OR[!is.finite(OR)] <- NA
+
+			# which is the highest?
+			maxVal <- max(OR, na.rm=T)
+			highestOR <- which(OR==maxVal)
+
+			# in case it is undecided
+			if(length(highestOR)>1){
 				return(NA)
+#				affVarTaxon[i] <- NA
+			# if there is one largest
+			# do a binomial test for this in constrast with the others
+			}else{
+				focus <-taxOcc[highestOR] 
+				pFocus <- relProbs[highestOR]
+
+				if(stats::binom.test(focus, all, pFocus, "greater")$p.val<=alpha)
+				{
+					return(affLevels[highestOR])
+#					affVarTaxon[i] <- affLevels[highestOR]
+				}else{
+					return(NA)
+#					affVarTaxon[i] <- NA
+				}
 			}
+			
 		} # end binom
-		
-	#	if(method=="bayesian"){
-	#		
-	#		pEgivH1 <- dbinom(first, all, pFirst)
-	#	#	pEgivH2 <- dbinom(second, all, pSecond)
-	#		pEgivH2 <- dbinom(second, all, pFirst)
-	#		
-	#
-	#		# Bayes' theorem
-	#		pPost<- (pEgivH1*pH1)/(pEgivH1*pH1+pEgivH2*pH2)
-	#		
-	#		if(round(pPost,10)<0.5) return(affLevels[1])
-	#		if(round(pPost,10)>0.5) return(affLevels[2])
-	#		if(round(pPost,10)==0.5) return(NA)
-	#	
-	#	}		
 	}
+
 	)
-	#table(affVarTaxon)
-	names(affVarTaxon)<-rownames(dFL)
 	
 	return(affVarTaxon)
 }
