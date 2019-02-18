@@ -3,11 +3,11 @@ R package for quantifying diversity dynamics using fossil sampling data
 
 ## News
 
-- The next update of the package (v0.7.0) is here! It is submitted and available from the CRAN servers. 
+- The next update of the package (v0.7.1) is here! It is submitted ot the CRAN servers and should be available shortly. See the log below for the changes.
 
-- The preprint describing the package is accessible from bioRxiv. You can download it from here:
-http://biorxiv.org/cgi/content/short/423780v1.
-If you decide to use the methods implemented in this package, please refer to this document. The paper is getting finalized, and should be published within a month or two. The examples implemented in this manuscript are elaborated in this vignette: https://github.com/divDyn/ddPhanero/blob/master/doc/dd_phanero.pdf
+- The paper describing the package is accessible from Wiley Online library. As it is an application paper, it has free access. You can download it from here:
+https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.13161 
+(or contact me, if you hae problems). If you decide to use the methods implemented in this package, please refer to this document. The examples implemented in the paper are elaborated in this vignette: https://github.com/divDyn/ddPhanero/blob/master/doc/dd_phanero.pdf
 
 
 ## About the package
@@ -25,7 +25,7 @@ As the package is still getting developed, please note that some interface chang
 You can install the appropriate binaries normally, by running 
 `install.packages("divDyn")`
 
-### 2. Using the pre-built binaries (v0.7.0)
+### 2. Using the pre-built binaries 
 
 I have updated the windows binaries so that they work with the latest internals (3.5.2). If you want to use the binaries, please update your R to at least 3.5.
 
@@ -36,11 +36,11 @@ I have updated the windows binaries so that they work with the latest internals 
   `install.packages("https://github.com/divDyn/assets/raw/master/r_archive/bin/Mac_OSX/divDyn_0.5.2.tgz", repos=NULL)`
   I know this is old, but will update it at the earliest convenience (I do not have a Mac). Until I am done with this, please use install method 3 or 4.
 
-### 3. Using the source tarball to install (v0.7.0)
+### 3. Using the source tarball to install (v0.7.1)
 This you can do with running
 ```
 install.packages(
-  "https://github.com/divDyn/assets/raw/master/r_archive/source/divDyn_0.7.0.tar.gz", 
+  "https://github.com/divDyn/assets/raw/master/r_archive/source/divDyn_0.7.1.tar.gz", 
   repos=NULL, type="source")
 ```
 
@@ -48,7 +48,7 @@ from the R console. Note that there is some code in the package that requires co
 
 The sources of the older versions are also in the _archive/source folder. You can access earlier versions by changing the version number in the command above in an appropriate way.
 
-### 4. Using the repository files and 'devtools' to install (v0.7.0)
+### 4. Using the repository files and 'devtools' to install (v0.7.1)
 
 To do this:
 - You need a compiler, as for method 3
@@ -60,10 +60,23 @@ If you do not want to mess around with compiler and such, then contact me and I 
 
 # Change log
 
-## [0.7.0 (build 643)]  - 2019.01.08 
-### Fixed
-- the affinity() funciton now handles NA entries in the bin column explicitly
+## [0.7.1 (build 669)]  - 2019.02.18 
+### Added
+- A lot of people reported problems with the direction of time in the divDyn() function. A startup message is added as a reminder of the arbitrary decision I had to make when designing the function. 
+- The affinity() function is extended with the na.rm argument. Setting this argument to TRUE will remove all NAs found in relevant columns of the data table. Otherwise the function will halt if these are found. 
+- The "binom" method of the affinity() function is now generalized to more than two entry types. Binomial test are run for that type, that has the highest odd ratio of occurrences when contrasted to the reference dataset.
+- The 'bycoll' argument is now added to the affinity() function. This allows the calculation of affinities based on the collection counts rather than occurrence counts.
+- Some code was added to the tpslot() funciton to correctly plot the labels of the time scale boxes when the boundaris of the plot does not coincide with the boxes. The plotting of the labels of these partially drawn boxes can be switched on and off with the added 'rtlab' and 'ltlab' arguments.
 
+### Changed
+- Package suggested citation now directs to the paper in Methods in Ecology and Evolution.  
+- The default of the affinity() function is now set to NULL.
+
+### Fixed
+- The main divDyn() function produced warnings ('In cbind(bin = aubi$z, dCountsAndMetrics)'') when the automatic binning was used (breaks argument) and the provided interval had younger parts than the occurrence data. The results are the same, but this case does not produce warnings anymore.
+- Problems with the 'reldat' argument of the affinity() function
+
+  
 ## [0.7.0 (build 642)]  - 2019.01.08 
 ### Added
 - the georange() function for geographic range estimation from a set of coordinates (suggesting the vegan and the icosa packages)
