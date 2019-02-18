@@ -1,6 +1,8 @@
 # divDyn
 R package for quantifying diversity dynamics using fossil sampling data
 
+![](https://github.com/divDyn/assets/raw/master/logo/divDyn_logo_min.png)
+
 ## News
 
 - The next update of the package (v0.7.1) is here! It is submitted ot the CRAN servers and should be available shortly. See the log below for the changes.
