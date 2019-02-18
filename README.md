@@ -63,20 +63,20 @@ If you do not want to mess around with compiler and such, then contact me and I 
 
 # Change log
 
-## [0.7.1 (build 669)]  - 2019.02.18 
+## [0.7.1 (build 670)]  - 2019.02.18 
 ### Added
 - A lot of people reported problems with the direction of time in the divDyn() function. A startup message is added as a reminder of the arbitrary decision I had to make when designing the function. 
-- The affinity() function is extended with the na.rm argument. Setting this argument to TRUE will remove all NAs found in relevant columns of the data table. Otherwise the function will halt if these are found. 
-- The "binom" method of the affinity() function is now generalized to more than two entry types. Binomial test are run for that type, that has the highest odd ratio of occurrences when contrasted to the reference dataset.
-- The 'bycoll' argument is now added to the affinity() function. This allows the calculation of affinities based on the collection counts rather than occurrence counts.
-- Some code was added to the tpslot() funciton to correctly plot the labels of the time scale boxes when the boundaris of the plot does not coincide with the boxes. The plotting of the labels of these partially drawn boxes can be switched on and off with the added 'rtlab' and 'ltlab' arguments.
+- The affinity() function is extended with the 'na.rm' argument. Setting this argument to TRUE will remove all NAs found in relevant columns of the data table. Otherwise the function will halt if these are found. 
+- The "binom" method of the affinity() function is now generalized to more than two entry types. Binomial tests are run for that type that has the highest odds ratio of occurrences when contrasted to the reference dataset ('dat' or 'reldat').
+- The 'bycoll' argument is now added to the affinity() function. This allows the calculation of affinities based on the collection rather than occurrence counts.
+- Some code was added to the tsplot() function to correctly plot the labels of the time scale boxes when the boundaries of the plot do not coincide with those of the boxes. The plotting of the labels of these partially drawn boxes can be switched on and off with the added 'rtlab' and 'ltlab' arguments.
 
 ### Changed
-- Package suggested citation now directs to the paper in Methods in Ecology and Evolution.  
-- The default of the affinity() function is now set to NULL.
+- Package suggested citation now directs to the paper in Methods in Ecology and Evolution.
+- The default of the 'coll' argument in the affinity() function is now set to NULL.
 
 ### Fixed
-- The main divDyn() function produced warnings ('In cbind(bin = aubi$z, dCountsAndMetrics)'') when the automatic binning was used (breaks argument) and the provided interval had younger parts than the occurrence data. The results are the same, but this case does not produce warnings anymore.
+- The main divDyn() function produced warnings ('In cbind(bin = aubi$z, dCountsAndMetrics)'') when the automatic binning was used ('breaks 'argument) and when the provided interval had younger parts than the occurrence data. The results are the same, the warnings are no longer produced.
 - Problems with the 'reldat' argument of the affinity() function
 
   
