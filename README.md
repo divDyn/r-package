@@ -28,9 +28,9 @@ As the package is still getting developed, please note that some interface chang
 You can install the appropriate binaries normally, by running 
 `install.packages("divDyn")`
 
-### 2. Using the pre-built binaries 
+### 2. Using the pre-built binaries (v0.7.1)
 
-I have updated the windows binaries so that they work with the latest internals (3.5.2). If you want to use the binaries, please update your R to at least 3.5.
+I have updated the windows binaries so they work with the latest internals (3.5.2). If you want to use the binaries, please update your R to at least 3.5.
 
 - If you have a windows computer, you can install the package with the following R command:
   `install.packages("https://github.com/divDyn/assets/raw/master/r_archive/bin/Win_x64_x86/divDyn_0.7.1.zip", repos=NULL)`
