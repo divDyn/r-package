@@ -35,10 +35,9 @@ I have updated the windows binaries so that they work with the latest internals 
 - If you have a windows computer, you can install the package with the following R command:
   `install.packages("https://github.com/divDyn/assets/raw/master/r_archive/bin/Win_x64_x86/divDyn_0.7.1.zip", repos=NULL)`
 
-- If you have a Mac, then use the following link (still older version, for R <3.5).
-  `install.packages("https://github.com/divDyn/assets/raw/master/r_archive/bin/Mac_OSX/divDyn_0.5.2.tgz", repos=NULL)`
-  I know this is old, but will update it at the earliest convenience (I do not have a Mac). Until I am done with this, please use install method 3 or 4.
-
+- If you have a Mac, then use the following link .
+  `install.packages("https://github.com/divDyn/assets/raw/master/r_archive/bin/Mac_OSX/divDyn_0.7.1.tgz", repos=NULL)`
+  
 ### 3. Using the source tarball to install (v0.7.1)
 This you can do with running
 ```
