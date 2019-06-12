@@ -4,36 +4,39 @@
 \alias{fadlad}
 \title{FAD - LAD matrix from occurrence data}
 \usage{
-fadlad(dat, tax, bin, ages = FALSE, na.rm = TRUE, zerodur = TRUE)
+fadlad(x, tax, bin = NULL, age = NULL, revtime = FALSE,
+  na.rm = TRUE, diffbin = TRUE)
 }
 \arguments{
-\item{dat}{\code{(data.frame)}: Occurrence data.}
+\item{x}{\code{(data.frame)}: Occurrence data.}
 
-\item{tax}{\code{(character)}: The column name of taxon names.}
+\item{tax}{\code{(character)}: Column name of taxon names.}
 
-\item{bin}{\code{(character)}: The column name of bin variable. If two column names are entered, then they will interpreted as the minimum and maximum age uncertainty. (see examples)}
+\item{bin}{\code{(character)}: Column name(s) of the discreet bin variable(s). If two column names are entered, then they will interpreted as minimum and maximum uncertainty (see examples) By default, time flows from lower to higher numbers. You can change this behavior by setting \code{revtime=FALSE}. Either a \code{bin} or \code{age} argument is mandatory.}
 
-\item{ages}{\code{(logical)}: Are the bin entries ages (reversed time axis)? Setting ages to TRUE will replace the entries in 'bin' column(s) with their additive inverses.}
+\item{age}{\code{(character)}: Column name(s) of the continuous age variable(s). If two column names are entered, then they will interpreted as the minimum and maximum age uncertainty. (see examples) By default, time flows from higher to lower numbers. You can change this behavior by setting \code{revtime=FALSE}. Either a \code{bin} or \code{age} argument is mandatory.}
 
-\item{na.rm}{\code{(logical)}: Should taxa that have no valid FADs or LADs (due to only NA entries) be removed from the output?}
+\item{revtime}{\code{(logical)}: Should time be reversed?}
 
-\item{zerodur}{\code{(logical)}: If set to \code{TRUE}, single-interval taxa will 0 durations. Setting this argument to FALSE will add 1 to the durations of all taxa, which can be useful for binned data.}
+\item{na.rm}{\code{(logical)}: Should taxa that have no valid FADs or LADs (due to \code{NA} entries) be removed from the output?}
+
+\item{diffbin}{\code{(logical)}: Difference-based duration for discreet time (only applicabble to cases when \code{bin} is provided). If set to \code{TRUE}, single-interval taxa will \code{0} durations. Setting this argument to \code{FALSE} will add code{1} to the durations of all taxa.}
 }
 \description{
 Function to generate range data from an occurrence dataset.
 }
 \details{
-The function will output First and Last Appearance Data of the taxa in the dataset. Keep in mind that incomplete sampling will influence these data and will make the ranges appear shrunken.
+The function will output First and Last Appearance Dates of the taxa in the dataset. Keep in mind that incomplete sampling will influence these data and will make the ranges appear shrunken.
 
 The following variables are produced:
 
-attribute \code{row.names}: The names of the taxa.
+\code{row.names} attribute: The names of the taxa.
 
-\code{FAD}: First appearance data, given in time slice numbers.
+\code{FAD}: First appearance dates in time bin nmbers or ages.
 
-\code{LAD}: Last appearance data, given in time slice numbers.
+\code{LAD}: Last appearance dates in time bin numbers or ages.
 
-\code{duration}: optionally, the duration of taxa in numeric ages. It is given for single-interval taxa as well assuming that the taxa's range span over the entire time slice.
+\code{duration}: The durations of taxa in bin numbers or ages.
 }
 \examples{
 data(corals)
@@ -42,12 +45,12 @@ data(corals)
   flBinned <- fadlad(corals, tax="genus", bin="stg")
 
 # using basic bin lengths
-  flDual <- fadlad(corals, tax="genus", bin=c("max_ma", "min_ma"), ages=TRUE)
+  flDual <- fadlad(corals, tax="genus", age=c("max_ma", "min_ma"))
 
 # single age esimate 
   data(stages)
   corals$mid <- stages$mid[corals$stg]
-  flSingle <- fadlad(corals, tax="genus", bin="mid", ages=TRUE)
+  flSingle <- fadlad(corals, tax="genus", age="mid")
 
 
 }

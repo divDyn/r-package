@@ -10,9 +10,9 @@
 #' The function returns a vector of values if the return value of \code{FUN} is a single value. In case it is a vector, the final output will be a matrix. 
 #' When both \code{bin} and \code{tax} is presented, the function output will be a matrix (one output value for a taxon/bin subset) or an array (3d, when \code{FUN} returns a vector).  Setting \code{FUN} to \code{NULL} will return the occurrence dataset as \code{list}s. 
 #' 
-#' @param dat \code{(data.frame)} Fossil occurrence table.
+#' @param x \code{(data.frame)} Fossil occurrence table.
 #' 
-#' @param FUN (\code{function}) The function applied to the subset of occurrences. The subset of occurence data will be passed to this function as \code{dat}. 
+#' @param FUN (\code{function}) The function applied to the subset of occurrences. The subset of occurence data will be passed to this function as \code{x}. 
 #' 
 #' @param bin \code{(character)} Variable name of the bin numbers of the occurrences. This variable should be \code{numeric}. 
 #' 
@@ -33,12 +33,12 @@
 #'     lat="paleolat", lng="paleolng", method="co")
 #'
 #' @export
-tabinate <- function(dat,bin=NULL, tax=NULL, FUN=NULL, ...){
-#	dat <- testData
+tabinate <- function(x,bin=NULL, tax=NULL, FUN=NULL, ...){
+#	x <- testData
 #	bin <- binName
 #	tax <- taxName
-#	FUN <- function(dat) c(nrow(dat), nrow(dat)+1)
-#	FUN <- function(dat) {one <- c(nrow(dat), nrow(dat)+1); names(one)<-c("a", "b"); one}
+#	FUN <- function(x) c(nrow(x), nrow(x)+1)
+#	FUN <- function(x) {one <- c(nrow(x), nrow(x)+1); names(one)<-c("a", "b"); one}
 #	addArgs<-list()
 
 	# additional arguments
@@ -49,7 +49,7 @@ tabinate <- function(dat,bin=NULL, tax=NULL, FUN=NULL, ...){
 	
 		# call function based on this
 		callArgs <-list(
-			dat=dat
+			x=x
 			)
 		
 		# append user-supplied arguments to those defined by this function
@@ -59,7 +59,7 @@ tabinate <- function(dat,bin=NULL, tax=NULL, FUN=NULL, ...){
 			# call applied function
 			oneResult<- do.call(FUN, callArgs)
 		}else{
-			oneResult <- dat
+			oneResult <- x
 		}
 
 		# the final result
@@ -70,15 +70,15 @@ tabinate <- function(dat,bin=NULL, tax=NULL, FUN=NULL, ...){
 		# single-binned analysis with multiple taxa
 		if(is.null(bin)){
 			# omit those entries where no taxon is given
-			dat<-dat[!is.na(dat[, tax]),]
+			x<-x[!is.na(x[, tax, drop=TRUE]),]
 
  			# if factor convert to character
- 			if(is.factor(dat[, tax])) dat[, tax] <- as.character(dat[, tax])
+ 			if(is.factor(x[, tax, drop=TRUE])) x[, tax, drop=TRUE] <- as.character(x[, tax, drop=TRUE])
 
-			rows <- 1:nrow(dat)
-			iteratorListOutput<-tapply(INDEX=dat[,tax], X=rows, function(x){
+			rows <- 1:nrow(x)
+			iteratorListOutput<-tapply(INDEX=x[,tax, drop=TRUE], X=rows, function(w){
 				callArgs <-list(
-					dat=dat[x,]
+					x=x[w,]
 				)
 
 				callArgs <- c(callArgs, addArgs)
@@ -86,7 +86,7 @@ tabinate <- function(dat,bin=NULL, tax=NULL, FUN=NULL, ...){
 					# call the applied function
 					oneResult<- do.call(FUN, callArgs)
 				}else{
-					oneResult <- dat[x,]
+					oneResult <- x[w,]
 				}
 				
 				return(oneResult)
@@ -101,7 +101,7 @@ tabinate <- function(dat,bin=NULL, tax=NULL, FUN=NULL, ...){
 			if(is.null(tax)){
 				# recursion, setting tax, to bin!
 				callArgs <- list(
-					dat=dat,
+					x=x,
 					bin=NULL, 
 					tax=bin,
 					FUN=FUN
@@ -112,25 +112,25 @@ tabinate <- function(dat,bin=NULL, tax=NULL, FUN=NULL, ...){
 			# multi-bin, multi taxon
 			}else{
 				
-				# omit values where bin or dat is missing
-				dat<-dat[!is.na(dat[,bin]) & !is.na(dat[,tax]),]
+				# omit values where bin or x is missing
+				x<-x[!is.na(x[,bin, drop=TRUE]) & !is.na(x[,tax, drop=TRUE]),]
 
-				rows <- 1:nrow(dat)
+				rows <- 1:nrow(x)
 				# on every bin
-				tabin <- paste(dat[, tax], dat[,bin], sep="_")
+				tabin <- paste(x[, tax, drop=TRUE], x[,bin, drop=TRUE], sep="_")
 
-				iterRes<- tapply(INDEX=tabin, X=rows, FUN=function(x){
+				iterRes<- tapply(INDEX=tabin, X=rows, FUN=function(w){
 					
 					if(!is.null(FUN)){
 						callArgs <-list(
-							dat=dat[x,]
+							x=x[w,]
 						)
 						callArgs <- c(callArgs, addArgs)
 					
 						# call the applied function
 						return(do.call(FUN, callArgs))
 					}else{
-						return(dat[x,])
+						return(x[w,])
 					}
 					
 				})
@@ -142,8 +142,8 @@ tabinate <- function(dat,bin=NULL, tax=NULL, FUN=NULL, ...){
 
 				# simple value output
 				if(is.numeric(iterRes) | is.logical(iterRes) | is.character(iterRes)){
-					allTax <- sort(unique(dat[, tax]))
-					allBin <- sort(unique(dat[, bin]))
+					allTax <- sort(unique(x[, tax, drop=TRUE]))
+					allBin <- sort(unique(x[, bin, drop=TRUE]))
 	
 					taxpart <- rep(allTax, each=length(allBin))
 					binpart <-rep(allBin, length(allTax))
@@ -181,8 +181,8 @@ tabinate <- function(dat,bin=NULL, tax=NULL, FUN=NULL, ...){
 						if(is.null(theNames)) theNames<-1:theLen
 
 						# all possible entries are combined from these
-						allTax <- sort(unique(dat[, tax]))
-						allBin <- sort(unique(dat[, bin]))
+						allTax <- sort(unique(x[, tax, drop=TRUE]))
+						allBin <- sort(unique(x[, bin, drop=TRUE]))
 	
 						# the original results (flat)
 						names(iterRes)<-paste(names(iterRes), ".", sep="")
@@ -190,9 +190,9 @@ tabinate <- function(dat,bin=NULL, tax=NULL, FUN=NULL, ...){
 
 						# in case there are original names of the elements (delete this)
 						namesSplit <- strsplit(names(flattened),"\\.")
-						simplifiedNames <- unlist(lapply(namesSplit, function(x) x[[1]]))
+						simplifiedNames <- unlist(lapply(namesSplit, function(w) w[[1]]))
 
-						tempor<- unlist(sapply(vecLen, function(x) 1:x))
+						tempor<- unlist(sapply(vecLen, function(w) 1:w))
 
 						names(flattened) <- paste(simplifiedNames, tempor, sep="_")
 
@@ -248,7 +248,7 @@ flattenList <- function(iteratorListOutput){
 				cMethods <- varlength[[1]]
 				res <- matrix(NA, nrow=length(iteratorListOutput), ncol=cMethods)
 				for(i in 1:cMethods){
-					res[,i]<-unlist(lapply(iteratorListOutput, function(x) x[i]))
+					res[,i]<-unlist(lapply(iteratorListOutput, function(w) w[i]))
 				}
 				rownames(res) <- names(iteratorListOutput)
 				colnames(res) <- names(iteratorListOutput[[1]])
@@ -274,16 +274,16 @@ flattenList <- function(iteratorListOutput){
 }
 
 # oldmethod
-# outerRes <- tapply(INDEX=dat[,bin], X=rows, function(x){
-# 				#	x<-rows[dat[,bin]==80]
+# outerRes <- tapply(INDEX=x[,bin], X=rows, function(w){
+# 				#	w<-rows[x[,bin]==80]
 # 
-# 					binTax <- dat[x,tax]
+# 					binTax <- x[w,tax]
 # 				
 # 					# result for every taxon in a current bin - returns a list
-# 					innerRes <- tapply(INDEX=binTax, X=x, function(y){
-# 					#	y<- x[binTax==binTax[1]]
+# 					innerRes <- tapply(INDEX=binTax, X=w, function(y){
+# 					#	y<- w[binTax==binTax[1]]
 # 						callArgs <-list(
-# 							dat=dat[y,, drop=FALSE]
+# 							x=x[y,, drop=FALSE]
 # 						)
 # 
 # 						callArgs <- c(callArgs, addArgs)
@@ -293,7 +293,7 @@ flattenList <- function(iteratorListOutput){
 # 							oneResult<- do.call(FUN, callArgs)
 # 						}else{
 # 							
-# 							oneResult <- dat[y,]
+# 							oneResult <- x[y,]
 # 						}
 # 
 # 						return(oneResult)

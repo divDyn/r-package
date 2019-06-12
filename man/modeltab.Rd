@@ -4,11 +4,10 @@
 \alias{modeltab}
 \title{Origination/extinction response table for statistical modelling.}
 \usage{
-modeltab(dat, tax, bin, taxvars = NULL, rt = FALSE,
-  singletons = FALSE)
+modeltab(x, tax, bin, taxvars = NULL, rt = FALSE, singletons = FALSE)
 }
 \arguments{
-\item{dat}{\code{(data.frame)} Fossil occurrence table.}
+\item{x}{\code{(data.frame)} Fossil occurrence table.}
 
 \item{tax}{\code{(character)} Variable name of the occurring taxa (variable type: \code{factor} or \code{character} - such as \code{"genus"})}
 

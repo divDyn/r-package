@@ -5,7 +5,7 @@
 \title{Time series plotting using a custom time scale}
 \usage{
 tsplot(tsdat, ylim = c(0, 1), xlim = NULL, prop = 0.05, gap = 0,
-  bottom = "bottom", top = "top", xlab = "age (Ma)", ylab = "",
+  bottom = "bottom", top = "top", xlab = "Age (Ma)", ylab = "",
   boxes = NULL, boxes.col = NULL, shading = NULL,
   shading.col = c("white", "gray80"), plot.args = NULL,
   boxes.args = NULL, labels = TRUE, labels.args = NULL,
@@ -54,7 +54,7 @@ tsplot(tsdat, ylim = c(0, 1), xlim = NULL, prop = 0.05, gap = 0,
 This function allows the user to quickly plot a time scale data table
 }
 \details{
-As most analysis use an individually compiled time scale object, in order to ensure compatibility between the analyzed and plotted values, the time scale table used for the analysis could be plotted rather than a standardized table. Two example tables have been included in the package (\code{\link{stages}} and \code{\link{bins}}) that can serve as templates.
+As most analysis use an individually compiled time scale object, in order to ensure compatibility between the analyzed and plotted values, the time scale table used for the analysis could be plotted rather than a standardized table. Two example tables have been included in the package (\code{\link{stages}} and \code{\link{tens}}) that can serve as templates.
 }
 \examples{
 data(stages) 

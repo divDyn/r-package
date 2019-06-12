@@ -5,17 +5,19 @@ R package for quantifying diversity dynamics using fossil sampling data
 
 ## News
 
-- The next update of the package (v0.7.1) is here! It is submitted ot the CRAN servers and should be available shortly. See the log below for the changes.
+- The next update of the package (V0.8.0) is now availble from this development repository. It is submitted to the CRAN servers, the pre-compiled binaries should be available shortly. As this is a major update, I suggest everyone to update their previous installation. See the change log below for the changes. 
 
-- The paper describing the package is available from Wiley Online Library. You can download it from this link:
+- The paper describing the package is available from the Wiley Online Library. You can download it from this link:
 https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.13161 
-(or contact me, if you have problems). If you decide to use the methods implemented in this package, please refer to this document. The examples implemented in the paper are elaborated in this vignette: 
-https://github.com/divDyn/ddPhanero/blob/master/doc/dd_phanero.pdf
+(or contact me, if you have problems). If you decide to use the methods implemented in this package, please refer to this document. The examples implemented can be reproduced with the files deposited at
+https://github.com/divDyn/ddPhanero
+using this (updated) vignette:
+https://github.com/divDyn/ddPhanero/blob/master/doc/dd_phanero_web.html
 
 
 ## About the package
 
-If you are interested in what this package does, or have questions about its use, please check out the first vignette: 'Handout to the R package 'divDyn' v0.7.1 for diversity dynamics from fossil occurrence data' here:
+If you are interested in what this package does, or have questions about its use, please check out the first vignette: 'Handout to the R package 'divDyn' v0.8.0 for diversity dynamics from fossil occurrence data' here:
 https://github.com/divDyn/r_package/blob/master/vignettes/handout.pdf
 
 As the package is still getting developed, please note that some interface changes might occurr based on the feedback of people and my own experience on what is easier to use. If you have any requirements or recommendations about what to add (or more importantly, if you find a mistake), do not hesitate to contact me at adam.kocsis@fau.de.
@@ -23,44 +25,79 @@ As the package is still getting developed, please note that some interface chang
 
 ## Installing 
 
-### 1. From CRAN (v0.7.0)
+### 1. From CRAN (v0.7.1)
 
 You can install the appropriate binaries normally, by running 
 `install.packages("divDyn")`
 
-### 2. Using the pre-built binaries (v0.7.1)
+### 2. Using manually pre-built binaries (v0.8.0)
 
-I have updated the windows binaries so they work with the latest internals (3.5.2). If you want to use the binaries, please update your R to at least 3.5.
+I have updated the windows binaries so they work with the latest internals (3.6). If you want to use the binaries, please update your R to at least 3.6.
 
 - If you have a windows computer, you can install the package with the following R command:
-  `install.packages("https://github.com/divDyn/assets/raw/master/r_archive/bin/Win_x64_x86/divDyn_0.7.1.zip", repos=NULL)`
+  `install.packages("https://github.com/divDyn/assets/raw/master/r_archive/bin/Win_x64_x86/divDyn_0.8.0.zip", repos=NULL)`
 
 - If you have a Mac, then use the following link .
-  `install.packages("https://github.com/divDyn/assets/raw/master/r_archive/bin/Mac_OSX/divDyn_0.7.1.tgz", repos=NULL)`
+  `install.packages("https://github.com/divDyn/assets/raw/master/r_archive/bin/Mac_OSX/divDyn_0.8.0.tgz", repos=NULL)`
   
-### 3. Using the source tarball to install (v0.7.1)
+### 3. Using the source tarball to install (v0.8.0)
 This you can do with running
 ```
 install.packages(
-  "https://github.com/divDyn/assets/raw/master/r_archive/source/divDyn_0.7.1.tar.gz", 
+  "https://github.com/divDyn/assets/raw/master/r_archive/source/divDyn_0.8.0.tar.gz", 
   repos=NULL, type="source")
 ```
 
-from the R console. Note that there is some code in the package that requires compilation. For windows, the most straightforward way is to use Rtools (https://cran.r-project.org/bin/windows/Rtools/), and XCode https://developer.apple.com/xcode/ for Mac.
+from the R console. Note that there is some code in the package that requires compilation. To do this, the most straightforward way is to install/use Rtools (https://cran.r-project.org/bin/windows/Rtools/) on Windows, and XCode https://developer.apple.com/xcode/ on Mac.
 
-The sources of the older versions are also in the _archive/source folder. You can access earlier versions by changing the version number in the command above in an appropriate way.
+The sources of the older versions are also in the _archive/source folder. You can access earlier versions by changing the version number in the command above.
 
-### 4. Using the repository files and 'devtools' to install (v0.7.1)
+### 4. Using the repository files and 'devtools' to install (v0.8.0)
 
 To do this:
 - You need a compiler, as for method 3
 - Make sure that the 'devtools' package is installed
 - Run `devtools::install_github("divDyn/r_package")`
 
-If you do not want to mess around with compiler and such, then contact me and I will find a way to compile binaries for you.
+If the frist method is not working for you, and you do not want to mess around with a compiler and such, then contact me and I will find a way to compile binaries for you.
 
 
 # Change log
+
+## [0.8.0 (build 736)]  - 2019.06.12 
+### Added
+- Support for 'tibble' type input data.frames. 
+- The tsbars() function.
+- The 'age' argument for the divDyn() and fadlad() functions. With the previous composite time argument ('bin') it was difficult to handle both contiunous age and discrete bin entries, as the two implied different direction of time and applicability in the package functions. The argument 'bin' is now reserved for discrete entries, where bin number increases from earlier to later intervals. The argument 'age' is used for continuous, automatically binned time, where time flows from higher to lower numbers. The 'age' argument will be added to the binstat() function in future versions.
+- You can reverse this pattern by toggling the added 'revtime' argument.
+- The repmatch() function is now exported from the package namespace. This is the function that is called to match and average the subsampling output. You will probably not need this, but just in case.
+- The 'bin=NULL' option is now valid for the subsample() function, specifying subsampling processes that are not iterated over mutliple time bins. This allows the application of sampling-based rarefaction, SQS and so on. With this configuration, the function can also accept vectors as the primary argument. 
+- The 'na.rm' argument is added to the subsample() function. The inclusion of this argument is part of a more scrutinous checking protocol for missing values. 
+- The slice() function is now exported from the package namespace. This function is used by the divDyn() function for discretizing (slicing) the continuous time dimension. Doing this separately is a prerequisite of running subsample() on the data.
+- The 'depenv' element to the 'keys' data object. This addition maps entries in the 'environment' field of the Paleobiology Database to "onshore" or "offshore" settings. 
+- Option to supress loop counting output in the subsample() function ('counter=FALSE').
+
+### Changes
+- The divDyn() and binstat() functions both output the names of the 'bins' in the a column that has the 'bin'/'age' argument as a name. Note that in previous versions this was a hard-coded '"bin"' character string. The occasional empty rows that result from using largen than 1- bin numbers now have the bin numbers in the <bin> column instead of ``NA``s. 
+- The subsample() function is updated to version 2.0, with a lot of additions. The output of the subsample() function is constrained to match the output of the FUN argument function. <bin> numbers are no longer NA, when FUN=divDyn, and when bins fail the subsampling trials (too low quota) and the output table dimensions do not change, even if bins are omitted from the start or end of the series. THe reorganized function allows additional improvements that will be added in the next version of the package.
+- The divDyn() and binstat() functions have a rownames variable that is a replicate of <bin> column. 
+- The 'zerodur' argument of the fadlad() function is renamed to 'diffbin' and is restricted to be used with binned entries.
+- If 'bin!=NULL' then 'output=list' option of subsample() returns the failed bins (accessible as $failed). The list containing trial results can be accessed as '$results'. 
+- If the last bin is supplied as 'rem', the dimensions of the output of subsample() will not change, because the interval will be included in the prototype calculation.
+- The abbreviation for the Triassic in the 'stages' internal data.frame is changed from 'T' to 'Tr' (suggestion by V. Roden)
+- The 'bins' internal time scale object was renamed to 'tens'. The columns <bin> and <Bin> were also replaced with 'ten' to avoid confusion. 
+- All functions of the package now use the conventional 'x' as the primary function argument, typically denoting the occurrence database. This change was necessary to streamline the passing of function objects. Accordingly, the rarely used x-exponent of the OxW subsampling method was changed from 'x' to 'xexp'. 
+- The default 'xlab' of the tsplot() function was changed to "Age (ma)" from "age (ma)".
+- Some default arguments of the omit() function were changed from the Paleobiology Database defaults, ensuring proper argument flow.
+- The package now depends on R versions that are newer than 3.5.0.
+
+
+### Deleted
+- The 'ages' argument of the divDyn() and fadlad() functions was removed due to the re-organization of the time-argumentation.
+
+### Fixed
+- The function subsample() crashed when FUN was set to 'divDyn', and the output resulting from its application on the subsample trial dataset did not have have the same dimensions as the result of divDyn() when it was applied to the total dataset. Note that this matching of the 'trial results' is only viable when the data.frame output of FUN has a 'rownames' attribute. 
+
 
 ## [0.7.1 (build 670)]  - 2019.02.18 
 ### Added

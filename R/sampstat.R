@@ -5,7 +5,7 @@
 #' Secondary function of the package that calculates a number of sampling related variables and diversity estimators for each bin. 
 #' In contrast to the (\code{\link{divDyn}}) function, the bins are treated independently in this function.
 #' The function also returns the maximum subsampling quota for OxW subsampling 
-#' (\code{\link{subtrialOXW}}) with a given \code{x} value.
+#' (\code{\link{subtrialOXW}}) with a given \code{xexp} value.
 #'
 #' By setting \code{total} to \code{FALSE} (default), the following results are output:
 #'
@@ -13,8 +13,8 @@
 #'
 #'	\code{colls}: The number of collections in each time bin.
 #'
-#'  \code{xQuota}: The maximum quota for OxW subsampling (\code{\link{subtrialOXW}}) with the given \code{x} value. 
-#' 	The number of occurrences in each collection is tabulated, and is raised to the power of \code{x}. 
+#'  \code{xQuota}: The maximum quota for OxW subsampling (\code{\link{subtrialOXW}}) with the given \code{xexp} value. 
+#' 	The number of occurrences in each collection is tabulated, and is raised to the power of \code{xexp}. 
 #' 	The \code{xQuota} value is the sum of these values across all collections in a time slice.
 #'
 #'	\code{refs}: The number of references in each time bin.
@@ -37,14 +37,14 @@
 #'
 #'	\code{chao1ref}: Chao1 extrapolation estimator, based on the the number of single-reference and two-reference taxa (occ2).
 #'
-#' @param dat \code{(data.frame)}: The occurrence dataset.
+#' @param x \code{(data.frame)}: The occurrence dataset.
 #' @param tax \code{(character)}: The column name of taxon names.
 #' @param bin \code{(character)}: The column name of bin names.
 #' @param coll \code{(character)}: The column name of collection numbers. (optional)
 #' @param ref \code{(character)}: The column name of reference numbers. (optional)
 #' @param noNAStart (logical) Useful when the dataset does not start from bin no. 1, but positive integer bin numbers are provided. Then \code{noNAStart=TRUE} will cut the first part of the resulting table, so the first row will contain the estimates for the lowest bin number. In case of positive integer bin identifiers, and if \code{noNAStart=FALSE}, the index of the row will be the bin number. 
 #' @param duplicates \code{(logical)}: The function will check whether there are duplicate occurrences (multiple species/genera). When set to \code{NULL}, nothing will happen, but the function will notify you if duplicates are present. If set to \code{TRUE}, the function will not do anything with these, if set to \code{FALSE}, the duplicates will be omitted. 
-#' @param x (\code{numeric}): Argument of the OxW subsampling type (\code{\link{subtrialOXW}}).Setting this parameter to a valid numeric value will return the maximum quota for \code{x}.
+#' @param xexp (\code{numeric}): Argument of the OxW subsampling type (\code{\link{subtrialOXW}}).Setting this parameter to a valid numeric value will return the maximum quota for \code{xexp}.
 #' @param indices (\code{logical}): Setting this value to \code{TRUE} will calculate all indices implemented in (\code{\link{indices}}). 
 #' @examples
 #'	data(corals)
@@ -55,27 +55,27 @@
 #'  subStats <- subsample(corals, method="cr", tax="genus", FUN=binstat, 
 #'    bin="stg", q=100,noNAStart=FALSE)
 #'
-#' # maximum quota with x
-#'	more <- binstat(corals, tax="genus", bin="stg", coll="collection_no", x=1.4)
+#' # maximum quota with xexp
+#'	more <- binstat(corals, tax="genus", bin="stg", coll="collection_no", xexp=1.4)
 #'	
 #' @export
-binstat <- function(dat, tax="genus", bin="stg", coll=NULL, ref=NULL, noNAStart=FALSE, duplicates=NULL, x=NULL, indices=FALSE){
-	datUni<- unique(dat[c(tax, bin, coll, ref)])
-	if(nrow(datUni)!=nrow(dat)){
+binstat <- function(x, tax="genus", bin="stg", coll=NULL, ref=NULL, noNAStart=FALSE, duplicates=NULL, xexp=NULL, indices=FALSE){
+	datUni<- unique(x[,c(tax, bin, coll, ref)])
+	if(nrow(datUni)!=nrow(x)){
 		if(is.null(duplicates)){
 			if(!is.null(coll) | !is.null(ref))	message("The database contains duplicate occurrences (multiple species/genus).") 
 		}else{
 			if(!duplicates & (is.null(coll)& is.null(ref))) stop("duplicates=FALSE implies that a 'coll' or 'ref' value is present!")
 			if(!duplicates){
-				dat <- datUni
+				x <- datUni
 			}
 		}
 	}
 
 	# final output variables depend on what was entered
-	needed <- NULL
+	needed <- "thebin"
 	# factorize everything
-	binVar<-dat[,bin]
+	binVar<-x[,bin, drop=TRUE]
 	
 	# note if binVar is a positive integer
 	uBin <- unique(binVar)
@@ -87,24 +87,24 @@ binstat <- function(dat, tax="genus", bin="stg", coll=NULL, ref=NULL, noNAStart=
 	}
 	
 	
-	if(!is.null(coll)) collVar<-as.integer(factor(dat[,coll]))
-	taxVar<-as.integer(factor(dat[,tax]))
+	if(!is.null(coll)) collVar<-as.integer(factor(x[,coll, drop=TRUE]))
+	taxVar<-as.integer(factor(x[,tax, drop=TRUE]))
 	
-	if(!is.null(ref)) refVar<-as.integer(factor(dat[,ref]))
+	if(!is.null(ref)) refVar<-as.integer(factor(x[,ref, drop=TRUE]))
 	
 	# the number of occurrences
 	occs<-table(binVar)
-
+	thebin<-as.numeric(names(occs))
 	needed<- c(needed, "occs")
 	
 	# the number of collections)
 	if(!is.null(coll)){
 		colls<-table((binVar[!duplicated(paste(binVar, collVar))]))
 		needed<- c(needed, "colls")
-		if(!is.null(x)){
-			xQuota <- tapply(INDEX=dat[,bin], X=dat[, coll], function(y){
-			#	y <- dat[dat[,bin]==85,coll]
-				sum(table(y)^x)
+		if(!is.null(xexp)){
+			xQuota <- tapply(INDEX=x[,bin, drop=TRUE], X=x[, coll, drop=TRUE], function(y){
+			#	y <- x[x[,bin]==85,coll]
+				sum(table(y)^xexp)
 			})
 			needed<- c(needed, "xQuota")
 			xQuota <- xQuota[names(occs)]
@@ -116,7 +116,7 @@ binstat <- function(dat, tax="genus", bin="stg", coll=NULL, ref=NULL, noNAStart=
 		xQuota<-rep(NA, length(occs))
 	}
 	
-#	table(unique(dat[,c(bin, coll)])[,bin])
+#	table(unique(x[,c(bin, coll)])[,bin])
 	
 	
 	# the number of references
@@ -131,19 +131,19 @@ binstat <- function(dat, tax="genus", bin="stg", coll=NULL, ref=NULL, noNAStart=
 	SIBs<-table((binVar[!duplicated(paste(taxVar, binVar))]))
 	needed<- c(needed, "SIBs")
 	
-	rows<-1:nrow(dat)
+	rows<-1:nrow(x)
 	
 	# calculate taxon counts
 	cVar<-NULL
-	tot<-tapply(INDEX=binVar, X=rows, FUN=function(x){
+	tot<-tapply(INDEX=binVar, X=rows, FUN=function(w){
 		# the basic stuff
-		tVar<-taxVar[x]
+		tVar<-taxVar[w]
 		
 		# no collection occ table
 		occTable<-table(tVar)
 		
 		if(!is.null(ref)){
-			rVar<-refVar[x]
+			rVar<-refVar[w]
 			refTable<-table(unique(cbind(rVar, tVar))[, "tVar"])
 			# single reference taxa
 			p1<-sum(refTable==1)
@@ -155,7 +155,7 @@ binstat <- function(dat, tax="genus", bin="stg", coll=NULL, ref=NULL, noNAStart=
 		}
 		
 		if(!is.null(coll)){
-			cVar<-collVar[x]
+			cVar<-collVar[w]
 		}
 		
 		
@@ -184,7 +184,7 @@ binstat <- function(dat, tax="genus", bin="stg", coll=NULL, ref=NULL, noNAStart=
 	tapRes<-matrix(nrow=length(tot), ncol=0)
 
 	for(i in 1:length(outVars)){
-		tapRes<- cbind(tapRes, unlist(lapply(tot, function(x)x[[i]])))
+		tapRes<- cbind(tapRes, unlist(lapply(tot, function(w)w[[i]])))
 	}
 	
 	colnames(tapRes) <- outVars
@@ -196,15 +196,15 @@ binstat <- function(dat, tax="genus", bin="stg", coll=NULL, ref=NULL, noNAStart=
 	}
 	
 	# Good's u (occs)
-	u<-1-(tapRes[names(occs), "occ1"]/occs)
+	u<-1-(tapRes[names(occs), "occ1", drop=TRUE]/occs)
 	# Chao' estime
-	chao1occ<-SIBs+(tapRes[names(occs), "occ1"]^2)/(2*tapRes[names(occs), "occ2"])
+	chao1occ<-SIBs+(tapRes[names(occs), "occ1", drop=TRUE]^2)/(2*tapRes[names(occs), "occ2", drop=TRUE])
 	needed <- c(needed, "u","chao1occ")
 	
 	# Alroy's u' (references)
 	if(!is.null(ref)){
-		uPrime<-1-(tapRes[names(occs), "ref1"]/occs)
-		chao1ref<-SIBs+(tapRes[names(occs), "ref1"]^2)/(2*tapRes[names(occs), "ref2"])
+		uPrime<-1-(tapRes[names(occs), "ref1", drop=TRUE]/occs)
+		chao1ref<-SIBs+(tapRes[names(occs), "ref1", drop=TRUE]^2)/(2*tapRes[names(occs), "ref2", drop=TRUE])
 		needed <- c(needed, "uPrime","chao1ref")
 	}else{
 		uPrime<-rep(NA, length(u))
@@ -213,6 +213,7 @@ binstat <- function(dat, tax="genus", bin="stg", coll=NULL, ref=NULL, noNAStart=
 
 	# concatenate everything (also emtpy variables)
 	all<-cbind(
+		thebin,
 		occs, 
 		colls, 
 		refs, 
@@ -231,8 +232,9 @@ binstat <- function(dat, tax="genus", bin="stg", coll=NULL, ref=NULL, noNAStart=
 	# if the entries are positive integers, coerce indexing!
 	if(posint){
 		place<- matrix(NA, ncol=ncol(all), nrow=max(as.numeric(names(occs))))
-		rownames(place)<-1:nrow(place)
 		colnames(place)<-colnames(all)
+		place[, "thebin"] <- 1:nrow(place)
+		rownames(place)<- place[, "thebin"]
 		place[as.numeric(names(occs)),]<-all
 		all<-place
 	}
@@ -243,6 +245,7 @@ binstat <- function(dat, tax="genus", bin="stg", coll=NULL, ref=NULL, noNAStart=
 		
 	}
 	all<-as.data.frame(all)
+	colnames(all)[colnames(all)=="thebin"] <- bin
 
 
 
@@ -267,7 +270,7 @@ binstat <- function(dat, tax="genus", bin="stg", coll=NULL, ref=NULL, noNAStart=
 #'
 #'  \code{gappiness}: The proportion of sampling gaps in the ranges of the taxa (without the range-endpoints).
 #'
-#' @param dat \code{(data.frame)}: The occurrence dataset.
+#' @param x \code{(data.frame)}: The occurrence dataset.
 #' @param tax \code{(character)}: The column name of taxon names.
 #' @param bin \code{(character)}: The column name of bin names.
 #' @param coll \code{(character)}: The column name of collection numbers. (optional)
@@ -277,37 +280,37 @@ binstat <- function(dat, tax="genus", bin="stg", coll=NULL, ref=NULL, noNAStart=
 #'	data(corals)
 #'	  sumstat(corals, tax="genus", bin="stg", coll="collection_no", ref="reference_no")
 #' @export
-sumstat<- function(dat, tax="genus", bin="stg", coll=NULL, ref=NULL, duplicates=NULL){
+sumstat<- function(x, tax="genus", bin="stg", coll=NULL, ref=NULL, duplicates=NULL){
 	# duplicate searching and omission part
-	datUni<- unique(dat[c(tax, bin, coll, ref)])
-	if(nrow(datUni)!=nrow(dat)){
+	datUni<- unique(x[,c(tax, bin, coll, ref)])
+	if(nrow(datUni)!=nrow(x)){
 		if(is.null(duplicates)){
 			if(!is.null(coll) | !is.null(ref))	message("The database contains duplicate occurrences (multiple species/genus).") 
 		}else{
 			if(!duplicates & (is.null(coll)& is.null(ref))) stop("duplicates=FALSE implies that a 'coll' or 'ref' value is present!")
 			if(!duplicates){
-				dat <- datUni
+				x <- datUni
 			}
 		}
 	}
 	
-	nOcc<- nrow(dat)
-	nTaxa <- length(levels(factor(dat[,tax])))
-	nBin <- length(levels(factor(dat[,bin])))
+	nOcc<- nrow(x)
+	nTaxa <- length(levels(factor(x[,tax, drop=TRUE])))
+	nBin <- length(levels(factor(x[,bin, drop=TRUE])))
 	if(!is.null(coll)){
-		nColl <- length(levels(factor(dat[,coll])))
+		nColl <- length(levels(factor(x[,coll, drop=TRUE])))
 	}else{
 		nColl <- NA
 	}
 	if(!is.null(ref)){
-		nRef <- length(levels(factor(dat[,ref])))
+		nRef <- length(levels(factor(x[,ref, drop=TRUE])))
 	}else{
 		nRef<-NA
 	}
 	
 	# Paul's sampling statistic
-	binVar<-dat[,bin]
-	taxVar<-dat[,tax]
+	binVar<-x[,bin, drop=TRUE]
+	taxVar<-x[,tax, drop=TRUE]
 	
 	pSamp<-taxPS(taxVar, binVar)
 	
@@ -322,9 +325,9 @@ taxPS<-function(taxVar, binVar)
 	cTax<-levels(factor(taxVar))
 	
 	#repeat procedure for all taxa
-	sap<-sapply(cTax, function(x){
+	sap<-sapply(cTax, function(w){
 		#taxon specific dataset
-		nSamp<-sort(unique(binVar[taxVar==x]))
+		nSamp<-sort(unique(binVar[taxVar==w]))
 		
 		#exclude range endpoints from calculation
 		if (length(nSamp)>2)

@@ -4,16 +4,16 @@
 \alias{tabinate}
 \title{Apply function to TAxon/BIN subset of occurrences and iterATE}
 \usage{
-tabinate(dat, bin = NULL, tax = NULL, FUN = NULL, ...)
+tabinate(x, bin = NULL, tax = NULL, FUN = NULL, ...)
 }
 \arguments{
-\item{dat}{\code{(data.frame)} Fossil occurrence table.}
+\item{x}{\code{(data.frame)} Fossil occurrence table.}
 
 \item{bin}{\code{(character)} Variable name of the bin numbers of the occurrences. This variable should be \code{numeric}.}
 
 \item{tax}{\code{(character)} Variable name of the occurring taxa (variable type: \code{factor} or \code{character} - such as \code{"genus"}}
 
-\item{FUN}{(\code{function}) The function applied to the subset of occurrences. The subset of occurence data will be passed to this function as \code{dat}.}
+\item{FUN}{(\code{function}) The function applied to the subset of occurrences. The subset of occurence data will be passed to this function as \code{x}.}
 
 \item{...}{arguments passed to \code{FUN}}
 }

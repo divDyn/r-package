@@ -4,10 +4,10 @@
 \alias{georange}
 \title{Estimation of geographic ranges from occurrence data}
 \usage{
-georange(dat, lng = NULL, lat = NULL, loc = NULL, method = "co")
+georange(x, lng = NULL, lat = NULL, loc = NULL, method = "co")
 }
 \arguments{
-\item{dat}{\code{(data.frame)} Occurrence table containing the coordinates/locality memberships as variables.}
+\item{x}{\code{(data.frame)} Occurrence table containing the coordinates/locality memberships as variables.}
 
 \item{lng}{(\code{character}) The variable name of the longitudes, required for the \code{"co"}, \code{"mst"} and \code{"mgcd"} methods.}
 

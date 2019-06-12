@@ -33,7 +33,7 @@
 #' 	\item{\code{max_ma}}{Maximum estimated age based on the PaleoDB dynamic time scale.}
 #' 	\item{\code{min_ma}}{Minimum estimated age based on the PaleoDB dynamic time scale.}
 #' 	\item{\code{stg}}{Bin number in the stage-level timescale \code{\link{stages}}.}
-#' 	\item{\code{Bin}}{Bin number in the PaleoDB 10 million year resolution timescale \code{\link{bins}}.}
+#' 	\item{\code{ten}}{Bin number in the PaleoDB 10 million year resolution timescale \code{\link{tens}}.}
 #' 	\item{\code{env}}{Environment of the occurrence: reefal \code{(r)}, non-reefal \code{(nr)} or unknown (\code{uk}), based on \code{\link{keys}}.}
 #' 	\item{\code{lith}}{Substrate of the occurrence: carbonate \code{(c)}, siliciclastic \code{(s)} or unknown (\code{uk}), based on \code{\link{keys}}.}
 #' 	\item{\code{latgroup}}{Latitude of the occurrence: tropical \code{(t)} or non-tropical \code{(nt)}.}
@@ -59,12 +59,13 @@
 #'  
 #' @format A \code{list} of 7 \code{list}s:
 #' 	\describe{
-#' 		\item{\code{binInt}}{A \code{list} of \code{vector}s. Entries in the \code{early_interval} and \code{late_interval} variables of PaleoDB downloads indicate the collections' positions in the dynamic time scale. These entries were linked to 10 million year-resolution time scale stored in \code{\link{bins}}. These links were compiled using a download from the FossilWorks website (\url{http://fossilworks.org/}), on 08 June, 2018. You can check the lookup table \code{\link{stratkeys}} here. This is version 0.9.2}
+#' 		\item{\code{tenInt}}{A \code{list} of \code{vector}s. Entries in the \code{early_interval} and \code{late_interval} variables of PaleoDB downloads indicate the collections' positions in the dynamic time scale. These entries were linked to 10 million year-resolution time scale stored in \code{\link{tens}}. These links were compiled using a download from the FossilWorks website (\url{http://fossilworks.org/}), on 08 June, 2018. You can check the lookup table \code{\link{stratkeys}} here. This is version 0.9.2}
 #' 		\item{\code{stgInt}}{A \code{list} of \code{vector}s. Entries in the \code{early_interval} and \code{late_interval} variables of PaleoDB downloads indicate the collections' positions in the dynamic time scale. These entries were linked to stage-resolution time scale stored in \code{\link{stages}}. See \code{binInt} for version information.} These entries are reliable only in the Post-Ordovician!
 #' 		\item{\code{reefs}}{A \code{list} of \code{vector}s. Entries in the \code{environment} field of the PaleoDB download indicate information regarding the likely reefal origin of carbonatic rocks. See the vignette ('§PhaneroCurve') on the exact use of these data. v0.9.}
 #' 		\item{\code{lith}}{A \code{list} of \code{vector}s. Entries in the \code{lithology1} field of the PaleoDB download indicate information regarding the substrate of the embedding rocks. This key maps the entries to \code{siliciclastic}, \code{"carbonate"} or \code{"unknown"} substrates. v0.9.}
 #' 		\item{\code{lat}}{A \code{list} of \code{vector}s. Entries in the \code{paleolat} field of the PaleoDB download indicate information regarding paleolatitude of the occurrences. This key maps the entries to \code{"tropical"} or \code{"non-tropical"} latitudes. v0.9.}
 #' 		\item{\code{grain}}{A \code{list} of \code{vector}s. Entries in the \code{lithology1} field of the PaleoDB download indicate information regarding the grain sizes of the depositional environment. This key maps the entries to \code{"coarse"}, \code{"fine"} or \code{"unknown"} grain sizes. v0.9.}
+#'		\item{\code{depenv}}{A \code{list} of \code{vector}s. Entries in the \code{environment} field of the PaleoDB download indicate information regarding the onshore-offshore nature of the depositional environment. This key maps the entries to \code{"onshore"}, \code{"offshore"} or \code{"unknown"} environment. v0.9.3}
 #' 
 #' 	}
 #' 
@@ -116,12 +117,12 @@
 #'  	\item{\code{mid}}{Numeric ages midpoints of the bins, the averages of \code{bottom} and \code{top}.}
 #'  	\item{\code{top}}{Numeric ages of the tops (latest ages) of the bins.}
 #'		\item{\code{dur}}{Numeric ages of the durations of the bins.}
-#'  	\item{\code{bin}}{Integer number identifiers of the bins. §correct to num!}
+#'  	\item{\code{ten}}{Integer number identifiers of the bins. §correct to num!}
 #' }
 #' 
 #' 
 #' @source Executive committee meeting (2015) of old Paleobiology Database. Additional variables were added by Wolfgang Kiessling.
-"bins"
+"tens"
 
 #' The FossilWorks-based lookup table for the stratigraphic assignments of collections in the Paleobiology Database
 #' 
@@ -139,7 +140,7 @@
 #' 		\item{\code{period}}{The period containing the interval.}
 #' 		\item{\code{epoch}}{The epoch containing the interval.}
 #' 		\item{\code{X10_my_bin}}{The 10 million year time scale interval containing the interval.}
-#' 		\item{\code{bin}}{Numeric identifier of the 10 million year interval in the \code{\link{bins}} object.}
+#' 		\item{\code{ten}}{Numeric identifier of the 10 million year interval in the \code{\link{tens}} object.}
 #' 		\item{\code{stage}}{The stage containing the interval.}	
 #' 		\item{\code{stg}}{Numeric identifier of the interval in the stage-level time scale provided as \code{\link{stages}} object.}
 #' 	}

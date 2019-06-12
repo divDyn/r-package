@@ -1,17 +1,17 @@
 Package: divDyn
 Type: Package
 Title: Diversity Dynamics using Fossil Sampling Data
-Version: 0.7.1
+Version: 0.8.0
 Author: Adam T. Kocsis, John Alroy, Carl J. Reddin, Wolfgang Kiessling
 Maintainer: Adam T. Kocsis <adam.t.kocsis@gmail.com>
 Description: Functions to describe sampling and diversity dynamics of fossil occurrence datasets (e.g. from the Paleobiology Database). The package includes methods to calculate range- and occurrence-based metrics of taxonomic richness, extinction and origination rates, along with traditional sampling measures. A powerful subsampling tool is also included that implements frequently used sampling standardization methods in a multiple bin-framework. The plotting of time series and the occurrence data can be simplified by the functions incorporated in the package, as well other calculations, such as environmental affinities and extinction selectivity testing. Details can be found in: Kocsis, A.T.; Reddin, C.J.; Alroy, J. and Kiessling, W. (2019) <doi:10.1101/423780>.
 License: CC BY 4.0
-Date: 2019-02-18
+Date: 2019-06-12
 BugReports: https://github.com/divDyn/r_package/issues
 Encoding: UTF-8
 LazyData: false
 Depends:
-    R (>= 3.3.0)
+    R (>= 3.5.0)
 Imports: 
 	Rcpp, 
 	stats,

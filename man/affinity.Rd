@@ -4,11 +4,11 @@
 \alias{affinity}
 \title{Environmental affinities of taxa}
 \usage{
-affinity(dat, tax, bin, env, coll = NULL, method = "binom",
-  alpha = 1, reldat = NULL, na.rm = FALSE, bycoll = FALSE)
+affinity(x, tax, bin, env, coll = NULL, method = "binom", alpha = 1,
+  reldat = NULL, na.rm = FALSE, bycoll = FALSE)
 }
 \arguments{
-\item{dat}{\code{(data.frame)} The occurrence dataset containing the taxa with unknown environmental affinities.}
+\item{x}{\code{(data.frame)} The occurrence dataset containing the taxa with unknown environmental affinities.}
 
 \item{tax}{\code{(character)} The column name of taxon names.}
 
@@ -22,10 +22,10 @@ affinity(dat, tax, bin, env, coll = NULL, method = "binom",
 
 \item{alpha}{\code{(numeric)} The alpha value of the binomial tests. By default binomial testing is off (\code{alpha=1}) and the methods returns that environment as the preferred one, which has the highest likelihood (odds ratio).}
 
-\item{reldat}{\code{(data.frame)} Database with the same structure as \code{dat}.  \code{dat} is typically a subset of \code{reldat}. If given, the occurrence distribution of \code{reldat} is used 
-as the null model of sampling. Defaults to \code{NULL}, which means that \code{dat} itself will be used as \code{reldat}.}
+\item{reldat}{\code{(data.frame)} Database with the same structure as \code{x}.  \code{x} is typically a subset of \code{reldat}. If given, the occurrence distribution of \code{reldat} is used 
+as the null model of sampling. Defaults to \code{NULL}, which means that \code{x} itself will be used as \code{reldat}.}
 
-\item{na.rm}{\code{(logical)} Should the \code{NA} entries in the relevant columns of \code{dat} be omitted automatically?}
+\item{na.rm}{\code{(logical)} Should the \code{NA} entries in the relevant columns of \code{x} be omitted automatically?}
 
 \item{bycoll}{\code{(logical)} If set to \code{TRUE}, the number of collections (or samples, in \code{coll}) will be used rather than the number of occurrences.}
 }
@@ -39,7 +39,7 @@ Sampling patterns have an overprinting effect on the frequency of taxon occurren
 
 \code{'majority'}: Environmental affinity will be assigned based on the number of occurrences of the taxon in the different environments, without taking sampling of the entire dataset into account. If the taxon has more occurrences in \emph{environment 1}, the function will return \emph{environment 1} as the preferred habitat.
 
-\code{'binom'}: The proportion of occurrences of a taxon in \emph{environment 1} and \emph{environment 2} will be compared to a null model, which is based on the distribution of all occurrences from the stratigraphic range of the taxon (in \code{dat} or if provided, in \code{reldat}). Then a binomial test is run on with the numbers of the most likely preference (against all else). The \code{alpha} value indicates the significance of the binomial tests, setting \code{alpha} to \code{1} will effectively switch the testing off: if the ratio of occurrences for the taxon is different from the ratio observed in the dataset, an affinity will be assigned. This is the default method. If an environment is not sampled at all in the dataset to which the taxon's occurrences are compared to, the binomial method returns \code{NA} for the taxon's affinity.
+\code{'binom'}: The proportion of occurrences of a taxon in \emph{environment 1} and \emph{environment 2} will be compared to a null model, which is based on the distribution of all occurrences from the stratigraphic range of the taxon (in \code{x} or if provided, in \code{reldat}). Then a binomial test is run on with the numbers of the most likely preference (against all else). The \code{alpha} value indicates the significance of the binomial tests, setting \code{alpha} to \code{1} will effectively switch the testing off: if the ratio of occurrences for the taxon is different from the ratio observed in the dataset, an affinity will be assigned. This is the default method. If an environment is not sampled at all in the dataset to which the taxon's occurrences are compared to, the binomial method returns \code{NA} for the taxon's affinity.
 
 \strong{References}
 

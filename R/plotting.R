@@ -2,7 +2,7 @@
 #'
 #' This function allows the user to quickly plot a time scale data table
 #'
-#' As most analysis use an individually compiled time scale object, in order to ensure compatibility between the analyzed and plotted values, the time scale table used for the analysis could be plotted rather than a standardized table. Two example tables have been included in the package (\code{\link{stages}} and \code{\link{bins}}) that can serve as templates.
+#' As most analysis use an individually compiled time scale object, in order to ensure compatibility between the analyzed and plotted values, the time scale table used for the analysis could be plotted rather than a standardized table. Two example tables have been included in the package (\code{\link{stages}} and \code{\link{tens}}) that can serve as templates.
 #' @param tsdat \code{(data frame)}: The time scale data frame.
 #' @param boxes \code{(character)}: Column name indicating the names that should be plotted as boxes of the timescale.
 #' @param ylim \code{(numeric)}: The vertical extent of the plot, analogous to the same argument of \code{\link[graphics]{plot}}. By default it is set to the \code{[0,1]} interval.
@@ -45,7 +45,7 @@
 #' @export
 tsplot<-function(tsdat,  ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 	bottom="bottom", top="top",
-	xlab="age (Ma)", ylab="",
+	xlab="Age (Ma)", ylab="",
 	boxes=NULL, boxes.col=NULL,
 	shading=NULL,shading.col=c("white", "gray80"),
 	plot.args=NULL,
@@ -59,7 +59,7 @@ tsplot<-function(tsdat,  ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 #	bottom="bottom"
 #	top="top"
 #	ylim=c(0,1)
-#	xlab="age (Ma)"
+#	xlab="Age (Ma)"
 #	ylab=""
 #	shading="series"
 #	shading.col=c("white", "gray80")
@@ -132,12 +132,12 @@ tsplot<-function(tsdat,  ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 	
 	# xlim defense
 	if(is.null(xlim)){
-		xlim <- c(max(tsdat[,bottom],na.rm=T),min(tsdat[,top],na.rm=T))
+		xlim <- c(max(tsdat[,bottom, drop=TRUE],na.rm=T),min(tsdat[,top, drop=TRUE],na.rm=T))
 	} else{
 		if(is.numeric(xlim)){
 			if(length(xlim)>2){
 				if(sum(xlim%%1)==0 & sum(xlim<=0)==0 & sum(xlim>nrow(tsdat))==0){
-					xlim <- c(max(tsdat[xlim,bottom],na.rm=T),min(tsdat[xlim,top],na.rm=T))
+					xlim <- c(max(tsdat[xlim,bottom, drop=TRUE],na.rm=T),min(tsdat[xlim,top, drop=TRUE],na.rm=T))
 				}
 			}
 			if(length(xlim)==1){
@@ -234,7 +234,7 @@ tsplot<-function(tsdat,  ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 		for(j in 1:length(boxes)){
 		
 			# the box drawing
-			boxLev<-collapse(tsdat[,boxes[j]])
+			boxLev<-collapse(tsdat[,boxes[j], drop=TRUE])
 			xLeft<-rep(NA, length(boxLev))
 			xRight<-rep(NA, length(boxLev))
 			yTop<-rep(NA, length(boxLev))
@@ -243,8 +243,8 @@ tsplot<-function(tsdat,  ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 			for(i in 1:length(boxLev)){
 				# the rectangles
 					boolSel<-boxLev[i]==tsdat[,boxes[j]]
-					curBottom<-max(tsdat[boolSel,bottom], na.rm=T)
-					curTop<-min(tsdat[boolSel,top], na.rm=T)
+					curBottom<-max(tsdat[boolSel,bottom, drop=TRUE], na.rm=T)
+					curTop<-min(tsdat[boolSel,top, drop=TRUE], na.rm=T)
 					
 					# export the positions
 					xLeft[i]<-curBottom
@@ -311,15 +311,15 @@ tsplot<-function(tsdat,  ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 			if(sum(boolUnique)>0){
 				ind<-which(boolUnique)
 				for(i in ind){
-					boxes.argsIn[[i]]<-unique(tsdat[,boxes.argsIn[[i]]])
+					boxes.argsIn[[i]]<-unique(tsdat[,boxes.argsIn[[i]], drop=TRUE])
 				}
 			}
 
 			if(!is.null(boxes.col)){
-				boolRequire <- !seqduplicated(tsdat[,boxes[j]])
+				boolRequire <- !seqduplicated(tsdat[,boxes[j], drop=TRUE])
 
 				# the color values of the box
-				boxes.argsIn$col <- tsdat[boolRequire, boxes.col[j]]
+				boxes.argsIn$col <- tsdat[boolRequire, boxes.col[j], drop=TRUE]
 
 			}
 			
@@ -354,7 +354,7 @@ tsplot<-function(tsdat,  ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 				if(sum(boolUnique)>0){
 					ind<-which(boolUnique)
 					for(i in ind){
-						labels.argsIn[[i]]<-unique(tsdat[,labels.argsIn[[i]]])
+						labels.argsIn[[i]]<-unique(tsdat[,labels.argsIn[[i]], drop=TRUE])
 					}
 				}
 				
@@ -366,8 +366,8 @@ tsplot<-function(tsdat,  ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 	
 	# shading
 	if(!is.null(shading)){
-		bDupl<-seqduplicated(tsdat[, shading])
-		shadeLev<-tsdat[!bDupl,shading]
+		bDupl<-seqduplicated(tsdat[, shading, drop=TRUE])
+		shadeLev<-tsdat[!bDupl,shading, drop=TRUE]
 
 		# predefined color set
 		shadeLevCol <- NULL
@@ -375,7 +375,7 @@ tsplot<-function(tsdat,  ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 		#use a collumn to get this
 		if(length(shading.col)==1){
 			if(shading.col%in%colnames(tsdat)){
-				shadeLevCol<-tsdat[!bDupl,shading.col]
+				shadeLevCol<-tsdat[!bDupl,shading.col, drop=TRUE]
 
 			}
 		}
@@ -383,9 +383,9 @@ tsplot<-function(tsdat,  ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 		for(i in 1:length(shadeLev)){
 			
 			# the rectangles
-			boolSel<-shadeLev[i]==tsdat[,shading]
-			curBottom<-max(tsdat[boolSel,bottom], na.rm=T)
-			curTop<-min(tsdat[boolSel,top], na.rm=T)
+			boolSel<-shadeLev[i]==tsdat[,shading, drop=TRUE]
+			curBottom<-max(tsdat[boolSel,bottom, drop=TRUE], na.rm=T)
+			curTop<-min(tsdat[boolSel,top, drop=TRUE], na.rm=T)
 			# no predefined colors
 			if(is.null(shadeLevCol)){
 				if(i%%length(shading.col)){
@@ -1110,7 +1110,7 @@ ranges <- function(dat, bin=NULL, tax=NULL, xlim=NULL, ylim=c(0,1), total="", fi
 	if(!is.null(group)){
 		
 		# create group sepcific subsets
-		groupLevs<-levels(factor(dat[, group]))
+		groupLevs<-levels(factor(dat[, group, drop=TRUE]))
 		
 		# if no color is provided, use default
 		if(is.null(ranges.args$col) & is.null(labels.args$col) & is.null(occs.args$col) & length(groupLevs)<11){
@@ -1128,8 +1128,8 @@ ranges <- function(dat, bin=NULL, tax=NULL, xlim=NULL, ylim=c(0,1), total="", fi
 		
 		# add the group variable to FAD-LAD 
 		#only for occs!
-		groupVar<-dat[, group]
-		names(groupVar)<-dat[, tax] 
+		groupVar<-dat[, group, drop=TRUE]
+		names(groupVar)<-dat[, tax, drop=TRUE] 
 		newFL$group <- groupVar[row.names(newFL)]
 		
 		# where to plot
@@ -1146,9 +1146,9 @@ ranges <- function(dat, bin=NULL, tax=NULL, xlim=NULL, ylim=c(0,1), total="", fi
 		# calculate where the lots should be
 		ylimMat <- matrix(c(ylim[1], yPartGroup[1]), ncol=2, nrow=1)
 		
-		subDat<-dat[dat[, group]==groupLevs[1] & dat[, tax]%in%row.names(newFL), ]
+		subDat<-dat[dat[, group, drop=TRUE]==groupLevs[1] & dat[, tax, drop=TRUE]%in%row.names(newFL), ]
 		
-		
+		# first draw everything for the first group		
 		ranges(subDat, bin=bin, tax=tax, xlim=xlim, ylim=ylimMat[1,], occs=occs, labs=labs, total=groupLevs[1], decreasing=decreasing, group=NULL, 
 			labels.args=labels.argsDist[[1]], ranges.args=ranges.argsDist[[1]], occs.args=occs.argsDist[[1]], total.args=total.argsDist[[1]])
 		
@@ -1158,7 +1158,7 @@ ranges <- function(dat, bin=NULL, tax=NULL, xlim=NULL, ylim=c(0,1), total="", fi
 			second<-first+yPartGroup[i]
 			ylimMat<-rbind(ylimMat, c(first, second))
 			
-			subDat<-dat[dat[, group]==groupLevs[i] & dat[, tax]%in%row.names(newFL), ]
+			subDat<-dat[dat[, group, drop=TRUE]==groupLevs[i] & dat[, tax, drop=TRUE]%in%row.names(newFL), ]
 		
 			ranges(subDat, bin=bin, tax=tax, xlim=xlim, ylim=ylimMat[i,],  occs=occs, labs=labs,  total=groupLevs[i],decreasing=decreasing, group=NULL,
 				labels.args=labels.argsDist[[i]], ranges.args=ranges.argsDist[[i]], occs.args=occs.argsDist[[i]],total.args=total.argsDist[[i]])
@@ -1241,7 +1241,7 @@ ranges <- function(dat, bin=NULL, tax=NULL, xlim=NULL, ylim=c(0,1), total="", fi
 		if(occs){
 			# do the subsetting of the occurence dataset (for plotting)
 			plotDat <- dat[dat[,tax]%in%names(taxWhere), ]
-			plotCoords<-unique(cbind(plotDat[,bin], taxWhere[plotDat[,tax]]))
+			plotCoords<-unique(cbind(plotDat[,bin, drop=TRUE], taxWhere[plotDat[,tax, drop=TRUE]]))
 			
 			# use the supplied arguments
 				occArgs<-occs.args
@@ -1317,6 +1317,90 @@ distribute<-function(oneList, target){
 	
 	
 	return(newList)
+}
+
+#' Function to plot a series a values with bars that have variable widths
+#' 
+#' Function to use bars for time series.
+#' 
+#' People often present time series with connected points, although the visual depiction implies a certain process that describes how the values change between the points.
+#' Instead of using simple scatter plots, Barplots can be used to describe series where a single value is the most descriptive of a discreet time bin. The \code{tsbars()} function
+#' draws rectangles of different widths with the \code{\link[graphics]{rect}} function, to plot series in such a way.
+#' 
+#' @param x \code{(numeric)} Vector specifying where the centers of the bars should be on the x axis. 
+#' @param y \code{(numeric)} Vector containing the heights of the bars.
+#' @param width \code{(numeric)} Vector containing the widths of the bars. Recycling is not supported, has to be either a single numeric value, or a numeric vector with the same length as \code{x} and \code{y}. Automatic width calculation is possible, the default \code{"max"} option sets the bar width even and equal to the the maximum width that can be used evenly witout causing overlaps. The option \code{"half"}, places the boundaries of the bars halfway between the points. This will make the bars' width asymmetrical around the \code{x} coordinates.
+#' @param yref \code{(numeric)} Single numeric value in the y dimension indicating common base for the bars.
+#' @param gap \code{(numeric)} The amount of gap there should be between the bars (in the unit of the plotting). Defaults to no gaps. 
+#' @param vertical \code{(logical)} Switching this option to \code{FALSE} will reverse the x and y dimensions of the plot.
+#' @param ... Arguments passed to \code{\link[graphics]{rect}}.
+#' @examples
+#' # an occurrence-based example
+#' # needed data
+#'   data(stages)
+#'   data(corals)
+#' # calculate diversites
+#'   dd <-divDyn(corals, tax="genus", bin="stg")
+#' # plot range-through diversities
+#'   tsplot(stages, xlim=51:94, ylim=c(0,250), boxes="sys")
+#'   tsbars(x=stages$mid, y=dd$divRT, width=stages$dur, gap=1, col=stages$col)
+#' 
+#' @export
+tsbars <- function(x, y, width="max", yref=0, gap=0, vertical=TRUE, ...){
+#	x<- stages$mid
+#	y<- dd$divRT
+#	width <- stages$dur
+#	yref<-0
+
+	# check if if x has the right length
+	if(length(x)!=length(y)) stop("'x' has to have the same length as 'y'")
+	if(!is.numeric(x) | !is.numeric(y))  stop("'x' and 'y' have to be numeric")
+
+	if(length(width)!=1){
+		changeLeft<- width/2
+		changeRight<- width/2
+	}else{
+		if(width=="max"){
+			changeLeft <- min(abs(diff(x))/2, na.rm=TRUE)
+			changeRight <- changeLeft
+		}
+		if(width=="half"){
+			ser <- abs(diff(x))/2
+			changeLeft<-c(ser[1], ser)
+			changeRight<-c(ser, ser[length(ser)])
+		}
+		if(is.numeric(width)){
+			changeLeft<- width/2
+			changeRight<- width/2
+		}	
+	}
+	
+	# gap between bars
+	if(gap!=0){
+		changeLeft<-changeLeft-gap/2
+		changeRight<-changeRight-gap/2
+	}
+
+	# core
+	if(length(yref)==1){
+		yBot <- rep(yref, length(x))
+	}else{
+		if(length(yref)==length(x)){
+			yBot <- yref
+		}
+	}
+
+	# left and right borders
+	xLeft <- x+changeLeft
+	xRight <- x-changeRight
+
+	# function call
+	if(vertical){
+		rect(ytop=y, ybottom=yBot, xleft=xLeft, xright=xRight, ...)
+	}else{
+		rect(ytop=xLeft, ybottom=xRight, xleft=yBot, xright=y, ...)
+	}
+	
 }
 
 

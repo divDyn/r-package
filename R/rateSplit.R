@@ -24,7 +24,7 @@
 #' @param AICc \code{(logical)}: Only applicable for the \code{"AIC"} method. Toggles whether the small sample corrected AIC (AICc) should be used instead of the regular one.
 #'	
 #' @param rate \code{(character)}: The rate metric. Currently only the per capita rates of Foote (1999) are available (\code{rate="pc"}).
-#' @param dat \code{(data.frame)}: The fossil occurrence data.
+#' @param x \code{(data.frame)}: The fossil occurrence data.
 #'	 
 #' @param na.rm \code{(logical)}: Argument indicating whether the function should proceede when \code{NA}s are found in the \code{sel} column. Setting this argument to \code{TRUE} will proceede with the omission of these entries, while \code{FALSE} will coerce the function to output a single \code{NA} value.
 #' @param tax \code{(character)}: Variable name of the occurring taxa (variable type: \code{factor} or \code{character}).
@@ -59,7 +59,7 @@
 #'	# display selectivity with points
 #'	# select the higher rates
 #'	selIntervals<-cbind(ddZ$oriPC[rs$ori], ddAZ$oriPC[rs$ori])
-#'	groupSelector<-apply(selIntervals, 1, function(x) x[1]<x[2])
+#'	groupSelector<-apply(selIntervals, 1, function(w) w[1]<w[2])
 #'	# draw the points
 #'	points(stages$mid[rs$ori[groupSelector]], ddAZ$oriPC[rs$ori[groupSelector]],
 #'	  pch=16, col="red", cex=2)
@@ -68,10 +68,10 @@
 #'	
 #'	
 #' @export
-ratesplit<-function(dat,  sel, tax="genus", bin="stg", rate="pc", method="AIC",AICc=TRUE, na.rm=TRUE, alpha=NULL, output="simple"){
+ratesplit<-function(x,  sel, tax="genus", bin="stg", rate="pc", method="AIC",AICc=TRUE, na.rm=TRUE, alpha=NULL, output="simple"){
 #	 #dummy data:
 # 	
-#	 dat<-corals
+#	 x<-corals
 #	 tax<-"genus"
 #	 bin<-"stg"
 #	 cRate<-"nFooteOri"
@@ -86,7 +86,7 @@ ratesplit<-function(dat,  sel, tax="genus", bin="stg", rate="pc", method="AIC",A
 
 
 	# the types of entries
-	entries<-unique(dat[,sel])
+	entries<-unique(x[,sel, drop=TRUE])
 	
 	# omit NAs automatically
 	if(!na.rm){
@@ -95,7 +95,7 @@ ratesplit<-function(dat,  sel, tax="genus", bin="stg", rate="pc", method="AIC",A
 		}
 	}else{
 		entries<-entries[!is.na(entries)]
-		dat<-dat[!is.na(dat[,sel]),]
+		x<-x[!is.na(x[,sel, drop=TRUE]),]
 	}
 	
 	if(length(entries)>2){
@@ -121,9 +121,9 @@ ratesplit<-function(dat,  sel, tax="genus", bin="stg", rate="pc", method="AIC",A
 	}
 	 
 	#data selection:
-	dFirst<-subset(dat, dat[,sel]==entries[1])
-	dSecond<-subset(dat, dat[,sel]==entries[2])
-	dComb<-dat
+	dFirst<-subset(x, x[,sel, drop=TRUE]==entries[1])
+	dSecond<-subset(x, x[,sel, drop=TRUE]==entries[2])
+	dComb<-x
 	
 	 
 	# the diversity dynamics
@@ -161,7 +161,7 @@ ratesplit<-function(dat,  sel, tax="genus", bin="stg", rate="pc", method="AIC",A
 			# correction parameter for AIC
 			cp <- newBC[,1] 
 			
-			if (AICc==F){
+			if (!AICc){
 				# AIC test simple and corrected (specific for three columns)
 				# simple AIC
 				# extinction
@@ -173,7 +173,7 @@ ratesplit<-function(dat,  sel, tax="genus", bin="stg", rate="pc", method="AIC",A
 				oriAIC1 <- 2*1-2*(loglikOri[,1])
 			}
 			
-			if(AICc==T){
+			if(AICc){
 				# corrected AIC (small samples)
 				# extinction
 				extAIC12 <- 2*K2-2*(loglikExt[,2]+loglikExt[,3])+(2*K2*(K2+1))/(cp-K2-1)
@@ -233,14 +233,14 @@ ratesplit<-function(dat,  sel, tax="genus", bin="stg", rate="pc", method="AIC",A
 			dualOri <- apply(newOri[,2:3], 1, sum) 
 			
 			# successes in vulnerable category
-			kExt <- newExt[,2] 
-			kOri <- newOri[,2] 
+			kExt <- newExt[,2, drop=TRUE] 
+			kOri <- newOri[,2, drop=TRUE] 
 			
 			nExt <- dualExt
 			nOri <- dualOri
 			
 			# diversity proportion of vulnerable category
-				pr <- newBC[,2]/dualBC # boundary crossers 
+				pr <- newBC[,2, drop=TRUE]/dualBC # boundary crossers 
 		
 			# Binomial test (specific for three columns) - extinctions
 				sigExt <- stats::pbinom(kExt,nExt,pr,lower.tail=F)+stats::dbinom(kExt,nExt,pr)

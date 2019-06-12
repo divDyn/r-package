@@ -2,27 +2,25 @@
 % Please edit documentation in R/subsample.R
 \name{subsample}
 \alias{subsample}
-\title{Serial subsampling wrapper function}
+\title{Subsampling wrapper function}
 \usage{
-subsample(dat, q, tax = "genus", bin = "stg", FUN = divDyn,
-  coll = NULL, ref = NULL, iter = 50, type = "cr", keep = NULL,
-  rem = NULL, duplicates = TRUE, output = "arit",
-  useFailed = FALSE, ...)
+subsample(x, q, tax = NULL, bin = NULL, FUN = divDyn, coll = NULL,
+  iter = 50, type = "cr", keep = NULL, rem = NULL,
+  duplicates = TRUE, output = "arit", useFailed = FALSE,
+  FUN.args = NULL, na.rm = FALSE, counter = TRUE, ...)
 }
 \arguments{
-\item{dat}{(\code{data.frame}): Occurrence dataset, with \code{bin}, \code{tax} and \code{coll} as column names.}
+\item{x}{(\code{data.frame}): Occurrence dataset, with \code{bin}, \code{tax} and \code{coll} as column names.}
 
-\item{q}{(\code{numeric)}: Subsampling level argument (mandatory). Depends on the subsampling function, it is the number of occurrences for \code{"cr"}, and the number of desired occurrences to the power of \code{x} for O^x^W. It is also the quorum of the SQS method.}
+\item{q}{(\code{numeric)}: Subsampling level argument (mandatory). Depends on the subsampling function, it is the number of occurrences for \code{"cr"}, and the number of desired occurrences to the power of \code{xexp} for O^x^W. It is also the quorum of the SQS method.}
 
 \item{tax}{(\code{character}): The name of the taxon variable.}
 
 \item{bin}{(\code{character}): The name of the subsetting variable (has to be integer). For time series, this is the time-slice variable. Rows with \code{NA} entries in this column will be omitted.}
 
-\item{FUN}{(\code{function}): The function to be iteratively executed on the results of the subsampling trials. If set to \code{NULL}, no function will be executed, and the subsampled datasets will be returned as a \code{list}. By default set to the \code{\link{divDyn}} function. The function must have an argument called \code{dat}, that represents the dataset resulting from a subsampling trial (or the entire dataset). Arguments of the \code{subsample} function call will be searched for potential arguments of this function, which means that already provided variables (e.g. \code{bin} and \code{tax}) will also be used. You can also provide additional arguments (similarly to the \code{\link[base]{apply}} iterator). Functions that allow arguments to pass through (that have argument '...') are not allowed, as well as functions that have the same arguments as \code{subsample} but would require different values.}
+\item{FUN}{(\code{function}): The function to be iteratively executed on the results of the subsampling trials. If set to \code{NULL}, no function will be executed, and the subsampled datasets will be returned as a \code{list}. By default set to the \code{\link{divDyn}} function. The function must have an argument called \code{x}, that represents the dataset resulting from a subsampling trial (or the entire dataset). Arguments of the \code{subsample} function call will be searched for potential arguments of this function, which means that already provided variables (e.g. \code{bin} and \code{tax}) will also be used. You can also provide additional arguments (similarly to the \code{\link[base]{apply}} iterator). Functions that allow arguments to pass through (that have argument '...') are not allowed, as well as functions that have the same arguments as \code{subsample} but would require different values.}
 
 \item{coll}{(\code{character}): The variable name of the collection identifiers.}
-
-\item{ref}{(\code{character}): The name of the reference variable, optional - depending on the subsampling method.}
 
 \item{iter}{(\code{numeric}): The number of iterations to be executed.}
 
@@ -38,17 +36,24 @@ subsample(dat, q, tax = "genus", bin = "stg", FUN = divDyn,
 
 \item{useFailed}{(\code{logical}): If the bin does not reach the subsampling quota, should the bin be used?}
 
+\item{FUN.args}{(\code{list}): Arguments passed to the applied function \code{FUN} but not used by the subsampling wrapper. Normally, the arguments of \code{FUN} can be added to the call of \code{subsample}, but in case you want to use different values for the same argument, then the arguments added here will be used for the call of \code{FUN}. For instance, if you want to call \code{subsample} with \code{bin=NULL}, but want to run \code{FUN=divDyn} with a valid \code{bin} column then you can add the column name here, e.g. \code{FUN.args=list(bin="stg")}.}
+
+\item{na.rm}{(\code{logical}): The function call includes more column names that might contain missing values. If this flag is set to \code{TRUE}, all rows will be dropped that have missig values in the specificed columns. This might lead to the exclusion of some data you do not want to exclude.}
+
+\item{counter}{(\code{logical}): Should the loop counting be visible?}
+
 \item{...}{arguments passed to \code{FUN} and the type-specific subsampling functions: \code{\link{subtrialCR}}, \code{\link{subtrialOXW}}, \code{\link{subtrialSQS}}}
 }
 \description{
-The function will take a desired function that has an occurrence dataset as an argument, and reruns it iteratively on the subsets of the dataset.
+The function will take a function that has an occurrence dataset as an argument, and reruns it iteratively on the subsets of the dataset.
 }
 \details{
 The \code{subsample} function implements the iterative framework of the sampling standardization procedure. 
-The function 1. takes the dataset \code{dat}, 2. runs function \code{FUN} on the dataset and creates a container for results of trials
+The function 1. takes the dataset \code{x}, 2. runs function \code{FUN} on the dataset and creates a container for results of trials
 3. runs one of the subsampling trial functions (e.g. \code{\link{subtrialCR}}) to get a subsampled 'trial dataset'
 4. runs \code{FUN} on the trial dataset and
-5. averages the results of the trials. For a detailed treatment on what the function does, please see the vignette ('Handout to the R package 'divDyn' v0.5.0 for diversity dynamics from fossil occurrence data'). Currently the Classical Rarefaction (\code{"cr"}, Raup, 1975), the occurrence weighted by-list subsampling (\code{"oxw"}, Alroy et al., 2001) and the Shareholder Quorum Subsampling methods are implemented (\code{"sqs"}, Alroy, 2010).
+5. averages the results of the trials for a simple output of step 4. such as \code{vector}s, \code{matrices} and \code{data.frames}. For averaging, the \code{vectors} and \code{matrices} have to have the same output dimensions in the subsampling, as in the original object. For \code{data.frames}, the bin-specific information have to be in rows and the \code{bin} numbers have to be given in a variable \code{bin} in the output of \code{FUN}.
+For a detailed treatment on what the function does, please see the vignette ('Handout to the R package 'divDyn' v0.5.0 for diversity dynamics from fossil occurrence data'). Currently the Classical Rarefaction (\code{"cr"}, Raup, 1975), the occurrence weighted by-list subsampling (\code{"oxw"}, Alroy et al., 2001) and the Shareholder Quorum Subsampling methods are implemented (\code{"sqs"}, Alroy, 2010).
 
 \strong{References:}
 
@@ -75,13 +80,11 @@ data(stages)
   legend("topleft", legend=c("raw","rarefaction"),
     col=c("black", "blue"), lwd=c(2,2), bg="white")
   
-  
-  
 \donttest{
 # Example 2-SIB diversity 
 # draft a simple function to calculate SIB diversity
-sib<-function(dat, bin, tax){
-  calc<-tapply(INDEX=dat[,bin], X=dat[,tax], function(y){
+sib<-function(x, bin, tax){
+  calc<-tapply(INDEX=x[,bin], X=x[,tax], function(y){
     length(levels(factor(y)))
   })
   return(calc[as.character(stages$stg)])
@@ -108,10 +111,10 @@ lines(stages$mid, rarefSIB, lwd=2, col="blue")
   cr<-subsample(corals,iter=50, q=20,tax="genus", bin="stg", output="dist", keep=95)
   # by-list subsampling (unweighted) - 3 collections
   UW<-subsample(corals,iter=50, q=3,tax="genus", bin="stg", coll="collection_no", 
-    output="dist", keep=95, type="oxw", x=0)
+    output="dist", keep=95, type="oxw", xexp=0)
   # occurrence weighted by list subsampling
   OW<-subsample(corals,iter=50, q=20,tax="genus", bin="stg", coll="collection_no", 
-    output="dist", keep=95, type="oxw", x=1)
+    output="dist", keep=95, type="oxw", xexp=1)
  
   SQS<-subsample(corals,iter=50, q=0.4,tax="genus", bin="stg", output="dist", keep=95, type="sqs")
 

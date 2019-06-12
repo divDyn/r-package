@@ -2,24 +2,25 @@
 #' 
 #' Function to generate range data from an occurrence dataset.
 #' 
-#' The function will output First and Last Appearance Data of the taxa in the dataset. Keep in mind that incomplete sampling will influence these data and will make the ranges appear shrunken.
+#' The function will output First and Last Appearance Dates of the taxa in the dataset. Keep in mind that incomplete sampling will influence these data and will make the ranges appear shrunken.
 #'
 #' The following variables are produced:
 #'
-#' attribute \code{row.names}: The names of the taxa.
+#' \code{row.names} attribute: The names of the taxa.
 #'
-#' \code{FAD}: First appearance data, given in time slice numbers.
+#' \code{FAD}: First appearance dates in time bin nmbers or ages.
 #'
-#' \code{LAD}: Last appearance data, given in time slice numbers.
+#' \code{LAD}: Last appearance dates in time bin numbers or ages.
 #'
-#' \code{duration}: optionally, the duration of taxa in numeric ages. It is given for single-interval taxa as well assuming that the taxa's range span over the entire time slice.
+#' \code{duration}: The durations of taxa in bin numbers or ages.
 #' 
-#' @param dat \code{(data.frame)}: Occurrence data.
-#' @param tax \code{(character)}: The column name of taxon names.
-#' @param bin \code{(character)}: The column name of bin variable. If two column names are entered, then they will interpreted as the minimum and maximum age uncertainty. (see examples) 
-#' @param ages \code{(logical)}: Are the bin entries ages (reversed time axis)? Setting ages to TRUE will replace the entries in 'bin' column(s) with their additive inverses.
-#' @param na.rm \code{(logical)}: Should taxa that have no valid FADs or LADs (due to only NA entries) be removed from the output?
-#' @param zerodur \code{(logical)}: If set to \code{TRUE}, single-interval taxa will 0 durations. Setting this argument to FALSE will add 1 to the durations of all taxa, which can be useful for binned data.
+#' @param x \code{(data.frame)}: Occurrence data.
+#' @param tax \code{(character)}: Column name of taxon names.
+#' @param bin \code{(character)}: Column name(s) of the discreet bin variable(s). If two column names are entered, then they will interpreted as minimum and maximum uncertainty (see examples) By default, time flows from lower to higher numbers. You can change this behavior by setting \code{revtime=FALSE}. Either a \code{bin} or \code{age} argument is mandatory. 
+#' @param age \code{(character)}: Column name(s) of the continuous age variable(s). If two column names are entered, then they will interpreted as the minimum and maximum age uncertainty. (see examples) By default, time flows from higher to lower numbers. You can change this behavior by setting \code{revtime=FALSE}. Either a \code{bin} or \code{age} argument is mandatory. 
+#' @param revtime \code{(logical)}: Should time be reversed? 
+#' @param na.rm \code{(logical)}: Should taxa that have no valid FADs or LADs (due to \code{NA} entries) be removed from the output?
+#' @param diffbin \code{(logical)}: Difference-based duration for discreet time (only applicabble to cases when \code{bin} is provided). If set to \code{TRUE}, single-interval taxa will \code{0} durations. Setting this argument to \code{FALSE} will add code{1} to the durations of all taxa.
 #' @examples 
 #' data(corals)
 #' 
@@ -27,44 +28,63 @@
 #'   flBinned <- fadlad(corals, tax="genus", bin="stg")
 #' 
 #' # using basic bin lengths
-#'   flDual <- fadlad(corals, tax="genus", bin=c("max_ma", "min_ma"), ages=TRUE)
+#'   flDual <- fadlad(corals, tax="genus", age=c("max_ma", "min_ma"))
 #'
 #' # single age esimate 
 #'   data(stages)
 #'   corals$mid <- stages$mid[corals$stg]
-#'   flSingle <- fadlad(corals, tax="genus", bin="mid", ages=TRUE)
+#'   flSingle <- fadlad(corals, tax="genus", age="mid")
 #' 
 #' 
 #' @rdname fadlad
 #' @export
-fadlad<-function(dat, tax, bin, ages=FALSE, na.rm=TRUE, zerodur=TRUE){
+fadlad<-function(x, tax, bin=NULL,age=NULL, revtime=FALSE, na.rm=TRUE, diffbin=TRUE){
 	# for the prototype
-#	dat <- corals
+#	x <- corals
 #	tax<- "genus"
 #	bin <- "stg"
-
-	# defense
-		if(!is.matrix(dat) & !is.data.frame(dat) ) stop("Invalid 'dat' argument.")
-		if(!tax%in%colnames(dat))stop("Invalid 'tax' argument.")
-		if(sum(bin%in%colnames(dat))!=length(bin)) stop("Invalid 'bin' argument(s).")
-		for(i in 1:length(bin)) if(!is.numeric(dat[,bin[i]])) stop("'bin' must be a numeric variable.")
+	# correct data?
+	if(!is.matrix(x) & !is.data.frame(x) ) stop("Invalid 'x' argument.")
 	
+	if(is.null(bin) & is.null(age)) stop("You need to provide either a 'bin' or an 'age' variable.")
+	if(!is.null(bin) & !is.null(age)){
+		warning("You provided both a 'bin' and an 'age' variable. Only 'bin' is used.")
+		age <- NULL
+	}
+	if(!tax%in%colnames(x))stop("Invalid 'tax' argument.")
+
+
+	# binned data
+	if(!is.null(bin)){
+		if(sum(bin%in%colnames(x))!=length(bin)) stop("Invalid 'bin' argument(s).")
+		for(i in 1:length(bin)) if(!is.numeric(x[,bin[i], drop=TRUE])) stop("'bin' must be a numeric variable.")
+		binned <- TRUE
+		time <- bin
+	# age data
+	}else{
+		if(sum(age%in%colnames(x))!=length(age)) stop("Invalid 'age' argument(s).")
+		for(i in 1:length(age)) if(!is.numeric(x[,age[i], drop=TRUE])) stop("'age' must be a numeric variable.")
+		binned <- FALSE
+		if(!diffbin) warning("The 'diffbin=FALSE' option was discarded, because 'age' was provided.")
+		time <- age
+		x[, time] <- -x[,time]
+	}
+
 	# demote the tax column to character
-		taxVar <- as.character(dat[,tax])
+		taxVar <- as.character(x[,tax, drop=TRUE])
 	
 	# coerce bin to matrix
-		binVar <- as.matrix(dat[,bin])
+		timeVar <- as.matrix(x[,time, drop=TRUE])
 
 	# are ages?
-	if(ages){
-		for(i in 1:length(bin)) binVar[,i] <- -binVar[,i]
+	if(revtime){
+		for(i in 1:length(time)) timeVar[,i] <- -timeVar[,i, drop=TRUE]
 	}
 	
-
 	# single iteration
-	tempFL<-tapply(INDEX=taxVar, X=1:nrow(dat), FUN=function(x){
+	tempFL<-tapply(INDEX=taxVar, X=1:nrow(x), FUN=function(w){
 		# taxon specific part
-		taxDat <- binVar[x,]
+		taxDat <- timeVar[w,]
 		
 		suppressWarnings(c(
 			min(taxDat, na.rm=T), 
@@ -82,16 +102,24 @@ fadlad<-function(dat, tax, bin, ages=FALSE, na.rm=TRUE, zerodur=TRUE){
 	colnames(fl) <- c("FAD", "LAD")
 		
 	# calculate durations
-		fl$duration <- abs(fl[,"FAD"]-fl[,"LAD"])
-		if(!zerodur){
+		fl$duration <- abs(fl[,"FAD", drop=TRUE]-fl[,"LAD", drop=TRUE])
+
+		# only for binned data, and when instructed!
+		if(!diffbin & binned){
 			fl$duration <- fl$duration+1
 		}
-		
+
+	# if ages are used, the default is to revert time
+	if(!binned){
+		fl$FAD <- -fl$FAD
+		fl$LAD <- -fl$LAD
+	}
+
 	# add the species names
 	rownames(fl)<- names(tempFL)
 		
 	if(na.rm){
-		fl<-fl[!is.na(fl[,"FAD"]),]
+		fl<-fl[!is.na(fl[,"FAD", drop=TRUE]),]
 	}
 	
 	if(any(""==rownames(fl))){
@@ -117,7 +145,7 @@ fadlad<-function(dat, tax, bin, ages=FALSE, na.rm=TRUE, zerodur=TRUE){
 #'
 #' Raup, D. M. (1978). Cohort analysis of generic survivorship. Paleobiology, 4(1), 1-15.
 #' 
-#' @param dat \code{(data.frame)} The data frame containing fossil occurrences.
+#' @param x \code{(data.frame)} The data frame containing fossil occurrences.
 #' 
 #' @param tax \code{(character)} The variable  name of the occurring taxa (variable type: \code{factor} or \code{character}).
 #' 
@@ -141,11 +169,11 @@ fadlad<-function(dat, tax, bin, ages=FALSE, na.rm=TRUE, zerodur=TRUE){
 #' for(i in 1:ncol(surv)) lines(stages$mid, surv[,i])
 #' 
 #' @export
-survivors<-function(dat, tax="genus", bin="stg", method="forward", noNAStart=FALSE,fl=NULL){
+survivors<-function(x, tax="genus", bin="stg", method="forward", noNAStart=FALSE,fl=NULL){
 	
 	# calculate FAD-LAD matrix first, if not provided
 	if(is.null(fl)){
-		fl <- fadlad(dat, tax, bin)
+		fl <- fadlad(x, tax, bin)
 	}else{
 		if(!"FAD"%in%colnames(fl) | !"LAD"%in%colnames(fl)) stop("Invalid FAD-LAD matrix.")
 	}
@@ -160,11 +188,11 @@ survivors<-function(dat, tax="genus", bin="stg", method="forward", noNAStart=FAL
 	
 	if(method=="forward"){
 		
-		sProbList<-sapply(inter, FUN=function(x){
+		sProbList<-sapply(inter, FUN=function(w){
 			# who are there?
-			bOrig <- fl$FAD<=x & x<=fl$LAD
+			bOrig <- fl$FAD<=w & w<=fl$LAD
 			original<-fl[bOrig,]
-			subVector <- x:max(inter)
+			subVector <- w:max(inter)
 			curSurv<-sapply(subVector, FUN=function(y){
 				return(sum(original$FAD<=y & y<=original$LAD))
 				
@@ -178,11 +206,11 @@ survivors<-function(dat, tax="genus", bin="stg", method="forward", noNAStart=FAL
 	
 	if(method=="backward"){
 		
-		sProbList<-sapply(inter, FUN=function(x){
+		sProbList<-sapply(inter, FUN=function(w){
 			# who are there?
-			bOrig <- fl$FAD<=x & x<=fl$LAD
+			bOrig <- fl$FAD<=w & w<=fl$LAD
 			original<-fl[bOrig,]
-			subVector <- min(inter):x
+			subVector <- min(inter):w
 			curSurv<-sapply(subVector, FUN=function(y){
 				return(sum(original$FAD<=y & y<=original$LAD))
 				

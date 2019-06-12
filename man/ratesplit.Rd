@@ -4,12 +4,12 @@
 \alias{ratesplit}
 \title{Test of rate split (selectivity)}
 \usage{
-ratesplit(dat, sel, tax = "genus", bin = "stg", rate = "pc",
+ratesplit(x, sel, tax = "genus", bin = "stg", rate = "pc",
   method = "AIC", AICc = TRUE, na.rm = TRUE, alpha = NULL,
   output = "simple")
 }
 \arguments{
-\item{dat}{\code{(data.frame)}: The fossil occurrence data.}
+\item{x}{\code{(data.frame)}: The fossil occurrence data.}
 
 \item{sel}{\code{(character)}: Variable name to do the splitting of the dataset. Can have only two levels.}
 
@@ -72,7 +72,7 @@ rs
 # display selectivity with points
 # select the higher rates
 selIntervals<-cbind(ddZ$oriPC[rs$ori], ddAZ$oriPC[rs$ori])
-groupSelector<-apply(selIntervals, 1, function(x) x[1]<x[2])
+groupSelector<-apply(selIntervals, 1, function(w) w[1]<w[2])
 # draw the points
 points(stages$mid[rs$ori[groupSelector]], ddAZ$oriPC[rs$ori[groupSelector]],
   pch=16, col="red", cex=2)

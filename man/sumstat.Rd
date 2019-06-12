@@ -4,11 +4,11 @@
 \alias{sumstat}
 \title{Occurrence database summary}
 \usage{
-sumstat(dat, tax = "genus", bin = "stg", coll = NULL, ref = NULL,
+sumstat(x, tax = "genus", bin = "stg", coll = NULL, ref = NULL,
   duplicates = NULL)
 }
 \arguments{
-\item{dat}{\code{(data.frame)}: The occurrence dataset.}
+\item{x}{\code{(data.frame)}: The occurrence dataset.}
 
 \item{tax}{\code{(character)}: The column name of taxon names.}
 

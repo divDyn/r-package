@@ -4,11 +4,11 @@
 \alias{cleansp}
 \title{Cleanse Species Name Vector}
 \usage{
-cleansp(vec, debug = FALSE, collapse = "_", subgenera = FALSE,
+cleansp(x, debug = FALSE, collapse = "_", subgenera = FALSE,
   misspells = TRUE, stems = TRUE)
 }
 \arguments{
-\item{vec}{\code{(character)}: the vector containing species names with qualifiers of open taxonomy.}
+\item{x}{\code{(character)}: the vector containing species names with qualifiers of open taxonomy.}
 
 \item{debug}{\code{(logical)}: \code{FALSE} will return the cleaned species name vector, \code{TRUE} returns a data table that allows one by one checking.}
 

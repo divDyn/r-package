@@ -10,7 +10,7 @@
 		\item{\code{period}}{The period containing the interval.}
 		\item{\code{epoch}}{The epoch containing the interval.}
 		\item{\code{X10_my_bin}}{The 10 million year time scale interval containing the interval.}
-		\item{\code{bin}}{Numeric identifier of the 10 million year interval in the \code{\link{bins}} object.}
+		\item{\code{ten}}{Numeric identifier of the 10 million year interval in the \code{\link{tens}} object.}
 		\item{\code{stage}}{The stage containing the interval.}	
 		\item{\code{stg}}{Numeric identifier of the interval in the stage-level time scale provided as \code{\link{stages}} object.}
 	}}

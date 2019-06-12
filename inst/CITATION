@@ -1,18 +1,18 @@
-citHeader("To cite divDyn in publications, use the following citation until the peer-reviewed article is published:")
+citHeader("To cite divDyn in publications, use the following citation:")
 
 citEntry(entry = "Article",
   title        = "The R package divDyn for quantifying diversity dynamics using fossil sampling data",
   author       = personList(as.person("Ádám T. Kocsis"),as.person("Carl J. Reddin"),as.person("John Alroy"),as.person("Wolfgang Kiessling")),
   journal      = "Methods in Ecology and Evolution",
   year         = "2019",
-  volume       = "",
-  number       = "",
-  pages        = "",
+  volume       = "10",
+  number       = "5",
+  pages        = "735-743",
   url          = " https://doi.org/10.1111/2041-210X.13161",
 
   textVersion  =
-  paste("Kocsis, Á.T., Reddin, C.J., Alroy, J. and Kiessling W. 2018",
+  paste("Kocsis, Á.T., Reddin, C.J., Alroy, J. and Kiessling W. 2019",
         "The R package divDyn for quantifying diversity dynamics using fossil sampling data. ",
-        "Methods In Ecology and EVolution,",
+        "Methods in Ecology and Evolution 10(5), 735-743",
         "https://doi.org/10.1111/2041-210X.13161")
 )

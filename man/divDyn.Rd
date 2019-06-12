@@ -4,18 +4,20 @@
 \alias{divDyn}
 \title{Time series from metrics of diversity dynamics}
 \usage{
-divDyn(dat, tax, bin, ages = FALSE, breaks = NULL,
-  coll = "collection_no", ref = "reference_no", om = NULL,
+divDyn(x, tax, bin = NULL, age = NULL, revtime = FALSE,
+  breaks = NULL, coll = NULL, ref = NULL, om = NULL,
   noNAStart = FALSE, data.frame = TRUE, filterNA = FALSE)
 }
 \arguments{
-\item{dat}{\code{(data.frame)} Fossil occurrence table.}
+\item{x}{\code{(data.frame)} Fossil occurrence table.}
 
 \item{tax}{\code{(character)} Variable name of the occurring taxa (variable type: \code{factor} or \code{character} - such as \code{"genus"}}
 
-\item{bin}{\code{(character)} Variable name of the bin numbers of the occurrences. This variable should be \code{numeric}.}
+\item{bin}{\code{(character)} Variable name of the discrete bin numbers of the occurrences. This variable should be \code{numeric}. Time flows from lower to higher values by default. Use \code{revtime} to reverse this order.}
 
-\item{ages}{\code{(logical)} Argument for setting the direction of time in \code{bin}. The default setting, \code{FALSE} will execute the function with higher numbers corresponding to later intervals. \code{TRUE} will reverse the direction of values in the \code{bins} variable, making originations extinctions and vice versa (use this for age input!, e.g 400 Ma, see examples).}
+\item{age}{\code{(character)} Variable name of the ages of the occurrences that will be sliced with the \code{slice} function using the intervals provided in \code{breaks}. This variable should be \code{numeric}. Time flows from higher to lower values by default. Use \code{revtime} to reverse this order.}
+
+\item{revtime}{\code{(logical)} Argument for reversing the default direction of time. Setting this argument to \code{TRUE} will make time flow from higher to lower values when \code{bin} is used, and from lower to higher values, when \code{age} is given. CAUTION: Failing to set this argument properly can make originations become extinctions and vice versa!}
 
 \item{breaks}{\code{(numeric)} If \code{NULL} (default) the used values in the \code{bin} variable will designate independent time slices that follow each other in succession. If a vector is provided, than the numeric entries in \code{bin} will be binned similarly to the \code{\link[graphics]{hist}} or \code{\link[base]{cut}} function. The order of elements in this vector is arbitrary.}
 
@@ -41,9 +43,9 @@ The following variables are produced:
 
 \code{tThrough}: Number of through-ranging taxa, taxa that have first occurrences before, and last occurrences after the focal bin.
 
-\code{tOri}: Number of originating taxa, taxa that have first occurrences in the focal bin, and last occurrences after.
+\code{tOri}: Number of originating taxa, taxa that have first occurrences in the focal bin, and last occurrences after it.
 
-\code{tExt}: Number of taxa getting extinct. These are taxa that have first occurrences before the focal bin, and last occurrences after it.
+\code{tExt}: Number of taxa getting extinct. These are taxa that have first occurrences before the focal bin, and last occurrences in it.
 
 \code{tSing}: Number of stratigraphic singleton (single-interval) taxa, taxa that only occur in the focal bin.
 
@@ -83,11 +85,11 @@ The following variables are produced:
 
 \code{divRT}: Range-through diversity (richness), all taxa in the interval, based on the range-through assumption. \emph{(tSing + tOri + tExt + tThrough)}.
 
-\code{sampRange}: Range-based sampling probability (Foote), \emph{(divSIB - tExt - tOri- t-Sing)/tThrough}
+\code{sampRange}: Range-based sampling probability, without observed range end-points (Foote), \emph{(divSIB - tExt - tOri- t-Sing)/tThrough}
 
 \code{samp3t}: Three-timer sampling completeness of Alroy (2008). \emph{t3/(t3+tPart)}
 
-\code{extGF}: Gap-filler extinction rates of Alroy(2014). \emph{log((t2u + tPart)/(t3+tPart+tGFd))}
+\code{extGF}: Gap-filler extinction rates of Alroy(2014). \emph{log((t2d + tPart)/(t3+tPart+tGFd))}
 
 \code{oriGF}: Gap-filler origination rates of Alroy(2014). \emph{log((t2u + tPart)/(t3+tPart+tGFd))}
 
@@ -123,16 +125,16 @@ Alroy, J. (2015) A more precise speciation and extinction rate estimator. Paleob
   lines(stages$mid, dd$divRT, lwd=2)
 
  # with omission of single reference taxa  
-   ddNoSing <- divDyn(corals, tax="genus", bin="stg", om="ref")
+   ddNoSing <- divDyn(corals, tax="genus", bin="stg", om="ref", ref="reference_no")
    lines(stages$mid, ddNoSing$divRT, lwd=2, col="red")
 
  # using the estimated ages (less robust) - 10 million years
    # mean ages
    corals$me_ma <- apply(corals[, c("max_ma", "min_ma")], 1, mean)
    # ages reverse the direction of time! set ages to TRUE in this case
-   ddRadio10 <- divDyn(corals, tax="genus", bin="me_ma", 
-	breaks=seq(250,0,-10), ages=TRUE)
-   lines(ddRadio10$bin, ddRadio10$divRT, lwd=2, col="green")
+   ddRadio10 <- divDyn(corals, tax="genus", age="me_ma", 
+	breaks=seq(250,0,-10))
+   lines(ddRadio10$me_ma, ddRadio10$divRT, lwd=2, col="green")
       
  # legend
    legend("topleft", legend=c("all", "no single-ref. taxa", "all, estimated ages"), 

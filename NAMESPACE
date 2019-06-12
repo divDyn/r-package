@@ -26,7 +26,9 @@ export(modeltab)
 export(fill)
 export(georange)
 export(tabinate)
-
+export(tsbars)
+export(repmatch)
+export(slice)
 
 importFrom("Rcpp", evalCpp)
 importFrom("grDevices", "col2rgb", "rgb")

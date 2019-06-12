@@ -1,10 +1,10 @@
 ---
-title: "Handout to the R package divDyn v0.7.1 for diversity dynamics using fossil sampling data"
+title: "Handout to the R package divDyn v0.8.0 for diversity dynamics using fossil sampling data"
 author: "Adam T. Kocsis, Carl J. Reddin, Wolfgang Kiessling"
 date: '`r Sys.Date()`'
 output: pdf_document
 vignette: >
-  %\VignetteIndexEntry{Handout to the R package divDyn v0.7.1 for diversity dynamics using fossil sampling data}
+  %\VignetteIndexEntry{Handout to the R package divDyn v0.8.0 for diversity dynamics using fossil sampling data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -17,20 +17,20 @@ library(divDyn)
 
 # 1. Introduction
 
-The purpose of this vignette is to guide users through the basic capabilities of the 'divDyn' package. Fossil occurrence databases, such as the Paleobiology Database (PaleoDB, http://www.paleobiodb.org/, http://fossilworks.org) are readily available to be used in analyses of diversity, extinction and origination patterns (the dynamics of biodiversity), with a certain toolkit that has become standard since the creation of the database. Until now, the implementation of most of these tools have been the responsibilities of individual researchers, with no software package to rely on. This R package intends to fill this gap. 
+The purpose of this vignette is to guide users through the basic capabilities of the ‘divDyn’ package. Fossil occurrence databases, such as the Paleobiology Database (PaleoDB, http://www.paleobiodb.org/, http://fossilworks.org) are readily available to be used in analyses of diversity, extinction and origination patterns (the dynamics of biodiversity), with a certain toolkit that has become standard since the creation of the database. Until now, the implementation of most of these tools have been the responsibilities of individual researchers, with no software package to rely on. This R package intends to fill this gap. 
 
 ## 1.1. Installation
 
 To install this beta version of the package, you must download it either from the CRAN servers or its dedicated GitHub repository (http://www.github.com/divDyn/r_package/). All minor updates will be posted on GitHub as soon as they are finished, so please check this regularly. The version on CRAN will be lagging for some time, as it takes the servers many days to process everything and updates are expected to be frequent. All questions should be addressed to Adam Kocsis, the creator and maintainer of the package (adam.kocsis@fau.de). 
-Instead of spending it on actual research, a tremendous amount of time was invested in making this piece of software useable and user-friendly. If you use a method implemented in the package in a publication, please cite both its reference(s) and the 'divDyn' package itself (Kocsis et al. 2019).
+Instead of spending it on actual research, a tremendous amount of time was invested in making this piece of software useable and user-friendly. If you use a method implemented in the package in a publication, please cite both its reference(s) and the ‘divDyn’ package itself (Kocsis et al. 2019).
 
 # 2. Necessary Data
 
-Most functionality in the 'divDyn' package assumes that the time dimension is broken down to discrete intervals. Accordingly, most functions are built on two fundamental data structures: a time scale table and an occurrence dataset. 
+Most functionality in the ‘divDyn’ package assumes that the time dimension is broken down to discrete intervals. Accordingly, most functions are built on two fundamental data structures: a time scale table and an occurrence dataset. 
 
 ## 2.1. Time scales
 
-The workflow presented here is based on the discretization of geological time, which is constrained by stratigraphy. These intervals of time (bins) represent the basic units of the analysis, and their sequence is coded in the time scale table. Even if we develop a geological model that outputs robust estimates in a continuous time axis, the calculation of metrics presented in the package will require discretization. We added implementations of the basic functionalities for continuous time (chapter '4.3. Slicing') as well, but we do not deem it as reliable as using stratigraphic bins for million-year-scale, deep-time analyses. As age estimates are dependent on the different geological 'time scales', binning the data can change more than necessary, which can have random effects on the resulting series. 
+The workflow presented here is based on the discretization of geological time, which is constrained by stratigraphy. These intervals of time (bins) represent the basic units of the analysis, and their sequence is coded in the time scale table. Even if we develop a geological model that outputs robust estimates in a continuous time axis, the calculation of metrics presented in the package will require discretization. We added implementations of the basic functionalities for continuous time (chapter ‘4.3. Slicing’) as well, but we do not deem it as reliable as using stratigraphic bins for million-year-scale, deep-time analyses. As age estimates are dependent on the different geological ‘time scales’, binning the data can change more than necessary, which can have random effects on the resulting series. 
 
 In order to demonstrate the workflow of binned analyses, we added an example table to the package. This table represents a somewhat altered form (see below) of the stage-level geological time scale of Ogg et al. (2016). You can attach this table using the ``data()`` function. 
 
@@ -56,7 +56,7 @@ tsplot(stages, boxes="system", shading="stage", xlim=59:81)
 ```
 
 The function was designed to enable the highest level of customization. You can customize the distribution of plotting area with the ``xlim`` (accepts exact ages and sequences of bins, see the examples), ``ylim``, ``prop`` and ``gap`` arguments, and the color of the shading.  You can also customize the characteristics of the general plotting (calling ``plot()``, the boxes of time slices (calling ``rect()``) and the labels within them (calling  the ``text()`` function). You can directly control the arguments of these functions that ``tsplot()`` uses to draw the elements of the timescale by adding the additional arguments as lists to the ``plot.args``, ``boxes.args`` and ``labels.args`` arguments.  
-For instance, if you want your boxes to feature red italic fonts as labels, just add col="red", and font=3 the way you would regularly use them with the text() function, but wrap them up in a list, and assign it to the 'labels.args' argument:
+For instance, if you want your boxes to feature red italic fonts as labels, just add col="red", and font=3 the way you would regularly use them with the text() function, but wrap them up in a list, and assign it to the ‘labels.args’ argument:
 
 ```{r tsplot3, echo= TRUE, plot=TRUE, fig.height=5.5}
 tsplot(stages, boxes="sys", shading="series", 
@@ -83,7 +83,7 @@ tsplot(stages, boxes=c("short","system"), shading="short",
   labels.args=list(list(cex=0.5),list(cex=1)),
   boxes.args=list(list(),list(density=80)))
 ```
-Naturally, you can use other time scale plotting packages such as the 'geoscale' package developed by J. Bell (2015). These work great for Phanerozoic scale analyses, but be sure to check the compatibility of the time scale you use for the binning and the time scale used for plotting. As we have experience with problems that stemmed from the incompatibility of analyzing and plotting data, we recommend using your own timescale for plotting. 
+Naturally, you can use other time scale plotting packages such as the ‘geoscale’ package developed by J. Bell (2015). These work great for Phanerozoic scale analyses, but be sure to check the compatibility of the time scale you use for the binning and the time scale used for plotting. As we have experience with problems that stemmed from the incompatibility of analyzing and plotting data, we recommend using your own timescale for plotting. 
 
 ## 2.2. Occurrence table
 
@@ -111,8 +111,12 @@ In order to demonstrate most capabilities of the package we have added a fossil 
 ```{r corDat, echo= TRUE}
 data(corals)
 ```
+```{r tibbleOrNot, echo= FALSE, eval=FALSE}
+library(tibble)
+corals <- as_tibble(corals)
+```
 
-This dataset was resolved to the 10 my timescale of the PaleoDB (``BIN``, now only available through FossilWorks) and the stage-level time scale (variable ``stg``) that is included in the package (see Section 2.1, ``stages``). 
+This dataset was resolved to the 10 my timescale of the PaleoDB (``ten``, now only available through FossilWorks) and the stage-level time scale (variable ``stg``) that is included in the package (see Section 2.1, ``stages``). 
 This latter is the basis of all inference and plotting. The values of the ``stg`` column of the coral table refers to entries in the ``num`` column of the ``stages`` table. Please note that this dataset does not include Holocene occurrences. The occurrences designated with ``stg==95`` are just single entries that include extant genera; therefore all other entries of this subset are missing, except for the variables linked to the taxa. The rest of the occurrences represent actual fossils.
 
 ```{r fossils, echo= TRUE, results=TRUE}
@@ -124,7 +128,7 @@ nrow(fossils)
 # 3. Basic patterns
 
 ## 3.1. Ranges  
-We can gain preliminary knowledge by examining the basic patterns of the stratigraphic ranges. Probably the most apparent of these are the stratigraphic ranges of the taxa, which can be easily summarized in the FAD-LAD matrix:
+We can gain preliminary knowledge by examining the basic patterns of the stratigraphic ranges . Probably the most apparent of these are the stratigraphic ranges of the taxa, which can be easily summarized in the FAD-LAD matrix:
 
 ```{r fadlad, echo= TRUE, results=FALSE }
 fl <- fadlad(fossils, bin="stg", tax="genus")
@@ -200,7 +204,7 @@ tsplot(stages, shading="series", boxes="sys", xlim=c(260,0),
 for(i in 1:ncol(surv)) lines(stages$mid, surv[,i])
 ```
 
-The values shown here are also called 'forward' survivorship proportions, but you can also plot the 'backward' survivorships to see how certain cohorts emerge over geologic time, by setting the ``method`` argument of the survivors() function appropriately: 
+The values shown here are also called ‘forward’ survivorship proportions, but you can also plot the ‘backward’ survivorships to see how certain cohorts emerge over geologic time, by setting the ``method`` argument of the survivors() function appropriately: 
 
 ```{r survTsplot2, echo=FALSE, plot=TRUE, fig.height=5.5}
 survFor<-survivors(corals, tax="genus", bin="stg", method="backward")
@@ -234,9 +238,9 @@ This includes the total number of occurrences, collections, references and stati
 samp <-binstat(fossils, tax="genus", bin="stg", 
   coll="collection_no", ref="reference_no")
 ```
-The message above indicates that multiple entries of the same genus are present in the same collections. As this is a species-level occurrence dataset, this is understandable. By default, these entries are omitted from the calculations above, but you can toggle this manually by setting the ``duplicates`` argument of binstat() accordingly (``TRUE`` will keep the duplicates, ``FALSE`` will omit them - without notification). 
+The message above indicates that multiple entries of the same genus are present in the same collections. As this is a species-level occurrence dataset, this is understandable. By default, these entries are omitted from the calculations above, but you can toggle this manually by setting the ``duplicates`` argument of binstat() accordingly (``TRUE`` will keep the duplicates, ``FALSE`` will omit them – without notification). 
 
-The function calculates the basic bin-wise statistics that do not require multi-bin pattern recognition (for instance for Alroy's (2008) three-timer sampling completeness, which is output by the ``divDyn()`` function). Optionally, additional metrics implemented in the ``indices()`` function can be applied to information in every bin, by adding ``indices=TRUE`` to the function call. 
+The function calculates the basic bin-wise statistics that do not require multi-bin pattern recognition (for instance for Alroy’s (2008) three-timer sampling completeness, which is output by the ``divDyn()`` function). Optionally, additional metrics implemented in the ``indices()`` function can be applied to information in every bin, by adding ``indices=TRUE`` to the function call. 
 
 ```{r binstatInd, echo=TRUE, result=FALSE}
 samp <-binstat(fossils, tax="genus", bin="stg", 
@@ -259,7 +263,7 @@ lines(stages$mid[1:94], samp$occs)
   mtext(4, text="number of collections", col="blue", line=2)
 ```
 
-The ``binstat()`` function also calculates other basic statistics such as the numbers of references, sampled taxa, single-collection taxa, single-reference taxa, double collection and double reference taxa along with the sampling coverage estimator Good's *u* (1953), the coverage estimator suggested by Alroy (*u' *, 2010) that is based on the number of single-reference taxa.
+The ``binstat()`` function also calculates other basic statistics such as the numbers of references, sampled taxa, single-collection taxa, single-reference taxa, double collection and double reference taxa along with the sampling coverage estimator Good’s *u* (1953), the coverage estimator suggested by Alroy (*u’ *, 2010) that is based on the number of single-reference taxa.
 
 
 ### 3.2.2. Plotting of counts and proportions
@@ -301,14 +305,14 @@ legend("bottomleft", inset=c(0.01, 0.1),
 
 ### 3.2.3. Single-collection and single reference taxa
 
-Single-interval taxa were thought to be byproducts of temporary increases of sampling intensity (Foote and Raup, 1996) in range-based datasets such as Sepkoski's compendium (2002). This phenomenon urged researchers to develop metrics that ignore these taxa in calculating metrics of biodiversity and evolution.
+Single-interval taxa were thought to be byproducts of temporary increases of sampling intensity (Foote and Raup, 1996) in range-based datasets such as Sepkoski’s compendium (2002). This phenomenon urged researchers to develop metrics that ignore these taxa in calculating metrics of biodiversity and evolution.
 Single-collection taxa can be quickly omitted from the datasets by using the ``omit()`` function. This will return a logical vector, indicating the rows that should be omitted. The ``om`` argument can be set either to omit the single-collection occurrences (``om="coll"``). Single-reference taxa can be omitted in the same way, although the term needs additional clarification if multiple bins exist. 
 Taxa that were only described in a single reference (``om="ref"``). Some taxa appear in multiple bins and in each of them they are described by only one reference. These you can omit with ``om="binref"``.
 
 ```{r omit, echo=TRUE, result=TRUE}
-omitColl <- omit(corals, bin="stg", tax="genus", om="coll")
-omitRef <- omit(corals, bin="stg", tax="genus", om="ref")
-omitBinref <- omit(corals, bin="stg", tax="genus", om="binref")
+omitColl <- omit(corals, tax="genus", om="coll", coll="collection_no")
+omitRef <- omit(corals, tax="genus", om="ref", ref="reference_no")
+omitBinref <- omit(corals, bin="stg", tax="genus", om="binref", ref="reference_no")
 # the conserved number of occurrences will be
 sum(!omitColl)
 sum(!omitRef)
@@ -326,7 +330,7 @@ ddFirst<-divDyn(corals, bin="stg", tax="genus", noNAStart=TRUE)
 
 The output of the ``divDyn()`` function is a ``data.frame`` class object that contains values for each bins in rows. The first column (``bin`` variable) contains the bin identifiers. The rest of the variables are explained in the documentation. 
 
-## 4.1. Diversity (taxonomic richness)
+## 4.1. Diversity (taxonomic richness) with discrete time input
 You read this because you have interests in the changes of diversity. Calculating time series of diversity does not require additional action than running the basic ``divDyn()`` function.   
 
 ### 4.1.1.Taxon counts
@@ -346,7 +350,7 @@ ddRec <-divDyn(corals, bin="stg", tax="genus")
   lines(stages$mid, ddRec$divRT, col="black", lwd=2)
 ```
 
-This plot shows the trajectory of coral diversity over the post-Permian interval, using raw data and the range-through diversity metric. Besides the 0 values at the start of the time series (no sampled corals), you might also notice a sharp increase of richness in the latest intervals. This could be the result of an effect called the 'Pull of the Recent'. The 'Pull of the Recent' (Raup, 1979) is a smearing phenomenon that arises when range-based methods are calculated from datasets where sampling probability changes abruptly. As we know the Recent much better in comparison to other intervals (sampling probability is much higher, around one), the number of ranges that connect first occurrences of taxa to the extant time interval (``stg == 95``) is much higher than those that link two non-Recent time intervals. The results in spur of diversity as the Recent is approached. On the other hand, omitting the recent interval (effectively decreasing sampling probability to 0) leads to edge effects that result in the opposite phenomenon. The discrepancy between these two approaches can be visualized by the omission of the recent 'occurrences':
+This plot shows the trajectory of coral diversity over the post-Permian interval, using raw data and the range-through diversity metric. Besides the 0 values at the start of the time series (no sampled corals), you might also notice a sharp increase of richness in the latest intervals. This could be the result of an effect called the ‘Pull of the Recent’. The ‘Pull of the Recent’ (Raup, 1979) is a smearing phenomenon that arises when range-based methods are calculated from datasets where sampling probability changes abruptly. As we know the Recent much better in comparison to other intervals (sampling probability is much higher, around one), the number of ranges that connect first occurrences of taxa to the extant time interval (``stg == 95``) is much higher than those that link two non-Recent time intervals. The results in spur of diversity as the Recent is approached. On the other hand, omitting the recent interval (effectively decreasing sampling probability to 0) leads to edge effects that result in the opposite phenomenon. The discrepancy between these two approaches can be visualized by the omission of the recent ‘occurrences’:
 
 ```{r ddFossils, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5}
 # metrics
@@ -378,7 +382,7 @@ dd <-divDyn(fossils, bin="stg", tax="genus")
     col=c("red", "blue",   "green"), lwd=c(2,2,2), bg="white")
 ```
 
-Although range-interpolation does not bias the 'SIB' metric, it is more affected by changes of sampling intensity sampling. The three-timer sampling completeness is an effective expression of changes in sampling (``samp3t`` variable):
+Although range-interpolation does not bias the ‘SIB’ metric, it is more affected by changes of sampling intensity sampling. The three-timer sampling completeness is an effective expression of changes in sampling (``samp3t`` variable):
 
 ```{r samp3t, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5}
 # basic plot
@@ -388,7 +392,7 @@ Although range-interpolation does not bias the 'SIB' metric, it is more affected
   lines(stages$mid[1:94], dd$samp3t, col="black", lwd=2)
 ```
 
-The SIB series can be partially corrected by the three-timer sampling-completeness (Alroy §ref). Although this can be a convenient correction it also increases the estimation error. Nevertheless, this is the least biased estimator for diversity. 
+The SIB series can be partially corrected by the three-timer sampling-completeness (Alroy §ref ). Although this can be a convenient correction it also increases the estimation error. Nevertheless, this is the least biased estimator for diversity. 
 
 ```{r ddCorr, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5}
 # basic plot
@@ -402,7 +406,7 @@ The SIB series can be partially corrected by the three-timer sampling-completene
 ```
 The ``omit()`` function is also embedded in the ``divDyn()`` function, so that the metrics are calculated after the omission of poorly sampled taxa (switched off by default). You can add this filter, by adding (the appropriate ``om`` arguments to the ``divDyn()`` function call.
 
-## 4.2. Taxonomic rates
+## 4.2. Taxonomic rates with discrete time input
 
 Analyzing time series of originations and extinctions helps us to describe not just how diversity changed over time, by also why it changed. With taxonomic rates we can decompose changes in diversity to the relative contribution of cladogenetic processes (i.e. origination, the birth of a new taxon) and that of the disappearance of taxa (i.e. extinction, the death of a taxon). In the discrete time model, the most straightforward way to express these contributions is through simple exponential decay models (Raup, 1985). 
 For convenience, these variables are named as ``extTYPE`` and ``oriTYPE`` for extinction and origination rates, respectively. 
@@ -425,15 +429,15 @@ In the package, the proportional rates (``extProp`` and ``oriProp``) and per cap
 
 The documentation of the function (type in console ?divDyn) contains the formulas for the calculation of the rates. With heterogeneous, incomplete sampling the metrics have different properties that can be summarized as follows:
 
-* Proportional 'rates': These metrics express what proportion of the cohort of taxa disappears until the new interval.  
+* Proportional ‘rates’: These metrics express what proportion of the cohort of taxa disappears until the new interval.  
 
 * The per capita rates of Foote (1999) use the range-through assumption to establish ranges for the taxa in the dataset. The rate value expresses what proportion of the taxa decayed until the end of the interval.  The method is biased by the Signor-Lipps effect and edge effects (Foote 2000).
 
-* The 'three-timer' and 'corrected three-timer' rates (Alroy, 2008) are different estimators of the per capita rates but will converge on them when sampling tends to completeness. They use moving windows around the focal interval to select data that is more relevant to the focal interval. This metric is unbiased by the Signor-Lipps and edge effects. The three-timer sampling completeness can be used to correct this metric, but it will not improve its susceptibility to random sampling error. 
+* The ‘three-timer’ and ‘corrected three-timer’ rates (Alroy, 2008) are different estimators of the per capita rates but will converge on them when sampling tends to completeness. They use moving windows around the focal interval to select data that is more relevant to the focal interval. This metric is unbiased by the Signor-Lipps and edge effects. The three-timer sampling completeness can be used to correct this metric, but it will not improve its susceptibility to random sampling error. 
 
-* The 'gap-filler' rates (Alroy, 2014): gap-filler extinction rates are improved versions of the three-timer rates, using four-bin moving windows instead of three. This makes the rates less resistant to random error (more taxa are recognized by the categorizing procedure) and are an improvement on the three-timer rates. The method sometimes results in the seemingly nonsensical negative extinction rates, when the true extinction rates are near 0.
+* The ‘gap-filler’ rates (Alroy, 2014): gap-filler extinction rates are improved versions of the three-timer rates, using four-bin moving windows instead of three. This makes the rates less resistant to random error (more taxa are recognized by the categorizing procedure) and are an improvement on the three-timer rates. The method sometimes results in the seemingly nonsensical negative extinction rates, when the true extinction rates are near 0.
 
-* The 'second-for-third' rates (Alroy, 2015) are further improvement of ideas the three-timer and gap-filler rates represent.  By adding an algorithmic approach the frequency of negative extinction rates are further decreased. Extinction and origination proportions described by Alroy (2015) can also be used (``E2f3`` and ``O2f3``, respectively).
+* The ‘second-for-third’ rates (Alroy, 2015) are further improvement of ideas the three-timer and gap-filler rates represent.  By adding an algorithmic approach the frequency of negative extinction rates are further decreased. Extinction and origination proportions described by Alroy (2015) can also be used (``E2f3`` and ``O2f3``, respectively).
 
 
 ### 4.2.2. Selectivity testing for the per capita rates
@@ -541,58 +545,69 @@ The ``combine`` method will employ both schemes for testing, but with the defaul
 
 Naturally the ``ratesplit()`` function can return the *p*-values of the binomial tests and the Akaike weights by setting the ``output`` argument to ``"full"`` .
 
-## 4.3. Slicing
-The term slicing refers to the discretization of continuous time. The added option to use a time variable that contains real values allows users to use different data to express the passing of time.  This addition enables the application of the basic function to examples of high temporal resolution, where time is close to continuous, or samples in relative time such as expressed by meters within the section. 
+## 4.3. Diversity dynamics with age input
+The added option to use a time variable that contains real values allows users to use different data to express the passing of time.  This addition enables the application of the basic function to examples of high temporal resolution, where time is close to continuous, or samples in relative time such as expressed by meters within the section. 
 
-### 4.3.1. Unique bin values
+### 4.3.1. Using the ``bin`` argument – unique values code intervals
 
-In the case of the coral dataset, we can try this numerical binning approach by assigning the estimated age mid points to the occurrences. This is a very 'dirty' way of treating occurrence data as the assumed uncertainty of the age estimate is practically reduced to 0, and overlapping intervals that express uncertainty will have different assigned bins.
+In the case of the coral dataset, we can try this numerical binning approach by assigning the estimated age mid points to the occurrences. This is a very ‘dirty’ way of treating occurrence data as the assumed uncertainty of the age estimate is practically reduced to 0, and overlapping intervals that express uncertainty will have different assigned bins.
 
 ```{r ddMid, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5}
 fossils$mid_ma<- apply(fossils[,c("max_ma","min_ma")], 1, mean)
 ```
 
-If this column is set as the ``bin`` argument, then occurrences will be treated to represent the same time interval that have the same value in this column. The entries will be ordered by the function, but beware that in physical systems time flows from smaller values to larger values. This means that the ages estimates have to be inversed additively, otherwise extinctions become originations and vice versa.
-
-```{r ddNegMid, echo=TRUE, result=FALSE }
-fossils$mid_ma<- - fossils$mid_ma 
-```
-
-Now the variable is ready to be used by the ``divDyn()`` function.
+If this column is set as the ``bin`` argument, then occurrences will be treated to represent the same time interval that have the same value in this column. The entries will be ordered by the function.
+Similarly to physical systems time is assumed to flow from lower to larger values when it is provided as the **``bin``** argument. This means that **time has to be reversed, otherwise extinctions become originations and vice versa**. You can toggle this by setting ``revtime=TRUE``. 
 
 ```{r ddID, echo=TRUE, result=FALSE }
-ddIDbin <- divDyn(fossils, tax="genus", bin="mid_ma")
+ddIDbin <- divDyn(fossils, tax="genus", bin="mid_ma", revtime=TRUE)
 ```
 
 Please note that this is example is for illustration purposes only. As there are too many unique entries in this ``bin`` variable, with the corals, this resolution will be too high to produce potentially meaningful patterns. Range-through diversities are possibly the closest to reality with this method. 
-With this type of binning, the ``bin`` variable of the ``divDyn`` output contains the ages for the bins, which you can use for plotting (beware the negative values, plotting requires positive ones!)
+With this type of binning, the first variable of the ``divDyn`` output (name specified in ``bin``) contains the ages for the bins, which you can use for plotting.
 
 ```{r ddBasic, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5}
 # basic plot
   tsplot(stages, shading="series", boxes="sys", xlim=52:95,
     ylab="Diversity, range-through", ylim=c(0,300))
-  lines(-ddIDbin$bin, ddIDbin$divRT, col="black", lwd=2)
+  lines(ddIDbin$mid_ma, ddIDbin$divRT, col="black", lwd=2)
   lines(stages$mid[1:94], dd$divRT, col="red", lwd=2)
 legend("topleft", legend=c("unique mid entries",  "stg stages"),
   col=c("black", "red"), lwd=c(2,2), bg="white")
 ```
 
-### 4.3.2. Real numbers, sliced bins
+### 4.3.2. Slicing: ``slice()`` and the ``age`` argument of ``divDyn()``
 
-A potentially more promising solution is to assign the occurrences that go along a continuous time scale to regularly spaced bins. To achieve this discretization, you have to supply a numeric vector to the ``breaks`` argument of the ``divDyn()`` function. The entries in this vector will represent the breakpoints or boundaries of the interval, similarly to the ``breaks`` argument of the ``cut()`` or ``hist()`` function in the base R distribution. For the sake of simplicity, let's try a 10 million year bin resolution. Keep in mind that the ages are still negative values!
+The term slicing refers to the discretization of continuous time. A potentially more promising solution is to assign the occurrences that go along a continuous time scale to regularly spaced bins. However, we have to keep the direction of time in mind: age values decrease as time passes by.
+This is achieved with the ``slice()`` function, that can also produce a time scale object, similarly to the ``stages`` ``data.frame``. This function converts a continuous time vector to positive integers. To achieve this, you have to supply a numeric vector to the ``breaks`` argument function. The entries in this vector will represent the breakpoints or boundaries of the interval, similarly to the ``breaks`` argument of the ``cut()`` or ``hist()`` function in the base R distribution. For the sake of simplicity, let’s try a 10 million year bin resolution. 
+```{r slicing, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5}
+# resolve time
+  breakPoints <- seq(270, 0, -10)
+sliTen <- slice(fossils$mid_ma, breaks=breakPoints, ts=TRUE)
+str(sliTen)
+```
+The first element of the output list (``$slc``) is the discretized version of the original vector, with reversed time: in the original vector it was flowing from higher to lower values, whereas in ``$slc `` time flows from lower to higher values. The second element is the time scale object that is synthesized from the given ``breaks``. It also has an ``$slc`` column that reflects the connection between the age estimates and the slice numbers. This output can be used to run the ``divDyn()`` function and to visualize the results
+
+```{r slicedd, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5}
+# assign new column to the data frame
+fossils$slc <- sliTen$slc
+# run divDyn with the new column
+  auto10<-divDyn(fossils, tax="genus", bin="slc")
+  auto10$divRT
+```
+Note, that the rows of the divDyn() output are aligned with the rows of the ``slice()`` output `` sliTen$ts``. The results are practically identical to when you do the binning automatically with the ``age`` argument of the ``divDyn()`` function. 
 
 ```{r dd10, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5}
-# resolve time
-  breakPoints <- seq(-270, 0, 10)
 # and calculate diversity dynamics
-  ddMid10<-divDyn(fossils, tax="genus", bin="mid_ma", breaks=breakPoints)
+  ddMid10<-divDyn(fossils, tax="genus", age="mid_ma", breaks=breakPoints)
+  ddMid10$divRT
 ```
 
-In this case, the ``bin`` variable of the output will contain the mid ages of the bins. Do not worry about setting the exact values for the start and end of the age ranges. If no data occurs in the outlined bins, then the corresponding rows in the table will be empty. 
+In this case, the ``age`` variable of the output will contain the mid ages of the discrete intervals. Do not worry about setting the exact values for the start and end of slicing (``270`` and ``0`` in the example above). If no data occurs in the outlined bins, then the corresponding rows will be empty in the table. 
 
 ```{r dd10Show, echo=TRUE, eval=FALSE}
 # lines  
-lines(-ddMid10$bin, ddMid10$divRT, col="blue", lwd=2)
+lines(ddMid10$mid_ma, ddMid10$divRT, col="blue", lwd=2)
 # new legend
 legend("topleft", legend=c("age estimates, 10MY",  
   "stg stages", "unique mid entries"), col=c("blue", "red", "black"),
@@ -603,14 +618,19 @@ legend("topleft", legend=c("age estimates, 10MY",
 # basic plot
   tsplot(stages, shading="series", boxes="sys", xlim=52:95,
     ylab="Diversity, range-through", ylim=c(0,300))
-  lines(-ddIDbin$bin, ddIDbin$divRT, col="black", lwd=2)
+  lines(ddIDbin$mid_ma, ddIDbin$divRT, col="black", lwd=2)
   lines(stages$mid[1:94], dd$divRT, col="red", lwd=2)
-  lines(-ddMid10$bin, ddMid10$divRT, col="blue", lwd=2)
+  lines(ddMid10$mid_ma, ddMid10$divRT, col="blue", lwd=2)
    legend("topleft", legend=c("age estimates, 10MY",  
     "stg stages", "unique mid entries"), 
     col=c("blue", "red", "black"), lwd=c(2,2,2), bg="white")
 ```
-This is fairly close to the stratigraphically constrained time series. 
+
+### 4.3.3. Summary – about slicing and the direction of time
+
+It is better practice to use discretized time for analyses, as the nature of the data supports it better. Interval names are more conservative than age estimates that tend to vary with the evolving geologic timescale, whereas the stratigraphic positions of fossils barely change. In case you only have age estimates, I recommend to bin them separately first with the ``slice()`` function, rather than using the ``age`` argument of the ``divDyn()`` function. The integer bins can be used in any procedures, such as selectivity testing and subsampling, and you get better control over your calculations. 
+
+When time is fed to the ``divDyn`` function with its ``bin`` argument, it will assume by default that you are using discrete bins, with identifiers that increase as time passes by. On the other hand, using the ``age`` argument will assume that you use ages, with identifiers that decrease with flow of time. As the ``slice()`` function is designed to process age data, the way it handles time is similar to the ``age`` argument of the ``divDyn()`` function. You can override the default behavior in all by setting ``revtime=TRUE``. **In short: ``bin`` uses forward time, while ``age`` and ``slice()`` use  backward time. **
 
 ## 4.4. Origination and extinction dates in binary response variables
 
@@ -661,18 +681,18 @@ cor.test(dd$divRT, sam$occs, method="spearman")
 cor.test(dd$divSIB, sam$occs, method="spearman")
 ```
 
-Sampling standardization allows the researcher to answer the question: would the patterns change, if sampling was homogeneous over time? There are two ways to answer this question: extrapolation and interpolation. Extrapolation methods try to infer on information we do not have. Interpolation methods, on the other hand, omit information to make sampling intensity comparable. The latter are more frequently employed in the paleontological context, and is usually referred to as 'subsampling', while the former has more robust applications when sampling is already quite extensive.
+Sampling standardization allows the researcher to answer the question: would the patterns change, if sampling was homogeneous over time? There are two ways to answer this question: extrapolation and interpolation. Extrapolation methods try to infer on information we do not have. Interpolation methods, on the other hand, omit information to make sampling intensity comparable. The latter are more frequently employed in the paleontological context, and is usually referred to as ‘subsampling’, while the former has more robust applications when sampling is already quite extensive.
 Beware: as subsampling omits information, the result gained by subsampling is not an unequivocal substitute to the raw patterns, but rather their confirmation!
 
 ### 5.1.2. The formal representation of subsampling
 
 Although rarefaction is defined as a deterministic estimator, due to the advancement of computational speed, recent implementations of the process use Monte Carlo estimation to get expected results of the subsampling procedure. This just means that a random subset of a given size is taken from the data, the desired statistic (e.g. taxonomic richness) is calculated, and these steps are iterated. The omission of information effectively simulates lower levels of sampling (but conditioned on the realized sampling).
 
-This general question 'what would the pattern would be like?' is not specific to estimators of richness, but is generalizable to all other statistics that depend on sampling intensity. If the result of this estimator (*Res*) is dependent on the information from the time slice, it is essentially just a function *f* of the data (*D*) at hand with potential additional arguments *argF*:
+This general question ‘what would the pattern would be like?’ is not specific to estimators of richness, but is generalizable to all other statistics that depend on sampling intensity. If the result of this estimator (*Res*) is dependent on the information from the time slice, it is essentially just a function *f* of the data (*D*) at hand with potential additional arguments *argF*:
 
 $$Res= f(D, argF).$$
 
-The same metric can be calculated by using the subsampled data in the time slice, but first we have to calculate this set with the subsampling procedure. This is just another function g that outputs a subset of the input dataset, to which we will refer to as the 'trial dataset':
+The same metric can be calculated by using the subsampled data in the time slice, but first we have to calculate this set with the subsampling procedure. This is just another function g that outputs a subset of the input dataset, to which we will refer to as the ‘trial dataset’:
 
 $$sub = g(D, argD)$$
 
@@ -692,13 +712,13 @@ As the trial result is the manifestation of the randomness in procedure g it has
 
 ## 5.2. Basic arguments
 
-Some arguments must be provided in order to make the function run. These will be demonstrated with the simplest, Classical Rarefaction method (CR, Raup, 1975). All other subsampling methods (see section '5.4. Different Subsampling Types) use these input parameters, but most of them will require additional arguments. 
-In all cases, you will have to specify the input dataset, the column containing the categories (taxon names) and the binning variable, by which the data will be dissected to run the subsampler function. These are the ``dat``, ``tax``, and ``bin`` arguments, respectively. As the function is expected to be used on Paleobiology Database data, the duplicates argument (see section below on this argument) is set to ``FALSE`` by default for quicker use in these cases. This necessitates the 'coll' argument that defines the column name of the collection identifiers, which is set to the database default ``collection_no``. This variable designates samples in the occurrence dataset. If you do not have such samples, then set the duplicates argument to TRUE, which makes it possible to run the function without such a variable.
+Some arguments must be provided in order to make the function run. These will be demonstrated with the simplest, Classical Rarefaction method (CR, Raup, 1975). All other subsampling methods (see section ‘5.4. Different Subsampling Types) use these input parameters, but most of them will require additional arguments. 
+In all cases, you will have to specify the input dataset, the column containing the categories (taxon names) and the binning variable, by which the data will be dissected to run the subsampler function. These are the ``x``, ``tax``, and ``bin`` arguments, respectively. As the function is expected to be used on Paleobiology Database data, the duplicates argument (see section below on this argument) is set to ``FALSE`` by default for quicker use in these cases. This necessitates the ‘coll’ argument that defines the column name of the collection identifiers, which is set to the database default ``collection_no``. This variable designates samples in the occurrence dataset. If you do not have such samples, then set the duplicates argument to TRUE, which makes it possible to run the function without such a variable.
 
 
 ### 5.2.1. Subsampling level
 
-The only other mandatory input is the 'level' of subsampling, which can be specified using the ``q`` argument. The exact nature of this value is dependent on the subsampler function (see section 'Different Subsampling Methods'), but in general it expresses sampling intensity. For the CR subsampling method, this argument represents the subsampling quota, the desired number of occurrences in the 'trial datasets'. Increasing values will result in increasingly higher sampled diversities. The 'q' argument cannot be negative. With the subsampling quota of 40 and 60 occurrences the function outputs the following results for the coral dataset:
+The only other mandatory input is the ‘level’ of subsampling, which can be specified using the ``q`` argument. The exact nature of this value is dependent on the subsampler function (see section ‘Different Subsampling Methods’), but in general it expresses sampling intensity. For the CR subsampling method, this argument represents the subsampling quota, the desired number of occurrences in the ‘trial datasets’. Increasing values will result in increasingly higher sampled diversities. The ‘q’ argument cannot be negative. With the subsampling quota of 40 and 60 occurrences the function outputs the following results for the coral dataset:
 
 ```{r ddCRBasic, echo=TRUE, results=FALSE, plot=TRUE, fig.height=5.5}
 # basic plot
@@ -792,7 +812,7 @@ The subsampling level can be set as high as the user wants it to be. Depending o
 
 ### 5.2.5. The ``keep`` and ``rem`` arguments
 
-These arguments handle which bins should be forced to be kept (included) or removed (excluded) from the *trial dataset*. It accepts a numeric vector, with the bin identifiers. Positive entries mean that the bins will be included in the *trial dataset* without subsampling. This can be useful if you want the inclusion of recent 'occurrences' to demonstrate the 'Pull of the Recent' effect. This example uses the original ``corals`` dataset to demonstrate how the argument works (with duplicates omitted).
+These arguments handle which bins should be forced to be kept (included) or removed (excluded) from the *trial dataset*. It accepts a numeric vector, with the bin identifiers. Positive entries mean that the bins will be included in the *trial dataset* without subsampling. This can be useful if you want the inclusion of recent ‘occurrences’ to demonstrate the ‘Pull of the Recent’ effect. This example uses the original ``corals`` dataset to demonstrate how the argument works (with duplicates omitted).
 
 ```{r subIntact, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5}
 # basic plot
@@ -801,7 +821,7 @@ These arguments handle which bins should be forced to be kept (included) or remo
 ## subsampled, excluding the recent occurrences  
   sub <- subsample(corals, bin="stg", tax="genus", iter=100, 
     q=50, rem= 95, duplicates=FALSE, coll="collection_no")
-  lines(stages$mid[1:94], sub$extPC, col="black", lwd=2)
+  lines(stages$mid, sub$extPC, col="black", lwd=2)
 ## subsampled, including the recent
   subPR <- subsample(corals, bin="stg", tax="genus", iter=100, 
     q=50, keep= 95, duplicates=FALSE, coll="collection_no")
@@ -812,9 +832,9 @@ These arguments handle which bins should be forced to be kept (included) or remo
     lwd=c(2,2), bg="white")
 ```
 
-Between these two curves, neither shows perfectly accurate results. The per capita rates employ the range-through assumption. The first results (``sub``) is biased by edge effects, the closer the end of the time series is, the higher the rate values are due to decreasing total amount of range extensions. The inclusion of entries in the second dataset on the other hand allows the 'Pull of the Recent' to depress the extinction rates of the Late Cenozoic.
+Between these two curves, neither shows perfectly accurate results. The per capita rates employ the range-through assumption. The first results (``sub``) is biased by edge effects, the closer the end of the time series is, the higher the rate values are due to decreasing total amount of range extensions. The inclusion of entries in the second dataset on the other hand allows the ‘Pull of the Recent’ to depress the extinction rates of the Late Cenozoic.
 
-### 5.2.6. Subsampling 'output' and plotting options
+### 5.2.6. Subsampling ‘output’ and plotting options
 
 The output type of the subsampling process can be set with the output argument. This should be dependent on the further use of the function results. The most direct output is the arithmetic (default) or geometric means of the trials. They provide almost the same output:
 
@@ -870,7 +890,7 @@ tsplot(stages, shading="series", boxes="sys", xlim=52:95,
 shades(stages$mid[1:94], plottedVar, res=10, col="black")
 ```
 
-Setting the ``res`` argument of this function controls the 'quantile resolution'. The higher the number, the more refined the transparency gradient will be. However, it is more useful to the enter the exact quantiles to be plotted in the form of a numeric vector:
+Setting the ``res`` argument of this function controls the ‘quantile resolution’. The higher the number, the more refined the transparency gradient will be. However, it is more useful to the enter the exact quantiles to be plotted in the form of a numeric vector:
 
 ```{r shades100, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5}
 tsplot(stages, shading="series", boxes="sys", xlim=52:95,
@@ -878,7 +898,7 @@ tsplot(stages, shading="series", boxes="sys", xlim=52:95,
 shades(stages$mid[1:94], plottedVar, col="blue", res=c(0.05,0.25,0.75,0.95))
 ```
 
-The function's color argument only accepts colors that are specified without the alpha channel (for instance ``"#00000066"`` is impossible, but ``"blue"`` or ``"#4433FF"`` are perfectly viable).
+The function’s color argument only accepts colors that are specified without the alpha channel (for instance ``"#00000066"`` is impossible, but ``"blue"`` or ``"#4433FF"`` are perfectly viable).
 
 
 ## 5.3. The applied function during the subsampling
@@ -893,36 +913,36 @@ subData <- subsample(fossGen, bin="stg", tax="genus",
 ```{r subAppliedShow, echo=TRUE, results=TRUE}
 # characteristics
 class(subData)
-length(subData)
+names(subData)
+length(subData$results)
 # columns of the trial dataset
-colnames(subData[[1]])
+colnames(subData$results[[1]])
 ```
 
 The advantage of this option is that you can inspect the results of the subsampling output. You can also iterate a custom function on this output by using the ``lapply()`` interator in base R. The results of the function will be output as a ``list``. 
 
 ### 5.3.1. Example 1: Checking the number of occurrences
 
-One of the functions we can check is the number of occurrences in the 'trial datasets'. By the rules of CR, this should be exactly ``q``:
+One of the functions we can check is the number of occurrences in the ‘trial datasets’. By the rules of CR, this should be exactly ``q``:
 
 ```{r subLapply, echo=TRUE, results =TRUE}
 OCC <- function(x) table(x$stg)
 # list of trials, each contains the number of occurrences in a bin (vector)
-subOccs <- lapply(subData, OCC)
+subOccs <- lapply(subData$results, OCC)
 # one trial
 subOccs [[1]]
 ```
 
-Extracting the central tendency (average of the trials) is more difficult this way, but some output structures (e.g. geographic shapes) might require special treatment that can be written as a custom function. Anyway, ``subsample()`` allows the simplification of this process, if you set the output argument to 'list' and by providing the custom function as the ``FUN`` argument. One rule is that the function must take the occurrence dataset as an argument, which is formally called ``dat``:
+Extracting the central tendency (average of the trials) is more difficult this way, but some output structures (e.g. geographic shapes) might require special treatment that can be written as a custom function. Anyway, ``subsample()`` allows the simplification of this process, if you set the output argument to ‘list’ and by providing the custom function as the ``FUN`` argument. One rule is that the function must take the occurrence dataset as an argument, which is formally called ``x``:
 
 ```{r subOCC, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5}
-OCC <- function(dat) table(dat$stg)
+OCC <- function(x) table(x$stg)
 subOccsInternal <- subsample(fossGen, bin="stg", tax="genus", 
   iter=100, q=40,FUN= OCC, output="list")
 ```
 
 ```{r subOCCShow, echo=TRUE, results =TRUE}
-
-subOccsInternal[[1]]
+subOccsInternal$results[[1]]
 ```
 
 Whether averaging is possible will be dependent on the output of the *applied function*. 
@@ -941,11 +961,11 @@ CAUTION: The averaging and the grouping of the resulting variables is possible b
 
 ### 5.3.2. Example 2: maximum absolute paleolatitudes
 
-Let's say you are interested in the maximum absolute paleolatitude of the occurrences. This will be influenced by the number of occurrences, and should therefore be rechecked with subsampling. You can calculate this in the raw dataset with the following function, using the known variable names:
+Let’s say you are interested in the maximum absolute paleolatitude of the occurrences. This will be influenced by the number of occurrences, and should therefore be rechecked with subsampling. You can calculate this in the raw dataset with the following function, using the known variable names:
 
 ```{r rawPL, echo=TRUE, results=TRUE, plot=TRUE, fig.height=5.5}
-PL <- function(dat){
-  tRes<- tapply(INDEX=dat$stg, X=dat$paleolat, FUN=function(y){
+PL <- function(x){
+  tRes<- tapply(INDEX=x$stg, X=x$paleolat, FUN=function(y){
     max(abs(y), na.rm=T)
   })
 return(tRes)
@@ -989,7 +1009,7 @@ subUWunit <- subsample(fossGen, bin="stg", tax="genus",
 
 ### 5.4.2. Occurrence-weighted by-list subsampling (O^x^W)
 
-By-list subsampling methods use information about how the occurrences are clustered in lists. In the PaleoDB, these clusters are the collections that 'contain' the occurrences, which are direct products of sampling. Depending on whether we would like to emphasize the sampling of collections (related to beta diversity) or the number of entries in lists, you can use the O^x^W group of subsampling (Alroy et al., 2001). Since the development of SQS (or CBR, see below) these methods have not been widely applied, but nevertheless, they could be useful in some projects.
+By-list subsampling methods use information about how the occurrences are clustered in lists. In the PaleoDB, these clusters are the collections that ‘contain’ the occurrences, which are direct products of sampling. Depending on whether we would like to emphasize the sampling of collections (related to beta diversity) or the number of entries in lists, you can use the O^x^W group of subsampling (Alroy et al., 2001). Since the development of SQS (or CBR, see below) these methods have not been widely applied, but nevertheless, they could be useful in some projects.
 The basis of these methods is that collection integrity cannot be broken during the subsampling procedure. Entire lists are drawn from the subsampling pool of each time bin, while the number of occurrences are tracked. These lists are the collections that should be indicated by setting the ``coll`` variable appropriately. When the quota is reached, no more occurrences are drawn. The rest of the process (assembly of the *trial dataset*, running the *applied function*) is the same as with the CR method.
 
 ```{r subOXW, echo=TRUE, results =FALSE}
@@ -1009,16 +1029,16 @@ legend("topleft", legend=c("CR - 40", "OW - 40"),
   col=c("black", "blue"), lwd=c(2,2), bg="white")
 ```
 
-The reason why the method type is called the O^x^W is because, depending on the relative importance of the collections and the entries within the collection, lists express different aspects of sampling. This can be taken into consideration with the exponentiation of the occurrence counts in each collection. In these procedures, the number of occurrences in each collection will be raised to the power of ``x`` and the sum of the resulting values will be compared to the set subsampling quota.
-The simplest way of doing this is to raise the number of occurrences in a collection to the power of 0, which effectively means the selection of a certain number of collections in all different time slices (no matter how many occurrences there are in a collection it will be 1 if raised to the power of 0). Setting the ``x`` argument to 0, will force this setting. This is sometimes referred to as the 'unweighted subsampling' method, which effectively means to subsample the data to a certain number of collections in a bin. In this case the ``q`` argument will represent the quota of collections.
+The reason why the method type is called the O^x^W is because, depending on the relative importance of the collections and the entries within the collection, lists express different aspects of sampling. This can be taken into consideration with the exponentiation of the occurrence counts in each collection. In these procedures, the number of occurrences in each collection will be raised to the power of ``xexp`` and the sum of the resulting values will be compared to the set subsampling quota.
+The simplest way of doing this is to raise the number of occurrences in a collection to the power of 0, which effectively means the selection of a certain number of collections in all different time slices (no matter how many occurrences there are in a collection it will be 1 if raised to the power of 0). Setting the ``xexp`` argument to 0, will force this setting. This is sometimes referred to as the ‘unweighted subsampling’ method, which effectively means to subsample the data to a certain number of collections in a bin. In this case the ``q`` argument will represent the quota of collections.
 
 ```{r oxw, echo=TRUE, results =FALSE}
 trialsUW <- subsample(fossGen, bin="stg", tax="genus", coll="collection_no",
-  iter=100, q=20, type="oxw", x=0, FUN=binstat)
+  iter=100, q=20, type="oxw", xexp=0, FUN=binstat)
 # the number of sampled collections on average in each timeslice
 trialsUW[54:94, "colls"]
 subUW <- subsample(fossGen, bin="stg", tax="genus", coll="collection_no",
-  iter=100, q=10, type="oxw", x=0)
+  iter=100, q=10, type="oxw", xexp=0)
 ```
 
 By this principle, it is not difficult to see that depending on the size of the collections, the actual number of occurrences will be somewhat higher than the quota. You can quickly check the exact number of occurrences drawn with the ``binstat()`` function
@@ -1033,10 +1053,10 @@ subST[54:94, "occs"]
 ```
 
 Although there are ways to improve the accuracy of the subsampling process, the variation induced by this problem is only minuscule compared to those introduced by sampling and binning uncertainties.
-However, typically this ``x`` value is set to a value between 1 and 2 (e.g. 1.4). In these cases, you have to calculate the intensity of sampling. Although there is some discrepancy between the methods, the overall trajectories are quite similar.
+However, typically this ``xexp`` value is set to a value between 1 and 2 (e.g. 1.4). In these cases, you have to calculate the intensity of sampling . Although there is some discrepancy between the methods, the overall trajectories are quite similar.
 ```{r subO2, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5}
 subO2W <- subsample(fossGen, bin="stg", tax="genus", coll="collection_no", 
-  iter=100, q=80, type="oxw", x=2)
+  iter=100, q=80, type="oxw", xexp=2)
 tsplot(stages, shading="series", boxes="sys", xlim=52:95,
   ylab="corrected SIB genus richness", ylim=c(0,90))
 lines(stages$mid[1:94], subCR$divCSIB, col="black")
@@ -1049,7 +1069,7 @@ legend("topleft", legend=c("CR - 40", "OW - 40", "UW - 10", "O2W - 80"),
 
 ### 5.4.3. Shareholder Quorum Subsampling (SQS)
 
-As intuitive as the CR approach is to understand, the method has been criticized for be being 'unfair' (Alroy, 2010). The results of CR will not reflect changes of richness appropriately, if two localities with different diversities are compared and their total richnesses are not equal. 
+As intuitive as the CR approach is to understand, the method has been criticized for being ‘unfair’ (Alroy, 2010). The results of CR will not reflect changes of richness appropriately, if two localities with different diversities are compared and their total richnesses are not equal. 
 This can be visualized by progressively lowering the subsampling quota for CR, which will result in not just decreased levels of richness but also in a pronounced decrease in variance (Alroy, 2010b). This effect can be illustrated by rerunning CR iteratively with progressively lower quotas. 
 ```{r subCRmany, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5}
 # repeat CR subsampling for a set of quotas
@@ -1074,11 +1094,11 @@ for(i in quotas){
 ```
 
 As the subsampling quota decreases, so does the mean value of richness, and also the relative deviation of the series.
-The Shareholder Quorum subsampling approach (Alroy, 2010) effectively circumvents this problem by using a different proxy for sampling completeness, other than the number of occurrences. Rather than looking at the basic unary information of occurrences, the SQS method assesses sampling with frequency coverage. Coverage is an intuitive way to express the completeness of sampling. In the species sampling pool all species have a frequency (F^k^) that sum up to 1. In this sense, the coverage of a sample is the sum of species frequencies in the original sampling pool (F^k^), but only for those species that actually have been sampled. This rule effectively coerces sampling coverage between 0 and 1. Different levels of sampling can be created by maximizing the desired coverage of a sample. This desired coverage is referred to as the 'quorum'. After the work of Chao and Jost (2012), ecologists usually refer to this approach as coverage-based rarefaction. 
+The Shareholder Quorum subsampling approach (Alroy, 2010) effectively circumvents this problem by using a different proxy for sampling completeness, other than the number of occurrences. Rather than looking at the basic unary information of occurrences, the SQS method assesses sampling with frequency coverage. Coverage is an intuitive way to express the completeness of sampling. In the species sampling pool all species have a frequency (F^k^) that sum up to 1. In this sense, the coverage of a sample is the sum of species frequencies in the original sampling pool (F^k^), but only for those species that actually have been sampled. This rule effectively coerces sampling coverage between 0 and 1. Different levels of sampling can be created by maximizing the desired coverage of a sample. This desired coverage is referred to as the ‘quorum’. After the work of Chao and Jost (2012), ecologists usually refer to this approach as coverage-based rarefaction. 
 
-#### 5.4.3.1. The 'inexact' approach to SQS
+#### 5.4.3.1. The ‘inexact’ approach to SQS
 
-The original description of the SQS algorithm ensured different levels of coverages by going through the occurrences (or collections) randomly and aggregating the estimated frequencies of the species that are taken from the sample until this sum reached the subsampling quorum. John Alroy (2014) referred to this approach as the 'inexact' method to perform SQS. This is the default way to do SQS.
+The original description of the SQS algorithm ensured different levels of coverages by going through the occurrences (or collections) randomly and aggregating the estimated frequencies of the species that are taken from the sample until this sum reached the subsampling quorum. John Alroy (2014) referred to this approach as the ‘inexact’ method to perform SQS. This is the default way to do SQS.
 ```{r sqs1, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5}
 # sqs with 0.6 quorum
 sqs0.6 <-subsample(fossGen, iter=50, q=0.6,
@@ -1096,11 +1116,11 @@ lines(stages$mid[1:94], dd$divCSIB, col="black")
 legend("topleft", legend=c("raw", "SQS, q=0.6", "SQS, q=0.3"),
   col=c("black", "blue", "green"), lwd=c(2,2,2), bg="white")
 ```
-This procedure is dependent on the proper estimation of the species' frequencies in the sampling pool (?frequencies). Alroy (2010) suggested that the observed frequencies should be adjusted with Good's total sample coverage estimator *u*, which is dependent on the number of occurrences (*o*) and the number of single-collection (single-occurrence) taxa (*^1^O *). 
+This procedure is dependent on the proper estimation of the species’ frequencies in the sampling pool (?frequencies). Alroy (2010) suggested that the observed frequencies should be adjusted with Good’s total sample coverage estimator *u*, which is dependent on the number of occurrences (*o*) and the number of single-collection (single-occurrence) taxa (*^1^O *). 
 
 $$u = 1 - {1}O/o$$
 
-This is the first correction of Alroy (2010, for overall coverage). He also suggested that for Paleobiology Database occurrences, a different version of this estimator (*u'*) might be more accurate that is estimated using the single reference taxa, instead of single-collection taxa. This estimator is then used to estimate the true frequencies of species. You can choose between these versions by toggling the ``singleton`` argument between ``"occ"`` (default), ``"ref"`` and it can be switched off by setting it to ``FALSE``. Note that ``"ref"`` will require you to provide a reference variable (``ref`` argument). The discrepancy between the methods is very small: 
+This is the first correction of Alroy (2010, for overall coverage). He also suggested that for Paleobiology Database occurrences, a different version of this estimator (*u’*) might be more accurate that is estimated using the single reference taxa, instead of single-collection taxa. This estimator is then used to estimate the true frequencies of species. You can choose between these versions by toggling the ``singleton`` argument between ``"occ"`` (default), ``"ref"`` and it can be switched off by setting it to ``FALSE``. Note that ``"ref"`` will require you to provide a reference variable (``ref`` argument). The discrepancy between the methods is very small: 
 ```{r sqs2, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5}
 sqsCollSing <-subsample(fossGen, iter=50, q=0.4, 
   tax="genus", bin="stg", type="sqs", 
@@ -1162,7 +1182,7 @@ SQS is probably the most appropriate method we have today for sampling standardi
 
 ### 5.4.4. Subsampling trial functions
 
-The different subsampling types can be contrasted by comparing the subsampling trial functions (``subtrialCR()``, ``subtrialOXW()`` and ``subtrialSQS()``).The procedures are of these functions are also implemented within the ``subsample()`` function, and they can be used to produce one 'trial dataset' from the total sampled data. The output of these function is a logical vector indicating the rows of the data that should be present in one particular trial dataset. Future versions of the package will allow the writing and application of custom subsampling trial functions, with which the ``subsample()`` function will be entirely customizable.
+The different subsampling types can be contrasted by comparing the subsampling trial functions (``subtrialCR()``, ``subtrialOXW()`` and ``subtrialSQS()``).The procedures are of these functions are also implemented within the ``subsample()`` function, and they can be used to produce one ‘trial dataset’ from the total sampled data. The output of these function is a logical vector indicating the rows of the data that should be present in one particular trial dataset. Future versions of the package will allow the writing and application of custom subsampling trial functions, with which the ``subsample()`` function will be entirely customizable.
 
 # 6. Taxon-specific characteristics
 
@@ -1185,7 +1205,7 @@ affMajor <- affinity(knownBath, bin="stg", tax="genus",
 table(affMajor)
 ```
 
-The output of this function is a single character vector, values specifying the apparently preferred environments and the ``names`` attribute defining the taxon names. ``NA`` entries occur when the function is unable to define an affinity (i.e. the number of occurrences from both environments is the same). It is not mandatory to provide collection identifiers (``coll``). If these are given, then the multiple occurrences of a taxon within a collection (sample) will be treated as one.
+The output of this function is a single character vector, values specifying the apparently preferred environments and the ``names`` attribute defining the taxon names. ``NA`` entries occur when the function is unable to define an affinity (i.e. the number of occurrences  from both environments is the same). It is not mandatory to provide collection identifiers (``coll``). If these are given, then the multiple occurrences of a taxon within a collection (sample) will be treated as one.
 As you can see, an overwhelming majority of the taxa have shallow affinities based on this method, but this is not surprising, as most of the occurrences come from shallow environments.
 
 ```{r tabBath, echo=TRUE, results =TRUE}
@@ -1194,7 +1214,7 @@ table(knownBath$bath)
 
 ### 6.1.2. Binomial method
 
-If sampling is so dominated by shallow occurrences, then the obvious question that arises is whether the apparent pattern of affinity only is present because this biased sampling. In order to correct for this 'background' sampling issue, Foote (2006) suggested that the environment affinity should be determined by comparing the taxon's observed pattern of occurrences to that present in the total dataset (null sampling probability of the environment). This approach was also used by Kiessling and Aberhan (2007) and Kiessling and Kocsis (2015) in later studies.
+If sampling is so dominated by shallow occurrences, then the obvious question that arises is whether the apparent pattern of affinity only is present because this biased sampling. In order to correct for this ‘background’ sampling issue, Foote (2006) suggested that the environment affinity should be determined by comparing the taxon’s observed pattern of occurrences to that present in the total dataset (null sampling probability of the environment). This approach was also used by Kiessling and Aberhan (2007) and Kiessling and Kocsis (2015) in later studies.
 The sampling probability of the environment is calculated by taking the proportion of occurrences in the two environments in the total dataset from the range of the taxon. Under random sampling conditions, the number of total occurrences and the number among these that come from an environment is modelled by a binomial distribution. Given a certain level of confidence one can guess whether the sampled occurrences of a taxon represent a significantly higher or lower proportion than predicted by the null probability. The more likely it is that a simple binomial model can produce the observed success/total trial ratio, the less we know about the affinity of the taxon. This approach is implemented by the default ``"binom"`` method.
 
 ```{r affBin, echo=TRUE, results =TRUE, plot=TRUE, dev='png', dpi=300}
@@ -1203,7 +1223,7 @@ affBin1 <- affinity(knownBath, bin="stg", tax="genus",
 table(affBin1)
 ```
 
-The significance of the binomial tests can be chosen by the ``alpha`` argument that toggles the breadth of proportions that is considered to be output by the randomness of sampling. The default ``alpha = 1`` setting (above) will not perform the binomial test. It will only compare the taxon's observed proportion of occurrences from the different environments to those observed in the total dataset. The lower this ``alpha`` value is, the less taxa will get an assigned affinity.
+The significance of the binomial tests can be chosen by the ``alpha`` argument that toggles the breadth of proportions that is considered to be output by the randomness of sampling. The default ``alpha = 1`` setting (above) will not perform the binomial test. It will only compare the taxon’s observed proportion of occurrences from the different environments to those observed in the total dataset. The lower this ``alpha`` value is, the less taxa will get an assigned affinity.
 
 ```{r affBin2, echo=TRUE, results =TRUE}
 affBin0.5 <- affinity(knownBath, bin="stg", tax="genus", 
@@ -1220,7 +1240,7 @@ It is also possible to do the calculations based on the collection counts, inste
 
 ## 6.2. Changing characteristics
 
-The entire occurrence dataset can be subdivided into time-bin and taxon-specific subsets. We can use each of these subsets to describe the taxa's ecological characteristics if we assert that these occurrences are contemporaneous. 
+The entire occurrence dataset can be subdivided into time-bin and taxon-specific subsets. We can use each of these subsets to describe the taxa’s ecological characteristics if we assert that these occurrences are contemporaneous. 
 
 ### 6.2.1. Geographic range
 
@@ -1234,13 +1254,13 @@ This function call outputs coordinate occupancy, the number of unique pairs of c
 
 ### 6.2.2. The ``tabinate()`` iterator function
 
-For large-scale analyses of taxa, it is desirable to apply the function above to all time-bin/taxon specific subsets of the data. This can be desired for numerous calculations that use contemporaneous occurrences of a taxon as input, which can be iterated for every time-bin/taxon subset with the ``tabinate()`` function. To use this function you have to provide the taxon and time bin identifiers (``tax`` and ``bin``, respectively), and the function (``FUN``) that needs to be iterated on every taxon/time-bin subset of the dataset. This function has to take ``dat`` as the primary argument (the database subset), but additional arguments will be passed to it. 
+For large-scale analyses of taxa, it is desirable to apply the function above to all time-bin/taxon specific subsets of the data. This can be desired for numerous calculations that use contemporaneous occurrences of a taxon as input, which can be iterated for every time-bin/taxon subset with the ``tabinate()`` function. To use this function you have to provide the taxon and time bin identifiers (``tax`` and ``bin``, respectively), and the function (``FUN``) that needs to be iterated on every taxon/time-bin subset of the dataset. This function has to take ``x`` as the primary argument (the database subset), but additional arguments will be passed to it. 
 
 For instance, if you are interested in the number of collections each taxon has in each time slice, instead of using a combination of functions (``subset()``, ``unique()`` and `` table()``) you can define a function, which can be iterated on all subsets. 
 
 ```{r georan2, echo=TRUE, results =TRUE}
-collCount <- function(dat) length(unique(dat$coll))
-allGeo <- tabinate(corals, bin="stg", tax="genus", FUN= collCount)
+collCount <- function(x) length(unique(x$collection_no))
+allGeo <- tabinate(corals, bin="stg", tax="genus", FUN=collCount)
 ```
 
 This is a somewhat slower solution, but its utility is evident when more complicated functions are passed to the iterator, such the ``georanges()`` presented before.
@@ -1254,53 +1274,53 @@ The ``tabinate()`` function currently accepts functions that output single value
 
 # Acknowledgements
 
-The package was developed in the context of a project on global paleobiogeography funded by the Deutsche Forschungsgemeinschaft (DFG project numbers Ko 5382/1-1, Ko 5382/1-2, Ki 806/16-1). The package is also part of the DFG Research Unit 2332: TERSANE (TEmperature Related Stressors in ANcient Extinctions). We are thankful to all testers of the package including Emilia Jarochowska, Vanessa Roden, Andreas Lauchstedt, Gwen Antell and Roger Benson for suggestions, and all participants of the first year International Master's Programme for Paleobiology at the GeoZentrum Nordbayern, FAU in Erlangen, Germany. We also thank all enterers of the Paleobiology Database.
+The development of the package began in the context of a project on global paleobiogeography funded by the Deutsche Forschungsgemeinschaft (DFG project numbers Ko 5382/1-1, Ko 5382/1-2, Ki 806/16-1). The package is also part of the DFG Research Unit 2332: TERSANE (TEmperature Related Stressors in ANcient Extinctions). We are thankful to all testers of the package including Emilia Jarochowska, Vanessa Roden, Andreas Lauchstedt, Gwen Antell and Roger Benson for suggestions, and all participants of the first year International Master’s Programme for Paleobiology at the GeoZentrum Nordbayern, FAU in Erlangen, Germany. We also thank all enterers of the Paleobiology Database.
 
 # References
 
-Alroy, J. (2008). Dynamics of origination and extinction in the marine fossil record. Proceedings of the National Academy of Science, 105, 11536-11542.
+Alroy, J. (2008). Dynamics of origination and extinction in the marine fossil record. Proceedings of the National Academy of Science, 105, 11536–11542.
 
-Alroy, J., Marshall, C. R., Bambach, R. K., Bezusko, K., Foote, M., Fürsich, F. T., … Webber, A. (2001). Effects of sampling standardization on estimates of Phanerozoic marine diversification. Proceedings of the National Academy of Science, 98(11), 6261-6266. https://doi.org/10.1073/pnas.111144698
+Alroy, J., Marshall, C. R., Bambach, R. K., Bezusko, K., Foote, M., Fürsich, F. T., … Webber, A. (2001). Effects of sampling standardization on estimates of Phanerozoic marine diversification. Proceedings of the National Academy of Science, 98(11), 6261–6266. https://doi.org/10.1073/pnas.111144698
 
 
-Alroy, J., Aberhan, M., Bottjer, D. J., Foote, M., Fürsich, F. T., Harries, P. J., … Visaggi, C. C. (2008). Phanerozoic Trends in the Global Diversity of Marine Invertebrates. Science, 321(5885), 97-100. https://doi.org/10.1126/science.1156963
+Alroy, J., Aberhan, M., Bottjer, D. J., Foote, M., Fürsich, F. T., Harries, P. J., … Visaggi, C. C. (2008). Phanerozoic Trends in the Global Diversity of Marine Invertebrates. Science, 321(5885), 97–100. https://doi.org/10.1126/science.1156963
 
-Alroy, J. (2010). The Shifting Balance of Diversity Among Major Marine Animal Groups. Science, 329, 1191-1194. https://doi.org/10.1126/science.1189910
+Alroy, J. (2010). The Shifting Balance of Diversity Among Major Marine Animal Groups. Science, 329, 1191–1194. https://doi.org/10.1126/science.1189910
 
 Alroy, J. (2010b). Geographical, environmental and intrinsic biotic controls on Phanerozoic marine diversification. Palaeontology 53:1211-1235.https://doi.org/10.1111/j.1475-4983.2010.01011.x
 
-Alroy, J. (2014). Accurate and precise estimates of origination and extinction rates. Paleobiology, 40(3), 374-397. https://doi.org/10.1666/13036
+Alroy, J. (2014). Accurate and precise estimates of origination and extinction rates. Paleobiology, 40(3), 374–397. https://doi.org/10.1666/13036
 
-Alroy, J. (2015). A more precise speciation and extinction rate estimator. Paleobiology, 41(04), 633-639. https://doi.org/10.1017/pab.2015.26
+Alroy, J. (2015). A more precise speciation and extinction rate estimator. Paleobiology, 41(04), 633–639. https://doi.org/10.1017/pab.2015.26
 
 Bell, M. A. (2015). geoscale: Geological Time Scale Plotting. R package version 2.0. Retrieved from http://CRAN.R-project.org/package=geoscale
 
-Foote, M., & Raup, D. M. (1996). Fossil Preservation and the Stratigraphic Ranges of Taxa. Paleobiology, 22(2), 121-140.
+Foote, M., & Raup, D. M. (1996). Fossil Preservation and the Stratigraphic Ranges of Taxa. Paleobiology, 22(2), 121–140.
 
-Chao, A., & Jost, L. (2012). Coverage-based rarefaction and extrapolation: standardizing samples by completeness rather than size. Ecology, 93(12), 2533-2547. https://doi.org/10.1890/11-1952.1
+Chao, A., & Jost, L. (2012). Coverage-based rarefaction and extrapolation: standardizing samples by completeness rather than size. Ecology, 93(12), 2533–2547. https://doi.org/10.1890/11-1952.1
 
-Foote, M. (1999). Morphological Diversity In The Evolutionary Radiation Of Paleozoic and Post-Paleozoic Crinoids. Paleobiology, 25(S2), 1-115.
+Foote, M. (1999). Morphological Diversity In The Evolutionary Radiation Of Paleozoic and Post-Paleozoic Crinoids. Paleobiology, 25(S2), 1–115.
 
-Foote, M. (2000). Origination and Extinction Components of Taxonomic Diversity: General Problems. Paleobiology, 26(4), 74-102.
+Foote, M. (2000). Origination and Extinction Components of Taxonomic Diversity: General Problems. Paleobiology, 26(4), 74–102.
 
-Foote, M. (2006). Substrate Affinity and Diversity Dynamics of Paleozoic Marine Animals. Paleobiology, 32(3), 345-366. https://doi.org/10.2307/4096955
+Foote, M. (2006). Substrate Affinity and Diversity Dynamics of Paleozoic Marine Animals. Paleobiology, 32(3), 345–366. https://doi.org/10.2307/4096955
 
-Good, I. J. (1953). The Popoulation Frequencies of Species and the Estimation of Population Parameters. Biometrika, 40(3/4), 237-264.
+Good, I. J. (1953). The Popoulation Frequencies of Species and the Estimation of Population Parameters. Biometrika, 40(3/4), 237–264.
 
 Ogg, J. G., G. Ogg, and F. M. Gradstein. (2016). A concise geologic time scale: 2016. Elsevier.
 
-Kiessling, W., & Aberhan, M. (2007). Environmental determinants of marine benthic biodiversity dynamics through Triassic-Jurassic time. Paleobiology, 33(3), 414-434.
+Kiessling, W., & Aberhan, M. (2007). Environmental determinants of marine benthic biodiversity dynamics through Triassic-Jurassic time. Paleobiology, 33(3), 414–434.
 
-Kiessling, W., & Kocsis, A. T. (2015). Biodiversity dynamics and environmental occupancy of fossil azooxanthellate and zooxanthellate scleractinian corals. Paleobiology, 41(3), 402-414.
+Kiessling, W., & Kocsis, A. T. (2015). Biodiversity dynamics and environmental occupancy of fossil azooxanthellate and zooxanthellate scleractinian corals. Paleobiology, 41(3), 402–414.
 
-Kiessling, W., & Simpson, C. (2011). On the potential for ocean acidification to be a general cause of ancient reef crises. Global Change Biology, 17, 56-67. https://doi.org/10.1111/j.1365-2486.2010.02204.x
+Kiessling, W., & Simpson, C. (2011). On the potential for ocean acidification to be a general cause of ancient reef crises. Global Change Biology, 17, 56–67. https://doi.org/10.1111/j.1365-2486.2010.02204.x
 
 Kocsis, A. T., Reddin, C. J., Alroy, J. and Kiessling, W. (2019). The R package divDyn for quantifying diversity dynamics using fossil sampling data. Methods in Ecology and Evolution. https://doi.org/10.1111/2041-210X.13161
 
-Raup, D. M. (1975). Taxonomic Diversity Estimation Using Rarefaction. Paleobiology, 1, 333-342. https://doi.org/10.2307/2400135
+Raup, D. M. (1975). Taxonomic Diversity Estimation Using Rarefaction. Paleobiology, 1, 333–342. https://doi.org/10.2307/2400135
 
 Raup, D. M. (1979). Biases in the fossil record of species and genera. Bulletin of the Carnegie Museum of Natural History, 13, 85-91.
 
-Raup, D. M. (1985). Mathematical Models of Cladogenesis. Paleobiology, 11(1), 42-52.
+Raup, D. M. (1985). Mathematical Models of Cladogenesis. Paleobiology, 11(1), 42–52.
 
-Sepkoski Jr, J. J. (2002). A compendium of fossil marine animal genera. Bulletins of American Paleontology, 363, 1-560.
+Sepkoski Jr, J. J. (2002). A compendium of fossil marine animal genera. Bulletins of American Paleontology, 363, 1-560.

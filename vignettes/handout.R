@@ -44,6 +44,10 @@ structure <- data.frame(
 ## ----corDat, echo= TRUE--------------------------------------------------
 data(corals)
 
+## ----tibbleOrNot, echo= FALSE, eval=FALSE--------------------------------
+#  library(tibble)
+#  corals <- as_tibble(corals)
+
 ## ----fossils, echo= TRUE, results=TRUE-----------------------------------
 fossils <- corals[corals$stg!=95,]
 # the number of occurrences
@@ -159,9 +163,9 @@ legend("bottomleft", inset=c(0.01, 0.1),
   legend= plotnames, fill=cols, bg="white")
 
 ## ----omit, echo=TRUE, result=TRUE----------------------------------------
-omitColl <- omit(corals, bin="stg", tax="genus", om="coll")
-omitRef <- omit(corals, bin="stg", tax="genus", om="ref")
-omitBinref <- omit(corals, bin="stg", tax="genus", om="binref")
+omitColl <- omit(corals, tax="genus", om="coll", coll="collection_no")
+omitRef <- omit(corals, tax="genus", om="ref", ref="reference_no")
+omitBinref <- omit(corals, bin="stg", tax="genus", om="binref", ref="reference_no")
 # the conserved number of occurrences will be
 sum(!omitColl)
 sum(!omitRef)
@@ -319,30 +323,39 @@ points(
 ## ----ddMid, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5-----------
 fossils$mid_ma<- apply(fossils[,c("max_ma","min_ma")], 1, mean)
 
-## ----ddNegMid, echo=TRUE, result=FALSE-----------------------------------
-fossils$mid_ma<- - fossils$mid_ma 
-
 ## ----ddID, echo=TRUE, result=FALSE---------------------------------------
-ddIDbin <- divDyn(fossils, tax="genus", bin="mid_ma")
+ddIDbin <- divDyn(fossils, tax="genus", bin="mid_ma", revtime=TRUE)
 
 ## ----ddBasic, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5---------
 # basic plot
   tsplot(stages, shading="series", boxes="sys", xlim=52:95,
     ylab="Diversity, range-through", ylim=c(0,300))
-  lines(-ddIDbin$bin, ddIDbin$divRT, col="black", lwd=2)
+  lines(ddIDbin$mid_ma, ddIDbin$divRT, col="black", lwd=2)
   lines(stages$mid[1:94], dd$divRT, col="red", lwd=2)
 legend("topleft", legend=c("unique mid entries",  "stg stages"),
   col=c("black", "red"), lwd=c(2,2), bg="white")
 
-## ----dd10, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5------------
+## ----slicing, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5---------
 # resolve time
-  breakPoints <- seq(-270, 0, 10)
+  breakPoints <- seq(270, 0, -10)
+sliTen <- slice(fossils$mid_ma, breaks=breakPoints, ts=TRUE)
+str(sliTen)
+
+## ----slicedd, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5---------
+# assign new column to the data frame
+fossils$slc <- sliTen$slc
+# run divDyn with the new column
+  auto10<-divDyn(fossils, tax="genus", bin="slc")
+  auto10$divRT
+
+## ----dd10, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5------------
 # and calculate diversity dynamics
-  ddMid10<-divDyn(fossils, tax="genus", bin="mid_ma", breaks=breakPoints)
+  ddMid10<-divDyn(fossils, tax="genus", age="mid_ma", breaks=breakPoints)
+  ddMid10$divRT
 
 ## ----dd10Show, echo=TRUE, eval=FALSE-------------------------------------
 #  # lines
-#  lines(-ddMid10$bin, ddMid10$divRT, col="blue", lwd=2)
+#  lines(ddMid10$mid_ma, ddMid10$divRT, col="blue", lwd=2)
 #  # new legend
 #  legend("topleft", legend=c("age estimates, 10MY",
 #    "stg stages", "unique mid entries"), col=c("blue", "red", "black"),
@@ -352,9 +365,9 @@ legend("topleft", legend=c("unique mid entries",  "stg stages"),
 # basic plot
   tsplot(stages, shading="series", boxes="sys", xlim=52:95,
     ylab="Diversity, range-through", ylim=c(0,300))
-  lines(-ddIDbin$bin, ddIDbin$divRT, col="black", lwd=2)
+  lines(ddIDbin$mid_ma, ddIDbin$divRT, col="black", lwd=2)
   lines(stages$mid[1:94], dd$divRT, col="red", lwd=2)
-  lines(-ddMid10$bin, ddMid10$divRT, col="blue", lwd=2)
+  lines(ddMid10$mid_ma, ddMid10$divRT, col="blue", lwd=2)
    legend("topleft", legend=c("age estimates, 10MY",  
     "stg stages", "unique mid entries"), 
     col=c("blue", "red", "black"), lwd=c(2,2,2), bg="white")
@@ -460,7 +473,7 @@ fossGen <- fossils[!duplicated(collGenus),]
 ## subsampled, excluding the recent occurrences  
   sub <- subsample(corals, bin="stg", tax="genus", iter=100, 
     q=50, rem= 95, duplicates=FALSE, coll="collection_no")
-  lines(stages$mid[1:94], sub$extPC, col="black", lwd=2)
+  lines(stages$mid, sub$extPC, col="black", lwd=2)
 ## subsampled, including the recent
   subPR <- subsample(corals, bin="stg", tax="genus", iter=100, 
     q=50, keep= 95, duplicates=FALSE, coll="collection_no")
@@ -525,25 +538,25 @@ subData <- subsample(fossGen, bin="stg", tax="genus",
 ## ----subAppliedShow, echo=TRUE, results=TRUE-----------------------------
 # characteristics
 class(subData)
-length(subData)
+names(subData)
+length(subData$results)
 # columns of the trial dataset
-colnames(subData[[1]])
+colnames(subData$results[[1]])
 
 ## ----subLapply, echo=TRUE, results =TRUE---------------------------------
 OCC <- function(x) table(x$stg)
 # list of trials, each contains the number of occurrences in a bin (vector)
-subOccs <- lapply(subData, OCC)
+subOccs <- lapply(subData$results, OCC)
 # one trial
 subOccs [[1]]
 
 ## ----subOCC, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5--------
-OCC <- function(dat) table(dat$stg)
+OCC <- function(x) table(x$stg)
 subOccsInternal <- subsample(fossGen, bin="stg", tax="genus", 
   iter=100, q=40,FUN= OCC, output="list")
 
 ## ----subOCCShow, echo=TRUE, results =TRUE--------------------------------
-
-subOccsInternal[[1]]
+subOccsInternal$results[[1]]
 
 ## ----subOCCdist, echo=TRUE, results=FALSE--------------------------------
 subDistOccs <- subsample(fossGen, bin="stg", tax="genus", 
@@ -553,8 +566,8 @@ subDistOccs <- subsample(fossGen, bin="stg", tax="genus",
 str(subDistOccs)
 
 ## ----rawPL, echo=TRUE, results=TRUE, plot=TRUE, fig.height=5.5-----------
-PL <- function(dat){
-  tRes<- tapply(INDEX=dat$stg, X=dat$paleolat, FUN=function(y){
+PL <- function(x){
+  tRes<- tapply(INDEX=x$stg, X=x$paleolat, FUN=function(y){
     max(abs(y), na.rm=T)
   })
 return(tRes)
@@ -597,11 +610,11 @@ legend("topleft", legend=c("CR - 40", "OW - 40"),
 
 ## ----oxw, echo=TRUE, results =FALSE--------------------------------------
 trialsUW <- subsample(fossGen, bin="stg", tax="genus", coll="collection_no",
-  iter=100, q=20, type="oxw", x=0, FUN=binstat)
+  iter=100, q=20, type="oxw", xexp=0, FUN=binstat)
 # the number of sampled collections on average in each timeslice
 trialsUW[54:94, "colls"]
 subUW <- subsample(fossGen, bin="stg", tax="genus", coll="collection_no",
-  iter=100, q=10, type="oxw", x=0)
+  iter=100, q=10, type="oxw", xexp=0)
 
 ## ----subST, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5---------
 subST <- subsample(fossGen, bin="stg", tax="genus", coll="collection_no", 
@@ -613,7 +626,7 @@ subST[54:94, "occs"]
 
 ## ----subO2, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5---------
 subO2W <- subsample(fossGen, bin="stg", tax="genus", coll="collection_no", 
-  iter=100, q=80, type="oxw", x=2)
+  iter=100, q=80, type="oxw", xexp=2)
 tsplot(stages, shading="series", boxes="sys", xlim=52:95,
   ylab="corrected SIB genus richness", ylim=c(0,90))
 lines(stages$mid[1:94], subCR$divCSIB, col="black")
@@ -738,8 +751,8 @@ oneTax <- corals[corals$stg==94 & corals$genus=="Acropora",]
 georange(oneTax, lat="paleolat", lng="paleolng", method="co")
 
 ## ----georan2, echo=TRUE, results =TRUE-----------------------------------
-collCount <- function(dat) length(unique(dat$coll))
-allGeo <- tabinate(corals, bin="stg", tax="genus", FUN= collCount)
+collCount <- function(x) length(unique(x$collection_no))
+allGeo <- tabinate(corals, bin="stg", tax="genus", FUN=collCount)
 
 ## ----georan3, echo=TRUE, results =TRUE-----------------------------------
 allGeo <- tabinate(corals, bin="stg", tax="genus", 

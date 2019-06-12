@@ -45,7 +45,7 @@ singletons <- function(dat, tax="clgen", var=NULL, bin=NULL, bybin=FALSE, na.rm=
 
 	if(na.rm){
 		if(!is.null(var)){
-			dat <-dat[!is.na(dat[, var]),]
+			dat <-dat[!is.na(dat[, var, drop=TRUE]),]
 		}
 	}
 
@@ -53,13 +53,13 @@ singletons <- function(dat, tax="clgen", var=NULL, bin=NULL, bybin=FALSE, na.rm=
 		if(is.null(bin)) stop("You cannot do by-bin filtering, if you do not provide a bin variable.")
 		if(!bin%in%colnames(dat)) stop("Invalid bin argument.")
 
-		dat <-dat[!is.na(dat[, bin]),]
-		binVar <- dat[,bin]
+		dat <-dat[!is.na(dat[, bin, drop=TRUE]),]
+		binVar <- dat[,bin, drop=TRUE]
 	}
 
 	# taxon variable
 	if(!tax%in%colnames(dat)) stop("The argument 'tax' has to be a column name of 'dat'. ")
-	taxVar <- dat[, tax]
+	taxVar <- dat[, tax, drop=TRUE]
 
 	# single-occurrence taxa
 	if(is.null(var)){
@@ -72,11 +72,11 @@ singletons <- function(dat, tax="clgen", var=NULL, bin=NULL, bybin=FALSE, na.rm=
 			occTaxa<-apply(occTab, 2, sum)
 	
 			# which are singletons
-			singTab <- occTab[,occTaxa==1]
+			singTab <- occTab[,occTaxa==1, drop=FALSE]
 	
 			# list of single-occurrence taxa in every bin
-			taxList <- apply(singTab, 1, function(x){
-				colnames(singTab)[as.logical(x)]
+			taxList <- apply(singTab, 1, function(w){
+				colnames(singTab)[as.logical(w)]
 			})
 
 		}else{
@@ -102,25 +102,25 @@ singletons <- function(dat, tax="clgen", var=NULL, bin=NULL, bybin=FALSE, na.rm=
 				taxInterval<- apply(crossTab, 1, sum)
 		
 				# which are single interval? 
-				singTab <- crossTab[taxInterval==1,]
+				singTab <- crossTab[taxInterval==1,, drop=FALSE]
 		
 				# single interval taxa in every interval
-				taxList<-apply(singTab, 2, function(x){
-					rownames(singTab)[as.logical(x)]
+				taxList<-apply(singTab, 2, function(w){
+					rownames(singTab)[as.logical(w)]
 		
 				})
 			# no, it is a different variable
 			}else{
-				varVar <- dat[,var]
+				varVar <- dat[,var, drop=TRUE]
 				# define core variables
 				rows <- 1:nrow(dat)
 	
-				taxList <- tapply(INDEX=binVar, X=rows, function(x){
+				taxList <- tapply(INDEX=binVar, X=rows, function(w){
 
-					combTab <- unique(cbind(taxVar[x],varVar[x]))
+					combTab <- unique(cbind(taxVar[w],varVar[w]))
 					
 					# how many references desribe a taxon - var==NA is also there!
-					tTax <- table(combTab[,1])
+					tTax <- table(combTab[,1, drop=TRUE])
 	
 					singVarTax <- names(tTax)[tTax==1]
 					return(singVarTax)
@@ -130,7 +130,7 @@ singletons <- function(dat, tax="clgen", var=NULL, bin=NULL, bybin=FALSE, na.rm=
 
 		# no binVar is required
 		}else{
-			varVar <- dat[,var]
+			varVar <- dat[,var, drop=TRUE]
 				
 			crossTab <- table(taxVar, varVar)
 			class(crossTab)  <- "matrix"
@@ -142,11 +142,11 @@ singletons <- function(dat, tax="clgen", var=NULL, bin=NULL, bybin=FALSE, na.rm=
 			taxVarone<- apply(crossTab, 1, sum)
 	
 			# which are single-unit, or have NA entries in var?
-			singTab <- crossTab[taxVarone==1 | taxVarone==0,]
+			singTab <- crossTab[taxVarone==1 | taxVarone==0,, drop=FALSE]
 	
 			# by every item
-			taxList<-apply(singTab, 2, function(x){
-				rownames(singTab)[as.logical(x)]
+			taxList<-apply(singTab, 2, function(w){
+				rownames(singTab)[as.logical(w)]
 	
 			})
 	
@@ -157,6 +157,4 @@ singletons <- function(dat, tax="clgen", var=NULL, bin=NULL, bybin=FALSE, na.rm=
 
 	}
 	return(taxList)
-
-
 }

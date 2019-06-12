@@ -34,7 +34,7 @@ argument, such as \code{"hill3"} for (q=3). The first Hill number is defined as 
 
 \code{"chao2"}: The Chao2 estimator for incidence-based data.
 
-\code{"SCOR"}: The Sum Common Species Occurrence rate of Hannisdal et al. (2012). This method will only be calculated if the occurrences entries (vector)
+\code{"SCOR"}: The Sum Common Species Occurrence rate of Hannisdal et al. (2012). This method will only be calculated if the occurrence entries (vector)
  a collection vector is provided (see examples).
 }
 \section{References}{

@@ -4,11 +4,11 @@
 \alias{survivors}
 \title{Proportions of survivorship}
 \usage{
-survivors(dat, tax = "genus", bin = "stg", method = "forward",
+survivors(x, tax = "genus", bin = "stg", method = "forward",
   noNAStart = FALSE, fl = NULL)
 }
 \arguments{
-\item{dat}{\code{(data.frame)} The data frame containing fossil occurrences.}
+\item{x}{\code{(data.frame)} The data frame containing fossil occurrences.}
 
 \item{tax}{\code{(character)} The variable  name of the occurring taxa (variable type: \code{factor} or \code{character}).}
 

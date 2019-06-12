@@ -4,7 +4,7 @@
 #' 
 #' Multiple estimators of geographic ranges are implemented based on coordinates or cell identifiers. The function outputs a vector of the results based on the calculation methods specified in \code{methods}.
 #'
-#' @param dat \code{(data.frame)} Occurrence table containing the coordinates/locality memberships as variables.
+#' @param x \code{(data.frame)} Occurrence table containing the coordinates/locality memberships as variables.
 #'
 #' @param lng (\code{character}) The variable name of the longitudes, required for the \code{"co"}, \code{"mst"} and \code{"mgcd"} methods. 
 #' 
@@ -19,7 +19,7 @@
 #'   georange(bitax, lng="paleolng", lat="paleolat", method="co")
 #' 
 #' @export
-georange <- function(dat, lng=NULL, lat=NULL, loc=NULL, method="co"){
+georange <- function(x, lng=NULL, lat=NULL, loc=NULL, method="co"){
 	
 	if(length(method)>0){
 		# the final output 
@@ -27,13 +27,13 @@ georange <- function(dat, lng=NULL, lat=NULL, loc=NULL, method="co"){
 		names(allRanges) <- method
 	
 		#do not use dupliate entries
-		unDat <- unique(dat[,c(lng, lat, loc), drop=FALSE])
+		unDat <- unique(x[,c(lng, lat, loc), drop=FALSE])
 		
 		# "lo"
 		if(any(method=="lo")){
 			if(!is.null(loc)){
 				if(length(dim(unDat))>1){
-					vec <- unique(unDat[,loc])
+					vec <- unique(unDat[,loc, drop=TRUE])
 					allRanges["lo"]<-length(vec[!is.na(vec)])
 					if(allRanges["lo"]==0) allRanges["lo"]<-NA
 				}else{
@@ -56,7 +56,7 @@ georange <- function(dat, lng=NULL, lat=NULL, loc=NULL, method="co"){
 				# the basic coordiantes
 				coordat <- unDat[, c(lng, lat)]
 				# omit missing entries
-				coordat <- coordat[!is.na(coordat[,lng]) & !is.na(coordat[,lat]), ]
+				coordat <- coordat[!is.na(coordat[,lng, drop=TRUE]) & !is.na(coordat[,lat, drop=TRUE]), ]
 				occNo <- nrow(coordat)
 
 			}

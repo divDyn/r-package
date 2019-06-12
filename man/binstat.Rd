@@ -4,11 +4,12 @@
 \alias{binstat}
 \title{Sampling statistics and diversity indices in every bin}
 \usage{
-binstat(dat, tax = "genus", bin = "stg", coll = NULL, ref = NULL,
-  noNAStart = FALSE, duplicates = NULL, x = NULL, indices = FALSE)
+binstat(x, tax = "genus", bin = "stg", coll = NULL, ref = NULL,
+  noNAStart = FALSE, duplicates = NULL, xexp = NULL,
+  indices = FALSE)
 }
 \arguments{
-\item{dat}{\code{(data.frame)}: The occurrence dataset.}
+\item{x}{\code{(data.frame)}: The occurrence dataset.}
 
 \item{tax}{\code{(character)}: The column name of taxon names.}
 
@@ -22,7 +23,7 @@ binstat(dat, tax = "genus", bin = "stg", coll = NULL, ref = NULL,
 
 \item{duplicates}{\code{(logical)}: The function will check whether there are duplicate occurrences (multiple species/genera). When set to \code{NULL}, nothing will happen, but the function will notify you if duplicates are present. If set to \code{TRUE}, the function will not do anything with these, if set to \code{FALSE}, the duplicates will be omitted.}
 
-\item{x}{(\code{numeric}): Argument of the OxW subsampling type (\code{\link{subtrialOXW}}).Setting this parameter to a valid numeric value will return the maximum quota for \code{x}.}
+\item{xexp}{(\code{numeric}): Argument of the OxW subsampling type (\code{\link{subtrialOXW}}).Setting this parameter to a valid numeric value will return the maximum quota for \code{xexp}.}
 
 \item{indices}{(\code{logical}): Setting this value to \code{TRUE} will calculate all indices implemented in (\code{\link{indices}}).}
 }
@@ -33,7 +34,7 @@ This function will return the basic sampling summaries of a dataset
 Secondary function of the package that calculates a number of sampling related variables and diversity estimators for each bin. 
 In contrast to the (\code{\link{divDyn}}) function, the bins are treated independently in this function.
 The function also returns the maximum subsampling quota for OxW subsampling 
-(\code{\link{subtrialOXW}}) with a given \code{x} value.
+(\code{\link{subtrialOXW}}) with a given \code{xexp} value.
 
 By setting \code{total} to \code{FALSE} (default), the following results are output:
 
@@ -41,8 +42,8 @@ By setting \code{total} to \code{FALSE} (default), the following results are out
 
 \code{colls}: The number of collections in each time bin.
 
-\code{xQuota}: The maximum quota for OxW subsampling (\code{\link{subtrialOXW}}) with the given \code{x} value. 
-	The number of occurrences in each collection is tabulated, and is raised to the power of \code{x}. 
+\code{xQuota}: The maximum quota for OxW subsampling (\code{\link{subtrialOXW}}) with the given \code{xexp} value. 
+	The number of occurrences in each collection is tabulated, and is raised to the power of \code{xexp}. 
 	The \code{xQuota} value is the sum of these values across all collections in a time slice.
 
 \code{refs}: The number of references in each time bin.
@@ -74,7 +75,7 @@ basic <- binstat(corals, tax="genus", bin="stg")
  subStats <- subsample(corals, method="cr", tax="genus", FUN=binstat, 
    bin="stg", q=100,noNAStart=FALSE)
 
-# maximum quota with x
-more <- binstat(corals, tax="genus", bin="stg", coll="collection_no", x=1.4)
+# maximum quota with xexp
+more <- binstat(corals, tax="genus", bin="stg", coll="collection_no", xexp=1.4)
 
 }

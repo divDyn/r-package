@@ -5,7 +5,7 @@
 #' Every entry in the output table corresponds to one cell in the \code{bin}/\code{tax} matrix. This function omits duplicates and concatenates two \code{logical} vectors (response variables) to the occurrence dataset:  
 #' The \code{ori} vector is \code{TRUE} in the interval when the taxon first appeared, and \code{FALSE} in all others. The \code{ext} vector is \code{TRUE} in the interval the taxon appeared for the last time, and \code{FALSE} in the rest.
 #' 
-#' @param dat \code{(data.frame)} Fossil occurrence table.
+#' @param x \code{(data.frame)} Fossil occurrence table.
 #' 
 #' @param tax \code{(character)} Variable name of the occurring taxa (variable type: \code{factor} or \code{character} - such as \code{"genus"})
 #' 
@@ -24,30 +24,30 @@
 #' modTab<-modeltab(corals, bin="stg", tax="genus", taxvars=c("ecology", "family"))
 #'
 #' @export
-modeltab<-function(dat, tax, bin, taxvars=NULL,  rt=FALSE, singletons=FALSE){
-#	dat <- corals[corals$stg!=95,]
+modeltab<-function(x, tax, bin, taxvars=NULL,  rt=FALSE, singletons=FALSE){
+#	x <- corals[corals$stg!=95,]
 #	bin<- "stg"
 #	tax <- "genus"
 #	taxvars <- "ecology"
 
 	# sub dataset
 	# the cell-variable
-	unVar<- paste(dat[, tax], dat[, bin], sep="")
-	subDat <- dat[,c(tax, bin, taxvars)]
+	unVar<- paste(x[, tax, drop=TRUE], x[, bin, drop=TRUE], sep="")
+	subDat <- x[,c(tax, bin, taxvars)]
 	subDat <- subDat[!duplicated(unVar),]
 
 	# omit NAs
-	bNeed<- !(is.na(subDat[,tax]) | is.na(subDat[,bin]))
+	bNeed<- !(is.na(subDat[,tax, drop=TRUE]) | is.na(subDat[,bin, drop=TRUE]))
 	# taxon vars
 	subDat<- subDat[bNeed,]
 
 	# the data are complied - reorder
-	subDat <- subDat[order(subDat[,tax], subDat[, bin]),]
+	subDat <- subDat[order(subDat[,tax, drop=TRUE], subDat[, bin, drop=TRUE]),]
 	
 
 	# filter singleton taxa
 	if(!singletons){
-		taxInd <- as.numeric(factor(subDat[, tax]))
+		taxInd <- as.numeric(factor(subDat[, tax, drop=TRUE]))
 
 		#if two 1 follow each other that indicates that a singleton is present
 		diffInd <- c(1,diff(taxInd))
@@ -62,11 +62,11 @@ modeltab<-function(dat, tax, bin, taxvars=NULL,  rt=FALSE, singletons=FALSE){
 	rows <- 1:nrow(subDat)
 
 	# for every taxon
-	respInd<-tapply(INDEX=subDat[, tax], X=rows, function(x){
+	respInd<-tapply(INDEX=subDat[, tax], X=rows, function(w){
 		# sampled bins
-		bins<- subDat[x, bin]
+		bins<- subDat[w, bin, drop=TRUE]
 		# return the FAD,LAD row numbers
-		c(x[bins==min(bins)], x[bins==max (bins)])
+		c(w[bins==min(bins)], w[bins==max (bins)])
 	})
 
 	# FAD-LAD row numbers 
@@ -88,13 +88,13 @@ modeltab<-function(dat, tax, bin, taxvars=NULL,  rt=FALSE, singletons=FALSE){
 		datMod <- cbind(occurrence, datMod)
 
 		# the rows of original data, gaps are NAs
-		indInNew <- tapply(subDat[, tax], X=rows, function(x){
-			bins <- subDat[x, bin]
+		indInNew <- tapply(subDat[, tax], X=rows, function(w){
+			bins <- subDat[w, bin, drop=TRUE]
 			ran <- (range(bins)[1]:range(bins)[2])
 
 			one <- rep(NA, length(ran))
 
-			one[ran%in%bins] <- x
+			one[ran%in%bins] <- w
 			return(one)
 		})
 
@@ -106,13 +106,13 @@ modeltab<-function(dat, tax, bin, taxvars=NULL,  rt=FALSE, singletons=FALSE){
 		datMod$occurrence[is.na(datMod$occurrence)] <- FALSE
 		# fill in the obvious gaps
 		# taxon name
-		datMod[, tax] <- fill(datMod[, tax])
+		datMod[, tax] <- fill(datMod[, tax, drop=TRUE])
 		# bin - increment by one
-		datMod[, bin] <- fill(datMod[, bin], inc=1)
+		datMod[, bin] <- fill(datMod[, bin, drop=TRUE], inc=1)
 
 		# extinction/origination response
-		datMod[, "ext"] <- fill(datMod[, "ext"])
-		datMod[, "ori"] <- fill(datMod[, "ori"], forward=FALSE)
+		datMod[, "ext"] <- fill(datMod[, "ext", drop=TRUE])
+		datMod[, "ori"] <- fill(datMod[, "ori", drop=TRUE], forward=FALSE)
 
 		if(!is.null(taxvars)){
 			# the taxon variables

@@ -6,7 +6,7 @@
 #' \emph{"n."}, \emph{"sp."}, \emph{"?"}, \emph{"gen."}, \emph{"aff."}, \emph{"cf."}, \emph{"ex gr."}, \emph{"subgen."}, \emph{"spp"} and informal species designated with letters. Entries with \emph{"informal"} and \emph{"indet."} in them will also be invalidated. 
 #' 
 #' Functions called by the \code{misspells} and \code{stems} arguments were written by Gwen Antell. 
-#' @param vec \code{(character)}: the vector containing species names with qualifiers of open taxonomy.
+#' @param x \code{(character)}: the vector containing species names with qualifiers of open taxonomy.
 #'
 #' @param debug \code{(logical)}: \code{FALSE} will return the cleaned species name vector, \code{TRUE} returns a data table that allows one by one checking.
 #' @param collapse \code{(character)}: This argument will be passed to the paste function's argument of the same name. The character value to be inserted between the genus and species names.
@@ -20,18 +20,18 @@
 #' cleansp(examp) 
 #' @export
 # function to cleanse a noisy species name vector
-cleansp <- function(vec, debug=FALSE, collapse="_", subgenera=FALSE, misspells=TRUE, stems=TRUE){
+cleansp <- function(x, debug=FALSE, collapse="_", subgenera=FALSE, misspells=TRUE, stems=TRUE){
 	
 	# keep the original
-	vecOrig<-vec
+	vecOrig<-x
 	# presplit for parenthesis error
-	vec<-gsub("\\( ", "\\(", vec)
+	x<-gsub("\\( ", "\\(", x)
 	
 	# presplit the the double space error
-	vec<-gsub("  ", " ", vec)
+	x<-gsub("  ", " ", x)
 	
 	# split the string
-	split<-strsplit(vec, " ")
+	split<-strsplit(x, " ")
 	
 	# excluded parts
 		# these entries will be omitted without further issues	
@@ -44,87 +44,87 @@ cleansp <- function(vec, debug=FALSE, collapse="_", subgenera=FALSE, misspells=T
 		special <- c("sp.1","sp.2", "informal", "indet.", letters)
 	
 	
-	dual<-lapply(split, function(x){
+	dual<-lapply(split, function(w){
 	# missing entries
-		if(sum(is.na(x))==length(x)){
+		if(sum(is.na(w))==length(w)){
 			return(NA, NA)
 		}
 	
 	#is a name starting with quotes - remove quotes
 		
-		quotes<-sapply(x, function(y){
+		quotes<-sapply(w, function(y){
 			substr(y, 1,1)%in%c("\"")
 		})
 		if(sum(quotes)>0){
-			tem<-unlist(strsplit(x[quotes], "\""))[2]
-			x[quotes]<-tem
+			tem<-unlist(strsplit(w[quotes], "\""))[2]
+			w[quotes]<-tem
 		}
 		
 	# omit the prefixes and suffixes
-		x<-x[!x%in%exclude]
+		w<-w[!w%in%exclude]
 
 	# omit the jointly occurring notes (e.g. 'sensu lato')
 		jointOcc<-unlist(lapply(jointExclude, function(y){
-			sum(y%in%x)==length(y)
+			sum(y%in%w)==length(y)
 		
 		}))
 		if(sum(jointOcc)>0){
 			je<-jointExclude[jointOcc]
 			for(i in 1:length(je)){
-				x<-x[!x%in%je[[i]]]
+				w<-w[!w%in%je[[i]]]
 			}
 			
 		}
 		
 	# if there is a non-valid species name indicator - remove the entry
-		if(sum(x%in%special)>0){
+		if(sum(w%in%special)>0){
 			return(c(NA, NA))
 		}
-		numConvert<-suppressWarnings(as.numeric(x))
+		numConvert<-suppressWarnings(as.numeric(w))
 		if(sum(!is.na(numConvert))>0){
 			return(c(NA, NA))
 		}
 		
-		if(length(x)==1){
+		if(length(w)==1){
 			return(c(NA, NA))
 		}
 	
 	# is there a subgenus name - omit it
 		# first character is parenthesis- omit
-		parenth1<-sapply(x, function(y){
+		parenth1<-sapply(w, function(y){
 			substr(y, 1,1)=="("
 		})
 		
 		if(sum(parenth1)>0){
 			# exclude
 			if(!subgenera){
-				x<-x[!parenth1]
+				w<-w[!parenth1]
 			}else{
-				subgen <- x[parenth1]
+				subgen <- w[parenth1]
 				subgen <-substr(subgen, 2,nchar(subgen))
-				x<-x[!parenth1]
-				x[1] <- subgen
+				w<-w[!parenth1]
+				w[1] <- subgen
 
 				# in case it is a single entry, omit the unneded 
 				if(substr(subgen, nchar(subgen),nchar(subgen))==")"){
-					x[1]<-substr(subgen, 1,nchar(subgen)-1)
+					w[1]<-substr(subgen, 1,nchar(subgen)-1)
 				}
 			}
 		}
 		
 		#last character is parenthesis- because of other words/qualifiers before
-		parenth2<-sapply(x, function(y){
+		parenth2<-sapply(w, function(y){
 			substr(y, nchar(y),nchar(y))==")"
 		})
 		
 		if(sum(parenth2)>0){
 			if(!subgenera){
-				x<-x[!parenth2]
+				w<-w[!parenth2]
 			}else{
-				subgen <- x[parenth2]
+				subgen <- w[parenth2]
 				subgen <-substr(subgen, 1,nchar(subgen)-1)
-				x<-x[!parenth2]
-				x[1] <- subgen
+				w<-w[!parenth2]
+				w[1] <- subgen
 			}
 		}
 		
@@ -133,7 +133,7 @@ cleansp <- function(vec, debug=FALSE, collapse="_", subgenera=FALSE, misspells=T
 		
 		
 	# return genus and species name - potentially subspecies and crap at the end
-		return(x)
+		return(w)
 	
 	})
 	
@@ -143,15 +143,15 @@ cleansp <- function(vec, debug=FALSE, collapse="_", subgenera=FALSE, misspells=T
 #	
 #	View(cbind(gen,sp)[len,])
 #	
-#	prob<-vec[len]
+#	prob<-x[len]
 #	View(prob)
 	
 	# merge the genus and species in one column
-	singular<-unlist(lapply(dual, function(x){
-		if(is.na(x[1])){
+	singular<-unlist(lapply(dual, function(w){
+		if(is.na(w[1])){
 			return(NA)
 		}else{
-			paste(x[1:2], collapse=collapse)
+			paste(w[1:2], collapse=collapse)
 		}
 	}))
 	if(stems){
@@ -166,12 +166,12 @@ cleansp <- function(vec, debug=FALSE, collapse="_", subgenera=FALSE, misspells=T
 	# omit parentheses
 	if(debug){
 		
-		gen<-unlist(lapply(dual, function(x){
-			x[1]
+		gen<-unlist(lapply(dual, function(w){
+			w[1]
 		}))
 		
-		sp<-unlist(lapply(dual, function(x){
-			x[2]
+		sp<-unlist(lapply(dual, function(w){
+			w[2]
 		
 		}))
 	

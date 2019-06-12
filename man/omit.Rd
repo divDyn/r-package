@@ -4,11 +4,13 @@
 \alias{omit}
 \title{Omission of taxa that have a poor occurrence record}
 \usage{
-omit(dat, tax = "genus", bin = "bin", coll = "collection_no",
-  ref = "reference_no", om = "ref", filterNA = FALSE)
+omit(x, om = "ref", tax = "genus", bin = "bin", coll = NULL,
+  ref = NULL, filterNA = FALSE)
 }
 \arguments{
-\item{dat}{\code{(data.frame)} Occurrence dataset, with \code{bin}, \code{tax} and \code{coll} as column names.}
+\item{x}{\code{(data.frame)} Occurrence dataset, with \code{bin}, \code{tax} and \code{coll} as column names.}
+
+\item{om}{\code{(character)} The type of omission. \code{"coll"} omits occurrences of taxa that occurr only in one collection. \code{"ref"} omits occurrences of taxa that were described only in one reference. \code{"binref"} will omit the set of single reference taxa that were described by more than one references, but appear in only one reference in a time bin.}
 
 \item{tax}{\code{(character)} The name of the taxon variable.}
 
@@ -17,8 +19,6 @@ omit(dat, tax = "genus", bin = "bin", coll = "collection_no",
 \item{coll}{\code{(character)} The variable name of the collection identifiers.}
 
 \item{ref}{\code{(character)} The variable name of the reference identifiers (optional).}
-
-\item{om}{\code{(character)} The type of omission. \code{"coll"} omits occurrences of taxa that occurr only in one collection. \code{"ref"} omits occurrences of taxa that were described only in one reference. \code{"binref"} will omit the set of single reference taxa that were described by more than one references, but appear in only one reference in a time bin.}
 
 \item{filterNA}{\code{(logical)} Additional entries can be added to influence the dataset that might not have reference or collection information (\code{NA} entries). These occurrences are treated as single-collection or single-reference taxa if the \code{na.rm} argument is set to \code{FALSE} (default). Setting this argument to \code{TRUE} will keep these entries. (see example)}
 }
@@ -32,20 +32,20 @@ The function returns a \code{logical} vector, with a value for each row. \code{T
 # omit single-reference taxa
   data(corals)
   data(stages)
-  toOmit <- omit(corals, bin="stg", tax="genus", om="ref")
-  dat <- corals[!toOmit,]
+  toOmit <- omit(corals, bin="stg", tax="genus", om="ref", ref="reference_no")
+  x <- corals[!toOmit,]
 
 # within divDyn
   # plotting
   tsplot(stages, shading="series", boxes="sys", xlim=c(260,0), 
     ylab="range-through diversity (genera)", ylim=c(0,230))
   # multiple ref/slice required
-  ddNoSing <- divDyn(corals, tax="genus", bin="stg", om="binref")
+  ddNoSing <- divDyn(corals, tax="genus", bin="stg", om="binref", ref="reference_no")
   lines(stages$mid, ddNoSing$divRT, lwd=2, col="red")
 
   # with the recent included (NA reference value)
   ddNoSingRec <- divDyn(corals, tax="genus", bin="stg",
-    om="binref", filterNA=TRUE)
+    om="binref", filterNA=TRUE,ref="reference_no")
   lines(stages$mid, ddNoSingRec$divRT, lwd=2, col="blue")
   
   # legend

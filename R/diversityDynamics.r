@@ -8,9 +8,9 @@
 #'
 #' \code{tThrough}: Number of through-ranging taxa, taxa that have first occurrences before, and last occurrences after the focal bin.
 #'
-#' \code{tOri}: Number of originating taxa, taxa that have first occurrences in the focal bin, and last occurrences after.
+#' \code{tOri}: Number of originating taxa, taxa that have first occurrences in the focal bin, and last occurrences after it.
 #'
-#' \code{tExt}: Number of taxa getting extinct. These are taxa that have first occurrences before the focal bin, and last occurrences after it.
+#' \code{tExt}: Number of taxa getting extinct. These are taxa that have first occurrences before the focal bin, and last occurrences in it.
 #'
 #' \code{tSing}: Number of stratigraphic singleton (single-interval) taxa, taxa that only occur in the focal bin.
 #'
@@ -50,11 +50,11 @@
 #'
 #' \code{divRT}: Range-through diversity (richness), all taxa in the interval, based on the range-through assumption. \emph{(tSing + tOri + tExt + tThrough)}.
 #'
-#' \code{sampRange}: Range-based sampling probability (Foote), \emph{(divSIB - tExt - tOri- t-Sing)/tThrough}
+#' \code{sampRange}: Range-based sampling probability, without observed range end-points (Foote), \emph{(divSIB - tExt - tOri- t-Sing)/tThrough}
 #'
 #' \code{samp3t}: Three-timer sampling completeness of Alroy (2008). \emph{t3/(t3+tPart)}
 #'
-#' \code{extGF}: Gap-filler extinction rates of Alroy(2014). \emph{log((t2u + tPart)/(t3+tPart+tGFd))}
+#' \code{extGF}: Gap-filler extinction rates of Alroy(2014). \emph{log((t2d + tPart)/(t3+tPart+tGFd))}
 #'
 #' \code{oriGF}: Gap-filler origination rates of Alroy(2014). \emph{log((t2u + tPart)/(t3+tPart+tGFd))}
 #'
@@ -76,13 +76,13 @@
 #'
 #' Alroy, J. (2015) A more precise speciation and extinction rate estimator. Paleobiology 41, 633-639. doi: 10.1017/pab.2015.26
 #'
-#' @param dat \code{(data.frame)} Fossil occurrence table.
+#' @param x \code{(data.frame)} Fossil occurrence table.
 #' 
 #' @param tax \code{(character)} Variable name of the occurring taxa (variable type: \code{factor} or \code{character} - such as \code{"genus"}
 #' 
-#' @param bin \code{(character)} Variable name of the bin numbers of the occurrences. This variable should be \code{numeric}. 
-#'
-#' @param ages \code{(logical)} Argument for setting the direction of time in \code{bin}. The default setting, \code{FALSE} will execute the function with higher numbers corresponding to later intervals. \code{TRUE} will reverse the direction of values in the \code{bins} variable, making originations extinctions and vice versa (use this for age input!, e.g 400 Ma, see examples). 
+#' @param bin \code{(character)} Variable name of the discrete bin numbers of the occurrences. This variable should be \code{numeric}. Time flows from lower to higher values by default. Use \code{revtime} to reverse this order.
+#' @param age \code{(character)} Variable name of the ages of the occurrences that will be sliced with the \code{slice} function using the intervals provided in \code{breaks}. This variable should be \code{numeric}. Time flows from higher to lower values by default. Use \code{revtime} to reverse this order.
+#' @param revtime \code{(logical)} Argument for reversing the default direction of time. Setting this argument to \code{TRUE} will make time flow from higher to lower values when \code{bin} is used, and from lower to higher values, when \code{age} is given. CAUTION: Failing to set this argument properly can make originations become extinctions and vice versa! 
 #' @param breaks \code{(numeric)} If \code{NULL} (default) the used values in the \code{bin} variable will designate independent time slices that follow each other in succession. If a vector is provided, than the numeric entries in \code{bin} will be binned similarly to the \code{\link[graphics]{hist}} or \code{\link[base]{cut}} function. The order of elements in this vector is arbitrary.
 #' @param noNAStart (logical) Useful when the entries in the \code{bin} variable do not start from bin no. 1, but positive integer bin numbers are provided. Then \code{noNAStart=TRUE} will cut the first part of the resulting table, so the first row will contain the estimates for the lowest bin number. In case of positive integer bin identifiers, and if \code{noNAStart=FALSE}, the index of the row will be the bin number. 
 #' 
@@ -106,16 +106,16 @@
 #'	  lines(stages$mid, dd$divRT, lwd=2)
 #' 
 #'  # with omission of single reference taxa  
-#'    ddNoSing <- divDyn(corals, tax="genus", bin="stg", om="ref")
+#'    ddNoSing <- divDyn(corals, tax="genus", bin="stg", om="ref", ref="reference_no")
 #'    lines(stages$mid, ddNoSing$divRT, lwd=2, col="red")
 #'
 #'  # using the estimated ages (less robust) - 10 million years
 #'    # mean ages
 #'    corals$me_ma <- apply(corals[, c("max_ma", "min_ma")], 1, mean)
 #'    # ages reverse the direction of time! set ages to TRUE in this case
-#'    ddRadio10 <- divDyn(corals, tax="genus", bin="me_ma", 
-#'		breaks=seq(250,0,-10), ages=TRUE)
-#'    lines(ddRadio10$bin, ddRadio10$divRT, lwd=2, col="green")
+#'    ddRadio10 <- divDyn(corals, tax="genus", age="me_ma", 
+#'		breaks=seq(250,0,-10))
+#'    lines(ddRadio10$me_ma, ddRadio10$divRT, lwd=2, col="green")
 #'       
 #'  # legend
 #'    legend("topleft", legend=c("all", "no single-ref. taxa", "all, estimated ages"), 
@@ -123,50 +123,148 @@
 #'    
 #'
 #' @export
-divDyn <- function(dat, tax, bin, ages=FALSE, breaks=NULL, coll="collection_no", ref="reference_no", om=NULL,noNAStart=FALSE, data.frame=TRUE, filterNA=FALSE)
+divDyn <- function(x, tax, bin=NULL, age=NULL, revtime=FALSE, breaks=NULL, coll=NULL, ref=NULL, om=NULL,noNAStart=FALSE, data.frame=TRUE, filterNA=FALSE)
 {
 	
 #	# tral run
-#	dat<-corals
+#	x<-corals
 #	bin<-"stg"
 #	tax<- "genus"
 #	ages <- FALSE
 #	breaks<-NULL
 
-	# checking the binning argument
-	# is numeric
-	if(!is.numeric(dat[,bin])){
-		stop("The bin variable is not numeric.")
+	# 1. Binning organization
+	if(is.null(bin) & is.null(age)) stop("You have to provide either a 'bin' or an 'age' argument.")
+
+	if(!is.null(bin) & !is.null(age)) stop("The 'bin' and 'age' arguents cannot be used together.")
+
+	# calculation offset. Bins are shifted for the time of the calculations. 
+	# Used to make sure that the Rcpp counting algorithm works accurately.
+	offset <- 4
+
+	# by default do not use factors:
+	useFactor <-FALSE
+
+	# 1a. the bin variable is used
+	if(!is.null(bin)){
+		# the breaks argument cannot be used
+		if(!is.null(breaks)) stop("The 'breaks' argument cannot be used when discreet bins are provided. ")
+
+		# for testing, checking and binning calculations
+		binVarFull <- x[,bin, drop=TRUE]
+	
+		# is the variable the right type?
+		if(!is.numeric(binVarFull) & !is.factor(binVarFull)){
+			stop("The 'bin' variable is not numeric or a factor.")
+		}
+	
+		#if bin is a factor, convert it to numeric here
+		if(is.factor(binVarFull)){
+			# conserve the levels
+			factLevs <- levels(binVarFull)
+
+			#save the names
+			binVarFull<-as.numeric(binVarFull)
+
+			useFactor<- TRUE
+		}
+		
+		# reverse time at this stage
+		if(revtime){
+			x[, bin] <- -binVarFull
+			binVarFull <- -binVarFull
+		}
+
+		# get levels
+		lev <- sort(unique(binVarFull)) # can NAs get past this? - yes, but the code below handles them
+
+		# check whether there are enough entries?
+		if(length(lev)<3) stop("You have less than 3 bins.")
+
+		# if there are integer entries coerce continuous numbering for the output
+		# and use only shifts of values, rather than replacement (much faster)
+		if(sum(lev%%1==0)==length(lev)) {
+			minLev<-min(lev)
+			maxLev<-max(lev)
+			lev<-minLev:maxLev
+
+			# shift the ranks so 5 should be the first index
+			y<- binVarFull-minLev+1+offset
+		
+		# used for specific bin entries e.g. -300, -295
+		# this might have to be forced by factorization! 
+		}else{
+
+			ranks <- rank(lev)+offset
+			names(ranks) <- lev
+	
+			# the NAs
+			notNA <- !is.na(binVarFull)
+			y<-rep(NA, length(binVarFull))
+	
+			# create the new bin vector
+			y[notNA]<-ranks[as.character(binVarFull[notNA])]
+			# y became bin
+			# and lev became lev
+		}
+		
+		# copy in the new variable
+		x[,bin] <- y
+
+		# use a unified variable name from now on
+		time <- bin
+
+	}
+
+	# 1b. age data
+	if(!is.null(age)){
+		# the breaks argument must be used
+		if(is.null(breaks)) stop("If you use ages, you have to use provide a 'breaks' argument.")
+		if(noNAStart) warning("You provided ages, 'noNAStart' will be ignored.")
+		
+		# for testing, checking and binning calculations
+		ageVarFull <- x[,age, drop=TRUE]
+	
+		# is the variable the right type?
+		if(!is.numeric(ageVarFull)){
+			stop("The 'age' variable is not numeric.")
+		}
+
+		# reverse time at this stage by default, opposite the way as for bins
+		if(!revtime){
+			x[, age] <- -x[,age, drop=TRUE]
+			ageVarFull <- -ageVarFull
+			breaks <- -breaks
+		}
+
+		# call the automatic binning function
+		aubi <- slice(x[,age, drop=TRUE], breaks=breaks, offset=offset, ts=FALSE, revtime=FALSE)
+		x[,age] <- aubi$slc
+		lev <- aubi$lev
+
+		# use a unified variable name from now on
+		time <- age
 	}
 	
-	if(ages){
-		dat[, bin] <- -dat[,bin]
-		if(!is.null(breaks)) breaks <- -breaks
-	}
-	
-	# appropriate treatment of binning data
-	off <- 4
-	aubi <- autoBin(dat[,bin], breaks=breaks, offset=off)
-	dat[,bin] <- aubi$y
 
 	# in case the scale defined by breaks has younger parts than the data
-	maxVal<- max(aubi$y, na.rm=TRUE)-off
+	# the number of de facto bins for which metrics will be calculated
+	maxVal<- max(x[,time], na.rm=TRUE)-offset
 
-
-	# the omission phase
+	# the omission phase - does this work?
 	if(!is.null(om)){
-		dat<-dat[!omit(dat, tax=tax, bin=bin,om=om, ref=ref, coll=coll, filterNA=filterNA),]
+		x<-x[!omit(x, tax=tax, bin=time,om=om, ref=ref, coll=coll, filterNA=filterNA),]
 	}
 	
 	# sub dataset
-	subDat <- unique(dat[,c(tax, bin)])
+	subDat <- unique(x[,c(tax, time)])
 	
 	# omit NAs
-	bNeed<- !(is.na(subDat[,tax]) | is.na(subDat[,bin]))
+	bNeed<- !(is.na(subDat[,tax, drop=TRUE]) | is.na(subDat[,time, drop=TRUE]))
 
 	# taxon vars
-	taxVar<-subDat[bNeed, tax]
-	binVar<-subDat[bNeed, bin]
+	taxVar<-subDat[bNeed, tax, drop=TRUE]
+	binVar<-subDat[bNeed, time, drop=TRUE]
 
 	if(any(""==taxVar)){
 		warning("Taxon name <\"\"> (empty quotes) is detected!")
@@ -192,14 +290,15 @@ divDyn <- function(dat, tax, bin, ages=FALSE, breaks=NULL, coll="collection_no",
 	dCountsAndMetrics<-cbind(counts, metrics)
 		
 	# delete the safety offset
-	dCountsAndMetrics<- dCountsAndMetrics[(off+1):nrow(dCountsAndMetrics), ]
+	dCountsAndMetrics<- dCountsAndMetrics[(offset+1):nrow(dCountsAndMetrics), ]
 
 	# cbind all together
-	dCountsAndMetrics<-cbind(bin=aubi$z[1:maxVal], dCountsAndMetrics)
+	dCountsAndMetrics<-cbind(time=lev[1:maxVal], dCountsAndMetrics)
+	colnames(dCountsAndMetrics)[colnames(dCountsAndMetrics)=="time"] <- time
 	
-	#create the returning table
+	#create the returned table
 	columns <- c(
-		"bin",
+		time,
 		"t2d",
 		"t2u",
 		"t3",
@@ -232,44 +331,77 @@ divDyn <- function(dat, tax, bin, ages=FALSE, breaks=NULL, coll="collection_no",
 		"sampRange"
 	)
 	dCountsAndMetrics<-dCountsAndMetrics[,columns]
-	
-	if(data.frame){				
-		dCountsAndMetrics<-as.data.frame(dCountsAndMetrics, stringsAsFactors=F)
-	}
-	
-	
-	#!!!nTot3tSampComp
 
 	# coerce NAs in variables and intervals where they were not supposed to be
-		# first row
+		# first two rows
 		dCountsAndMetrics[1,c("t2d","t3","tPart","tGFd","tGFu", "tThrough", "tExt", "divBC", "O2f3")] <- NA
 		dCountsAndMetrics[2,c("tGFd","oriGF", "ori2f3", "O2f3")] <- NA
 	
-		# last row
+		# last two rows
 		nEnd<-nrow(dCountsAndMetrics)
 		dCountsAndMetrics[nEnd,c("t2u","t3","tPart","tGFd","tGFu", "ext2f3", "tOri", "tThrough", "E2f3")] <- NA
 		dCountsAndMetrics[nEnd-1,c("tGFu","extGF", "ext2f3", "E2f3")] <- NA
 
-	#want to see the NA's at the beginnning? 
-	# only use noNAStart when the simple indices are used	
-	if (!noNAStart){
-		# only if it is applicable - e.g. 
-		firstBin <- min(dCountsAndMetrics[,"bin"]) 
-		
-		# (when the time series does not start with bin 1 and integers)
-		if(sum((dCountsAndMetrics[,"bin"]%%1)==0)==nEnd & firstBin>0){
-			empty <- matrix(NA, nrow=firstBin-1, ncol=ncol(dCountsAndMetrics))
-			colnames(empty) <- columns
-			dCountsAndMetrics<-rbind(empty,dCountsAndMetrics)
-			rownames(dCountsAndMetrics)<-NULL
+	# bin/age variable in the output table
+	# reverse time for bins if asked so
+	if(!is.null(bin)){
+		if(revtime){
+			dCountsAndMetrics[,bin]<- -dCountsAndMetrics[,bin]
 		}
-		
+	# reverse time by default for ages
+	}else{
+		if(!revtime){
+			dCountsAndMetrics[,age]<- -dCountsAndMetrics[,age]
+		}
+	}
+
+	# by default,use an output data.frame 
+	if(data.frame){				
+		dCountsAndMetrics<-as.data.frame(dCountsAndMetrics, stringsAsFactors=F)
+		if(useFactor) dCountsAndMetrics[,bin] <- factLevs
 	}
 	
-	# cosmetic changes		
-	if(ages){
-		dCountsAndMetrics[,"bin"]<- -dCountsAndMetrics[,"bin"]
+	#want to see the NA's at the beginnning? 
+	# only use noNAStart when the simple indices are used	
+	if(!is.null(bin) & !useFactor){
+		if(!noNAStart){
+			# only if it is applicable - e.g. 
+			firstBin <- min(dCountsAndMetrics[,bin]) 
+			
+			# (when the time series does not start with bin 1 and bins are positive integers)
+			if(sum((dCountsAndMetrics[,bin]%%1)==0)==nEnd & firstBin>1){
+				empty <- matrix(NA, nrow=firstBin-1, ncol=ncol(dCountsAndMetrics))
+				colnames(empty) <- columns
+				
+				# insert the NAs
+				dCountsAndMetrics<-rbind(empty,dCountsAndMetrics)
+				
+				# make the first column complete so it can be used as rownames
+				dCountsAndMetrics[1:(firstBin-1),bin] <- 1:(firstBin-1)
+			
+			}
+			
+		}
 	}
+	
+	
+
+	# after this the rownames should be alright, copy bin to that, so it can be used in subsampling
+	rnames <- as.character(dCountsAndMetrics[,time])
+
+	# weird problem for ages: sometimes during the character conversion and rounding 
+	# the bin IDs become identical...
+	bDuplum <- duplicated(rnames)
+	if(sum(bDuplum)>0){
+		# append some junk to make them different
+		rnames[bDuplum] <- paste(rnames[bDuplum], 1:sum(bDuplum), sep="")
+	}
+	
+	# and copy the rownames
+	rownames(dCountsAndMetrics) <- rnames
+
+	# use factor levels as rownames when the data.frame option is FALSE
+	if(!data.frame & useFactor) rownames(dCountsAndMetrics)<- factLevs
 		
 	#return the table					
 	return(dCountsAndMetrics)
@@ -330,91 +462,91 @@ Metrics<- function(counts){
 	colnames(metrics)<-metNames
 	
 	#BC diversity
-	metrics[,"divBC"] <- counts[,"tThrough"]+counts[,"tExt"]
+	metrics[,"divBC"] <- counts[,"tThrough", drop=TRUE]+counts[,"tExt", drop=TRUE]
 
 	# total diversity
-	sib. <- counts[,"divSIB"]-counts[,"tSing"]
-	div <- metrics[,"divBC"]+counts[,"tOri"]                  
-	metrics[,"divRT"]<-div+counts[,"tSing"]
+	sib. <- counts[,"divSIB", drop=TRUE]-counts[,"tSing", drop=TRUE]
+	div <- metrics[,"divBC", drop=TRUE]+counts[,"tOri", drop=TRUE]                  
+	metrics[,"divRT"]<-div+counts[,"tSing", drop=TRUE]
 	
 	#Sampling parameters
 	#sampling probability (Foote, 2000)
-	obs <- sib.-counts[,"tExt"]-counts[,"tOri"]
-	metrics[,"sampRange"] <- obs/counts[,"tThrough"] 
+	obs <- sib.-counts[,"tExt", drop=TRUE]-counts[,"tOri", drop=TRUE]
+	metrics[,"sampRange"] <- obs/counts[,"tThrough", drop=TRUE] 
 
 	#Three-timer sampling completeness (Alroy, 2008)	
-	metrics[,"samp3t"] <- counts[,"t3"]/(counts[,"t3"]+counts[,"tPart"])
+	metrics[,"samp3t"] <- counts[,"t3", drop=TRUE]/(counts[,"t3", drop=TRUE]+counts[,"tPart", drop=TRUE])
 			
 			#Sampling completeness of the entire time series
-			nTot3tSampComp<- sum(counts[,"t3"], na.rm=T)/(sum(counts[,"t3"], na.rm=T)+sum(counts[,"tPart"], na.rm=T))
+			nTot3tSampComp<- sum(counts[,"t3", drop=TRUE], na.rm=T)/(sum(counts[,"t3", drop=TRUE], na.rm=T)+sum(counts[,"tPart", drop=TRUE], na.rm=T))
 			
 	# proportional extinctions
-		metrics[,"extProp"]<-(counts[,"tExt"]+counts[,"tSing"])/metrics[,"divRT"]
-		metrics[,"oriProp"]<-(counts[,"tOri"]+counts[,"tSing"])/metrics[,"divRT"]
+		metrics[,"extProp"]<-(counts[,"tExt", drop=TRUE]+counts[,"tSing", drop=TRUE])/metrics[,"divRT", drop=TRUE]
+		metrics[,"oriProp"]<-(counts[,"tOri", drop=TRUE]+counts[,"tSing", drop=TRUE])/metrics[,"divRT", drop=TRUE]
 	
 	#Foote (2000) rates
-		metrics[,"extPC"]<- -log(counts[,"tThrough"]/(counts[,"tThrough"]+counts[,"tExt"]))
-		metrics[,"oriPC"]<- -log(counts[,"tThrough"]/(counts[,"tThrough"]+counts[,"tOri"]))
+		metrics[,"extPC"]<- -log(counts[,"tThrough", drop=TRUE]/(counts[,"tThrough", drop=TRUE]+counts[,"tExt", drop=TRUE]))
+		metrics[,"oriPC"]<- -log(counts[,"tThrough", drop=TRUE]/(counts[,"tThrough", drop=TRUE]+counts[,"tOri", drop=TRUE]))
 		
 	#Three-timer rates by Alroy (2008)
 		#uncorrected:
-		metrics[,"ext3t"] <- log(counts[,"t2d"]/counts[,"t3"]) # two-timer/three-timer ratio (bottom)
-		metrics[,"ori3t"] <- log(counts[,"t2u"]/counts[,"t3"]) # two-timer/three-timer ration (top)
+		metrics[,"ext3t"] <- log(counts[,"t2d", drop=TRUE]/counts[,"t3", drop=TRUE]) # two-timer/three-timer ratio (bottom)
+		metrics[,"ori3t"] <- log(counts[,"t2u", drop=TRUE]/counts[,"t3", drop=TRUE]) # two-timer/three-timer ration (top)
 		
 		#corrected:
 			#extinction rates:
 				thtSampCompNext <- c(metrics[2:nrow(counts),"samp3t"],NA) # Sampling probability in subsequent bin (BIN5)
-				metrics[,"extC3t"] <- metrics[,"ext3t"] + log(thtSampCompNext)
+				metrics[,"extC3t"] <- metrics[,"ext3t", drop=TRUE] + log(thtSampCompNext)
 				#nC3tExt[nC3tExt<0] <- 0 # omit negative values
 			
 			#origination rates:
-				thtSampCompPrev <- c(NA, metrics[1:(nrow(counts)-1),"samp3t"]) # Sampling probability in previous bin (BIN5)
-				metrics[,"oriC3t"] <- metrics[,"ori3t"] + log(thtSampCompPrev)
+				thtSampCompPrev <- c(NA, metrics[1:(nrow(counts)-1),"samp3t", drop=TRUE]) # Sampling probability in previous bin (BIN5)
+				metrics[,"oriC3t"] <- metrics[,"ori3t", drop=TRUE] + log(thtSampCompPrev)
 				#nC3tOri[nC3tOri<0] <- 0 #omit negative values
 	 
 	
 	#Gap filler rates by Alroy(2014)
-		metrics[,"extGF"]<-log((counts[,"t2d"]+counts[,"tPart"])/(counts[,"t3"]+counts[,"tPart"]+counts[,"tGFu"]))
-		metrics[,"oriGF"]<-log((counts[,"t2u"]+counts[,"tPart"])/(counts[,"t3"]+counts[,"tPart"]+counts[,"tGFd"]))
+		metrics[,"extGF"]<-log((counts[,"t2d", drop=TRUE]+counts[,"tPart", drop=TRUE])/(counts[,"t3", drop=TRUE]+counts[,"tPart", drop=TRUE]+counts[,"tGFu", drop=TRUE]))
+		metrics[,"oriGF"]<-log((counts[,"t2u", drop=TRUE]+counts[,"tPart", drop=TRUE])/(counts[,"t3", drop=TRUE]+counts[,"tPart", drop=TRUE]+counts[,"tGFd", drop=TRUE]))
 	
 	# second- for third (Alroy, 2015)
 	
-	#	substituteF<-function(x){
+	#	substituteF<-function(y){
 	#		# in such cases ... 
 	#		# reversed ordering
-	#		first <- x[1]<x[2] & x[2]<x[3]
+	#		first <- y[1]<y[2] & y[2]<y[3]
 	#		
 	#		# s2 is minimum
-	#		second <- x[2]<x[1] & x[2]<x[3]
+	#		second <- y[2]<y[1] & y[2]<y[3]
 	#		
 	#		# s2 is maximum
-	#		third <- x[2]>x[1] & x[2]>x[3]
+	#		third <- y[2]>y[1] & y[2]>y[3]
 	#		
 	#		# substituting the second lowest of the three counts for s3
 	#		if(first | second | third){
-	#			sort(x)[2]
+	#			sort(y)[2]
 	#		}else{
-	#			x[3]
+	#			y[3]
 	#		}
 	#	}
 		# this is not enough, because the proportion can be still very negative,
 		# he correctly says at the end of the paragraph, it should be a second in the order
 	
 		# extinction proportions (Eq. 4 in Alroy, 2015)
-		sSubD<-apply(counts[,c("s1d","s2d","s3d")],1,function(x) sort(x)[2])
-		metrics[,"E2f3"] <- (counts[,"s1d"]-sSubD)/(counts[,"t2d"]+counts[,"tPart"])
+		sSubD<-apply(counts[,c("s1d","s2d","s3d")],1,function(y) sort(y)[2])
+		metrics[,"E2f3"] <- (counts[,"s1d", drop=TRUE]-sSubD)/(counts[,"t2d", drop=TRUE]+counts[,"tPart", drop=TRUE])
 		
 		# origination proportions
-		sSubU<-apply(counts[,c("s1u","s2u","s3u")],1,function(x) sort(x)[2])
-		metrics[,"O2f3"] <- (counts[,"s1u"]-sSubU)/(counts[,"t2u"]+counts[,"tPart"])
+		sSubU<-apply(counts[,c("s1u","s2u","s3u")],1,function(y) sort(y)[2])
+		metrics[,"O2f3"] <- (counts[,"s1u", drop=TRUE]-sSubU)/(counts[,"t2u", drop=TRUE]+counts[,"tPart", drop=TRUE])
 	
 		# transform to classical rate form
-		metrics[,"ext2f3"] <-log(1/(1-metrics[,"E2f3"]))
-		metrics[,"ori2f3"] <-log(1/(1-metrics[,"O2f3"]))
+		metrics[,"ext2f3"] <-log(1/(1-metrics[,"E2f3", drop=TRUE]))
+		metrics[,"ori2f3"] <-log(1/(1-metrics[,"O2f3", drop=TRUE]))
 		
 	
 	#corrected sampled-in-bin diversity
-		metrics[,"divCSIB"]<-counts[,"divSIB"]*nTot3tSampComp/metrics[,"samp3t"]
+		metrics[,"divCSIB"]<-counts[,"divSIB", drop=TRUE]*nTot3tSampComp/metrics[,"samp3t", drop=TRUE]
 	
 
 	return(metrics)
@@ -431,7 +563,7 @@ Metrics<- function(counts){
 #' 
 #' @param tax \code{(character)} The name of the taxon variable.
 #' 
-#' @param dat \code{(data.frame)} Occurrence dataset, with \code{bin}, \code{tax} and \code{coll} as column names.
+#' @param x \code{(data.frame)} Occurrence dataset, with \code{bin}, \code{tax} and \code{coll} as column names.
 #' @param coll \code{(character)} The variable name of the collection identifiers. 
 #' @param ref \code{(character)} The variable name of the reference identifiers (optional). 
 #' @param om \code{(character)} The type of omission. \code{"coll"} omits occurrences of taxa that occurr only in one collection. \code{"ref"} omits occurrences of taxa that were described only in one reference. \code{"binref"} will omit the set of single reference taxa that were described by more than one references, but appear in only one reference in a time bin.
@@ -441,20 +573,20 @@ Metrics<- function(counts){
 #' # omit single-reference taxa
 #'   data(corals)
 #'   data(stages)
-#'   toOmit <- omit(corals, bin="stg", tax="genus", om="ref")
-#'   dat <- corals[!toOmit,]
+#'   toOmit <- omit(corals, bin="stg", tax="genus", om="ref", ref="reference_no")
+#'   x <- corals[!toOmit,]
 #' 
 #' # within divDyn
 #'   # plotting
 #'	  tsplot(stages, shading="series", boxes="sys", xlim=c(260,0), 
 #'	    ylab="range-through diversity (genera)", ylim=c(0,230))
 #'   # multiple ref/slice required
-#'   ddNoSing <- divDyn(corals, tax="genus", bin="stg", om="binref")
+#'   ddNoSing <- divDyn(corals, tax="genus", bin="stg", om="binref", ref="reference_no")
 #'   lines(stages$mid, ddNoSing$divRT, lwd=2, col="red")
 #'
 #'   # with the recent included (NA reference value)
 #'   ddNoSingRec <- divDyn(corals, tax="genus", bin="stg",
-#'     om="binref", filterNA=TRUE)
+#'     om="binref", filterNA=TRUE,ref="reference_no")
 #'   lines(stages$mid, ddNoSingRec$divRT, lwd=2, col="blue")
 #'   
 #'   # legend
@@ -462,59 +594,70 @@ Metrics<- function(counts){
 #'     "no single-ref. taxa,\n with recent"), 
 #'     col=c("red", "blue"), lwd=c(2,2))
 #' @export
-omit <- function(dat, tax="genus", bin="bin", coll="collection_no", ref="reference_no", om="ref", filterNA=FALSE){
+omit <- function(x, om="ref", tax="genus", bin="bin", coll=NULL, ref=NULL, filterNA=FALSE){
+
 
 	if(!om%in%c("coll", "ref","binref")) stop("Invalid om argument.")
 	
 	if(om=="coll"){
+		if(is.null(coll)) stop("You have to provide a 'coll' argument to omit by collection.")
+		if(is.null(x[[coll]])) stop("Invalid collection variable ('coll'). ")
 		# omit multiple occ rows of same tax (genus) and same coll
-		nonDupl <- !duplicated(dat[,c(tax, coll)])
+		nonDupl <- !duplicated(x[,c(tax, coll)])
 		
 		# which taxa come from just one collection?
-		tabSing <- table(dat[nonDupl,tax])
+		tabSing <- table(x[nonDupl,tax, drop=TRUE])
 		
 		# single collection taxa
 		singTax<- names(tabSing)[tabSing==1]
 		
 		# omit the single collection taxa
-		boolEnd<-dat[,tax]%in%singTax
+		boolEnd<-x[,tax, drop=TRUE]%in%singTax
 		
 		# if na.rm TRUE than do not omit NA collection stuff
 		if(filterNA){
-			boolEnd <- boolEnd & !is.na(dat[,coll])
+			boolEnd <- boolEnd & !is.na(x[,coll, drop=TRUE])
 		}
 	}
 	
 	if(om=="ref"){
+		if(is.null(ref)) stop("You have to provide a 'ref' argument to omit by reference")
+		if(is.null(x[[ref]])) stop("Invalid reference variable ('ref'). ")
+		
 		# omit multiple occ rows of same tax (genus) and same coll
-		nonDupl <- !duplicated(dat[,c(tax, ref)])
+		nonDupl <- !duplicated(x[,c(tax, ref)])
 		
 		# which taxa come from just one collection?
-		tabSing <- table(dat[nonDupl,tax])
+		tabSing <- table(x[nonDupl,tax, drop=TRUE])
 		
 		# single collection taxa
 		singTax<- names(tabSing)[tabSing==1]
 		
 		# omit the single collection taxa
-		boolEnd<-dat[,tax]%in%singTax
+		boolEnd<-x[,tax, drop=TRUE]%in%singTax
 		
 		# if na.rm TRUE than do not omit NA collection stuff
 		if(filterNA){
-			boolEnd <- boolEnd & !is.na(dat[,ref])
+			boolEnd <- boolEnd & !is.na(x[,ref, drop=TRUE])
 		}
 	}
 	
 	
 	
 	if(om=="binref"){
-		nonDupl <- !duplicated(dat[,c(tax, ref, bin)])
+		if(is.null(ref)) stop("You have to provide a 'ref' argument to omit by reference.")
+		if(is.null(x[[ref]])) stop("Invalid reference variable ('ref'). ")
+		if(is.null(bin)) stop("You have to provide a 'bin' argument to omit by bin-reference.")
+		if(is.null(x[[bin]])) stop("Invalid bin variable ('bin'). ")
 		
+
+		nonDupl <- !duplicated(x[,c(tax, ref, bin)])
 		
-		activeDat <- dat[nonDupl, ]
+		activeDat <- x[nonDupl, ]
 		
-		tap<-tapply(INDEX=activeDat[,bin], X=activeDat[,tax], function(x){
+		tap<-tapply(INDEX=activeDat[,bin, drop=TRUE], X=activeDat[,tax, drop=TRUE], function(y){
 					
-			tabSing <- table(x)
+			tabSing <- table(y)
 		
 			nonSingTax<- names(tabSing)[tabSing!=1]
 			return(nonSingTax)
@@ -524,15 +667,15 @@ omit <- function(dat, tax="genus", bin="bin", coll="collection_no", ref="referen
 		# list of taxa that do not occur in in only reference/slice
 		taxaMoreThanOne <- unique(unlist(tap))
 		
-		tap2<-(1:nrow(dat))[!dat[, tax]%in%taxaMoreThanOne]
+		tap2<-(1:nrow(x))[!x[, tax, drop=TRUE]%in%taxaMoreThanOne]
 		
 	
-		boolEnd<-rep(FALSE, nrow(dat))
+		boolEnd<-rep(FALSE, nrow(x))
 		boolEnd[tap2]<-TRUE
 		
 		# if na.rm TRUE than do not omit NA reference stuff
 		if(filterNA){
-			boolEnd <- boolEnd & !is.na(dat[,ref])
+			boolEnd <- boolEnd & !is.na(x[,ref, drop=TRUE])
 		}
 		
 	}
@@ -540,70 +683,6 @@ omit <- function(dat, tax="genus", bin="bin", coll="collection_no", ref="referen
 	return(boolEnd)
 
 }
-
-
-# The autobin utility function to perform the reliable discretization of the time dimension
-# 	# testing and developmental snippets:
-# 	library(divDyn)
-# 	data(corals)
-# 	
-# 	# start with the different stage identifiers
-# 	x<- corals$stg-50
-# 	x<- apply(corals[, c("min_ma", "max_ma")], 1,mean)
-# 	offset <- 4
-# 	breaks<-NULL
-# 	breaks<-seq(300, 0, -25)
-# 	
-# before function is run, do reversion of time axis if necessary!
-autoBin<-function(x, offset=4,breaks=NULL){
-	# only allow to pass through if it is numeric
-	if(!is.numeric(x)) stop("The provided time vector is not numeric.")
-
-	# when there are no breaks (bin identifiers were supposed to be used as provided)
-	if(is.null(breaks)){
-		# get levels
-		z <- sort(unique(x))
-
-		# if there are integer entries coerce continuous numbering for the output
-		# and use only shifts of values, rather than replacement (much faster)
-		if(sum(z%%1==0)==length(z)) {
-			minZ<-min(z)
-			maxZ<-max(z)
-			z<-minZ:maxZ
-
-			# shift the ranks 
-			y<- x-minZ+1+offset
-
-		}else{
-
-			ranks <- rank(z)+offset
-			names(ranks) <- z
-	
-			# the NAs
-			notNA <- !is.na(x)
-			y<-rep(NA, length(x))
-	
-			# create the new bin vector
-			y[notNA]<-ranks[as.character(x[notNA])]
-		}
-	# breaks are present
-	}else{
-		# first, sort the breaks
-		breaks<-sort(breaks)
-		# cut the vector
-		y <- cut(x, breaks=breaks, labels=FALSE)
-		z<-apply(
-			cbind(
-				breaks[1:(length(breaks)-1)],
-				breaks[2:length(breaks)]),
-			1, mean)
-
-		y<- y+offset
-	}
-	return(list(y=y, z=z))
-}
-
-# after function is run, constrain the omission of NAs
 
 
 
