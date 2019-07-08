@@ -5,7 +5,7 @@ R package for quantifying diversity dynamics using fossil sampling data
 
 ## News
 
-- The next update of the package (V0.8.0) is now availble from this development repository. It is submitted to the CRAN servers, the pre-compiled binaries should be available shortly. As this is a major update, I suggest everyone to update their previous installation. See the change log below for the changes. 
+- The next update of the package (V0.8.0) is now availble from the CRAN servers! As this is a major update, I suggest everyone to update their copy. See the change log below for the changes. 
 
 - The paper describing the package is available from the Wiley Online Library. You can download it from this link:
 https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.13161 
@@ -25,7 +25,7 @@ As the package is still getting developed, please note that some interface chang
 
 ## Installing 
 
-### 1. From CRAN (v0.7.1)
+### 1. From CRAN (v0.8.0)
 
 You can install the appropriate binaries normally, by running 
 `install.packages("divDyn")`
@@ -37,9 +37,6 @@ I have updated the windows binaries so they work with the latest internals (3.6)
 - If you have a windows computer, you can install the package with the following R command:
   `install.packages("https://github.com/divDyn/assets/raw/master/r_archive/bin/Win_x64_x86/divDyn_0.8.0.zip", repos=NULL)`
 
-- If you have a Mac, then use the following link .
-  `install.packages("https://github.com/divDyn/assets/raw/master/r_archive/bin/Mac_OSX/divDyn_0.8.0.tgz", repos=NULL)`
-  
 ### 3. Using the source tarball to install (v0.8.0)
 This you can do with running
 ```
