@@ -35,7 +35,7 @@ You can install the appropriate binaries normally, by running
 I have updated the windows binaries so they work with the latest internals (3.6). If you want to use the binaries, please update your R to at least 3.6.
 
 - If you have a windows computer, you can install the package with the following R command:
-  `install.packages("https://github.com/divDyn/assets/raw/master/r_archive/bin/Win_x64_x86/divDyn_0.8.0.zip", repos=NULL)`
+  `install.packages("https://github.com/divDyn/assets/raw/master/r_archive/bin/Win_x64_x86/divDyn_0.8.0.zip", repos=NULL, type="win.binary")`
 
 ### 3. Using the source tarball to install (v0.8.0)
 This you can do with running
