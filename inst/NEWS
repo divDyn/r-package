@@ -1,5 +1,12 @@
 # Change log of the R package 'divDyn'
 
+
+## [0.8.0 (build 737)]  - 2020-08-16
+### Changed
+- minor bugfix for the cleansp() function involving taxa that were missing ("")
+- cleansp()'s default changed from subgenera=FALSE to subgenera=TRUE
+
+
 ## [0.8.0 (build 736)]  - 2019.06.12 
 ### Added
 - Support for 'tibble' type input data.frames. 

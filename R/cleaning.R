@@ -10,7 +10,7 @@
 #'
 #' @param debug \code{(logical)}: \code{FALSE} will return the cleaned species name vector, \code{TRUE} returns a data table that allows one by one checking.
 #' @param collapse \code{(character)}: This argument will be passed to the paste function's argument of the same name. The character value to be inserted between the genus and species names.
-#' @param subgenera \code{(logical)}: \code{FALSE} omits subgenus information (in parentheses) and will construct a unique binomen based on the genus and species names alone. \code{TRUE} will promote the subgenus names and it will create a new binomen based on the subgenus rather than the genus name.
+#' @param subgenera \code{(logical)}: \code{FALSE} omits subgenus information (in parentheses) and will construct a unique binomen based on the genus and species names alone. \code{TRUE} (default) will promote the subgenus names and it will create a new binomen based on the subgenus rather than the genus name.
 #' @param stems \code{(logical)}: Setting this to \code{TRUE} will omit the adjective declination suffices from the species names. 
 #' @param misspells \code{logical}: Resolution of common spelling mistakes, such as diphtongs and alternate spellings: 'ue' is replaced with 'u', 'ae' is replaced with 'e', 'll' with 'l', 'ss' with 's'and 'y' with 'i'. 
 #' @examples
@@ -20,7 +20,7 @@
 #' cleansp(examp) 
 #' @export
 # function to cleanse a noisy species name vector
-cleansp <- function(x, debug=FALSE, collapse="_", subgenera=FALSE, misspells=TRUE, stems=TRUE){
+cleansp <- function(x, debug=FALSE, collapse="_", subgenera=TRUE, misspells=TRUE, stems=TRUE){
 	
 	# keep the original
 	vecOrig<-x
@@ -47,7 +47,7 @@ cleansp <- function(x, debug=FALSE, collapse="_", subgenera=FALSE, misspells=TRU
 	dual<-lapply(split, function(w){
 	# missing entries
 		if(sum(is.na(w))==length(w)){
-			return(NA, NA)
+			return(c(NA, NA))
 		}
 	
 	#is a name starting with quotes - remove quotes
