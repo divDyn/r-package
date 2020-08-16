@@ -128,7 +128,11 @@ cleansp <- function(x, debug=FALSE, collapse="_", subgenera=TRUE, misspells=TRUE
 			}
 		}
 		
+		# in case some genus (subgenus) was there, but no species
+		if(length(w)==1){
+			return(c(NA, NA))
 
+		}
 	# roots
 		
 		
