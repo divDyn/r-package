@@ -3,6 +3,7 @@
 ## [0.8.0 (build 738)]  - 2020-08-16
 ### Changed
 - bugfix of cleansp() that produced Gen_NA when there was a subspecies but no species name
+- fix for "subgenus"
 
 
 ## [0.8.0 (build 737)]  - 2020-08-16

@@ -127,6 +127,9 @@ cleansp <- function(x, debug=FALSE, collapse="_", subgenera=TRUE, misspells=TRUE
 				w[1] <- subgen
 			}
 		}
+		# again remove any potential quotes (subgenus names?)
+		w <- gsub("\"", "", w)
+
 		
 		# in case some genus (subgenus) was there, but no species
 		if(length(w)==1){
