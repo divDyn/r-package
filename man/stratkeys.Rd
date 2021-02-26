@@ -4,7 +4,8 @@
 \name{stratkeys}
 \alias{stratkeys}
 \title{The FossilWorks-based lookup table for the stratigraphic assignments of collections in the Paleobiology Database}
-\format{A \code{data.frame} with 761 observations of 8 variables:
+\format{
+A \code{data.frame} with 761 observations of 8 variables:
 	\describe{
 		\item{\code{interval}}{The names of the registered intervals in the \code{early_interval}/\code{max_interval} and \code{late_interval}/\code{min_interval} columns.}
 		\item{\code{period}}{The period containing the interval.}
@@ -13,20 +14,21 @@
 		\item{\code{ten}}{Numeric identifier of the 10 million year interval in the \code{\link{tens}} object.}
 		\item{\code{stage}}{The stage containing the interval.}	
 		\item{\code{stg}}{Numeric identifier of the interval in the stage-level time scale provided as \code{\link{stages}} object.}
-	}}
+	}
+}
 \source{
 \url{http://fossilworks.org/}
 }
 \usage{
-stratkeys
+data(stratkeys)
 }
 \description{
 Table including the user-chosen interval data and the stratigraphic units of the dynamic timescale.
 }
 \details{
-Since the separation of the FossilWorks (\url{http://fossilworks.org/}) portal from the Paleobiology Database (\url{http://www.paleobiodb.org/}) the access to the stratigraphic information in the database have been problematic. This table includes groupings of 
+Since the separation of the FossilWorks (\url{http://fossilworks.org/}) portal from the Paleobiology Database (\url{https://paleobiodb.org/}) the access to the stratigraphic information in the database have been problematic. This table includes groupings of 
 \code{early_interval}/\code{max_interval} entries of the dynamic timescale that users can choose during collection entry. The table assigns these intervals to some corresponding stratigraphic units from different time scales.
-These entries were distilled from those collections that only have a \code{max_interval} value. As there is a mismatch between the data Paleobiology Database and FossilWorks this list is not comprehensive and a couple entries are probably missing. For this reason, this dataset is expected to be updated in the future.
+These entries were distilled from those collections that only have a \code{max_interval} value. As there is a mismatch between the data Paleobiology Database and FossilWorks this list is not comprehensive and a couple entries are probably missing. For this reason, this dataset is expected to be updated in the future. 
 
 This particular version (v0.9.2) is based on a download of all collections in FossilWorks between the Ediacaran and the Holocene. The download took place on 22 June, 2018. The entries were transformed to \code{\link{keys}} to be used with the \code{\link{categorize}} function. Some entries were corrected manually.
 }

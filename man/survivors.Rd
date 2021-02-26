@@ -4,8 +4,14 @@
 \alias{survivors}
 \title{Proportions of survivorship}
 \usage{
-survivors(x, tax = "genus", bin = "stg", method = "forward",
-  noNAStart = FALSE, fl = NULL)
+survivors(
+  x,
+  tax = "genus",
+  bin = "stg",
+  method = "forward",
+  noNAStart = FALSE,
+  fl = NULL
+)
 }
 \arguments{
 \item{x}{\code{(data.frame)} The data frame containing fossil occurrences.}

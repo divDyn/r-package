@@ -4,8 +4,14 @@
 \alias{singletons}
 \title{List of singleton taxa}
 \usage{
-singletons(dat, tax = "clgen", var = NULL, bin = NULL,
-  bybin = FALSE, na.rm = TRUE)
+singletons(
+  dat,
+  tax = "clgen",
+  var = NULL,
+  bin = NULL,
+  bybin = FALSE,
+  na.rm = TRUE
+)
 }
 \arguments{
 \item{dat}{(\code{data.frame}): Occurrence dataset, with \code{bin}, \code{tax} and \code{coll} as column names.}
@@ -25,7 +31,7 @@ The function returns lists of taxa that occurr with only one particular entry in
 }
 \details{
 Singletons are defined in number of ways in the literature. True singletons are species that are represented by only one specimen, but one can talk about
-single-occurrence, single-interval, single-reference or single collection taxa as well. These can be returned with this function.
+single-occurrence, single-interval, single-reference or single collection taxa as well. These can be returned with this function. 
 
 As the time bin has particular importance, it is possible to filter singleton taxa in the context of a single bin. These can be returned with the \code{bybin} argument, that constrains and iterates the filtering to every bin.
 If this argument is set to \code{TRUE} and the variable in question is a references, than single-reference taxa will be taxa that occurred in only one reference within each bin - it does not necessarily mean that only one reference describes the taxon in the total database!

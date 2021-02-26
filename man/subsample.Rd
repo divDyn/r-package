@@ -4,10 +4,25 @@
 \alias{subsample}
 \title{Subsampling wrapper function}
 \usage{
-subsample(x, q, tax = NULL, bin = NULL, FUN = divDyn, coll = NULL,
-  iter = 50, type = "cr", keep = NULL, rem = NULL,
-  duplicates = TRUE, output = "arit", useFailed = FALSE,
-  FUN.args = NULL, na.rm = FALSE, counter = TRUE, ...)
+subsample(
+  x,
+  q,
+  tax = NULL,
+  bin = NULL,
+  FUN = divDyn,
+  coll = NULL,
+  iter = 50,
+  type = "cr",
+  keep = NULL,
+  rem = NULL,
+  duplicates = TRUE,
+  output = "arit",
+  useFailed = FALSE,
+  FUN.args = NULL,
+  na.rm = FALSE,
+  counter = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{(\code{data.frame}): Occurrence dataset, with \code{bin}, \code{tax} and \code{coll} as column names.}
@@ -69,7 +84,7 @@ data(corals)
 data(stages)
 # Example 1-calculate metrics of diversity dynamics
   dd <- divDyn(corals, tax="genus", bin="stg")
-  rarefDD<-subsample(corals,iter=50, q=50,
+  rarefDD<-subsample(corals,iter=30, q=50,
   tax="genus", bin="stg", output="dist", keep=95)
 	
 # plotting
@@ -92,9 +107,9 @@ sib<-function(x, bin, tax){
 sibDiv<-sib(corals, bin="stg", tax="genus")
 
 # calculate it with subsampling
-rarefSIB<-subsample(corals,iter=50, q=50,
+rarefSIB<-subsample(corals,iter=25, q=50,
   tax="genus", bin="stg", output="arit", keep=95, FUN=sib)
-rarefDD<-subsample(corals,iter=50, q=50,
+rarefDD<-subsample(corals,iter=25, q=50,
   tax="genus", bin="stg", output="arit", keep=95)
 
 # plot
@@ -108,15 +123,15 @@ lines(stages$mid, rarefSIB, lwd=2, col="blue")
 # Example 3 - different subsampling types with default function (divDyn)
 # compare different subsampling types
   # classical rarefaction
-  cr<-subsample(corals,iter=50, q=20,tax="genus", bin="stg", output="dist", keep=95)
+  cr<-subsample(corals,iter=25, q=20,tax="genus", bin="stg", output="dist", keep=95)
   # by-list subsampling (unweighted) - 3 collections
-  UW<-subsample(corals,iter=50, q=3,tax="genus", bin="stg", coll="collection_no", 
+  UW<-subsample(corals,iter=25, q=3,tax="genus", bin="stg", coll="collection_no", 
     output="dist", keep=95, type="oxw", xexp=0)
   # occurrence weighted by list subsampling
-  OW<-subsample(corals,iter=50, q=20,tax="genus", bin="stg", coll="collection_no", 
+  OW<-subsample(corals,iter=25, q=20,tax="genus", bin="stg", coll="collection_no", 
     output="dist", keep=95, type="oxw", xexp=1)
  
-  SQS<-subsample(corals,iter=50, q=0.4,tax="genus", bin="stg", output="dist", keep=95, type="sqs")
+  SQS<-subsample(corals,iter=25, q=0.4,tax="genus", bin="stg", output="dist", keep=95, type="sqs")
 
 # plot
   tsplot(stages, shading="series", boxes="sys", xlim=c(260,0), 

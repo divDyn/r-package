@@ -4,9 +4,20 @@
 \alias{divDyn}
 \title{Time series from metrics of diversity dynamics}
 \usage{
-divDyn(x, tax, bin = NULL, age = NULL, revtime = FALSE,
-  breaks = NULL, coll = NULL, ref = NULL, om = NULL,
-  noNAStart = FALSE, data.frame = TRUE, filterNA = FALSE)
+divDyn(
+  x,
+  tax,
+  bin = NULL,
+  age = NULL,
+  revtime = FALSE,
+  breaks = NULL,
+  coll = NULL,
+  ref = NULL,
+  om = NULL,
+  noNAStart = FALSE,
+  data.frame = TRUE,
+  filterNA = FALSE
+)
 }
 \arguments{
 \item{x}{\code{(data.frame)} Fossil occurrence table.}
@@ -49,7 +60,7 @@ The following variables are produced:
 
 \code{tSing}: Number of stratigraphic singleton (single-interval) taxa, taxa that only occur in the focal bin.
 
-\code{t2d}: Number of lower two timers (Alroy, 2008; 2014), taxa that are present in the \emph{i}-1th and the ith bin (focal bin).
+\code{t2d}: Number of lower two timers (Alroy, 2008; 2014), taxa that are present in the \emph{i}-1th and the ith bin (focal bin). 
 
 \code{t2u}: Number of upper two timers (Alroy, 2008; 2014), taxa that are present in the \emph{i}th (focal) and the \emph{i}+1th bin. (Alroy, 2008; 2014)
 
@@ -59,7 +70,7 @@ The following variables are produced:
 
 \code{t3}: Number of three timer taxa (Alroy, 2008; 2014), present in bin \emph{i}-1, \emph{i}, and \emph{i}+1. (Alroy, 2008; 2014)
 
-\code{tPart}: Part timer taxa (Alroy, 2008; 2014), present in bin \emph{i}-1,and \emph{i}+1, but not in bin \emph{i}.
+\code{tPart}: Part timer taxa (Alroy, 2008; 2014), present in bin \emph{i}-1,and \emph{i}+1, but not in bin \emph{i}. 
 
 \code{extProp}: Proportional extinctions including single-interval taxa: \emph{(tExt + tSing) / (tThrough + tOri + tExt + tSing)}.
 
@@ -79,7 +90,7 @@ The following variables are produced:
 
 \code{divSIB}: Sampled-in-bin diversity (richness), the number of genera sampled in the focal bin.
 
-\code{divCSIB}: Corrected sampled-in-bin diversity (richness). \emph{divSIB/samp3t*totSamp3t}, where \emph{totSamp3t} is total three-timer sampling completeness of the dataset (Alroy, 2008).
+\code{divCSIB}: Corrected sampled-in-bin diversity (richness). \emph{divSIB/samp3t*totSamp3t}, where \emph{totSamp3t} is total three-timer sampling completeness of the dataset (Alroy, 2008). 
 
 \code{divBC}: Boundary-crosser diversity (richness), the number of taxa with ranges crossing the boundaries of the interval. \emph{tExt + tOri + tThrough}.
 
@@ -93,7 +104,7 @@ The following variables are produced:
 
 \code{oriGF}: Gap-filler origination rates of Alroy(2014). \emph{log((t2u + tPart)/(t3+tPart+tGFd))}
 
-\code{E2f3}: Second-for-third extinction propotions of Alroy (2015). As these metrics are based on an algorithmic approach, for the equations please refer to the Alroy (2015, p. 634, right column and Eq. 4)). See source code (\url{http://www.github.com/adamkocsis/divDyn}) for the exact implementation, found in the \code{Metrics} function in the diversityDynamics.R file.
+\code{E2f3}: Second-for-third extinction propotions of Alroy (2015). As these metrics are based on an algorithmic approach, for the equations please refer to the Alroy (2015, p. 634, right column and Eq. 4)). See source code (\url{https://github.com/divDyn/r_package}) for the exact implementation, found in the \code{Metrics} function in the diversityDynamics.R file.
 
 \code{O2f3}: Second-for-third origination propotions of Alroy (2015). Please see \code{E2f3}.
 

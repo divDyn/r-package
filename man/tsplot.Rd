@@ -4,12 +4,27 @@
 \alias{tsplot}
 \title{Time series plotting using a custom time scale}
 \usage{
-tsplot(tsdat, ylim = c(0, 1), xlim = NULL, prop = 0.05, gap = 0,
-  bottom = "bottom", top = "top", xlab = "Age (Ma)", ylab = "",
-  boxes = NULL, boxes.col = NULL, shading = NULL,
-  shading.col = c("white", "gray80"), plot.args = NULL,
-  boxes.args = NULL, labels = TRUE, labels.args = NULL,
-  lplab = TRUE, rplab = TRUE)
+tsplot(
+  tsdat,
+  ylim = c(0, 1),
+  xlim = NULL,
+  prop = 0.05,
+  gap = 0,
+  bottom = "bottom",
+  top = "top",
+  xlab = "Age (Ma)",
+  ylab = "",
+  boxes = NULL,
+  boxes.col = NULL,
+  shading = NULL,
+  shading.col = c("white", "gray80"),
+  plot.args = NULL,
+  boxes.args = NULL,
+  labels = TRUE,
+  labels.args = NULL,
+  lplab = TRUE,
+  rplab = TRUE
+)
 }
 \arguments{
 \item{tsdat}{\code{(data frame)}: The time scale data frame.}

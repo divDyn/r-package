@@ -4,8 +4,7 @@
 \alias{tsbars}
 \title{Function to plot a series a values with bars that have variable widths}
 \usage{
-tsbars(x, y, width = "max", yref = 0, gap = 0, vertical = TRUE,
-  ...)
+tsbars(x, y, width = "max", yref = 0, gap = 0, vertical = TRUE, ...)
 }
 \arguments{
 \item{x}{\code{(numeric)} Vector specifying where the centers of the bars should be on the x axis.}

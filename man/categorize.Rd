@@ -17,9 +17,9 @@ categorize(x, key, incbound = "lower")
 This basic function replaces groups of values in a vector with single values with the help of a key object.
 }
 \details{
-Online datasets usually contain overly detailed information, as enterers intend to conserve as much data in the entry process, as possible. However, in analyses some values are treated to represent the same, less-detailed information, which is then used in further procedures. The \code{map} function allows users to do this type of multiple replacement using a specific object called a \code{'key'}.
+Online datasets usually contain overly detailed information, as enterers intend to conserve as much data in the entry process, as possible. However, in analyses some values are treated to represent the same, less-detailed information, which is then used in further procedures. The \code{map} function allows users to do this type of multiple replacement using a specific object called a \code{'key'}. 
 
-A \code{key} is an informal class and is essentially a \code{list} of \code{vectors}. In the case of \code{character} vectors as \code{x}, each vector element in the \code{list} corresponds to a set of entries in \code{x}. These will be replaced by the name of the \code{vector} in the \code{list}, to indicate their assumed identity.
+A \code{key} is an informal class and is essentially a \code{list} of \code{vectors}. In the case of \code{character} vectors as \code{x}, each vector element in the \code{list} corresponds to a set of entries in \code{x}. These will be replaced by the name of the \code{vector} in the \code{list}, to indicate their assumed identity. 
 
 In the case of \code{numeric} \code{x} vectors, if the \code{list} elements of the \code{key}
 are \code{numeric} vectors with 2 values, then this vector will be treated as an interval. The same value will be assigned to the entries that are in this interval (Example 2). If \code{x} contains values that form the boundary of an interval, than either only the one of the two boundary values can be considered to be in the interval (see the \code{incbound} argument to set which of the two).

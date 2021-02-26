@@ -2,7 +2,7 @@
 #' 
 #' Example dataset to illustrate the package's basic functionalities.
 #'
-#' This particular dataset was used in a study by Kiessling and Kocsis (2015). All occurrences of Scleractinia were downloaded from the Paleobiology Database (PaleoDB, \url{http://www.paleobiodb.org/}) on 23 September 2014, originally comprising 32420 occurrences. They were than cross-checked with data from Corallosphere (\url{http://corallosphere.org}). See the article text for details.
+#' This particular dataset was used in a study by Kiessling and Kocsis (2015). All occurrences of Scleractinia were downloaded from the Paleobiology Database (PaleoDB, \url{https://paleobiodb.org/}) on 23 September 2014, originally comprising 32420 occurrences. They were than cross-checked with data from Corallosphere (\url{http://corallosphere.org}). See the article text for details.
 #' 
 #' References
 #' 
@@ -45,7 +45,8 @@
 #' 	\item{\code{growth}}{Growth type of the coral: \code{colonial} or \code{solitary}.}
 #' 	\item{\code{integration}}{Integration of corallites from the scale of 0 to 4. \code{solitary} corals are marked with 0s.}
 #' }
-#' @source \url{http://www.paleobiodb.org/}
+#' @source \url{https://paleobiodb.org/}
+#' @usage data(corals)
 #' 
 "corals"
 
@@ -70,6 +71,7 @@
 #' 	}
 #' 
 #' @source Stratigraphic assignments are based on the download of collection data from Fossilworks (\url{http://fossilworks.org/}) and the dynamic time scale of the Paleobiology Database, written by J. Alroy. The assignment of numeric values were done by A. Kocsis. Environmental variables were grouped by W. Kiessling.
+#' @usage data(keys)
 "keys"
 
 #' 95 bin Phanerozoic time scale based on the stratigraphic stages of Ogg et al. (2016).
@@ -98,6 +100,7 @@
 #' @source Based on Ogg et al. (2016), compiled by Wolfgang Kiessling.
 #' @section References:
 #' Ogg, J. G., G. Ogg, and F. M. Gradstein. 2016. A concise geologic time scale: 2016. Elsevier.
+#' @usage data(stages)
 "stages"
 
 
@@ -122,13 +125,14 @@
 #' 
 #' 
 #' @source Executive committee meeting (2015) of old Paleobiology Database. Additional variables were added by Wolfgang Kiessling.
+#' @usage data(tens)
 "tens"
 
 #' The FossilWorks-based lookup table for the stratigraphic assignments of collections in the Paleobiology Database
 #' 
 #' Table including the user-chosen interval data and the stratigraphic units of the dynamic timescale.
 #' 
-#' Since the separation of the FossilWorks (\url{http://fossilworks.org/}) portal from the Paleobiology Database (\url{http://www.paleobiodb.org/}) the access to the stratigraphic information in the database have been problematic. This table includes groupings of 
+#' Since the separation of the FossilWorks (\url{http://fossilworks.org/}) portal from the Paleobiology Database (\url{https://paleobiodb.org/}) the access to the stratigraphic information in the database have been problematic. This table includes groupings of 
 #' \code{early_interval}/\code{max_interval} entries of the dynamic timescale that users can choose during collection entry. The table assigns these intervals to some corresponding stratigraphic units from different time scales.
 #' These entries were distilled from those collections that only have a \code{max_interval} value. As there is a mismatch between the data Paleobiology Database and FossilWorks this list is not comprehensive and a couple entries are probably missing. For this reason, this dataset is expected to be updated in the future. 
 #' 
@@ -146,4 +150,5 @@
 #' 	}
 #' 	
 #' @source \url{http://fossilworks.org/}
+#' @usage data(stratkeys)
 "stratkeys"

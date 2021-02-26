@@ -21,14 +21,14 @@ This set is not complete and does not intend to supercede additional R packages 
 implemented elsewhere or because they are invoked more frequently. The following entries can be added to the \code{method} argument of the function, which are
 also named accordingly in the output table/vector.
 
-\code{"richness"}: The number of sampled species.
+\code{"richness"}: The number of sampled species. 
 
 \code{"shannon"}: The Shannon entropy.
 
 \code{dom}: The Berger-Parker dominance index, the proportion of occurrences in the time bin that belong to the most frequent taxon.
 
 \code{"hill2"}: The second order Hill number (Jost, 2006; q=2), which will be calculated by default. You can specify additional Hill numbers with adding \code{"hillXX"} to the \code{method}
-argument, such as \code{"hill3"} for (q=3). The first Hill number is defined as the exponentiad version of Shannon entropy (Eq. 3 in Jost, 2006).
+argument, such as \code{"hill3"} for (q=3). The first Hill number is defined as the exponentiad version of Shannon entropy (Eq. 3 in Jost, 2006). 
 
 \code{"squares"}: The 'squares' richness estimator of J. Alroy (2018).
 

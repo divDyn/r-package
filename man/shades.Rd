@@ -4,8 +4,16 @@
 \alias{shades}
 \title{Quantile plot of time series}
 \usage{
-shades(x, y, col = "black", res = 10, border = NA,
-  interpolate = FALSE, method = "symmetric", na.rm = FALSE)
+shades(
+  x,
+  y,
+  col = "black",
+  res = 10,
+  border = NA,
+  interpolate = FALSE,
+  method = "symmetric",
+  na.rm = FALSE
+)
 }
 \arguments{
 \item{x}{\code{(numeric)}: The x coordinates.}

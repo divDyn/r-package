@@ -1,4 +1,7 @@
 # Change log of the R package 'divDyn'
+## [0.8.1 (build 739)]  - 2021-02-26
+### Changed
+- binwise CR subsampling now implements std::shuffle() instead of std::random_shuffle()
 
 ## [0.8.0 (build 738)]  - 2020-08-16
 ### Changed

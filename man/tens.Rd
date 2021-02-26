@@ -4,7 +4,8 @@
 \name{tens}
 \alias{tens}
 \title{The 10 million year resolution timescale of the Paleobiology Database}
-\format{A \code{data.frame} with 49 observations and 9 variables:
+\format{
+A \code{data.frame} with 49 observations and 9 variables:
 	\describe{
 		\item{X10}{The name of the bin: Period and number.}
 		\item{ocean}{The primary state of the oceans from the point of carbonate precipitation. \code{ar} indicates aragonitic, \code{cc} indicates calcitic conditions. Based on §}
@@ -15,12 +16,13 @@
  	\item{\code{top}}{Numeric ages of the tops (latest ages) of the bins.}
 	\item{\code{dur}}{Numeric ages of the durations of the bins.}
  	\item{\code{ten}}{Integer number identifiers of the bins. §correct to num!}
-}}
+}
+}
 \source{
 Executive committee meeting (2015) of old Paleobiology Database. Additional variables were added by Wolfgang Kiessling.
 }
 \usage{
-tens
+data(tens)
 }
 \description{
 Roughly 10 million year timescale used in some analyses.

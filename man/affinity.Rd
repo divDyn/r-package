@@ -4,8 +4,18 @@
 \alias{affinity}
 \title{Environmental affinities of taxa}
 \usage{
-affinity(x, tax, bin, env, coll = NULL, method = "binom", alpha = 1,
-  reldat = NULL, na.rm = FALSE, bycoll = FALSE)
+affinity(
+  x,
+  tax,
+  bin,
+  env,
+  coll = NULL,
+  method = "binom",
+  alpha = 1,
+  reldat = NULL,
+  na.rm = FALSE,
+  bycoll = FALSE
+)
 }
 \arguments{
 \item{x}{\code{(data.frame)} The occurrence dataset containing the taxa with unknown environmental affinities.}
@@ -37,9 +47,9 @@ Sampling patterns have an overprinting effect on the frequency of taxon occurren
 
 \strong{The following methods are implemented:}
 
-\code{'majority'}: Environmental affinity will be assigned based on the number of occurrences of the taxon in the different environments, without taking sampling of the entire dataset into account. If the taxon has more occurrences in \emph{environment 1}, the function will return \emph{environment 1} as the preferred habitat.
+\code{'majority'}: Environmental affinity will be assigned based on the number of occurrences of the taxon in the different environments, without taking sampling of the entire dataset into account. If the taxon has more occurrences in \emph{environment 1}, the function will return \emph{environment 1} as the preferred habitat. 
 
-\code{'binom'}: The proportion of occurrences of a taxon in \emph{environment 1} and \emph{environment 2} will be compared to a null model, which is based on the distribution of all occurrences from the stratigraphic range of the taxon (in \code{x} or if provided, in \code{reldat}). Then a binomial test is run on with the numbers of the most likely preference (against all else). The \code{alpha} value indicates the significance of the binomial tests, setting \code{alpha} to \code{1} will effectively switch the testing off: if the ratio of occurrences for the taxon is different from the ratio observed in the dataset, an affinity will be assigned. This is the default method. If an environment is not sampled at all in the dataset to which the taxon's occurrences are compared to, the binomial method returns \code{NA} for the taxon's affinity.
+\code{'binom'}: The proportion of occurrences of a taxon in \emph{environment 1} and \emph{environment 2} will be compared to a null model, which is based on the distribution of all occurrences from the stratigraphic range of the taxon (in \code{x} or if provided, in \code{reldat}). Then a binomial test is run on with the numbers of the most likely preference (against all else). The \code{alpha} value indicates the significance of the binomial tests, setting \code{alpha} to \code{1} will effectively switch the testing off: if the ratio of occurrences for the taxon is different from the ratio observed in the dataset, an affinity will be assigned. This is the default method. If an environment is not sampled at all in the dataset to which the taxon's occurrences are compared to, the binomial method returns \code{NA} for the taxon's affinity. 
 
 \strong{References}
 

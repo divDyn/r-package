@@ -4,8 +4,14 @@
 \alias{cleansp}
 \title{Cleanse Species Name Vector}
 \usage{
-cleansp(x, debug = FALSE, collapse = "_", subgenera = FALSE,
-  misspells = TRUE, stems = TRUE)
+cleansp(
+  x,
+  debug = FALSE,
+  collapse = "_",
+  subgenera = TRUE,
+  misspells = TRUE,
+  stems = TRUE
+)
 }
 \arguments{
 \item{x}{\code{(character)}: the vector containing species names with qualifiers of open taxonomy.}
@@ -14,7 +20,7 @@ cleansp(x, debug = FALSE, collapse = "_", subgenera = FALSE,
 
 \item{collapse}{\code{(character)}: This argument will be passed to the paste function's argument of the same name. The character value to be inserted between the genus and species names.}
 
-\item{subgenera}{\code{(logical)}: \code{FALSE} omits subgenus information (in parentheses) and will construct a unique binomen based on the genus and species names alone. \code{TRUE} will promote the subgenus names and it will create a new binomen based on the subgenus rather than the genus name.}
+\item{subgenera}{\code{(logical)}: \code{FALSE} omits subgenus information (in parentheses) and will construct a unique binomen based on the genus and species names alone. \code{TRUE} (default) will promote the subgenus names and it will create a new binomen based on the subgenus rather than the genus name.}
 
 \item{misspells}{\code{logical}: Resolution of common spelling mistakes, such as diphtongs and alternate spellings: 'ue' is replaced with 'u', 'ae' is replaced with 'e', 'll' with 'l', 'ss' with 's'and 'y' with 'i'.}
 
@@ -25,7 +31,7 @@ This function will take a vector of binomial names with various qualifiers of op
 }
 \details{
 This version will not keep subgenera, and will assign species to the base genus. The following qualifiers will be omitted:
-\emph{"n."}, \emph{"sp."}, \emph{"?"}, \emph{"gen."}, \emph{"aff."}, \emph{"cf."}, \emph{"ex gr."}, \emph{"subgen."}, \emph{"spp"} and informal species designated with letters. Entries with \emph{"informal"} and \emph{"indet."} in them will also be invalidated.
+\emph{"n."}, \emph{"sp."}, \emph{"?"}, \emph{"gen."}, \emph{"aff."}, \emph{"cf."}, \emph{"ex gr."}, \emph{"subgen."}, \emph{"spp"} and informal species designated with letters. Entries with \emph{"informal"} and \emph{"indet."} in them will also be invalidated. 
 
 Functions called by the \code{misspells} and \code{stems} arguments were written by Gwen Antell.
 }

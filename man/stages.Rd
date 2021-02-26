@@ -4,7 +4,8 @@
 \name{stages}
 \alias{stages}
 \title{95 bin Phanerozoic time scale based on the stratigraphic stages of Ogg et al. (2016).}
-\format{A \code{data.frame} with 95 observations and 10 variables:
+\format{
+A \code{data.frame} with 95 observations and 10 variables:
 	\describe{
 		\item{\code{sys}}{Abbreviations of geologic systems.}
 		\item{\code{system}}{Geologic periods.}
@@ -19,12 +20,13 @@
 	\item{\code{systemCol}}{Hexadecimal color code of the systems.}
 	\item{\code{seriesCol}}{Hexadecimal color code of the series.}
 	\item{\code{col}}{Hexadecimal color code of the stages.}
-	}}
+	}
+}
 \source{
 Based on Ogg et al. (2016), compiled by Wolfgang Kiessling.
 }
 \usage{
-stages
+data(stages)
 }
 \description{
 Stage-level (age-level) timescale used in some analyses.

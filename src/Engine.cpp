@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+#include <random>
 using namespace Rcpp;
 
 // [[Rcpp::export]]
@@ -213,16 +214,21 @@ NumericMatrix Counts(NumericVector tax, NumericVector bin)
 }
 
 
-int randWrapper(const int n) {
-	return floor(unif_rand()*n);
-}
+// int randWrapper(const int n) {
+// 	return floor(unif_rand()*n);
+// }
 
 Rcpp::NumericVector randomShuffle(Rcpp::NumericVector a) {
 
     // clone a into b to leave a alone
     Rcpp::NumericVector b = Rcpp::clone(a);
 
-    std::random_shuffle(b.begin(), b.end(), randWrapper);
+
+//    std::random_shuffle(b.begin(), b.end(), randWrapper);
+
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::shuffle(b.begin(), b.end(), g);
 
     return b;
 }

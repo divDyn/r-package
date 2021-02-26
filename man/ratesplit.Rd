@@ -4,9 +4,18 @@
 \alias{ratesplit}
 \title{Test of rate split (selectivity)}
 \usage{
-ratesplit(x, sel, tax = "genus", bin = "stg", rate = "pc",
-  method = "AIC", AICc = TRUE, na.rm = TRUE, alpha = NULL,
-  output = "simple")
+ratesplit(
+  x,
+  sel,
+  tax = "genus",
+  bin = "stg",
+  rate = "pc",
+  method = "AIC",
+  AICc = TRUE,
+  na.rm = TRUE,
+  alpha = NULL,
+  output = "simple"
+)
 }
 \arguments{
 \item{x}{\code{(data.frame)}: The fossil occurrence data.}

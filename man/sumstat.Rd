@@ -4,8 +4,14 @@
 \alias{sumstat}
 \title{Occurrence database summary}
 \usage{
-sumstat(x, tax = "genus", bin = "stg", coll = NULL, ref = NULL,
-  duplicates = NULL)
+sumstat(
+  x,
+  tax = "genus",
+  bin = "stg",
+  coll = NULL,
+  ref = NULL,
+  duplicates = NULL
+)
 }
 \arguments{
 \item{x}{\code{(data.frame)}: The occurrence dataset.}
@@ -26,7 +32,7 @@ The function calculates global statistics of the entire database
 \details{
 The function returns the following values.
 
-\code{bins}: The total number of bins sampled.
+ \code{bins}: The total number of bins sampled. 
 
 \code{occs}: The total number of sampled occurrences.
 
@@ -36,7 +42,7 @@ The function returns the following values.
 
 \code{taxa}:  The total number of sampled taxa.
 
-\code{gappiness}: The proportion of sampling gaps in the ranges of the taxa (without the range-endpoints).
+ \code{gappiness}: The proportion of sampling gaps in the ranges of the taxa (without the range-endpoints).
 }
 \examples{
 data(corals)

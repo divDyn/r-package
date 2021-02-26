@@ -4,10 +4,24 @@
 \alias{ranges}
 \title{Plotting ranges and occurrence distributions through time}
 \usage{
-ranges(dat, bin = NULL, tax = NULL, xlim = NULL, ylim = c(0, 1),
-  total = "", filt = "include", occs = FALSE, labs = FALSE,
-  decreasing = TRUE, group = NULL, gap = 0, labels.args = NULL,
-  ranges.args = NULL, occs.args = NULL, total.args = NULL)
+ranges(
+  dat,
+  bin = NULL,
+  tax = NULL,
+  xlim = NULL,
+  ylim = c(0, 1),
+  total = "",
+  filt = "include",
+  occs = FALSE,
+  labs = FALSE,
+  decreasing = TRUE,
+  group = NULL,
+  gap = 0,
+  labels.args = NULL,
+  ranges.args = NULL,
+  occs.args = NULL,
+  total.args = NULL
+)
 }
 \arguments{
 \item{dat}{\code{(data.frame)}: The occurrence dataset or the FAD-LAD dataset that is to be plotted. The FAD dataset must have numeric variables named \code{"FAD"} and \code{"LAD"}. Taxon ranges will be searched for in the \code{row.names} attribute of the table.}

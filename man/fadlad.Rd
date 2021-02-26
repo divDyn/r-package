@@ -4,8 +4,15 @@
 \alias{fadlad}
 \title{FAD - LAD matrix from occurrence data}
 \usage{
-fadlad(x, tax, bin = NULL, age = NULL, revtime = FALSE,
-  na.rm = TRUE, diffbin = TRUE)
+fadlad(
+  x,
+  tax,
+  bin = NULL,
+  age = NULL,
+  revtime = FALSE,
+  na.rm = TRUE,
+  diffbin = TRUE
+)
 }
 \arguments{
 \item{x}{\code{(data.frame)}: Occurrence data.}

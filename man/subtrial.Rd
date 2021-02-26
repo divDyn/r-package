@@ -6,16 +6,44 @@
 \alias{subtrialSQS}
 \title{Subsampling trial functions}
 \usage{
-subtrialCR(x, q, bin = NULL, unit = NULL, keep = NULL,
-  useFailed = FALSE, showFailed = FALSE)
+subtrialCR(
+  x,
+  q,
+  bin = NULL,
+  unit = NULL,
+  keep = NULL,
+  useFailed = FALSE,
+  showFailed = FALSE
+)
 
-subtrialOXW(x, q, bin = NULL, coll = NULL, xexp = 1, keep = NULL,
-  useFailed = FALSE, showFailed = FALSE)
+subtrialOXW(
+  x,
+  q,
+  bin = NULL,
+  coll = NULL,
+  xexp = 1,
+  keep = NULL,
+  useFailed = FALSE,
+  showFailed = FALSE
+)
 
-subtrialSQS(x, tax, q, bin = NULL, coll = NULL, ref = NULL,
-  singleton = "occ", excludeDominant = FALSE, largestColl = FALSE,
-  fcorr = "good", byList = FALSE, keep = NULL, useFailed = FALSE,
-  showFailed = FALSE, appr = "under")
+subtrialSQS(
+  x,
+  tax,
+  q,
+  bin = NULL,
+  coll = NULL,
+  ref = NULL,
+  singleton = "occ",
+  excludeDominant = FALSE,
+  largestColl = FALSE,
+  fcorr = "good",
+  byList = FALSE,
+  keep = NULL,
+  useFailed = FALSE,
+  showFailed = FALSE,
+  appr = "under"
+)
 }
 \arguments{
 \item{x}{(\code{data.frame}): Occurrence dataset, with \code{bin}, \code{tax} and \code{coll} as column names.}
@@ -70,7 +98,7 @@ These functions create one subsampling trial dataset with a desired subsampling 
 \details{
 The essence of these functions are present within the subsampling wrapper function \code{\link{subsample}}. Each function implements a certain subsampling type.
 The return value of the funcfions by default is a \code{logical} vector indicating which rows of the original dataset should be present in the subsample. 
-The inexact method for SQS is implemented here as it is computationally less demanding.
+The inexact method for SQS is implemented here as it is computationally less demanding. 
 
 \strong{References:}
 
@@ -88,12 +116,5 @@ Raup, D. M. (1975). Taxonomic Diversity Estimation Using Rarefaction. Paleobiolo
   # control
   unCor<-unique(corals[bRows,c("stg", "reference_no")])
   table(unCor$stg)
-# classical rarefaction can also be used to do by reference subsampling of collections
-  fossils <- corals[corals$stg!=95, ]
-  # rows in the sampling standardization
-  threeCollPerRef <- subtrialCR(x=fossils, unit="collection_no", 
-    bin="reference_no", q=3, useFailed=TRUE)
-  # check: table of collections/references in the new subset (with failed!!)
-  crosstab<-unique(fossils[threeCollPerRef,c("collection_no", "reference_no")])
-  table(crosstab$reference_no)
+
 }

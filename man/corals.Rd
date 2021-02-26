@@ -4,7 +4,8 @@
 \name{corals}
 \alias{corals}
 \title{Fossil occurrences of scleractinian (stony) corals from the Paleobiology Database}
-\format{A \code{data.frame} with 29775 observations and 38 variables:
+\format{
+A \code{data.frame} with 29775 observations and 38 variables:
 \describe{
 	\item{\code{genus}}{Genus names of the occurrences. Cross referenced with a compiled table, the simplified version of this can be found in the supplementary material of Kiessling and Kocsis (2015).}
 	\item{\code{collection_no}}{The number of the collection of the occurrence in the PaleoDB.}
@@ -40,18 +41,19 @@
 	\item{\code{ecologyMostAZ}}{Symbiotic status of the occurring coral, incorporating the uncertainty of inferred symbiotic status. This variable includes assignment with the maximum likely number of azooxanthellate genera.}
 	\item{\code{growth}}{Growth type of the coral: \code{colonial} or \code{solitary}.}
 	\item{\code{integration}}{Integration of corallites from the scale of 0 to 4. \code{solitary} corals are marked with 0s.}
-}}
+}
+}
 \source{
-\url{http://www.paleobiodb.org/}
+\url{https://paleobiodb.org/}
 }
 \usage{
-corals
+data(corals)
 }
 \description{
 Example dataset to illustrate the package's basic functionalities.
 }
 \details{
-This particular dataset was used in a study by Kiessling and Kocsis (2015). All occurrences of Scleractinia were downloaded from the Paleobiology Database (PaleoDB, \url{http://www.paleobiodb.org/}) on 23 September 2014, originally comprising 32420 occurrences. They were than cross-checked with data from Corallosphere (\url{http://corallosphere.org}). See the article text for details.
+This particular dataset was used in a study by Kiessling and Kocsis (2015). All occurrences of Scleractinia were downloaded from the Paleobiology Database (PaleoDB, \url{https://paleobiodb.org/}) on 23 September 2014, originally comprising 32420 occurrences. They were than cross-checked with data from Corallosphere (\url{http://corallosphere.org}). See the article text for details.
 
 References
 
