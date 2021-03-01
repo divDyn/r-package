@@ -39,6 +39,9 @@ as the null model of sampling. Defaults to \code{NULL}, which means that \code{x
 
 \item{bycoll}{\code{(logical)} If set to \code{TRUE}, the number of collections (or samples, in \code{coll}) will be used rather than the number of occurrences.}
 }
+\value{
+A named vector, values corresponding to affinities.
+}
 \description{
 This function will return the preferred environment of the taxa, given the distribution of occurrences.
 }

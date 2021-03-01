@@ -17,6 +17,9 @@ georange(x, lng = NULL, lat = NULL, loc = NULL, method = "co")
 
 \item{method}{(\code{character}) Geographic range estimator method. Can take multiple entries (concatenating the results in a vector). The following methods are implemented: \code{"co"}: coordinate-based occupancy, the number of different coordinate pairs; \code{"lo"}: locality-based occupancy for sites, samples or geographic cells, number of different entries in a variable. \code{"mst"}, the total length of a minimum spanning tree of the point cloud, based on the great circle distances between points (requires the 'vegan' and 'icosa' packages). \code{"mgcd"}, maximum great-circle distance that can be measured in the point cloud (this version is limited to half the circumference of the equator, requires the 'icosa' package).}
 }
+\value{
+A numeric vector with geographic ranges (multiple methods).
+}
 \description{
 Geographic range as a function of a set of coordinates or sample/site/cell membeships.
 }

@@ -26,6 +26,9 @@ sumstat(
 
 \item{duplicates}{\code{(logical)}: The function will check whether there are duplicate occurrences (multiple species/genera). When set to \code{NULL}, nothing will happen, but the function will notify you if duplicates are present. If set to \code{TRUE}, the function will not do anything with these, if set to \code{FALSE}, the duplicates will be omitted.}
 }
+\value{
+A named numeric vector.
+}
 \description{
 The function calculates global statistics of the entire database
 }

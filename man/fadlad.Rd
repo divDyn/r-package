@@ -29,6 +29,9 @@ fadlad(
 
 \item{diffbin}{\code{(logical)}: Difference-based duration for discreet time (only applicabble to cases when \code{bin} is provided). If set to \code{TRUE}, single-interval taxa will \code{0} durations. Setting this argument to \code{FALSE} will add code{1} to the durations of all taxa.}
 }
+\value{
+A data.frame, with rows corresponding to \code{tax} entries.
+}
 \description{
 Function to generate range data from an occurrence dataset.
 }

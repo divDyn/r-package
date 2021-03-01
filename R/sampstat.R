@@ -59,6 +59,7 @@
 #'	more <- binstat(corals, tax="genus", bin="stg", coll="collection_no", xexp=1.4)
 #'	
 #' @export
+#' @return A data.frame with rows corresponding to bin entries.
 binstat <- function(x, tax="genus", bin="stg", coll=NULL, ref=NULL, noNAStart=FALSE, duplicates=NULL, xexp=NULL, indices=FALSE){
 	datUni<- unique(x[,c(tax, bin, coll, ref)])
 	if(nrow(datUni)!=nrow(x)){
@@ -280,6 +281,7 @@ binstat <- function(x, tax="genus", bin="stg", coll=NULL, ref=NULL, noNAStart=FA
 #'	data(corals)
 #'	  sumstat(corals, tax="genus", bin="stg", coll="collection_no", ref="reference_no")
 #' @export
+#' @return A named numeric vector.
 sumstat<- function(x, tax="genus", bin="stg", coll=NULL, ref=NULL, duplicates=NULL){
 	# duplicate searching and omission part
 	datUni<- unique(x[,c(tax, bin, coll, ref)])

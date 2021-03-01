@@ -27,6 +27,9 @@ so the first row will contain the estimates for the lowest bin number.}
 
 \item{fl}{\code{(matrix} or \code{data.frame}). If so desired, the function can be run on an FAD-LAD dataset, output by the \code{\link{fadlad}} function.}
 }
+\value{
+A numeric matrix of survivorship probabilities.
+}
 \description{
 This function will calculate both forward and backward survivorship proportions from a given occurrence dataset or FAD-LAD matrix.
 }

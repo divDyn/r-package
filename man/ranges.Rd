@@ -56,6 +56,9 @@ ranges(
 
 \item{total.args}{(\code{list}): Arguments that will be passed to the \code{\link[graphics]{text}} function that draws the \code{total} label. If valid grouping is present (see argument \code{group}), then vector entries will be distributed across the groups (see examples.)}
 }
+\value{
+The function has no return value.
+}
 \description{
 Visualization of occurrence data
 }

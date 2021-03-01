@@ -29,6 +29,9 @@ omit(
 
 \item{filterNA}{\code{(logical)} Additional entries can be added to influence the dataset that might not have reference or collection information (\code{NA} entries). These occurrences are treated as single-collection or single-reference taxa if the \code{na.rm} argument is set to \code{FALSE} (default). Setting this argument to \code{TRUE} will keep these entries. (see example)}
 }
+\value{
+A logical vector.
+}
 \description{
 Function to quickly omit single-collection and single-reference taxa.
 }

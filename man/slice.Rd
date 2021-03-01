@@ -17,6 +17,9 @@ slice(x, breaks, offset = 0, ts = TRUE, revtime = TRUE)
 
 \item{revtime}{(\code{logical}) Should the time dimension be reversed? This argument is set to \code{TRUE} by default, meaning that the function will reverse the order of time: smaller values of \code{x} will be translated to higher values (\code{slc}) in the function output.}
 }
+\value{
+Either of new entries and levels or time scale.
+}
 \description{
 The function will slices time with a given set of boundaries and produce a time scale object if desired.
 }
@@ -26,5 +29,5 @@ Due to stratigraphic constraints, we can only process deep time data, when it is
 \examples{
 y<- runif(200, 0,100)
 au <- slice(y, breaks=seq(0, 100, 10))
-withTs <- slice(y, breaks=seq(0, 100, 10), ts=TRUE)
+withOut <- slice(y, breaks=seq(0, 100, 10), ts=FALSE)
 }

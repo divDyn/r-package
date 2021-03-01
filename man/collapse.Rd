@@ -16,6 +16,9 @@ collapse(x, na.rm = FALSE, na.breaks = TRUE)
 
 \item{na.breaks}{(\code{logical}): If \code{na.rm=TRUE} and the \code{NA} values are surrounded by the same values, should the streak be treated as broken? Running \code{seqduplicated(, na.rm=TRUE)} on \code{(2, 1,NA, 1)} while setting \code{na.breaks} to \code{TRUE} will return \code{(FALSE, FALSE, TRUE, FALSE)}, and with \code{TRUE} it will return \code{(FALSE, FALSE, TRUE, TRUE)}. The results with the same argumentation of \code{collapse()} will be \code{(2,1)} and \code{(2,1,1)}.}
 }
+\value{
+A logical vector.
+}
 \description{
 \code{seqduplicated()} The function determines which elements of a vector are duplicates (similarly to \code{\link[base]{duplicated}}) in consecutive rows.
 

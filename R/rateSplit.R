@@ -68,6 +68,7 @@
 #'	
 #'	
 #' @export
+#' @return A list of two numeric vectors.
 ratesplit<-function(x,  sel, tax="genus", bin="stg", rate="pc", method="AIC",AICc=TRUE, na.rm=TRUE, alpha=NULL, output="simple"){
 #	 #dummy data:
 # 	

@@ -251,7 +251,7 @@ colnames(samp)
 All results of the output of this function can be plotted then in a straightforward way, by referring to the elements of the data frame. For instance, the ``occs`` element contains the number of sampled occurrences and ``coll`` refers to the number of collections:
 
 ```{r occsAndColls, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5}
-par(mar=c(4,4,2,4))
+oldPar <- par(mar=c(4,4,2,4))
 # basic plot
 tsplot(stages, shading="series", boxes="sys", xlim=52:95,
     ylab="number of occurrences", ylim=c(0,3000))
@@ -261,6 +261,7 @@ lines(stages$mid[1:94], samp$occs)
   axis(4, col="blue",col.ticks="blue",col.axis="blue",
     at=seq(0,3000,500), labels=seq(0,600,100))
   mtext(4, text="number of collections", col="blue", line=2)
+par(oldPar)
 ```
 
 The ``binstat()`` function also calculates other basic statistics such as the numbers of references, sampled taxa, single-collection taxa, single-reference taxa, double collection and double reference taxa along with the sampling coverage estimator Good’s *u* (1953), the coverage estimator suggested by Alroy (*u’ *, 2010) that is based on the number of single-reference taxa.

@@ -38,6 +38,9 @@ ratesplit(
 
 \item{output}{\code{(character)}: Either \code{"simple"} or \code{"full"}. \code{"simple"} returns the indices of the series where selectivity can be suggested. \code{"full"} returns a \code{matrix} of Akaike weights, or binomial probabilities.}
 }
+\value{
+A list of two numeric vectors.
+}
 \description{
 This function will determine whether there are meaningful differences between the taxonomic rates in the individual time bins of two subsets of an occurrence database.
 }

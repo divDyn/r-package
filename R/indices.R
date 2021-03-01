@@ -26,6 +26,7 @@
 #' @param method (\code{character}): The type of metric that is to be calculated. The default value (\code{NULL}) will calculate all implemented metrics. 
 #' @param samp (\code{vector}): Only applicable if \code{x} is vector of occurrence entries. The id of the sampling units. A necessary variable for SCOR. 
 #' 
+#' @return A named numeric vector.
 #' @section References:
 #' Alroy, J. 2018. Limits to species richness in terrestrial communities. Ecology Letters.
 #' 

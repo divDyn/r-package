@@ -26,18 +26,22 @@ cleansp(
 
 \item{stems}{\code{(logical)}: Setting this to \code{TRUE} will omit the adjective declination suffices from the species names.}
 }
+\value{
+A data.frame or character vector.
+}
 \description{
 This function will take a vector of binomial names with various qualifiers of open nomenclatures, and removes them form the vector entries. Only the the genus and species names will remain.
 }
 \details{
-This version will not keep subgenera, and will assign species to the base genus. The following qualifiers will be omitted:
-\emph{"n."}, \emph{"sp."}, \emph{"?"}, \emph{"gen."}, \emph{"aff."}, \emph{"cf."}, \emph{"ex gr."}, \emph{"subgen."}, \emph{"spp"} and informal species designated with letters. Entries with \emph{"informal"} and \emph{"indet."} in them will also be invalidated. 
-
-Functions called by the \code{misspells} and \code{stems} arguments were written by Gwen Antell.
+This version will keep subgenera, and will not assign species to the base genus. The following qualifiers will be omitted:
+\emph{"n."}, \emph{"sp."}, \emph{"?"}, \emph{"gen."}, \emph{"aff."}, \emph{"cf."}, \emph{"ex gr."}, \emph{"subgen."}, \emph{"spp"} and informal species designated with letters. Entries with \emph{"informal"} and \emph{"indet."} in them will also be invalidated.
 }
 \examples{
 examp <- c("Genus cf. species", "Genus spp.", "Family indet.", 
   "Mygenus yourspecies", "Okgenus ? questionsp", 
   "Genus (cf. Subgenus) aff. species")
 cleansp(examp) 
+}
+\author{
+Adam T. Kocsis, Gwenn Antell. Adam T. Kocsis wrote the main body of the function, subroutines called by the \code{misspells} and \code{stems} are the modified work of Gwen Antell.
 }

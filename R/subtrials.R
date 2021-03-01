@@ -35,6 +35,7 @@
 #'   table(unCor$stg)
 #'
 #' @export
+#' @return A logical vector.
 subtrialCR<-function(x, q, bin=NULL, unit=NULL, keep=NULL, useFailed=FALSE, showFailed=FALSE){
 	quoVar <- q
 	if(!is.null(bin)){

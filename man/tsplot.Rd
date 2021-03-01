@@ -65,6 +65,9 @@ tsplot(
 
 \item{rplab}{\code{logical}: When the right boundary of the plot does not match with any of the boundaries of the time scale boxes (and \code{labels=TRUE}), should the label of the partially drawn box be plotted?}
 }
+\value{
+The function has no return value.
+}
 \description{
 This function allows the user to quickly plot a time scale data table
 }

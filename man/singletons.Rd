@@ -26,6 +26,9 @@ singletons(
 
 \item{na.rm}{(\code{logical}): If \code{var} is not \code{NULL}, setting this argument to \code{TRUE} removes all rows where var is \code{NA}. Otherwise these will be returned as singletons.}
 }
+\value{
+A vector of character entries in \code{tax}.
+}
 \description{
 The function returns lists of taxa that occurr with only one particular entry in a given variable.
 }

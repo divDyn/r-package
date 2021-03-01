@@ -32,6 +32,9 @@ shades(
 
 \item{na.rm}{\code{(logical)}: If set to \code{FALSE}, than rows that are missing from the dataset will be plotted as gaps in the shading. If set to \code{TRUE}, than these gaps will be skipped.}
 }
+\value{
+The function has no return value.
+}
 \description{
 This intermediate-level function will plot a time series with the quantiles shown with transparency values.
 }

@@ -13,8 +13,9 @@
 #' @examples
 #' y<- runif(200, 0,100)
 #' au <- slice(y, breaks=seq(0, 100, 10))
-#' withTs <- slice(y, breaks=seq(0, 100, 10), ts=TRUE)
+#' withOut <- slice(y, breaks=seq(0, 100, 10), ts=FALSE)
 #' @export
+#' @return Either of new entries and levels or time scale.
 slice<-function(x, breaks, offset=0, ts=TRUE, revtime=TRUE){
 	# only allow to pass through if it is numeric
 	if(!is.numeric(x)) stop("The provided time vector is not numeric.")

@@ -92,6 +92,9 @@ version is not concerned with small fluctuations around the drawn subsampling qu
 Therefore, in the inexact algorithm, sampling is finished when the subset 
 either is immediately below the quorum (\code{"under"}) or above it (\code{"over"}).}
 }
+\value{
+A logical vector.
+}
 \description{
 These functions create one subsampling trial dataset with a desired subsampling method
 }

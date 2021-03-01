@@ -59,6 +59,9 @@ subsample(
 
 \item{...}{arguments passed to \code{FUN} and the type-specific subsampling functions: \code{\link{subtrialCR}}, \code{\link{subtrialOXW}}, \code{\link{subtrialSQS}}}
 }
+\value{
+Either a list of replicates or an object matching the class of \code{FUN}.
+}
 \description{
 The function will take a function that has an occurrence dataset as an argument, and reruns it iteratively on the subsets of the dataset.
 }

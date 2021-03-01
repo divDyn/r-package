@@ -33,6 +33,7 @@
 #'     lat="paleolat", lng="paleolng", method="co")
 #'
 #' @export
+#' @return The return object depends on the output of \code{FUN}, as well as the \code{bin} and \code{tax} input.
 tabinate <- function(x,bin=NULL, tax=NULL, FUN=NULL, ...){
 #	x <- testData
 #	bin <- binName

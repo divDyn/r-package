@@ -17,6 +17,9 @@ tabinate(x, bin = NULL, tax = NULL, FUN = NULL, ...)
 
 \item{...}{arguments passed to \code{FUN}}
 }
+\value{
+The return object depends on the output of \code{FUN}, as well as the \code{bin} and \code{tax} input.
+}
 \description{
 The function takes another function and reruns it on every taxon- and/or bin-specific subsets of an occurrence dataset.
 }

@@ -103,6 +103,7 @@
 #' }
 #'
 #' @rdname subsample
+#' @return Either a list of replicates or an object matching the class of \code{FUN}.
 #' @export
 subsample<- function(x, q, tax=NULL, bin=NULL,  FUN=divDyn, coll=NULL, iter=50,  type="cr", keep=NULL, rem=NULL, duplicates=TRUE,  output="arit",  useFailed=FALSE, FUN.args=NULL, na.rm=FALSE, counter=TRUE, ...){
 	

@@ -14,6 +14,9 @@ whichmaxstreak(x, which = -1)
 
 \item{which}{\code{(integer)} In case multiple streaks of the same length are found, which of them should be returned by the vector (integer).}
 }
+\value{
+A list (streaklog) or a numeric vector (whichmaxstreak).
+}
 \description{
 The function returns where the continuous streaks start and how long they are, which can be used for efficient and flexible subsetting.
 }

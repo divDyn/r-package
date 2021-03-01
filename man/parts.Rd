@@ -15,7 +15,7 @@ parts(
   border = NULL,
   ylim = c(0, 1),
   na.valid = FALSE,
-  labs = T,
+  labs = TRUE,
   labs.args = NULL,
   vertical = FALSE
 )
@@ -46,6 +46,9 @@ parts(
 \item{labs.args}{\code{(list)}: Arguments for the \code{\link[graphics]{text}} function. If one entry for each argument is provided, then it will be applied to all labels. If the number of elements in an argument equals the number of categories to be plotted, then one to one assignment will be used. For example, for 4 categories in total, if the \code{labs.args} \code{list} contains a \code{col} vector element with 4 values, see examples).}
 
 \item{vertical}{\code{(logical)}: Horizontal or vertical plotting? If \code{FALSE}, the independent variable will be horizontal, if \code{TRUE}, the count/proportion variable will be horizontal. In the latter case \code{xlim} and \code{ylim} has reversed roles.}
+}
+\value{
+The function has no return value.
 }
 \description{
 This function plots the changing shares of categories in association with an independent variable.

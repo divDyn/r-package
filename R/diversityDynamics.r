@@ -123,6 +123,7 @@
 #'    
 #'
 #' @export
+#' @return A data.frame object, with every row corresponding to a time bin. 
 divDyn <- function(x, tax, bin=NULL, age=NULL, revtime=FALSE, breaks=NULL, coll=NULL, ref=NULL, om=NULL,noNAStart=FALSE, data.frame=TRUE, filterNA=FALSE)
 {
 	
@@ -569,6 +570,7 @@ Metrics<- function(counts){
 #' @param om \code{(character)} The type of omission. \code{"coll"} omits occurrences of taxa that occurr only in one collection. \code{"ref"} omits occurrences of taxa that were described only in one reference. \code{"binref"} will omit the set of single reference taxa that were described by more than one references, but appear in only one reference in a time bin.
 #' @param filterNA \code{(logical)} Additional entries can be added to influence the dataset that might not have reference or collection information (\code{NA} entries). These occurrences are treated as single-collection or single-reference taxa if the \code{na.rm} argument is set to \code{FALSE} (default). Setting this argument to \code{TRUE} will keep these entries. (see example)
 #' 
+#' @return A logical vector. 
 #' @examples
 #' # omit single-reference taxa
 #'   data(corals)

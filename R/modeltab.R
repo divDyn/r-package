@@ -24,6 +24,7 @@
 #' modTab<-modeltab(corals, bin="stg", tax="genus", taxvars=c("ecology", "family"))
 #'
 #' @export
+#' @return A data.frame with binary response variables.
 modeltab<-function(x, tax, bin, taxvars=NULL,  rt=FALSE, singletons=FALSE){
 #	x <- corals[corals$stg!=95,]
 #	bin<- "stg"

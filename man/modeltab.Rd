@@ -19,6 +19,9 @@ modeltab(x, tax, bin, taxvars = NULL, rt = FALSE, singletons = FALSE)
 
 \item{singletons}{\code{(logical)} Should single-interval taxa be removed from the final table? This is recommended, as it is impossible to get a \code{FALSE} response for these taxa.}
 }
+\value{
+A data.frame with binary response variables.
+}
 \description{
 This function takes an occurrence dataset and reformats it to a table that can be used as input for logistic models.
 }

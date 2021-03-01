@@ -5,5 +5,5 @@
 
 .onAttach<-function(libpath, pkgname){
 	packageStartupMessage(
-	"v0.8.0. See latest changes with \'news(package=\"divDyn\")\'. Default: \nTime flows forward with \'bin\', and backward with \'age\' and \'slice()\'.")
+	"v0.8.1. See latest changes with \'news(package=\"divDyn\")\'. Default: \nTime flows forward with \'bin\', and backward with \'age\' and \'slice()\'.")
 }

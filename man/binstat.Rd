@@ -35,6 +35,9 @@ binstat(
 
 \item{indices}{(\code{logical}): Setting this value to \code{TRUE} will calculate all indices implemented in (\code{\link{indices}}).}
 }
+\value{
+A data.frame with rows corresponding to bin entries.
+}
 \description{
 This function will return the basic sampling summaries of a dataset
 }

@@ -41,6 +41,7 @@
 #'   categorize(toReplace, key3)
 #'    
 #' @export
+#' @return A vector with replacements.
 categorize<- function(x, key, incbound="lower"){
 	# assign the defaults
 	default<-key$default

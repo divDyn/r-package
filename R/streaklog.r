@@ -23,6 +23,7 @@
 #'	  streaklog(b)
 #'	  whichmaxstreak(b)
 #' @export
+#' @return A list (streaklog) or a numeric vector (whichmaxstreak). 
 streaklog<-function(x)
 {
 	if(!is.logical(x)) x<-!is.na(x)
@@ -157,6 +158,7 @@ vectorFromLog<-function(streak, len=T){
 #'   # with NA removal
 #'   seqduplicated(examp, na.rm=TRUE)
 #' @export
+#' @return A logical vector.
 seqduplicated <- function(x, na.rm=FALSE, na.breaks=TRUE){
 	if(!is.vector(x)) stop("x has to be a vector.")
 	# cast to numeric
@@ -242,6 +244,7 @@ collapse<- function(x, na.rm=FALSE, na.breaks=TRUE){
 #' # backward, replace with previous in loop direction
 #' fill(dummy2, inc=0, forward=FALSE)
 #' @export
+#' @return A logical vector.
 fill <- function(x,forward=TRUE, inc=0){
 	if(is.numeric(x)) x2 <- .Call('_divDyn_fillNumeric', PACKAGE = 'divDyn',x, dir=forward, inc)
 

@@ -44,6 +44,9 @@ divDyn(
 
 \item{filterNA}{\code{(logical)} The \code{filterNA} parameter of the \code{\link{omit}} function.}
 }
+\value{
+A data.frame object, with every row corresponding to a time bin.
+}
 \description{
 This function calculates various metrics from occurrence datasets in the form of time series.
 }

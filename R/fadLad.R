@@ -37,6 +37,7 @@
 #' 
 #' 
 #' @rdname fadlad
+#' @return A data.frame, with rows corresponding to \code{tax} entries.
 #' @export
 fadlad<-function(x, tax, bin=NULL,age=NULL, revtime=FALSE, na.rm=TRUE, diffbin=TRUE){
 	# for the prototype
@@ -157,6 +158,7 @@ fadlad<-function(x, tax, bin=NULL,age=NULL, revtime=FALSE, na.rm=TRUE, diffbin=T
 #' 
 #' @param method \code{(character)} Either \code{"forward"} or \code{"backward"}.
 #' 
+#' @return A numeric matrix of survivorship probabilities.
 #' @examples
 #' data(corals)
 #' surv<-survivors(corals, tax="genus", bin="stg", method="forward")

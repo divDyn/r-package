@@ -13,6 +13,9 @@ fill(x, forward = TRUE, inc = 0)
 
 \item{inc}{\code{(numeric)} Only if \code{x} is \code{numeric}, the function will increase the substituted value by this amount (useful for filling in sequences).}
 }
+\value{
+A logical vector.
+}
 \description{
 The function will loop through a vector and will substitute \code{NA} values with the value it last encountered or replaced.
 }

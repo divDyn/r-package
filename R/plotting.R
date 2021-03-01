@@ -22,6 +22,7 @@
 #' @param boxes.args \code{(list)}: Arguments that will be passed to the \code{\link[graphics]{rect}} function that draws the rectangles of time intervals.
 #' @param rplab \code{logical}: When the right boundary of the plot does not match with any of the boundaries of the time scale boxes (and \code{labels=TRUE}), should the label of the partially drawn box be plotted?
 #' @param lplab \code{logical}: When the left boundary of the plot does not match with any of the boundaries of the time scale boxes (and \code{labels=TRUE}), should the label of the partially drawn box be plotted?
+#' @return The function has no return value.
 #' @examples
 #'	data(stages) 
 #'	  tsplot(stages, boxes="sys", shading="series")
@@ -437,6 +438,7 @@ tsplot<-function(tsdat,  ylim=c(0,1), xlim=NULL, prop=0.05, gap=0,
 #'	  randVar <- t(sapply(1:95, FUN=function(x){rlnorm(150, 0,1)}))
 #'	  shades(stages$mid, randVar, col="blue", res=c(0,0.33, 0.66, 1),method="decrease")	 
 #' @export
+#' @return The function has no return value.
 shades <- function(x, y, col="black", res=10, border=NA,interpolate=FALSE, method="symmetric",na.rm=FALSE){
 	if(nrow(y)!=length(x)) stop("length of x and y don't match")
 	
@@ -621,6 +623,7 @@ shades <- function(x, y, col="black", res=10, border=NA,interpolate=FALSE, metho
 #' @param plot \code{(logical)}: If set to \code{TRUE}, then the function will plot the output. If set to \code{FALSE}, then a matrix with the relevant values will be returned. This output is similar to the output of \code{\link[base]{table}}, but handles proportions instantly.
 #' 
 #' @param vertical \code{(logical)}: Horizontal or vertical plotting? If \code{FALSE}, the independent variable will be horizontal, if \code{TRUE}, the count/proportion variable will be horizontal. In the latter case \code{xlim} and \code{ylim} has reversed roles.
+#' @return The function has no return value.
 #' @examples
 #' 
 #' # dummy examples 
@@ -672,7 +675,7 @@ shades <- function(x, y, col="black", res=10, border=NA,interpolate=FALSE, metho
 #'     bg="white", cex=1.4) 
 #' 
 #' @export
-parts<-function(x, b=NULL, ord="up", prop=FALSE, plot=TRUE,  col=NULL, xlim=NULL, border=NULL, ylim=c(0,1), na.valid=FALSE, labs=T, labs.args=NULL, vertical=FALSE){
+parts<-function(x, b=NULL, ord="up", prop=FALSE, plot=TRUE,  col=NULL, xlim=NULL, border=NULL, ylim=c(0,1), na.valid=FALSE, labs=TRUE, labs.args=NULL, vertical=FALSE){
 	
 	if(is.factor(b)) b<-as.character(b)
 	
@@ -963,6 +966,7 @@ parts<-function(x, b=NULL, ord="up", prop=FALSE, plot=TRUE,  col=NULL, xlim=NULL
 #'
 #' @param decreasing (\code{logical}): This parameter sets whether the series of ranges should start from the top \code{decreasing=TRUE} or bottom of the plot \code{decreasing=FALSE}. 
 #' 
+#' @return The function has no return value.
 #' @examples
 #'  # import
 #'  data(stages)
@@ -1346,6 +1350,7 @@ distribute<-function(oneList, target){
 #'   tsbars(x=stages$mid, y=dd$divRT, width=stages$dur, gap=1, col=stages$col)
 #' 
 #' @export
+#' @return The function has no return value.
 tsbars <- function(x, y, width="max", yref=0, gap=0, vertical=TRUE, ...){
 #	x<- stages$mid
 #	y<- dd$divRT

@@ -13,6 +13,9 @@ categorize(x, key, incbound = "lower")
 
 \item{incbound}{\code{(character)} Either \code{"lower"} or \code{"higher"}. Interval identifiers will be treated with different interval rules. \code{"lower"} will treat the lowest entry as included, \code{"higher"} works the opposite. The argument will be renamed to 'include.lowest' to make the interface easier to remember.}
 }
+\value{
+A vector with replacements.
+}
 \description{
 This basic function replaces groups of values in a vector with single values with the help of a key object.
 }

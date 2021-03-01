@@ -39,6 +39,7 @@
 #'	  aff<-affinity(fossilEnv, env="bath", tax="genus", bin="stg", alpha=1)
 #'	
 #' @export
+#' @return A named vector, values corresponding to affinities.
 affinity<-function(x, tax, bin, env, coll=NULL, method="binom", alpha=1,reldat=NULL, na.rm=FALSE, bycoll=FALSE){
 # version 2.0
 #	x <- fossilEnv

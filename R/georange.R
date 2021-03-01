@@ -19,6 +19,7 @@
 #'   georange(bitax, lng="paleolng", lat="paleolat", method="co")
 #' 
 #' @export
+#' @return A numeric vector with geographic ranges (multiple methods). 
 georange <- function(x, lng=NULL, lat=NULL, loc=NULL, method="co"){
 	
 	if(length(method)>0){

@@ -13,6 +13,9 @@ indices(x, samp = NULL, method = NULL)
 
 \item{method}{(\code{character}): The type of metric that is to be calculated. The default value (\code{NULL}) will calculate all implemented metrics.}
 }
+\value{
+A named numeric vector.
+}
 \description{
 This function includes some indices that characterize a species-abundance/occurrence distribution.
 }

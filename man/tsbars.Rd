@@ -21,6 +21,9 @@ tsbars(x, y, width = "max", yref = 0, gap = 0, vertical = TRUE, ...)
 
 \item{...}{Arguments passed to \code{\link[graphics]{rect}}.}
 }
+\value{
+The function has no return value.
+}
 \description{
 Function to use bars for time series.
 }

@@ -38,6 +38,7 @@
 #'   singRefBin <- singletons(corals, tax="genus", var="reference_no", bin="stg", bybin=TRUE)
 #' 
 #' @export
+#' @return A vector of character entries in \code{tax}.
 singletons <- function(dat, tax="clgen", var=NULL, bin=NULL, bybin=FALSE, na.rm=TRUE){
 	
 	if(!is.logical(na.rm)) stop("The argument 'na.rm' has to be logical.")
