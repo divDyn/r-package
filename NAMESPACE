@@ -29,6 +29,8 @@ export(tabinate)
 export(tsbars)
 export(repmatch)
 export(slice)
+export(matchtime)
+
 
 importFrom("Rcpp", evalCpp)
 importFrom("grDevices", "col2rgb", "rgb")
