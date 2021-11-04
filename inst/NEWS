@@ -4,7 +4,7 @@
 ## [0.8.2 (build 741)]  - 2021-08-16
 ### Added
 - the matchtime() function from chronosphere 0.4
-
+- defense against trying to use divDyn() as applied function in subsample() when bin=NULL
 
 ## [0.8.1 (build 740)]  - 2021-03-01
 ### Changed
