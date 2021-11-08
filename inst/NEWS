@@ -1,10 +1,14 @@
 # Change log of the R package 'divDyn'
 
 
-## [0.8.2 (build 741)]  - 2021-08-16
+## [0.8.2 (build 742)]  - 2021-08-16
 ### Added
 - the matchtime() function from chronosphere 0.4
 - defense against trying to use divDyn() as applied function in subsample() when bin=NULL
+
+### Changed
+- subsample() will produce warnings instead of halting when the variables 'tax' or 'bin' has NAs in them. The corresponding rows are omitted automatically.
+
 
 ## [0.8.1 (build 740)]  - 2021-03-01
 ### Changed

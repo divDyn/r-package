@@ -155,7 +155,10 @@ subsample<- function(x,
 			if(na.rm){
 				if(sum(bTaxNA)>0) x <- x[!bTaxNA,]
 			}else{
-				if(sum(bTaxNA)>0) stop("The 'tax' variable includes NAs.")
+				if(sum(bTaxNA)>0){
+					warning("The 'tax' variable includes NAs.")
+					x <- x[!bTaxNA,]
+				}
 			}
 		}
 
@@ -169,10 +172,15 @@ subsample<- function(x,
 				# logical
 				bVar<- x[,bin, drop=TRUE]
 				bBinNA <- is.na(bVar)
+
+				# depending on whether this is indicated, provide a warning
 				if(na.rm){
 					if(sum(bBinNA)>0) x <- x[!bBinNA,]
 				}else{
-					if(sum(bBinNA)>0) stop("The 'bin' variable includes NAs.")
+					if(sum(bBinNA)>0){
+						warning("The 'bin' variable includes NAs.")
+						x <- x[!bBinNA,]
+					}
 				}
 
 				if(sum(x[,bin, drop=TRUE]%%1)>0) stop("The bin column may only contain integers.")
