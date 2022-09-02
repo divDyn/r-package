@@ -32,7 +32,7 @@ Most functionality in the ‘divDyn’ package assumes that the time dimension i
 
 The workflow presented here is based on the discretization of geological time, which is constrained by stratigraphy. These intervals of time (bins) represent the basic units of the analysis, and their sequence is coded in the time scale table. Even if we develop a geological model that outputs robust estimates in a continuous time axis, the calculation of metrics presented in the package will require discretization. We added implementations of the basic functionalities for continuous time (chapter ‘4.3. Slicing’) as well, but we do not deem it as reliable as using stratigraphic bins for million-year-scale, deep-time analyses. As age estimates are dependent on the different geological ‘time scales’, binning the data can change more than necessary, which can have random effects on the resulting series. 
 
-In order to demonstrate the workflow of binned analyses, we added an example table to the package. This table represents a somewhat altered form (see below) of the stage-level geological time scale of Ogg et al. (2016). You can attach this table using the ``data()`` function. 
+In order to demonstrate the workflow of binned analyses, we added an example table to the package. This table represents a somewhat altered form (see below) of the stage-level geological time scale of Gradstein et al. (2020). You can attach this table using the ``data()`` function. 
 
 ```{r package, echo= TRUE, eval=FALSE}
 library(divDyn)
@@ -1308,7 +1308,7 @@ Foote, M. (2006). Substrate Affinity and Diversity Dynamics of Paleozoic Marine 
 
 Good, I. J. (1953). The Popoulation Frequencies of Species and the Estimation of Population Parameters. Biometrika, 40(3/4), 237–264.
 
-Ogg, J. G., G. Ogg, and F. M. Gradstein. (2016). A concise geologic time scale: 2016. Elsevier.
+Gradstein, F. M., Ogg, J. G., & Schmitz, M. D. (2020). The geologic time scale 2020. Elsevier.
 
 Kiessling, W., & Aberhan, M. (2007). Environmental determinants of marine benthic biodiversity dynamics through Triassic-Jurassic time. Paleobiology, 33(3), 414–434.
 

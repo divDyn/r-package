@@ -74,7 +74,37 @@
 #' @usage data(keys)
 "keys"
 
-#' 95 bin Phanerozoic time scale based on the stratigraphic stages of Ogg et al. (2016).
+#' 95 bin Phanerozoic time scale based on the stratigraphic stages of Ogg et al. (2016) with updated dates in some intervals (2018).
+#' 
+#' Stage-level (age-level) timescale used in some analyses.
+#' 
+#' This is an example time scale object that can be used in the Phanerozoic-scale analyses. Example occurrence datasets related to the package use the variable \code{stg} when referring to this timescale.
+#' This is the \code{stages} object used until divDyn version 0.8.1.
+#' 
+#' @format A \code{data.frame} with 95 observations and 10 variables:
+#' 	\describe{
+#' 		\item{\code{sys}}{Abbreviations of geologic systems.}
+#' 		\item{\code{system}}{Geologic periods.}
+#' 		\item{\code{series}}{Geologic series.}
+#' 		\item{\code{stage}}{Names of geologic stages.}
+#' 		\item{\code{short}}{Abbreviations of geologic stages.}
+#' 		\item{\code{bottom}}{Numeric ages of the bottoms boundaries (earliest ages) of the bins.}
+#' 		\item{\code{mid}}{Numeric age midpoints of the bins, the averages of \code{bottom} and \code{top}.}
+#' 		\item{\code{top}}{Numeric ages of the tops (latest ages) of the bins.}
+#'		\item{\code{dur}}{Numeric ages of the durations for the bins.}
+#' 		\item{\code{stg}}{Integer number identifiers of the bins.}
+#'		\item{\code{systemCol}}{Hexadecimal color code of the systems.}
+#'		\item{\code{seriesCol}}{Hexadecimal color code of the series.}
+#'		\item{\code{col}}{Hexadecimal color code of the stages.}
+#' 	}
+#' 
+#' @source Based on Ogg et al. (2016), compiled by Wolfgang Kiessling.
+#' @section References:
+#' Ogg, J. G., G. Ogg, and F. M. Gradstein. 2016. A concise geologic time scale: 2016. Elsevier.
+#' @usage data(stages2018)
+"stages2018"
+
+#' 95 bin Phanerozoic time scale based on the stratigraphic stages of Gradstein et al. 2020.
 #' 
 #' Stage-level (age-level) timescale used in some analyses.
 #' 
@@ -97,11 +127,12 @@
 #'		\item{\code{col}}{Hexadecimal color code of the stages.}
 #' 	}
 #' 
-#' @source Based on Ogg et al. (2016), compiled by Wolfgang Kiessling.
+#' @source Based on Gradstein et al. (2020).
 #' @section References:
-#' Ogg, J. G., G. Ogg, and F. M. Gradstein. 2016. A concise geologic time scale: 2016. Elsevier.
+#' Gradstein, F. M., Ogg, J. G., & Schmitz, M. D. (2020). The geologic time scale 2020. Elsevier.
 #' @usage data(stages)
 "stages"
+
 
 
 #' The 10 million year resolution timescale of the Paleobiology Database
