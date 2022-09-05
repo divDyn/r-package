@@ -8,7 +8,6 @@
 #' 
 #' @param index (\code{logical}) If this argument is \code{TRUE}, only the indices will be returned that refer to the new order, rather than the reordered \code{x} variable.
 #' 
-#' @param time \code{numeric}. Single value referring to that dimension of \code{x} where the time-coding names are (\code{time=1} is the default for lists).
 #' @param ... Additional arguments passed to class-specific methods.
 #' @rdname matchtime
 #' @return An object of the class as \code{x} or a \code{numeric} vector.
@@ -19,7 +18,7 @@
 #' targ <- c(5.1,4.2, 3.4, 2.7, 2.3)
 #' # how do the two series match the best?
 #' matchtime(orig, targ)
-#' @exportMethod matchtime
+#' @export matchtime
 setGeneric("matchtime", function(x,y,...) standardGeneric("matchtime"))
 
 #' @rdname matchtime

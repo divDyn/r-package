@@ -23,8 +23,6 @@ matchtime(x, y, ...)
 \item{...}{Additional arguments passed to class-specific methods.}
 
 \item{index}{(\code{logical}) If this argument is \code{TRUE}, only the indices will be returned that refer to the new order, rather than the reordered \code{x} variable.}
-
-\item{time}{\code{numeric}. Single value referring to that dimension of \code{x} where the time-coding names are (\code{time=1} is the default for lists).}
 }
 \value{
 An object of the class as \code{x} or a \code{numeric} vector.

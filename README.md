@@ -5,7 +5,7 @@ R package for quantifying diversity dynamics using fossil sampling data
 
 ## News
 
-- The next update of the package (V0.8.0) is now availble from the CRAN servers! As this is a major update, I suggest everyone to update their copy. See the change log below for the changes. 
+- The next update of the package (V0.8.2) is now availble from the CRAN servers! As this is a major update, I suggest everyone to update their copy. See the change log below for the changes. 
 
 - The paper describing the package is available from the Wiley Online Library. You can download it from this link:
 https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.13161 
@@ -25,19 +25,19 @@ As the package is still getting developed, please note that some interface chang
 
 ## Installing 
 
-### 1. From CRAN (v0.8.0)
+### 1. From CRAN (v0.8.1)
 
 You can install the appropriate binaries normally, by running 
 `install.packages("divDyn")`
 
-### 2. Using manually pre-built binaries (v0.8.0)
+### 2. Using manually pre-built binaries (v0.8.1)
 
 I have updated the windows binaries so they work with the latest internals (3.6). If you want to use the binaries, please update your R to at least 3.6.
 
 - If you have a windows computer, you can install the package with the following R command:
   `install.packages("https://github.com/divDyn/assets/raw/master/r_archive/bin/Win_x64_x86/divDyn_0.8.0.zip", repos=NULL, type="win.binary")`
 
-### 3. Using the source tarball to install (v0.8.0)
+### 3. Using the source tarball to install (v0.8.2)
 This you can do with running
 ```
 install.packages(
@@ -49,7 +49,7 @@ from the R console. Note that there is some code in the package that requires co
 
 The sources of the older versions are also in the _archive/source folder. You can access earlier versions by changing the version number in the command above.
 
-### 4. Using the repository files and 'devtools' to install (v0.8.0)
+### 4. Using the repository files and 'devtools' to install (v0.8.2)
 
 To do this:
 - You need a compiler, as for method 3

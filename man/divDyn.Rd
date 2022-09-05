@@ -87,9 +87,9 @@ The following variables are produced:
 
 \code{ori3t}: Three-timer origination rates of Alroy (2008). \emph{log(t2u/t3)}.
 
-\code{extC3t}: Corrected three-timer extinction rates of Alroy (2008). \emph{ext3t[\emph{i}] + log(samp3t[\emph{i}+1])}.
+\code{extC3t}: Corrected three-timer extinction rates of Alroy (2008). \emph{ext3t[i] + log(samp3t[i+1])}.
 
-\code{oriC3t}: Corrected three-timer origination rates of Alroy (2008). \emph{ori3t[\emph{i}] + log(samp3t[\emph{i}-1])}.
+\code{oriC3t}: Corrected three-timer origination rates of Alroy (2008). \emph{ori3t[i] + log(samp3t[i-1])}.
 
 \code{divSIB}: Sampled-in-bin diversity (richness), the number of genera sampled in the focal bin.
 

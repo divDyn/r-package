@@ -8,7 +8,7 @@ citEntry(entry = "Article",
   volume       = "10",
   number       = "5",
   pages        = "735-743",
-  url          = " https://doi.org/10.1111/2041-210X.13161",
+  url          = "https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13161",
 
   textVersion  =
   paste("Kocsis, Á.T., Reddin, C.J., Alroy, J. and Kiessling W. 2019",
