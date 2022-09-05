@@ -702,6 +702,11 @@ parts<-function(x, b=NULL, ord="up", prop=FALSE, plot=TRUE,  col=NULL, xlim=NULL
 		
 	}
 		
+	# any empty quotes? Highligt!
+	if(length(which(b==""))>0){
+		warning("Empty quotes (\"\") found among categories!")
+		b[which(b=="")] <- "<empty quotes>"
+	}
 	# the unique entries
 	bLevs<-unique(b)
 	

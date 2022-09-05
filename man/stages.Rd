@@ -32,7 +32,7 @@ data(stages)
 Stage-level (age-level) timescale used in some analyses.
 }
 \details{
-This is an example time scale object that can be used in the Phanerozoic-scale analyses. Example occurrence datasets related to the package use the variable \code{stg} when referring to this timescale.
+This is an example time scale object that can be used in the Phanerozoic-scale analyses. Example occurrence datasets related to the package use the variable \code{stg} when referring to this timescale. This version uses the longer Rhaetian option.
 }
 \section{References}{
 

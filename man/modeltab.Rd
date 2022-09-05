@@ -4,10 +4,18 @@
 \alias{modeltab}
 \title{Origination/extinction response table for statistical modelling.}
 \usage{
-modeltab(x, tax, bin, taxvars = NULL, rt = FALSE, singletons = FALSE)
+modeltab(
+  x,
+  tax,
+  bin,
+  taxvars = NULL,
+  rt = FALSE,
+  singletons = FALSE,
+  probs = NULL
+)
 }
 \arguments{
-\item{x}{\code{(data.frame)} Fossil occurrence table.}
+\item{x}{\code{(data.frame)} Fossil occurrence data.frame.}
 
 \item{tax}{\code{(character)} Variable name of the occurring taxa (variable type: \code{factor} or \code{character} - such as \code{"genus"})}
 
@@ -17,7 +25,9 @@ modeltab(x, tax, bin, taxvars = NULL, rt = FALSE, singletons = FALSE)
 
 \item{rt}{\code{(logical)} Should the range-through assumption be applied within the function? If set to \code{TRUE} then missing occurrences will be interpolated with \code{FALSE} values in both the \code{ext} and \code{ori} variables. .}
 
-\item{singletons}{\code{(logical)} Should single-interval taxa be removed from the final table? This is recommended, as it is impossible to get a \code{FALSE} response for these taxa.}
+\item{singletons}{\code{(logical)} Should single-interval taxa be included from the final table? This is not recommended, as it is impossible to get a \code{FALSE} response for these taxa.}
+
+\item{probs}{\code{(logical)} When set to \code{NULL}, the response variable will be binary. When set to \code{"samp3t"} or \code{"sampRange"} the response results will be probabilities, based on the three-timer sampling completeness, or the range-based sampling completeness, respectively.}
 }
 \value{
 A data.frame with binary response variables.
@@ -28,11 +38,23 @@ This function takes an occurrence dataset and reformats it to a table that can b
 \details{
 Every entry in the output table corresponds to one cell in the \code{bin}/\code{tax} matrix. This function omits duplicates and concatenates two \code{logical} vectors (response variables) to the occurrence dataset:  
 The \code{ori} vector is \code{TRUE} in the interval when the taxon first appeared, and \code{FALSE} in all others. The \code{ext} vector is \code{TRUE} in the interval the taxon appeared for the last time, and \code{FALSE} in the rest.
+
+The true date of extinction and origination is unknown, therefore these events can only be expressed as probabilities. The argument \code{probs} allows the replacement of a binary response with two probability values, which are based on the apparent sampling patterns. For extinctions, when \code{probs} is set to \code{"samp3t"}, the response parameter for extinctions in the last bin of appearance is set to the three-timer sampling compelteness of the following bin. Assuming that the taxon'as range offset is not larger than a whole bin, if the taxon did not go extinct in the bin in which it appeared the last time, it is assumed to be going extinct in the following bin, and the remainder (1 -  sampling completeness) is assigned to that bin. The pattern is reversed for originations. For \code{probs="sampRange"}, the range-based completeness measures are applied in a similar fashion. For Phanerozoic-scale analyses, a whole bin difference between apparent event and the actual event is reasonable. See more in Reddin et al. 2021. Note that the response probabilities are set to missing values (\code{NA}s) when the probabilities cannot be calculated. The variable \code{ext} is also set to \code{NaN} for the early virtual extension of the range, and \code{ori} is treated the same for the late-extension. 
+
+\strong{References:}
+
+Reddin, C. J., Kocsis, Á. T., Aberhan, M., & Kiessling, W. (2021). Victims of ancient hyperthermal events herald the fates of marine clades and traits under global warming. Global Change Biology, 27(4), 868–878. https://doi.org/10.1111/gcb.15434
 }
 \examples{
 # load necessary data
 data(corals)
 # simple table
 modTab<-modeltab(corals, bin="stg", tax="genus", taxvars=c("ecology", "family"))
+# probabilities for extinction modeling
+modTab2 <- modeltab(corals, bin="stg", tax="genus", probs="samp3t")
+# only extinction response (omit virtual origination extensions)
+extTab <- modTab2[!is.nan(modTab2$ext), ]
+# only extinction response (omit virtual extinction extensions)
+oriTab <- modTab2[!is.nan(modTab2$ori), ]
 
 }

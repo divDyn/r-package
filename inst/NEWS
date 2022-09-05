@@ -5,6 +5,8 @@
 ### Added
 - the matchtime() function from chronosphere 0.4
 - defense against trying to use divDyn() as applied function in subsample() when bin=NULL
+- the probs argument to modeltab() following Reddin et al. 2021
+
 
 ### Changed
 - subsample() will produce warnings instead of halting when the variables 'tax' or 'bin' has NAs in them. The corresponding rows are omitted automatically.
