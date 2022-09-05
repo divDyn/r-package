@@ -1,7 +1,7 @@
 # Change log of the R package 'divDyn'
 
 
-## [0.8.2 (build 743)]  - 2022-09-02
+## [0.8.2 (build 745)]  - 2022-09-05
 ### Added
 - the matchtime() function from chronosphere 0.4
 - defense against trying to use divDyn() as applied function in subsample() when bin=NULL
@@ -13,6 +13,7 @@
 - changed bitwise and to boolean in Engine.cpp
 - regenerated documentation for compatibility to HTML5, corrected some entries
 - Fixed mismatching data object keys$lat, which indicated intervals for absolute paleolatitudes instead of actual paleolatitudes.
+- Fixed error, when parts() was invoked for "" category.
 
 
 ## [0.8.1 (build 740)]  - 2021-03-01
