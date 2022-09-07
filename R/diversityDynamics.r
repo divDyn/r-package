@@ -58,7 +58,7 @@
 #'
 #' \code{oriGF}: Gap-filler origination rates of Alroy(2014). \emph{log((t2u + tPart)/(t3+tPart+tGFd))}
 #'
-#' \code{E2f3}: Second-for-third extinction propotions of Alroy (2015). As these metrics are based on an algorithmic approach, for the equations please refer to the Alroy (2015, p. 634, right column and Eq. 4)). See source code (\url{https://github.com/divDyn/r_package}) for the exact implementation, found in the \code{Metrics} function in the diversityDynamics.R file.
+#' \code{E2f3}: Second-for-third extinction propotions of Alroy (2015). As these metrics are based on an algorithmic approach, for the equations please refer to the Alroy (2015, p. 634, right column and Eq. 4)). See source code (\url{https://github.com/divDyn/divDyn}) for the exact implementation, found in the \code{Metrics} function in the diversityDynamics.R file.
 #'
 #' \code{O2f3}: Second-for-third origination propotions of Alroy (2015). Please see \code{E2f3}.
 #'
