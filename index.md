@@ -30,7 +30,7 @@ A.T.; Reddin, C.J.; Alroy, J. and Kiessling, W. (2019)
 
 The site is getting filled with the following content:
 
-#### Tutorials with the 2015 Coral data
+#### Tutorials with the PBDB coral data from 2015
 
   - This particular dataset is used to ensure interface stability and
     consistency.
