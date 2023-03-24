@@ -1,5 +1,6 @@
 url: https://divDyn.github.io/
-home: R package for diversity dynamics
+home:
+  title: R package for diversity dynamics
 template:
   opengraph:
     image:
