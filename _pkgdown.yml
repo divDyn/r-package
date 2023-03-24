@@ -1,5 +1,13 @@
 url: https://divDyn.github.io/
+home: R package for diversity dynamics
 template:
+  opengraph:
+    image:
+      src: man/figures/logo.png
+      alt: The divDyn sticker.
+    twitter:
+      creator: "@atkocsis"
+      card: summary_large_image
   bootstrap: 5
   bootswatch: cosmo
   bslib:
