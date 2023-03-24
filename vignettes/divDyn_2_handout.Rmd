@@ -1,10 +1,8 @@
 ---
-title: "Handout to the R package divDyn v0.8.2 for diversity dynamics using fossil sampling data"
-author: "Adam T. Kocsis, Carl J. Reddin, Wolfgang Kiessling"
-date: '`r Sys.Date()`'
-output: pdf_document
+title: "Handout"
+output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Handout to the R packare divDyn v0.8.2 for diversity dynamics using fossil sampling data}
+  %\VignetteIndexEntry{Handout}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

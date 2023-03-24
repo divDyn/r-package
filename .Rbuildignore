@@ -1,3 +1,7 @@
 tests
 README.Rmd
 LICENSE
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+man/figures/divDyn_example.png

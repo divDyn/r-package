@@ -1,0 +1,60 @@
+---
+title: "1. Installation"
+description: >
+  Alternatives to install the divDyn R package. 
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{1. Installation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Stable version from the CRAN
+
+The stable version of the package is available on [CRAN servers](https://cran.r-project.org/package=divDyn), which means that you can install it with the regular `install.packages()` function.
+
+```{r cran, eval=FALSE}
+install.packages("divDyn")
+```
+
+If for some reason, the installlation from CRAN fails, you might need to look into alternative methods.
+
+
+* * * 
+
+## Alternative methods
+
+#### Stable version from GitHub from source
+
+For the sake of completeness and simplicity, the sources of the stable version are also available on GitHub. The `install.packages()` function can be used to install this from source - but you will have to install dependencies of the package, and you have to have a compiler installed on your system 
+
+```{r stable, eval=FALSE}
+install.packages(
+  "https://github.com/divDyn/assets/raw/master/r_archive/source/divDyn_0.8.2.tar.gz", 
+  repos=NULL, type="source")
+```
+
+#### Development version - the raw 
+
+If you encounter technical problems with the package that are not described anywhere, you might want to take a look at the [development version](https://github.com/divDyn/divDyn/tree/devel).
+
+If you wish to install the development version, I recommend a manual installation:  
+1. Clone the repository to your local hard drive.  
+2. Make sure that you have the package dependencies, and a compiler installed: on Windows, [RTools](https://cran.r-project.org/bin/windows/Rtools/) should include all the tools you need, on Mac, you will need to have [XCode](https://developer.apple.com/xcode/) - if you use GNU/Linux, you have to go down deeper the rabbit hole :).   
+3. Open a terminal and navigate to the directory where you cloned. The `divDyn` directory should be visible from there.  
+4. Run this line in the terminal  
+
+```
+R CMD INSTALL divDyn
+```
+
+- *If you see an error suggesting that `R` is not found, you have to add it to your `PATH` environmental variable.*  
+- *If the R packages that `divDyn` depend on are not installed, you have to install them manually, or you will get an error.*
+- You can also try `devtools::install_github()`. 

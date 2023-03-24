@@ -1,0 +1,56 @@
+url: https://divDyn.github.io/
+template:
+  bootstrap: 5
+  bootswatch: cosmo
+  bslib:
+    primary: "#83100d"
+
+navbar:
+  structure:
+#    left: [tutorials, paper, reference, internals, howtos]
+    left: [tutorials, reference, internals, howtos]
+    right: [search, github]
+  components:
+    tutorials:
+      text: Tutorials
+      menu:
+        - text: "1. Installation"
+          href: articles/divDyn_1_installation.html 
+        - text: "2. Handout"
+          href: articles/divDyn_2_handout.html
+    # paper:
+    #   text: ddPhanero 
+    #   menu:
+    #     - text: "Current version"
+    #       href: articles/icosa_1_installation.html 
+    #     - text: "Past versions"
+    #       href: articles/icosa_1_installation.html 
+    internals:
+      text: Internals
+      menu: 
+      - href: news/index.html
+        text: Changelog 
+      # - href: articles/archive.html
+      #   text: Package archive 
+    howtos:
+      text: How-to guides on EvolvED
+      href: "https://www.evolv-ed.net/"
+
+authors:
+  Adam T. Kocsis:
+    href: "https://palaeobiology.nat.fau.de/people/instructors/kocsis/"
+  Carl J. Reddin:
+    href: "https://www.gzn.nat.fau.eu/palaeontologie/team/former-members/reddin/"
+  John Alroy:
+    href: "https://researchers.mq.edu.au/en/persons/john-alroy"
+  Wolfgang Kiessling:
+    href: "https://www.gzn.nat.fau.eu/palaeontologie/team/professors/kiessling/"
+  Deutsche Forschungsgemeinschaft:
+    href: https://www.dfg.de/en/index.jsp
+    html: <img src='https://www.dfg.de/includes/bausteine/open_graph_de/dfgfallback.jpg' alt='dfg' width='80' />
+  FAU GeoZentrum Nordbayern:
+    href: https://www.gzn.nat.fau.eu/
+    html: <img src='https://www.gzn.nat.fau.de/files/2017/05/cropped-gzn-logo.jpg' alt='geozentrum' width='80' />
+
+
+
