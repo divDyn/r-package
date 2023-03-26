@@ -1,0 +1,11 @@
+pandoc: 2.9.2.1
+pkgdown: 2.0.7
+pkgdown_sha: ~
+articles:
+  divDyn_1_installation: divDyn_1_installation.html
+  divDyn_2_handout: divDyn_2_handout.html
+last_built: 2023-03-26T18:12Z
+urls:
+  reference: https://divDyn.github.io/reference
+  article: https://divDyn.github.io/articles
+
