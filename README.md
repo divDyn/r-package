@@ -18,7 +18,7 @@ https://github.com/divDyn/ddPhanero/blob/master/doc/dd_phanero_web.html
 ## About the package
 
 If you are interested in what this package does, or have questions about its use, please check out the first vignette: 'Handout to the R package 'divDyn' v0.8.2 for diversity dynamics from fossil occurrence data' here:
-https://github.com/divDyn/r_package/blob/master/vignettes/handout.pdf
+https://github.com/divDyn/r-package/blob/master/vignettes/handout.pdf
 
 As the package is still getting developed, please note that some interface changes might occurr based on the feedback of people and my own experience on what is easier to use. If you have any requirements or recommendations about what to add (or more importantly, if you find a mistake), do not hesitate to contact me at adam.kocsis@fau.de.
 
@@ -47,10 +47,10 @@ The sources of the older versions are also in the _archive/source folder. You ca
 To do this:
 - You need a compiler, as for method 2
 - Make sure that the 'devtools' package is installed
-- Run `devtools::install_github("divDyn/divDyn")`
+- Run `devtools::install_github("divDyn/r-package")`
 
 If the frist method is not working for you, and you do not want to mess around with a compiler and such, then contact me and I will find a way to compile binaries for you.
 
 # Change log
 
-See the change log here: [Change Log](https://github.com/divDyn/divDyn/blob/master/inst/NEWS)
+See the change log here: [Change Log](https://github.com/divDyn/r-package/blob/master/inst/NEWS)

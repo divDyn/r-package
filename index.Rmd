@@ -10,7 +10,7 @@ library(badger)
 
 # divDyn: Diversity Dynamics <img src="man/figures/logo.png" align="right" />
 
-`r badge_devel("divDyn/divDyn", "green")`
+`r badge_devel("divDyn/r-package", "green")`
 `r badge_cran_release("divDyn", "blue")`
 `r badge_cran_download("divDyn", "grand-total", "yellow")`
 `r badge_cran_checks("divDyn")`

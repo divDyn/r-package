@@ -43,18 +43,22 @@ install.packages(
 
 #### Development version - the raw 
 
-If you encounter technical problems with the package that are not described anywhere, you might want to take a look at the [development version](https://github.com/divDyn/divDyn/tree/devel).
+If you encounter technical problems with the package that are not described anywhere, you might want to take a look at the [development version](https://github.com/divDyn/r-package/tree/devel).
 
 If you wish to install the development version, I recommend a manual installation:  
 1. Clone the repository to your local hard drive.  
-2. Make sure that you have the package dependencies, and a compiler installed: on Windows, [RTools](https://cran.r-project.org/bin/windows/Rtools/) should include all the tools you need, on Mac, you will need to have [XCode](https://developer.apple.com/xcode/) - if you use GNU/Linux, you have to go down deeper the rabbit hole :).   
-3. Open a terminal and navigate to the directory where you cloned. The `divDyn` directory should be visible from there.  
-4. Run this line in the terminal  
+2. Rename the directory `r-package` to `divDyn`. 
+3. Make sure that you have the package dependencies, and a compiler installed: on Windows, [RTools](https://cran.r-project.org/bin/windows/Rtools/) should include all the tools you need, on Mac, you will need to have [XCode](https://developer.apple.com/xcode/) - if you use GNU/Linux, you have to go down deeper the rabbit hole :).   
+4. Open a terminal and navigate to the directory where you cloned. The `divDyn` directory should be visible from there.  
+5. Run this line in the terminal  
 
 ```
 R CMD INSTALL divDyn
 ```
 
+<div class="alert alert-danger" role="warning">
 - *If you see an error suggesting that `R` is not found, you have to add it to your `PATH` environmental variable.*  
 - *If the R packages that `divDyn` depend on are not installed, you have to install them manually, or you will get an error.*
-- You can also try `devtools::install_github()`. 
+</div>
+
+ You can also try `devtools::install_github("divDyn/r-package")`

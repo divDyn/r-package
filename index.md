@@ -1,7 +1,7 @@
 
 # divDyn: Diversity Dynamics <img src="man/figures/logo.png" align="right" />
 
-[![](https://img.shields.io/badge/devel%20version-0.8.2-green.svg)](https://github.com/divDyn/divDyn)
+[![](https://img.shields.io/badge/devel%20version-0.8.2-green.svg)](https://github.com/divDyn/r-package)
 [![](https://www.r-pkg.org/badges/version/divDyn?color=blue)](https://cran.r-project.org/package=divDyn)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/divDyn?color=yellow)](https://cran.r-project.org/package=divDyn)
 [![CRAN

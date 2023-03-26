@@ -45,6 +45,68 @@ navbar:
       text: How-to guides on EvolvED
       href: "https://www.evolv-ed.net/"
 
+reference:
+- title: Diversity dynamics
+  desc: >
+    Primary functions to calculate variables fo diversity dynamics, i.e. richness,
+    origination and extinction rates and sampling.
+  contents:
+  - divDyn
+  - binstat
+  - indices
+  - ratesplit
+  - sumstat
+- title: Sampling standardization 
+  desc: >
+    Wrapper function and algorithms used for sampling-standardization via subsampling. 
+  contents:
+  - subsample
+  - subtrialCR
+- title: Auxilliary functions 
+  desc: >
+    Additional functions relevant for complex analyses of diversity dynamics.
+  contents:
+  - georange
+  - fadlad
+  - survivors
+  - affinity
+  - singletons
+  - modeltab
+  - matchtime
+  - cleansp
+  - omit
+  - tabinate
+- title: Plotting tools 
+  desc: >
+    Tools that help visualize paleobiological data.
+  contents:
+  - tsplot
+  - tsbars
+  - shades
+  - parts
+  - ranges
+- title: Example data
+  desc: >
+    Data examples to demonstrate the structure the package was designed to work with. 
+  contents:
+  - corals
+  - stages
+  - stages2018
+  - stratkeys
+  - tens
+  - keys
+- title: Utilities
+  desc: >
+    Utilities used to manipulate base R objects.
+  contents:
+  - seqduplicated
+  - fill
+  - categorize
+  - slice
+  - streaklog
+  - repmatch
+
+
 authors:
   Adam T. Kocsis:
     href: "https://palaeobiology.nat.fau.de/people/instructors/kocsis/"
