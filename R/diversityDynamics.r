@@ -30,9 +30,9 @@
 #'
 #' \code{oriProp}: Proportional originations including single-interval taxa:  \emph{(tOri + tSing) / (tThrough + tOri + tExt + tSing)}.
 #' 
-#' \code{extPC}: Per capita extinction rates of Foote (1999). \emph{-log(tExt/(tExt + tThrough))}.  Values are not normalized with bin lengths. Similar equations were used by Alroy (1996) but without taking the logarithm.
+#' \code{extPC}: Per capita extinction rates of Foote (1999). \emph{-log(tThrough/(tExt + tThrough))}.  Values are not normalized with bin lengths. Similar equations were used by Alroy (1996) but without taking the logarithm.
 #'
-#' \code{oriPC}: Per capita origination rates of Foote (1999). \emph{-log(tOri/(tOri + tThrough))}. Values are not normalized with bin lengths. Similar equations were used by Alroy (1996) but without taking the logarithm.
+#' \code{oriPC}: Per capita origination rates of Foote (1999). \emph{-log(tThrough/(tOri + tThrough))}. Values are not normalized with bin lengths. Similar equations were used by Alroy (1996) but without taking the logarithm.
 #'
 #' \code{ext3t}: Three-timer extinction rates of Alroy (2008). \emph{log(t2d/t3)}.
 #'
@@ -54,7 +54,7 @@
 #'
 #' \code{samp3t}: Three-timer sampling completeness of Alroy (2008). \emph{t3/(t3+tPart)}
 #'
-#' \code{extGF}: Gap-filler extinction rates of Alroy(2014). \emph{log((t2d + tPart)/(t3+tPart+tGFd))}
+#' \code{extGF}: Gap-filler extinction rates of Alroy(2014). \emph{log((t2d + tPart)/(t3+tPart+tGFu))}
 #'
 #' \code{oriGF}: Gap-filler origination rates of Alroy(2014). \emph{log((t2u + tPart)/(t3+tPart+tGFd))}
 #'
@@ -180,7 +180,7 @@ divDyn <- function(x, tax, bin=NULL, age=NULL, revtime=FALSE, breaks=NULL, coll=
 		lev <- sort(unique(binVarFull)) # can NAs get past this? - yes, but the code below handles them
 
 		# check whether there are enough entries?
-		if(length(lev)<3) stop("You have less than 3 bins.")
+		if(length(lev)<3) stop("The divDyn() function cannot run with less than 3 bins.")
 
 		# if there are integer entries coerce continuous numbering for the output
 		# and use only shifts of values, rather than replacement (much faster)
