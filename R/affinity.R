@@ -157,6 +157,11 @@ affinity<-function(x, tax, bin, env, coll=NULL, method="binom", alpha=1,reldat=N
 	#subset of the taxons ranges
 		# bins where the taxon is present
 		vectRange<-as.numeric(w[1]):as.numeric(w[2])
+
+		################ emergency bug fix to cover the gaps
+		# subset it to those that are present in the rownames
+		vectRange <- vectRange[vectRange%in%rownames(relTab)]
+		################
 		
 		# what you relate to
 			thisRel <- relTab[as.character(vectRange), , drop=FALSE]
