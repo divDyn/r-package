@@ -3,7 +3,7 @@
 #' 
 #' The function will slices time with a given set of boundaries and produce a time scale object if desired.
 #' 
-#' Due to stratigraphic constraints, we can only process deep time data, when it is sliced to discrete bins. It is suggested that you do this separately for most of your analyses. This function is also used by the code{\link{divDyn}} function when \code{age} entries are provided.
+#' Due to stratigraphic constraints, we can only process deep time data, when it is sliced to discrete bins. It is suggested that you do this separately for most of your analyses. This function is also used by the \code{\link{divDyn}} function when \code{age} entries are provided.
 #' 
 #' @param x (\code{numeric}) Vector of continouos age/time estimates.
 #' @param breaks (\code{numeric}) Vector of boundaries, the breaks argument of the \code{\link[base]{cut}} function

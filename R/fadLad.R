@@ -20,7 +20,7 @@
 #' @param age \code{(character)}: Column name(s) of the continuous age variable(s). If two column names are entered, then they will interpreted as the minimum and maximum age uncertainty. (see examples) By default, time flows from higher to lower numbers. You can change this behavior by setting \code{revtime=FALSE}. Either a \code{bin} or \code{age} argument is mandatory. 
 #' @param revtime \code{(logical)}: Should time be reversed? 
 #' @param na.rm \code{(logical)}: Should taxa that have no valid FADs or LADs (due to \code{NA} entries) be removed from the output?
-#' @param diffbin \code{(logical)}: Difference-based duration for discreet time (only applicabble to cases when \code{bin} is provided). If set to \code{TRUE}, single-interval taxa will \code{0} durations. Setting this argument to \code{FALSE} will add code{1} to the durations of all taxa.
+#' @param diffbin \code{(logical)}: Difference-based duration for discreet time (only applicabble to cases when \code{bin} is provided). If set to \code{TRUE}, single-interval taxa will \code{0} durations. Setting this argument to \code{FALSE} will add \code{1} to the durations of all taxa.
 #' @examples 
 #' data(corals)
 #' 

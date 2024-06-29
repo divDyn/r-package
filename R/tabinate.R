@@ -6,7 +6,7 @@
 #' For example, the iterator can be used to calculate geographic ranges from occurrence coordinates (\code{georange}).
 #'
 #' The output structure of FUN should be independent from the input subset, or the function will return an error. 
-#' Setting both \code{bin} If \code{bin=NULL} and code{tax=NULL}, will run \code{FUN} on the entire dataset (no effect). Providing either \code{bin} or \code{tax} and keeping the other \code{NULL} will iterate \code{FUN} for every \code{bin} or \code{tax} entry (whichever is presented).
+#' Setting both \code{bin} If \code{bin=NULL} and \code{tax=NULL}, will run \code{FUN} on the entire dataset (no effect). Providing either \code{bin} or \code{tax} and keeping the other \code{NULL} will iterate \code{FUN} for every \code{bin} or \code{tax} entry (whichever is presented).
 #' The function returns a vector of values if the return value of \code{FUN} is a single value. In case it is a vector, the final output will be a matrix. 
 #' When both \code{bin} and \code{tax} is presented, the function output will be a matrix (one output value for a taxon/bin subset) or an array (3d, when \code{FUN} returns a vector).  Setting \code{FUN} to \code{NULL} will return the occurrence dataset as \code{list}s. 
 #' 
