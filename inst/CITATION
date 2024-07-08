@@ -2,7 +2,7 @@ citHeader("To cite divDyn in publications, use the following citation:")
 
 citEntry(entry = "Article",
   title        = "The R package divDyn for quantifying diversity dynamics using fossil sampling data",
-  author       = personList(as.person("Ádám T. Kocsis"),as.person("Carl J. Reddin"),as.person("John Alroy"),as.person("Wolfgang Kiessling")),
+  author       = c(person(given="Adam T.", family="Kocsis"),person(given="Carl J.", family="Reddin"),person(given="John", family="Alroy"),person(given="Wolfgang", family="Kiessling")),
   journal      = "Methods in Ecology and Evolution",
   year         = "2019",
   volume       = "10",

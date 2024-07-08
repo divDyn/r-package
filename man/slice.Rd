@@ -24,7 +24,7 @@ Either of new entries and levels or time scale.
 The function will slices time with a given set of boundaries and produce a time scale object if desired.
 }
 \details{
-Due to stratigraphic constraints, we can only process deep time data, when it is sliced to discrete bins. It is suggested that you do this separately for most of your analyses. This function is also used by the code{\link{divDyn}} function when \code{age} entries are provided.
+Due to stratigraphic constraints, we can only process deep time data, when it is sliced to discrete bins. It is suggested that you do this separately for most of your analyses. This function is also used by the \code{\link{divDyn}} function when \code{age} entries are provided.
 }
 \examples{
 y<- runif(200, 0,100)

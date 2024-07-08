@@ -53,7 +53,7 @@ data(corals)
 Example dataset to illustrate the package's basic functionalities.
 }
 \details{
-This particular dataset was used in a study by Kiessling and Kocsis (2015). All occurrences of Scleractinia were downloaded from the Paleobiology Database (PaleoDB, \url{https://paleobiodb.org/}) on 23 September 2014, originally comprising 32420 occurrences. They were than cross-checked with data from Corallosphere (\url{http://corallosphere.org}). See the article text for details.
+This particular dataset was used in a study by Kiessling and Kocsis (2015). All occurrences of Scleractinia were downloaded from the Paleobiology Database (PaleoDB, \url{https://paleobiodb.org/}) on 23 September 2014, originally comprising 32420 occurrences. They were than cross-checked with data from Corallosphere (used be accessible at \code{http://corallosphere.org}). See the article text for details.
 
 References
 

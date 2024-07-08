@@ -79,9 +79,9 @@ The following variables are produced:
 
 \code{oriProp}: Proportional originations including single-interval taxa:  \emph{(tOri + tSing) / (tThrough + tOri + tExt + tSing)}.
 
-\code{extPC}: Per capita extinction rates of Foote (1999). \emph{-log(tExt/(tExt + tThrough))}.  Values are not normalized with bin lengths. Similar equations were used by Alroy (1996) but without taking the logarithm.
+\code{extPC}: Per capita extinction rates of Foote (1999). \emph{-log(tThrough/(tExt + tThrough))}.  Values are not normalized with bin lengths. Similar equations were used by Alroy (1996) but without taking the logarithm.
 
-\code{oriPC}: Per capita origination rates of Foote (1999). \emph{-log(tOri/(tOri + tThrough))}. Values are not normalized with bin lengths. Similar equations were used by Alroy (1996) but without taking the logarithm.
+\code{oriPC}: Per capita origination rates of Foote (1999). \emph{-log(tThrough/(tOri + tThrough))}. Values are not normalized with bin lengths. Similar equations were used by Alroy (1996) but without taking the logarithm.
 
 \code{ext3t}: Three-timer extinction rates of Alroy (2008). \emph{log(t2d/t3)}.
 
@@ -103,11 +103,11 @@ The following variables are produced:
 
 \code{samp3t}: Three-timer sampling completeness of Alroy (2008). \emph{t3/(t3+tPart)}
 
-\code{extGF}: Gap-filler extinction rates of Alroy(2014). \emph{log((t2d + tPart)/(t3+tPart+tGFd))}
+\code{extGF}: Gap-filler extinction rates of Alroy(2014). \emph{log((t2d + tPart)/(t3+tPart+tGFu))}
 
 \code{oriGF}: Gap-filler origination rates of Alroy(2014). \emph{log((t2u + tPart)/(t3+tPart+tGFd))}
 
-\code{E2f3}: Second-for-third extinction propotions of Alroy (2015). As these metrics are based on an algorithmic approach, for the equations please refer to the Alroy (2015, p. 634, right column and Eq. 4)). See source code (\url{https://github.com/divDyn/divDyn}) for the exact implementation, found in the \code{Metrics} function in the diversityDynamics.R file.
+\code{E2f3}: Second-for-third extinction propotions of Alroy (2015). As these metrics are based on an algorithmic approach, for the equations please refer to the Alroy (2015, p. 634, right column and Eq. 4)). See source code (\url{https://github.com/divDyn/r-package}) for the exact implementation, found in the \code{Metrics} function in the diversityDynamics.R file.
 
 \code{O2f3}: Second-for-third origination propotions of Alroy (2015). Please see \code{E2f3}.
 

@@ -5,3 +5,4 @@ LICENSE
 ^docs$
 ^pkgdown$
 man/figures/divDyn_example.png
+index.*

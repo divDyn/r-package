@@ -41,7 +41,7 @@ subsample(
 
 \item{type}{(\code{character}): The type of subsampling to be implemented. By default this is classical rarefaction (\code{"cr"}). (\code{"oxw"}) stands for occurrence weighted by-list subsampling. If set to (\code{"sqs"}), the program will execute the shareholder quorum subsampling algorithm as it was suggested by Alroy (2010). Setting the argument to \code{"none"} will invoke no subsamling, but the applied function will be iterated on the trials, nevertheless.}
 
-\item{keep}{(\code{numeric}): The bins, which will not be subsampled but will be added to the subsampling trials. NIf the number of occurrences does not reach the subsampling quota, by default it will not be represented in the subsampling trials. You can force their inclusion with the \code{keep} argument separetely (for all, see the \code{useFailed} argument).}
+\item{keep}{(\code{numeric}): The bins which will not be subsampled but will be added to the subsampling trials. If the number of occurrences does not reach the subsampling quota, by default it will not be represented in the subsampling trials. You can force their inclusion with the \code{keep} argument separetely (for all, see the \code{useFailed} argument).}
 
 \item{rem}{(\code{numeric}): The bins, which will be removed from the dataset before the subsampling trials.}
 

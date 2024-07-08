@@ -7,7 +7,7 @@
 \format{
 A \code{list} of 7 \code{list}s:
 	\describe{
-		\item{\code{tenInt}}{A \code{list} of \code{vector}s. Entries in the \code{early_interval} and \code{late_interval} variables of PaleoDB downloads indicate the collections' positions in the dynamic time scale. These entries were linked to 10 million year-resolution time scale stored in \code{\link{tens}}. These links were compiled using a download from the FossilWorks website (\url{http://www.fossilworks.org/}), on 08 June, 2018. You can check the lookup table \code{\link{stratkeys}} here. This is version 0.9.2}
+		\item{\code{tenInt}}{A \code{list} of \code{vector}s. Entries in the \code{early_interval} and \code{late_interval} variables of PaleoDB downloads indicate the collections' positions in the dynamic time scale. These entries were linked to 10 million year-resolution time scale stored in \code{\link{tens}}. These links were compiled using a download from the FossilWorks website (used to be \code{http://www.fossilworks.org/}), on 08 June, 2018. You can check the lookup table \code{\link{stratkeys}} here. This is version 0.9.2}
 		\item{\code{stgInt}}{A \code{list} of \code{vector}s. Entries in the \code{early_interval} and \code{late_interval} variables of PaleoDB downloads indicate the collections' positions in the dynamic time scale. These entries were linked to stage-resolution time scale stored in \code{\link{stages}}. See \code{binInt} for version information.} These entries are reliable only in the Post-Ordovician!
 		\item{\code{reefs}}{A \code{list} of \code{vector}s. Entries in the \code{environment} field of the PaleoDB download indicate information regarding the likely reefal origin of carbonatic rocks. See the vignette ('§PhaneroCurve') on the exact use of these data. v0.9.}
 		\item{\code{lith}}{A \code{list} of \code{vector}s. Entries in the \code{lithology1} field of the PaleoDB download indicate information regarding the substrate of the embedding rocks. This key maps the entries to \code{siliciclastic}, \code{"carbonate"} or \code{"unknown"} substrates. v0.9.}
@@ -18,7 +18,7 @@ A \code{list} of 7 \code{list}s:
 	}
 }
 \source{
-Stratigraphic assignments are based on the download of collection data from Fossilworks (\url{http://www.fossilworks.org/}) and the dynamic time scale of the Paleobiology Database, written by J. Alroy. The assignment of numeric values were done by A. Kocsis. Environmental variables were grouped by W. Kiessling.
+Stratigraphic assignments are based on the download of collection data from Fossilworks (used to be \code{http://www.fossilworks.org/}) and the dynamic time scale of the Paleobiology Database, written by J. Alroy. The assignment of numeric values were done by A. Kocsis. Environmental variables were grouped by W. Kiessling.
 }
 \usage{
 data(keys)

@@ -15,11 +15,11 @@ library(divDyn)
 
 # 1. Introduction
 
-The purpose of this vignette is to guide users through the basic capabilities of the ‘divDyn’ package. Fossil occurrence databases, such as the Paleobiology Database (PaleoDB, http://www.paleobiodb.org/, http://fossilworks.org) are readily available to be used in analyses of diversity, extinction and origination patterns (the dynamics of biodiversity), with a certain toolkit that has become standard since the creation of the database. Until now, the implementation of most of these tools have been the responsibilities of individual researchers, with no software package to rely on. This R package intends to fill this gap. 
+The purpose of this vignette is to guide users through the basic capabilities of the ‘divDyn’ package. Fossil occurrence databases, such as the Paleobiology Database (PaleoDB, https://paleobiodb.org/) are readily available to be used in analyses of diversity, extinction and origination patterns (the dynamics of biodiversity), with a certain toolkit that has become standard since the creation of the database. Until now, the implementation of most of these tools have been the responsibilities of individual researchers, with no software package to rely on. This R package intends to fill this gap. 
 
 ## 1.1. Installation
 
-To install this beta version of the package, you must download it either from the CRAN servers or its dedicated GitHub repository (http://www.github.com/divDyn/r_package/). All minor updates will be posted on GitHub as soon as they are finished, so please check this regularly. The version on CRAN will be lagging for some time, as it takes the servers many days to process everything and updates are expected to be frequent. All questions should be addressed to Adam Kocsis, the creator and maintainer of the package (adam.kocsis@fau.de). 
+To install this beta version of the package, you must download it either from the CRAN servers or its dedicated GitHub repository (https://github.com/divDyn/r_package/). All minor updates will be posted on GitHub as soon as they are finished, so please check this regularly. The version on CRAN will be lagging for some time, as it takes the servers many days to process everything and updates are expected to be frequent. All questions should be addressed to Adam Kocsis, the creator and maintainer of the package (adam.kocsis@fau.de). 
 Instead of spending it on actual research, a tremendous amount of time was invested in making this piece of software useable and user-friendly. If you use a method implemented in the package in a publication, please cite both its reference(s) and the ‘divDyn’ package itself (Kocsis et al. 2019).
 
 # 2. Necessary Data
@@ -99,7 +99,7 @@ The functions of the package will have to be pointed to this column, by specifyi
 
 ### 2.2.1. Stratigraphic assignment
 
-Most functions rely on processes that subset the data to contain occurrences that represent the same time interval. This column can be specified with setting the ``bin`` argument accordingly. However, to get this column, a number of processes has to be run on the raw data. Although the package already incorporates functions and data to assign downloaded occurrences to stratigraphic bins, those are illustrated in a separate vignette (http://github.com/divDyn/ddPhanero). 
+Most functions rely on processes that subset the data to contain occurrences that represent the same time interval. This column can be specified with setting the ``bin`` argument accordingly. However, to get this column, a number of processes has to be run on the raw data. Although the package already incorporates functions and data to assign downloaded occurrences to stratigraphic bins, those are illustrated in a separate vignette (https://github.com/divDyn/ddPhanero). 
 
 ### 2.2.2. The example file
 
@@ -1292,7 +1292,7 @@ Alroy, J. (2014). Accurate and precise estimates of origination and extinction r
 
 Alroy, J. (2015). A more precise speciation and extinction rate estimator. Paleobiology, 41(04), 633–639. https://doi.org/10.1017/pab.2015.26
 
-Bell, M. A. (2015). geoscale: Geological Time Scale Plotting. R package version 2.0. Retrieved from http://CRAN.R-project.org/package=geoscale
+Bell, M. A. (2015). geoscale: Geological Time Scale Plotting. R package version 2.0. Retrieved from https://CRAN.R-project.org/package=geoscale
 
 Foote, M., & Raup, D. M. (1996). Fossil Preservation and the Stratigraphic Ranges of Taxa. Paleobiology, 22(2), 121–140.
 
@@ -1302,7 +1302,7 @@ Foote, M. (1999). Morphological Diversity In The Evolutionary Radiation Of Paleo
 
 Foote, M. (2000). Origination and Extinction Components of Taxonomic Diversity: General Problems. Paleobiology, 26(4), 74–102.
 
-Foote, M. (2006). Substrate Affinity and Diversity Dynamics of Paleozoic Marine Animals. Paleobiology, 32(3), 345–366. https://doi.org/10.2307/4096955
+Foote, M. (2006). Substrate Affinity and Diversity Dynamics of Paleozoic Marine Animals. Paleobiology, 32(3), 345–366. https://doi.org/10.1666/05062.1 
 
 Good, I. J. (1953). The Popoulation Frequencies of Species and the Estimation of Population Parameters. Biometrika, 40(3/4), 237–264.
 
@@ -1316,7 +1316,7 @@ Kiessling, W., & Simpson, C. (2011). On the potential for ocean acidification to
 
 Kocsis, A. T., Reddin, C. J., Alroy, J. and Kiessling, W. (2019). The R package divDyn for quantifying diversity dynamics using fossil sampling data. Methods in Ecology and Evolution. https://doi.org/10.1111/2041-210X.13161
 
-Raup, D. M. (1975). Taxonomic Diversity Estimation Using Rarefaction. Paleobiology, 1, 333–342. https://doi.org/10.2307/2400135
+Raup, D. M. (1975). Taxonomic Diversity Estimation Using Rarefaction. Paleobiology, 1, 333–342. https://doi.org/10.1017/S0094837300002633 
 
 Raup, D. M. (1979). Biases in the fossil record of species and genera. Bulletin of the Carnegie Museum of Natural History, 13, 85-91.
 
