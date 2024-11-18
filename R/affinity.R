@@ -23,7 +23,7 @@
 #' @param method \code{(character)} The method used for affinity calculations. Can be either \code{"binom"} or \code{"majority"}.
 #' @param tax \code{(character)} The column name of taxon names.
 #' @param bin \code{(character)} The column name of bin names.
-#' @param coll \code{(character)} The column name of collection identifiers (optional). If this is provided, then then the multiple entries of a taxon within the collections will be treated as 1.
+#' @param coll \code{(character)} The column name of collection identifiers (optional). If this is provided, then then the multiple entries of a taxon within the collections will be treated as one (recommended).
 #' @param alpha \code{(numeric)} The alpha value of the binomial tests. By default binomial testing is off (\code{alpha=1}) and the methods returns that environment as the preferred one, which has the highest likelihood (odds ratio). 
 #' @param reldat \code{(data.frame)} Database with the same structure as \code{x}.  \code{x} is typically a subset of \code{reldat}. If given, the occurrence distribution of \code{reldat} is used 
 #' as the null model of sampling. Defaults to \code{NULL}, which means that \code{x} itself will be used as \code{reldat}.
