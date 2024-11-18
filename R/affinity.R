@@ -232,13 +232,20 @@ affinity<-function(x, tax, bin, env, coll=NULL, method="binom", alpha=1,reldat=N
 				focus <-taxOcc[highestOR] 
 				pFocus <- relProbs[highestOR]
 
-				if(stats::binom.test(focus, all, pFocus, "greater")$p.val<=alpha)
-				{
-					return(affLevels[highestOR])
-#					affVarTaxon[i] <- affLevels[highestOR]
+				binTest <- stats::binom.test(focus, all, pFocus, "greater")$p.val
+
+				if(!is.null(alpha)){
+					if(binTest<=alpha)
+					{
+						return(affLevels[highestOR])
+	#					affVarTaxon[i] <- affLevels[highestOR]
+					}else{
+						return(NA)
+	#					affVarTaxon[i] <- NA
+					}
 				}else{
-					return(NA)
-#					affVarTaxon[i] <- NA
+					names(binTest) <-  affLevels[highestOR]
+					return(binTest)
 				}
 			}
 			

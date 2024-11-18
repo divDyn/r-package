@@ -1,4 +1,5 @@
 # divDyn
+
 R package for quantifying diversity dynamics using fossil sampling data
 
 ![](https://github.com/divDyn/assets/raw/master/logo/divDyn_logo_min.png)
