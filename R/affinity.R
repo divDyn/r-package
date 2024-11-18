@@ -29,6 +29,8 @@
 #' as the null model of sampling. Defaults to \code{NULL}, which means that \code{x} itself will be used as \code{reldat}.
 #' @param na.rm \code{(logical)} Should the \code{NA} entries in the relevant columns of \code{x} be omitted automatically?
 #' @param bycoll \code{(logical)} If set to \code{TRUE}, the number of collections (or samples, in \code{coll}) will be used rather than the number of occurrences.
+#' @param output \code{(character)} The type of output, defaults to \code{"levels"}, which will return the affinities of the taxa. Can also be \code{"counts"}, which will return the original counts calculated from the data.
+#' The third option \code{"proportions"} will calculate the proportions from the counts.
 #'
 #' @examples
 #'	data(corals)
@@ -36,12 +38,12 @@
 #'	  fossils<-subset(corals, stg!=95)
 #'	  fossilEnv<-subset(fossils, bath!="uk")
 #'	# calculate affinities
-#'	  aff<-affinity(fossilEnv, env="bath", tax="genus", bin="stg", alpha=1)
+#'	  aff<-affinity(fossilEnv, env="bath", tax="genus", bin="stg", alpha=1, coll="collection_no")
 #'	
 #' @export
-#' @return A named vector, values corresponding to affinities.
-affinity<-function(x, tax, bin, env, coll=NULL, method="binom", alpha=1,reldat=NULL, na.rm=FALSE, bycoll=FALSE){
-# version 2.0
+#' @return If \code{output="levels"}, a named vector, values corresponding to affinities.
+affinity <- function(x, tax, bin, env, coll=NULL, method="binom", alpha=1,reldat=NULL, na.rm=FALSE, bycoll=FALSE, output="levels"){
+# version 2.1 - extended to work with
 #	x <- fossilEnv
 #	env <- "bath"
 #	tax <- "genus"
@@ -52,15 +54,19 @@ affinity<-function(x, tax, bin, env, coll=NULL, method="binom", alpha=1,reldat=N
 #	coll <- NULL
 #	na.rm<-TRUE
 
+
 	if(method=="majority" & !is.null(reldat)) warning("Majority rule selected, reldat will be ignored.")
-	
+
 	if(bycoll) if(any(!coll%in%colnames(x))) stop("The \'coll\' argument has to be a column name of \'x\' if \'bycoll=TRUE\'.")
 
-	# omit everything from x that is not necessary
-		x<-unique(x[,c(coll, tax,bin, env)]) # this can be faster!!
-	
+	# argument defense
 	match.arg(method, c("binom", "majority"))
-	
+	match.arg(output, c("levels", "proportions", "counts"))
+
+	if(!is.null(coll)){
+		x<-unique(x[,c(coll, tax,bin, env)])
+	}
+
 	# omit NA bins
 	naBin <- is.na(x[,bin, drop=TRUE])
 	naTax <- is.na(x[,tax, drop=TRUE])
@@ -167,14 +173,23 @@ affinity<-function(x, tax, bin, env, coll=NULL, method="binom", alpha=1,reldat=N
 			thisRel <- relTab[as.character(vectRange), , drop=FALSE]
 			
 			# the occurrence probabilities
-			relProbs<-apply(thisRel, 2, sum)/sum(thisRel)
+			relOcc <- apply(thisRel, 2, sum)
+			relProbs <- relOcc/sum(thisRel)
 			
 		# taxon occurrences in the different evnironment	
 			taxOccBin <- occArr[as.character(vectRange), as.character(w[length(w)]),, drop=FALSE]
 			taxOcc <- apply(taxOccBin, c(2,3), sum)
 
+		# EARLY RETURN - don't waste time with the rest
+		if(output=="counts" | output=="proportions"){
+			# return an overview table
+			oneTax <- c(taxOcc, relOcc, min(vectRange), max(vectRange))
+			names(oneTax) <- c(paste0("tax_",colnames(taxOcc)), paste0("rel_", names(relOcc)),"FAD", "LAD" )
+			return(oneTax)
+		}
+
 		# all occurrences of the taxon
-			all <- sum(taxOcc)
+		all <- sum(taxOcc)
 
 		#no occurrences from known habitats
 		if (sum(taxOcc)==0)		{
@@ -193,11 +208,12 @@ affinity<-function(x, tax, bin, env, coll=NULL, method="binom", alpha=1,reldat=N
 
 			# if undecided, return NA
 			if(length(mostOcc)>1){
-				return(NA)
+				returned <- NA
 #				affVarTaxon[i] <- NA
 			}else{
-				return(affLevels[mostOcc])
+				returned <- affLevels[mostOcc]
 			}
+			return(returned)
 		} # end majority
 		
 		# binomial basic
@@ -205,7 +221,9 @@ affinity<-function(x, tax, bin, env, coll=NULL, method="binom", alpha=1,reldat=N
 
 			# an important imperative: if the environment is not sampled, then
 			# what do we know about the taxon's affinity?
-			if(any(relProbs==0)) return(NA)
+			if(any(relProbs==0)){
+				return(NA)
+			}
 
 			# 1. which is the most likely (odds ratios) 
 			# taxon probabilities
@@ -232,6 +250,7 @@ affinity<-function(x, tax, bin, env, coll=NULL, method="binom", alpha=1,reldat=N
 				focus <-taxOcc[highestOR] 
 				pFocus <- relProbs[highestOR]
 
+				# save the binomial test to an object
 				binTest <- stats::binom.test(focus, all, pFocus, "greater")$p.val
 
 				if(!is.null(alpha)){
@@ -253,6 +272,28 @@ affinity<-function(x, tax, bin, env, coll=NULL, method="binom", alpha=1,reldat=N
 	}
 
 	)
+
+	if(output!="levels"){
+
+		# transpose for better
+		affVarTaxon <- as.data.frame(t(affVarTaxon))
+
+		# transform output
+		if(output=="proportions"){
+			# post process these
+			sumTaxOccs <- apply(affVarTaxon[, 1:2], 1, sum)
+			sumRelOccs <- apply(affVarTaxon[, 3:4], 1, sum)
+
+			# normalize to proportions
+			affVarTaxon[,1] <- affVarTaxon[,1]/sumTaxOccs
+			affVarTaxon[,2] <- affVarTaxon[,2]/sumTaxOccs
+			affVarTaxon[,3] <- affVarTaxon[,3]/sumRelOccs
+			affVarTaxon[,4] <- affVarTaxon[,4]/sumRelOccs
+
+		}
+
+
+	}
 	
 	return(affVarTaxon)
 }

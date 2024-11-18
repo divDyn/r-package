@@ -1,5 +1,15 @@
 # Change log of the R package 'divDyn'
 
+# divDyn 0.8.3 - 2024-11-18
+
+### Added
+- The `affinity()` function has a new argument `output`. The p-values of the binomial testing can now be returned with `alpha=NULL`.
+
+### Fixed
+
+- A myriad of documentation issues
+- Some data were omitted by the `affinity()` function when the `coll` argument was not provided. 
+
 
 # divDyn 0.8.2 - 2022-09-05
 ### Added
