@@ -84,7 +84,7 @@ georange <- function(x, lng=NULL, lat=NULL, loc=NULL, method="co"){
 						# transform them
 						transCoords <- icosa::PolToCar(coordat)
 						# calculate distance matrix
-						distanceMatrix<- icosa::arcdistmat(transCoords)
+						distanceMatrix<- icosa::arcdistmat(as.matrix(transCoords))
 					}else{
 						distanceMatrix<-NA
 						warning("The icosa package is required to use methods 'mgcd' and 'mst'.")
