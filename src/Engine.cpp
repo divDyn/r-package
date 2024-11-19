@@ -218,23 +218,24 @@ NumericMatrix Counts(NumericVector tax, NumericVector bin)
 // 	return floor(unif_rand()*n);
 // }
 
-Rcpp::NumericVector randomShuffle(Rcpp::NumericVector a) {
+Rcpp::NumericVector randomShuffle(Rcpp::NumericVector a, int seed ) {
 
     // clone a into b to leave a alone
     Rcpp::NumericVector b = Rcpp::clone(a);
-
 
 //    std::random_shuffle(b.begin(), b.end(), randWrapper);
 
     std::random_device rd;
     std::mt19937 g(rd());
+	g.seed(seed);
+
     std::shuffle(b.begin(), b.end(), g);
 
     return b;
 }
 
 // [[Rcpp::export]]
-NumericMatrix CRbinwise(NumericVector binVar, int quota){
+NumericMatrix CRbinwise(NumericVector binVar, int quota, int seed){
 	// do a single loop for finding the  different bins
 	int n = binVar.size();
 	NumericVector indexVector(n);
@@ -316,7 +317,7 @@ NumericMatrix CRbinwise(NumericVector binVar, int quota){
 			}
 			
 			// shuffle vector in some way
-			tempVect=randomShuffle(tempVect);
+			tempVect=randomShuffle(tempVect, seed);
 			
 			for(int i=0; i<quota; i++){
 				endMatrix(endValue,0)= tempVect(i);

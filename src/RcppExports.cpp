@@ -23,14 +23,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // CRbinwise
-NumericMatrix CRbinwise(NumericVector binVar, int quota);
-RcppExport SEXP _divDyn_CRbinwise(SEXP binVarSEXP, SEXP quotaSEXP) {
+NumericMatrix CRbinwise(NumericVector binVar, int quota, int seed);
+RcppExport SEXP _divDyn_CRbinwise(SEXP binVarSEXP, SEXP quotaSEXP, SEXP seedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type binVar(binVarSEXP);
     Rcpp::traits::input_parameter< int >::type quota(quotaSEXP);
-    rcpp_result_gen = Rcpp::wrap(CRbinwise(binVar, quota));
+    Rcpp::traits::input_parameter< int >::type seed(seedSEXP);
+    rcpp_result_gen = Rcpp::wrap(CRbinwise(binVar, quota, seed));
     return rcpp_result_gen;
 END_RCPP
 }

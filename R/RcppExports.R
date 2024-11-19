@@ -5,8 +5,8 @@ Counts <- function(tax, bin) {
     .Call(`_divDyn_Counts`, tax, bin)
 }
 
-CRbinwise <- function(binVar, quota) {
-    .Call(`_divDyn_CRbinwise`, binVar, quota)
+CRbinwise <- function(binVar, quota, seed) {
+    .Call(`_divDyn_CRbinwise`, binVar, quota, seed)
 }
 
 seqduplicated <- function(vect) {

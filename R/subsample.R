@@ -658,6 +658,12 @@ subsample<- function(x,
 	
 	# 6. ITERATION - rerun the subsampling function in loops, and run the applied function
 
+	# In case there is random number generation in RCpp
+	if(type=="cr"){
+		# in case the seed was not set earlier
+		if(!exists(".Random.seed")) set.seed(NULL)
+	}
+
 	# 6A.  FOR-type iteration
 	if(loop=="for"){
 	
@@ -677,8 +683,17 @@ subsample<- function(x,
 					
 					#by-row method
 					if(!byUnit){
+
+						# generate a single random number,it will move the generator state forward
+						# as long as the state can be linked to the R RNG seed, this should work fine
+						seed <- sample(max(.Random.seed),1)
+						# message(seed)
+
+						# move the seed forward (as long as this is deterministically controlled, it should be fine!)
+						set.seed(seed)
+
 						# output of cpp function
-						binCRres<-.Call('_divDyn_CRbinwise', PACKAGE = 'divDyn', binVar, quoVar)
+						binCRres<-.Call('_divDyn_CRbinwise', PACKAGE = 'divDyn', binVar, quoVar, seed)
 					
 						# increase indexing (R)
 						binCRres[,1]<-binCRres[,1, drop=TRUE]+1
