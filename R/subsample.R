@@ -689,7 +689,7 @@ subsample<- function(x,
 						seed <- sample(max(.Random.seed),1)
 						# message(seed)
 
-						# move the seed forward (as long as this is deterministically controlled, it should be fine!)
+						# this is probably not necessary,but just in case
 						set.seed(seed)
 
 						# output of cpp function

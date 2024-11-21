@@ -39,9 +39,14 @@
 subtrialCR<-function(x, q, bin=NULL, unit=NULL, keep=NULL, useFailed=FALSE, showFailed=FALSE){
 	quoVar <- q
 	if(!is.null(bin)){
-		# omit NA bin entries
-		x <- x[!is.na(x[,bin]),]
-	
+		if(any(is.na(x[,bin]))) stop("The binning column must not have missing values in it!")
+
+		if(!exists(".Random.seed")) set.seed(NULL)
+		seed <- sample(max(.Random.seed),1)
+
+		# this is probably not necessary,but just in case
+		set.seed(seed)
+
 		if(is.null(unit)){
 			# order the rows 
 			oBin <- order(x[,bin, drop=TRUE])
@@ -53,7 +58,7 @@ subtrialCR<-function(x, q, bin=NULL, unit=NULL, keep=NULL, useFailed=FALSE, show
 			keepRows<-binVar%in%keep
 			
 			# output of cpp function
-			binCRres<-.Call('_divDyn_CRbinwise', PACKAGE = 'divDyn', binVar, quoVar)
+			binCRres<-.Call('_divDyn_CRbinwise', PACKAGE = 'divDyn', binVar, quoVar, seed)
 			
 			# increase indexing (R)
 			binCRres[,1]<-binCRres[,1, drop=TRUE]+1
@@ -71,8 +76,13 @@ subtrialCR<-function(x, q, bin=NULL, unit=NULL, keep=NULL, useFailed=FALSE, show
 			usedRows[binCRres[!failOutput,1, drop=TRUE]] <- TRUE
 			
 			usedRows[keepRows] <- TRUE
+
+			# reorder to original order
+			newRes <-rep(FALSE, nrow(x))
+			newRes[oBin] <- usedRows
+
 			# should be kept intact
-			res<-list(rows=usedRows, fail=fail)
+			res<-list(rows=newRes, fail=fail)
 		
 					
 		}else{

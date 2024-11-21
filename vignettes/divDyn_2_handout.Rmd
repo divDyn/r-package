@@ -19,7 +19,7 @@ The purpose of this vignette is to guide users through the basic capabilities of
 
 ## 1.1. Installation
 
-To install this beta version of the package, you must download it either from the CRAN servers or its dedicated GitHub repository (https://github.com/divDyn/r_package/). All minor updates will be posted on GitHub as soon as they are finished, so please check this regularly. The version on CRAN will be lagging for some time, as it takes the servers many days to process everything and updates are expected to be frequent. All questions should be addressed to Adam Kocsis, the creator and maintainer of the package (adam.kocsis@fau.de). 
+To install this beta version of the package, you must download it either from the CRAN servers or its dedicated GitHub repository (https://github.com/divDyn/r-package/). All minor updates will be posted on GitHub as soon as they are finished, so please check this regularly. The version on CRAN will be lagging for some time, as it takes the servers many days to process everything and updates are expected to be frequent. All questions should be addressed to Adam Kocsis, the creator and maintainer of the package (adam.kocsis@fau.de). 
 Instead of spending it on actual research, a tremendous amount of time was invested in making this piece of software useable and user-friendly. If you use a method implemented in the package in a publication, please cite both its reference(s) and the ‘divDyn’ package itself (Kocsis et al. 2019).
 
 # 2. Necessary Data
