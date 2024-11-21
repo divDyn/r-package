@@ -1,6 +1,6 @@
 citHeader("To cite divDyn in publications, use the following citation:")
 
-citEntry(entry = "Article",
+bibentry(bibtype = "Article",
   title        = "The R package divDyn for quantifying diversity dynamics using fossil sampling data",
   author       = c(person(given="Adam T.", family="Kocsis"),person(given="Carl J.", family="Reddin"),person(given="John", family="Alroy"),person(given="Wolfgang", family="Kiessling")),
   journal      = "Methods in Ecology and Evolution",
@@ -16,3 +16,6 @@ citEntry(entry = "Article",
         "Methods in Ecology and Evolution 10(5), 735-743",
         "https://doi.org/10.1111/2041-210X.13161")
 )
+
+
+
