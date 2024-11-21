@@ -7,9 +7,9 @@
 
 ### Fixed
 
-- A myriad of documentation issues
+- A myriad of documentation issues.
 - Some data were omitted by the `affinity()` function when the `coll` argument was not provided. 
-
+- `subsample(type="cr")` now has a random number generator linked to the R RNG seed, allowing reproducible examples.
 
 # divDyn 0.8.2 - 2022-09-05
 ### Added

@@ -14,7 +14,8 @@ affinity(
   alpha = 1,
   reldat = NULL,
   na.rm = FALSE,
-  bycoll = FALSE
+  bycoll = FALSE,
+  output = "levels"
 )
 }
 \arguments{
@@ -26,7 +27,7 @@ affinity(
 
 \item{env}{\code{(character)} The environmental variable of the occurrences.}
 
-\item{coll}{\code{(character)} The column name of collection identifiers (optional). If this is provided, then then the multiple entries of a taxon within the collections will be treated as 1.}
+\item{coll}{\code{(character)} The column name of collection identifiers (optional). If this is provided, then then the multiple entries of a taxon within the collections will be treated as one (recommended).}
 
 \item{method}{\code{(character)} The method used for affinity calculations. Can be either \code{"binom"} or \code{"majority"}.}
 
@@ -38,9 +39,12 @@ as the null model of sampling. Defaults to \code{NULL}, which means that \code{x
 \item{na.rm}{\code{(logical)} Should the \code{NA} entries in the relevant columns of \code{x} be omitted automatically?}
 
 \item{bycoll}{\code{(logical)} If set to \code{TRUE}, the number of collections (or samples, in \code{coll}) will be used rather than the number of occurrences.}
+
+\item{output}{\code{(character)} The type of output, defaults to \code{"levels"}, which will return the affinities of the taxa. Can also be \code{"counts"}, which will return the original counts calculated from the data.
+The third option \code{"proportions"} will calculate the proportions from the counts.}
 }
 \value{
-A named vector, values corresponding to affinities.
+If \code{output="levels"}, a named vector, values corresponding to affinities.
 }
 \description{
 This function will return the preferred environment of the taxa, given the distribution of occurrences.
@@ -68,6 +72,6 @@ data(corals)
   fossils<-subset(corals, stg!=95)
   fossilEnv<-subset(fossils, bath!="uk")
 # calculate affinities
-  aff<-affinity(fossilEnv, env="bath", tax="genus", bin="stg", alpha=1)
+  aff<-affinity(fossilEnv, env="bath", tax="genus", bin="stg", alpha=1, coll="collection_no")
 
 }
