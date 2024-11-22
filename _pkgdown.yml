@@ -118,10 +118,7 @@ authors:
     href: "https://www.gzn.nat.fau.eu/palaeontologie/team/professors/kiessling/"
   Deutsche Forschungsgemeinschaft:
     href: https://www.dfg.de/en/index.jsp
-    html: <img src='https://www.dfg.de/includes/bausteine/open_graph_de/dfgfallback.jpg' alt='dfg' width='80' />
+    html: <img src='https://github.com/gplates/rgplates/blob/devel/pkgdown/assets/dfg.png?raw=true' alt='dfg' width='80' />
   FAU GeoZentrum Nordbayern:
     href: https://www.gzn.nat.fau.eu/
-    html: <img src='https://www.gzn.nat.fau.de/files/2017/05/cropped-gzn-logo.jpg' alt='geozentrum' width='80' />
-
-
-
+    html: <img src='https://github.com/gplates/rgplates/blob/devel/pkgdown/assets/GeoZentrum.svg?raw=true' alt='geozentrum' width='80' />

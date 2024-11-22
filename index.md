@@ -1,11 +1,12 @@
 
 # divDyn: Diversity Dynamics <img src="man/figures/logo.png" align="right" />
 
-[![](https://img.shields.io/badge/devel%20version-0.8.2-green.svg)](https://github.com/divDyn/r-package)
+[![](https://img.shields.io/badge/devel%20version-0.8.3-green.svg)](https://github.com/divDyn/r-package)
 [![](https://www.r-pkg.org/badges/version/divDyn?color=blue)](https://cran.r-project.org/package=divDyn)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/divDyn?color=yellow)](https://cran.r-project.org/package=divDyn)
 [![CRAN
 checks](https://badges.cranchecks.info/summary/divDyn.svg)](https://cran.r-project.org/web/checks/check_results_divDyn.html)
+[![](https://img.shields.io/badge/doi-10.5281/zenodo.7056783-blue.svg)](https://doi.org/10.5281/zenodo.7056783)
 
 ### Diversity Dynamics using fossil occurrence data
 
@@ -26,32 +27,32 @@ A.T.; Reddin, C.J.; Alroy, J. and Kiessling, W. (2019)
 
 ## Site Contents
 
------
+------------------------------------------------------------------------
 
 The site is getting filled with the following content:
 
 #### Tutorials with the PBDB coral data from 2015
 
-  - This particular dataset is used to ensure interface stability and
-    consistency.
+- This particular dataset is used to ensure interface stability and
+  consistency.
 
 #### The ‘ddPhanero’ analysis (from the MiEE paper)
 
-  - Execute up-to-date versions
+- Execute up-to-date versions
 
 #### Function reference and technical material
 
 #### Additional material
 
-  - How-to guides on combining the package’s capabilities with other
-    packages are deposited on the [evolvED
-    blog](https://www.evolv-ed.net/).
+- How-to guides on combining the package’s capabilities with other
+  packages are deposited on the [evolvED
+  blog](https://www.evolv-ed.net/).
 
 <br>
 
 ## Example output
 
------
+------------------------------------------------------------------------
 
 ``` r
 # attach library
@@ -77,17 +78,17 @@ The site is getting filled with the following content:
 
 ## Plans
 
------
+------------------------------------------------------------------------
 
 #### Near
 
-  - Splitting up vignettes to separate **Tutorials**
-  - Adding the ddPhanero case study with updates
-  - Package updates
+- Splitting up vignettes to separate **Tutorials**
+- Adding the ddPhanero case study with updates
+- Package updates
 
 #### Distant
 
-  - Writing a C++ library from the core functionality and porting it to
-    Python and Julia
+- Writing a C++ library from the core functionality and porting it to
+  Python and Julia
 
 <img alt="The logo of the divDyn project" src="https://github.com/divDyn/assets/raw/master/logo/divDyn_logo_medium.png" width="300">

@@ -12,19 +12,21 @@
 - `subsample(type="cr")` now has a random number generator linked to the R RNG seed, allowing reproducible examples.
 - The `subtrialCR` function had issues when it was invoked with `unit=NULL`
 
+* * *
+
 # divDyn 0.8.2 - 2022-09-05
 ### Added
-- the matchtime() function from chronosphere 0.4
+- the `matchtime()` function from chronosphere 0.4
 - defense against trying to use divDyn() as applied function in subsample() when bin=NULL
 - the probs argument to modeltab() following Reddin et al. 2021
 
 
 ### Changed
-- subsample() will produce warnings instead of halting when the variables 'tax' or 'bin' has NAs in them. The corresponding rows are omitted automatically.
+- `subsample()` will produce warnings instead of halting when the variables 'tax' or 'bin' has NAs in them. The corresponding rows are omitted automatically.
 - changed bitwise and to boolean in Engine.cpp
 - regenerated documentation for compatibility to HTML5, corrected some entries
 - Fixed mismatching data object keys$lat, which indicated intervals for absolute paleolatitudes instead of actual paleolatitudes.
-- Fixed error, when parts() was invoked for "" category.
+- Fixed error, when `parts()` was invoked for "" category.
 
 
 * * *

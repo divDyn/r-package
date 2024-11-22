@@ -14,6 +14,7 @@ library(badger)
 `r badge_cran_release("divDyn", "blue")`
 `r badge_cran_download("divDyn", "grand-total", "yellow")`
 `r badge_cran_checks("divDyn")`
+`r badger::badge_doi(doi = "10.5281/zenodo.7056783", color = "blue")` 
 
 ### Diversity Dynamics using fossil occurrence data  
 
