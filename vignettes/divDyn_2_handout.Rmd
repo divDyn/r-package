@@ -1,5 +1,5 @@
 ---
-title: "Handout"
+title: "Handout to divDyn v0.8.3"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Handout}
@@ -43,39 +43,39 @@ data(stages)
 Every row in this table represents a bin in the timescale. The most important variable in this table is the slice number (in this case ``num``). This variable links every occurrence to one of the bins. You can gather additional information by typing ``?stages`` to the console.
 You can visualize the timescale by using the ``plots()`` function included in the package:
 
-```{r tsplot1, echo= TRUE, plot=TRUE, fig.height=5.5}
+```{r tsplot1, echo= TRUE, plot=TRUE, fig.height=5.5, fig.width=7}
 tsplot(stages, boxes="sys", shading= "series")
 ```
 
 For easier navigation in the plot, the time dimension can be indicated with three variables: the radiometric dates that serve as coordinates; boxes of intervals under lowest ``ylim`` value of the plot; and vertical shades over the plotting area. The time scale to be plotted can be altered by changing the values of the main argument ``tsdat`` and by providing the appropriate column names for the boxes and shading arguments. In order to use the system (period) names as labels and the stages as shades, just change the function input accordingly (the ``xlim`` values will limit the x axis plot):
 
-```{r tsplot2, echo= TRUE, plot=TRUE, fig.height=5.5}
+```{r tsplot2, echo= TRUE, plot=TRUE, fig.height=5.5, fig.width=7}
 tsplot(stages, boxes="system", shading="stage", xlim=59:81)
 ```
 
 The function was designed to enable the highest level of customization. You can customize the distribution of plotting area with the ``xlim`` (accepts exact ages and sequences of bins, see the examples), ``ylim``, ``prop`` and ``gap`` arguments, and the color of the shading.  You can also customize the characteristics of the general plotting (calling ``plot()``, the boxes of time slices (calling ``rect()``) and the labels within them (calling  the ``text()`` function). You can directly control the arguments of these functions that ``tsplot()`` uses to draw the elements of the timescale by adding the additional arguments as lists to the ``plot.args``, ``boxes.args`` and ``labels.args`` arguments.  
 For instance, if you want your boxes to feature red italic fonts as labels, just add col="red", and font=3 the way you would regularly use them with the text() function, but wrap them up in a list, and assign it to the ‘labels.args’ argument:
 
-```{r tsplot3, echo= TRUE, plot=TRUE, fig.height=5.5}
+```{r tsplot3, echo= TRUE, plot=TRUE, fig.height=5.5, fig.width=7}
 tsplot(stages, boxes="sys", shading="series", 
   labels.args=list(col="red", font=3), shading.col=c("white", "wheat"))
 ```
 
 Although you can set it manually with the ``boxes.args`` argument, the time scale plotting function also features colored plotting of the boxes, via the argument ``boxes.col``. The ``stages`` object contains hexadecimal RGB codes for the system (period), series (epoch) and stage (age) entries of the ICS table of stratigraphy in the ``systemCol``, ``seriesCol`` and ``col`` columns, respectively. 
-```{r tsplot4, echo= TRUE, plot=TRUE, fig.height=5.5}
+```{r tsplot4, echo= TRUE, plot=TRUE, fig.height=5.5, fig.width=7}
 tsplot(stages, boxes=c("sys"), shading="sys", boxes.col="systemCol")
 ```
 
 
 Plotting of multiple levels as boxes is also supported now. Use vectors of column names if you want to add these.
  
-```{r tsplot5, echo= TRUE, plot=TRUE, fig.height=5.5}
+```{r tsplot5, echo= TRUE, plot=TRUE, fig.height=5.5, fig.width=7}
 tsplot(stages, boxes=c("short","system"), shading="short", 
   xlim=59:69, boxes.col=c("col","systemCol"), labels.args=list(cex=0.5))
 ```
 Accordingly, the ``boxes.args`` and ``labels.args`` accept hierarchical input that corresponds to the levels of stratigraphic hierarchy.
 
-```{r tsplot6, echo= TRUE, plot=TRUE, fig.height=5.5}
+```{r tsplot6, echo= TRUE, plot=TRUE, fig.height=5.5, fig.width=7}
 tsplot(stages, boxes=c("short","system"), shading="short", 
   xlim=59:69, boxes.col=c("col","systemCol"),
   labels.args=list(list(cex=0.5),list(cex=1)),
@@ -134,7 +134,7 @@ fl <- fadlad(fossils, bin="stg", tax="genus")
 
 You can also use the occurrences' own age estimate to calculate the ranges, just type in ?fadlad to see some more examples. The ranges of fossil taxa are the primary data quality feedback we can have from the massive amount of fossil occurrences. You can easilly visualize these with the `ranges()` function. To keep things simple, just assign the age (stage) mean age to the occurrences:
 
-```{r ranplot, echo= TRUE, plot=TRUE, fig.height=5.5}
+```{r ranplot, echo= TRUE, plot=TRUE, fig.height=5.5, fig.width=7}
 fossils$mid <- stages$mid[fossils$stg]
 
 tsplot(stages, shading="series", boxes="sys",xlim=c(260,0))
@@ -144,7 +144,7 @@ ranges(fossils, tax="genus", bin="mid")
 
 The function automatically selects the taxa that have ranges that fall into the `xlim` values of the open device (you can suppress this if you want to). If you zoom in with the main plotting function, you can see this effect. You can also add the taxon labels by setting the `labs` argument to `TRUE`. 
 
-```{r ranplot2, echo= TRUE, plot=TRUE, fig.height=5.5}
+```{r ranplot2, echo= TRUE, plot=TRUE, fig.height=5.5, fig.width=7}
 tsplot(stages, shading="series", boxes="series",xlim=c(100,81))
 
 ranges(fossils, tax="genus", bin="mid", labs=T, labels.args=list(cex=0.2))
@@ -154,7 +154,7 @@ As you can see from the example above (`labs.args` argument), the argumentation 
 You can get an even more detailed look if you set the `filt` argument to `"orig"`. This will limit the displayed taxa to those that originated within the interval. `occs=TRUE` will also plot the sampled occurrences on the ranges.
 
 
-```{r ranplot3, echo= TRUE, plot=TRUE, fig.height=5.5}
+```{r ranplot3, echo= TRUE, plot=TRUE, fig.height=5.5, fig.width=7}
 tsplot(stages, shading="stage", boxes=c("stage","series"),xlim=c(100,80))
 
 ranges(fossils, tax="genus", bin="mid", labs=T, 
@@ -163,7 +163,7 @@ ranges(fossils, tax="genus", bin="mid", labs=T,
 
 This function can also plot the taxa by groups. Here is the same plot, but by separating the taxa based on symbiotic status:
 
-```{r ranplot4, echo= TRUE, plot=TRUE, fig.height=5.5}
+```{r ranplot4, echo= TRUE, plot=TRUE, fig.height=5.5, fig.width=7}
 tsplot(stages, shading="stage", boxes=c("stage","series"),xlim=c(100,80))
 
 ranges(fossils, tax="genus", bin="mid", labs=T, 
@@ -179,7 +179,7 @@ surv <- survivors(corals, bin="stg", tax="genus")
 
 You can plot these values for every cohort to get survivorship curves. As these curves can be thought of as products of an exponential decay, it is customary to log the y axis, which you can do with adding ``log="y"`` to the arguments of the main ``plot()`` function in ``plot.args``:
 
-```{r survTsplotblank, echo=TRUE, plot=TRUE, fig.height=5.5}
+```{r survTsplotblank, echo=TRUE, plot=TRUE, fig.height=5.5, fig.width=7}
 # time scale plot
 tsplot(stages, shading="series", boxes="sys", 
   xlim=c(260,0), ylab="proportion of survivors present",
@@ -193,7 +193,7 @@ Then the curves can be plotted for every column with
 for(i in 1:ncol(surv)) lines(stages$mid, surv[,i])
 ```
 
-```{r survTsplot1, echo=FALSE, plot=TRUE, fig.height=5.5}
+```{r survTsplot1, echo=FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 # time scale plot
 tsplot(stages, shading="series", boxes="sys", xlim=c(260,0),
   ylab="proportion of survivors present", 
@@ -204,7 +204,7 @@ for(i in 1:ncol(surv)) lines(stages$mid, surv[,i])
 
 The values shown here are also called ‘forward’ survivorship proportions, but you can also plot the ‘backward’ survivorships to see how certain cohorts emerge over geologic time, by setting the ``method`` argument of the survivors() function appropriately: 
 
-```{r survTsplot2, echo=FALSE, plot=TRUE, fig.height=5.5}
+```{r survTsplot2, echo=FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 survFor<-survivors(corals, tax="genus", bin="stg", method="backward")
 # plot
 tsplot(stages, shading="series", boxes="sys", 
@@ -248,7 +248,7 @@ colnames(samp)
 
 All results of the output of this function can be plotted then in a straightforward way, by referring to the elements of the data frame. For instance, the ``occs`` element contains the number of sampled occurrences and ``coll`` refers to the number of collections:
 
-```{r occsAndColls, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5}
+```{r occsAndColls, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 oldPar <- par(mar=c(4,4,2,4))
 # basic plot
 tsplot(stages, shading="series", boxes="sys", xlim=52:95,
@@ -269,7 +269,7 @@ The ``binstat()`` function also calculates other basic statistics such as the nu
 
 You can trace the trajectory of the occurrences that have different attributes through the bins by using the ``parts()`` function. This requires only two arguments: vector of bin identifiers and a vector that contains the categories entries. The bin identifier also determines the coordinates along the independent variable (time), so the numerical bin entries have to be replaced by the age estimates. 
 
-```{r parts, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5}
+```{r parts, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 # numerical ages, as bins
 fossils$stgMid <- stages$mid[fossils$stg]
 #plotting
@@ -280,7 +280,7 @@ parts(fossils$stgMid, fossils$bath)
 
 If you check out ``?parts``, there will be additional examples using artificial data. In the default case, the category names are plotted where they are the most abundant. This plot can be even nicer if you use opacity (RGBA values for colors) and adding a proper legend.
 
-```{r parts2, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5}
+```{r parts2, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 cols <- c("#FF0000AA", "#00FF00AA", "#0000FFAA")
 # reorder too
 reord <- c("shal","deep","uk")
@@ -294,7 +294,7 @@ legend("topleft", inset=c(0.01, 0.01),
 
 The dominance of shallow occurrences are even more apparent with proportions. You can use the ``parts`` function to plot these, rather than the counts, by adding  ``prop=T`` to the function call:
 
-```{r parts3, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5}
+```{r parts3, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 tsplot(stages, shading="series", boxes="sys", xlim=52:95,
     ylab="proportion of occurrences", ylim=c(0,1))
 parts(fossils$stgMid, fossils$bath, prop=T, col=cols, ord=reord, labs=F)
@@ -339,7 +339,7 @@ All calculations in this function depend on patterns of occurrences in the bin/t
 Calculating time series of diversity does not require additional action than running the basic ``divDyn()`` function. In this package, among the traditional range-based methods the range-through (variable ``divRT``) and the boundary-crosser (``divBC``) diversities are implemented.
 Plotting can be also facilitated by matching the indices of the diversity values in the variables and their numbers. If the bin numbers are positive integers this is turned on by setting the ``noNAStart`` argument to ``FALSE``, which is the default. This change results in ``NA``s and zeros in the final table in rows, which bins are not sampled. 
 
-```{r ddRec, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5}
+```{r ddRec, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 # metrics
 ddRec <-divDyn(corals, bin="stg", tax="genus")
 # basic plot
@@ -351,7 +351,7 @@ ddRec <-divDyn(corals, bin="stg", tax="genus")
 
 This plot shows the trajectory of coral diversity over the post-Permian interval, using raw data and the range-through diversity metric. Besides the 0 values at the start of the time series (no sampled corals), you might also notice a sharp increase of richness in the latest intervals. This could be the result of an effect called the ‘Pull of the Recent’. The ‘Pull of the Recent’ (Raup, 1979) is a smearing phenomenon that arises when range-based methods are calculated from datasets where sampling probability changes abruptly. As we know the Recent much better in comparison to other intervals (sampling probability is much higher, around one), the number of ranges that connect first occurrences of taxa to the extant time interval (``stg == 95``) is much higher than those that link two non-Recent time intervals. The results in spur of diversity as the Recent is approached. On the other hand, omitting the recent interval (effectively decreasing sampling probability to 0) leads to edge effects that result in the opposite phenomenon. The discrepancy between these two approaches can be visualized by the omission of the recent ‘occurrences’:
 
-```{r ddFossils, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5}
+```{r ddFossils, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 # metrics
 dd <-divDyn(fossils, bin="stg", tax="genus")
 # basic plot
@@ -366,7 +366,7 @@ dd <-divDyn(fossils, bin="stg", tax="genus")
 
 Over the last couple of decades, a number of metrics were proposed to efficiently express diversity given such distorting effects of incomplete sampling and the discretized time dimension. As these more straightforward approaches that use range interpolations have known issues, occurrence datasets, allow the calculation of more direct estimators, such as sampled-in-bin (SIB, variable ``divSIB``) diversities. 
 
-```{r ddDiv, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5}
+```{r ddDiv, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 # metrics
 dd <-divDyn(fossils, bin="stg", tax="genus")
 # basic plot
@@ -383,7 +383,7 @@ dd <-divDyn(fossils, bin="stg", tax="genus")
 
 Although range-interpolation does not bias the ‘SIB’ metric, it is more affected by changes of sampling intensity sampling. The three-timer sampling completeness is an effective expression of changes in sampling (``samp3t`` variable):
 
-```{r samp3t, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5}
+```{r samp3t, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 # basic plot
   tsplot(stages, shading="series", boxes="sys", xlim=52:95,
     ylab="three-timer sampling completeness")
@@ -393,7 +393,7 @@ Although range-interpolation does not bias the ‘SIB’ metric, it is more affe
 
 The SIB series can be partially corrected by the three-timer sampling-completeness (Alroy §ref ). Although this can be a convenient correction it also increases the estimation error. Nevertheless, this is the least biased estimator for diversity. 
 
-```{r ddCorr, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5}
+```{r ddCorr, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 # basic plot
   tsplot(stages, shading="series", boxes="sys", xlim=52:95,
     ylab="three-timer sampling completeness", ylim=c(0,250))
@@ -414,7 +414,7 @@ For convenience, these variables are named as ``extTYPE`` and ``oriTYPE`` for ex
 
 In the package, the proportional rates (``extProp`` and ``oriProp``) and per capita rates (``extPC`` and ``oriPC``) of Foote (1999), the three-timer rates (``ext3t`` and ``ori3t``) of Alroy (2008), their corrected counterparts (``extC3t`` and ``oriC3t``), the gap-filler rates (``extGF`` and ``oriGF``) of Alroy (2014) and the improved second-for-third (``ext2f3`` and ``ori2f3``) of Alroy (2015) are provided.
 
-```{r ddExt, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5}
+```{r ddExt, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 # basic plot
   tsplot(stages, shading="series", boxes="sys", xlim=52:95,
     ylab="extinction rates", ylim=c(0,2))
@@ -445,7 +445,7 @@ Although extinction and origination rates can provide information about events a
 
 The general problem of extinction selectivity is the error estimation of the rate values. More data (e.g. more taxa) will lead to more reliable estimates while, splitting the same dataset to two subsets will lead to higher uncertainty in the rate estimates for the two rate values in the selected interval. The selectivity testing incorporates two aspects: (1) the difference between the two rate values, (2) and whether this distance is meaningful or not.  In practice, these two criteria can be summarized by whether it is more supported by the data to describe two rate values, or is it better founded to describe just one. These two alternatives are sometimes called as *single-rate model* and the *dual-rate model* (Kiessling and Simpson, 2011; Kiessling and Kocsis, 2015).  In the case that a dual rate model is better supported, that means that the difference between the two values of rates is statistically meaningful, and the extinction or origination event selectively affected the group with the higher value. 
 For example, here are the raw origination rates of corals, plotted for the *az* and the *z* group separately and together:
-```{r selPrim, echo=TRUE, results=TRUE, plot=TRUE, fig.height=5.5}
+```{r selPrim, echo=TRUE, results=TRUE, plot=TRUE, fig.height=5.5, fig.width=7}
 # split by ecology (az = azooxanthellate, z = zooxantehllate)
   z<- fossils[fossils$ecology=="z",]
   az<- fossils[fossils$ecology=="az",]
@@ -466,13 +466,13 @@ legend("topright", inset=c(0.1,0.1), legend=c("total", "z", "az"),
 
 The question that arises in this case is whether some intervals can be characterized by actually higher origination rates (for *az* taxa in the Cretaceous), or is this just a sampling artifact. The testing framework is implemented currently only for the per capita extinction rates of Foote (1999) in the ``ratesplit`` function. The function will take the occurrence dataset as an argument and will calculate the rates values similarly to the ``divDyn`` function. The function requires a separator variable for the selection testing (``sel``) that will be used for splitting the dataset into two (this column has to have two possible states i.e. binary code). The implementation of the process for the symbiotic status is:
 
-```{r selFirst, echo=TRUE, results=TRUE, plot=TRUE, fig.height=5.5}
+```{r selFirst, echo=TRUE, results=TRUE, plot=TRUE, fig.height=5.5, fig.width=7}
 rs<-ratesplit(fossils, sel="ecology", tax="genus", bin="stg")
 rs
 ```
 The default output of this function by default is a list of two vectors: ``ext`` and ``ori``, extinction rates and origination rates, respectively. Each vector contains the bin numbers where the dual rate model is better supported than the single rate model, where selectivity is plausible. In the example above, selectivity for the extinctions is unlikely and it is supported for bin 57 (Norian), 59 (Hettangian), 75 (Albian) and 81 (Maastrichtian). 
 The statistical testing in this case is based on the number of taxa and can be performed in two different ways, set with the ``method`` argument. The less stringent ``binom`` method implements binomial testing, with a significance value set with the ``alpha`` parameter that defaults to 0.05.
-```{r sel2, echo=TRUE, results=TRUE, plot=TRUE, fig.height=5.5}
+```{r sel2, echo=TRUE, results=TRUE, plot=TRUE, fig.height=5.5, fig.width=7}
 rsBin95<-ratesplit(fossils, sel="ecology", tax="genus", 
   bin="stg", method="binom")
 rsBin95
@@ -482,7 +482,7 @@ rsBin90
 ```
 
 The more conservative approach is to use model selection criteria for the testing of support for the *single * or *dual rate models*, which involves calculating Akaike Information Criteria and then Akaike weights. This is the default method (``method=AIC``). The ``alpha`` argument in this case depicts the minimum Akaike weight that serves as a threshold for the *dual rate model* to be supported. As the ratio of these weights represent likelihood ratios, by default it is set to 0.89 that roughly represents 8 times higher likelihood for the *dual rate model*. This can be toggled the way it is deemed useful for the question at hand.  
-```{r sel3, echo=TRUE, results=TRUE, plot=TRUE, fig.height=5.5}
+```{r sel3, echo=TRUE, results=TRUE, plot=TRUE, fig.height=5.5, fig.width=7}
 rsAIC0.5<-ratesplit(fossils, sel="ecology", tax="genus", 
   bin="stg", alpha=0.5)
 rsAIC0.5
@@ -509,7 +509,7 @@ points(
   ddZ$oriPC[rs$ori[!groupSelector]],
   pch=16, col="blue", cex=2)
 ```
-```{r selDotShow, echo=FALSE, results=TRUE, plot=TRUE, fig.height=5.5}
+```{r selDotShow, echo=FALSE, results=TRUE, plot=TRUE, fig.height=5.5, fig.width=7}
 # split by ecology
   z<- fossils[fossils$ecology=="z",]
   az<- fossils[fossils$ecology=="az",]
@@ -551,7 +551,7 @@ The added option to use a time variable that contains real values allows users t
 
 In the case of the coral dataset, we can try this numerical binning approach by assigning the estimated age mid points to the occurrences. This is a very ‘dirty’ way of treating occurrence data as the assumed uncertainty of the age estimate is practically reduced to 0, and overlapping intervals that express uncertainty will have different assigned bins.
 
-```{r ddMid, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5}
+```{r ddMid, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 fossils$mid_ma<- apply(fossils[,c("max_ma","min_ma")], 1, mean)
 ```
 
@@ -565,7 +565,7 @@ ddIDbin <- divDyn(fossils, tax="genus", bin="mid_ma", revtime=TRUE)
 Please note that this is example is for illustration purposes only. As there are too many unique entries in this ``bin`` variable, with the corals, this resolution will be too high to produce potentially meaningful patterns. Range-through diversities are possibly the closest to reality with this method. 
 With this type of binning, the first variable of the ``divDyn`` output (name specified in ``bin``) contains the ages for the bins, which you can use for plotting.
 
-```{r ddBasic, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5}
+```{r ddBasic, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 # basic plot
   tsplot(stages, shading="series", boxes="sys", xlim=52:95,
     ylab="Diversity, range-through", ylim=c(0,300))
@@ -579,7 +579,7 @@ legend("topleft", legend=c("unique mid entries",  "stg stages"),
 
 The term slicing refers to the discretization of continuous time. A potentially more promising solution is to assign the occurrences that go along a continuous time scale to regularly spaced bins. However, we have to keep the direction of time in mind: age values decrease as time passes by.
 This is achieved with the ``slice()`` function, that can also produce a time scale object, similarly to the ``stages`` ``data.frame``. This function converts a continuous time vector to positive integers. To achieve this, you have to supply a numeric vector to the ``breaks`` argument function. The entries in this vector will represent the breakpoints or boundaries of the interval, similarly to the ``breaks`` argument of the ``cut()`` or ``hist()`` function in the base R distribution. For the sake of simplicity, let’s try a 10 million year bin resolution. 
-```{r slicing, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5}
+```{r slicing, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 # resolve time
   breakPoints <- seq(270, 0, -10)
 sliTen <- slice(fossils$mid_ma, breaks=breakPoints, ts=TRUE)
@@ -587,7 +587,7 @@ str(sliTen)
 ```
 The first element of the output list (``$slc``) is the discretized version of the original vector, with reversed time: in the original vector it was flowing from higher to lower values, whereas in ``$slc `` time flows from lower to higher values. The second element is the time scale object that is synthesized from the given ``breaks``. It also has an ``$slc`` column that reflects the connection between the age estimates and the slice numbers. This output can be used to run the ``divDyn()`` function and to visualize the results
 
-```{r slicedd, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5}
+```{r slicedd, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 # assign new column to the data frame
 fossils$slc <- sliTen$slc
 # run divDyn with the new column
@@ -596,7 +596,7 @@ fossils$slc <- sliTen$slc
 ```
 Note, that the rows of the divDyn() output are aligned with the rows of the ``slice()`` output `` sliTen$ts``. The results are practically identical to when you do the binning automatically with the ``age`` argument of the ``divDyn()`` function. 
 
-```{r dd10, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5}
+```{r dd10, echo=TRUE, result=FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 # and calculate diversity dynamics
   ddMid10<-divDyn(fossils, tax="genus", age="mid_ma", breaks=breakPoints)
   ddMid10$divRT
@@ -613,7 +613,7 @@ legend("topleft", legend=c("age estimates, 10MY",
   lwd=c(2,2,2), bg="white")
 ```
 
-```{r dd10actual, echo=FALSE, result=FALSE, plot=TRUE, fig.height=5.5}
+```{r dd10actual, echo=FALSE, result=FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 # basic plot
   tsplot(stages, shading="series", boxes="sys", xlim=52:95,
     ylab="Diversity, range-through", ylim=c(0,300))
@@ -719,7 +719,7 @@ In all cases, you will have to specify the input dataset, the column containing 
 
 The only other mandatory input is the ‘level’ of subsampling, which can be specified using the ``q`` argument. The exact nature of this value is dependent on the subsampler function (see section ‘Different Subsampling Methods’), but in general it expresses sampling intensity. For the CR subsampling method, this argument represents the subsampling quota, the desired number of occurrences in the ‘trial datasets’. Increasing values will result in increasingly higher sampled diversities. The ‘q’ argument cannot be negative. With the subsampling quota of 40 and 60 occurrences the function outputs the following results for the coral dataset:
 
-```{r ddCRBasic, echo=TRUE, results=FALSE, plot=TRUE, fig.height=5.5}
+```{r ddCRBasic, echo=TRUE, results=FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 # basic plot
   tsplot(stages, shading="series", boxes="sys", xlim=52:95,
     ylab="SIB diversity", ylim=c(0,200))
@@ -742,7 +742,7 @@ The only other mandatory input is the ‘level’ of subsampling, which can be s
 
 The precision of the simulations can be chosen by changing  the number of iterations the function will run. This can set with the ``iter`` argument that has to be a single positive integer. In general, the more iterations, the better the results, but the time the function needs to run has a linear relationship with the iteration number. Most paleontological examples are stable after a couple hundred iterations. However, if the result of the function changes with every run, you will have to increase this number!
 
-```{r subIter, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5}
+```{r subIter, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 # basic plot
   tsplot(stages, shading="series", boxes="sys", xlim=52:95,
     ylab="genus richness (corrected SIB)", ylim=c(0,200))
@@ -764,7 +764,7 @@ In this example, the red line is based on only 5 iterations, while the blue one 
 ### 5.2.3. The ``duplicates`` argument
 
 In the Paleobiology Database, occurrences are organized in collections, and are recorded as lists of taxa. These entries optimally are on the species-level of taxonomic resolution while most analyses operate at the level of genera. As multiple species can be registered in a single collection, the same genus name can appear multiple time in the collection list. This will have an effect on the occurrence-based subsampling methods. Using the ``duplicates`` arguments, you can toggle whether the surplus entries should be omitted (``duplicates=FALSE``, default) or whether they should be kept (``duplicates=TRUE``). The omission is applied to the variables defined in ``tax`` and ``coll`` variables. In case ``duplicates=FALSE`` the ``coll`` argument is mandatory. 
-```{r subDupl, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5}
+```{r subDupl, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 ## subsampled, stable  
   subCRnd <- subsample(fossils, bin="stg", tax="genus", 
     coll="collection_no", iter=100, q=40, duplicates=FALSE)
@@ -791,7 +791,7 @@ Just remember that this step can be skipped by adding ``duplicates=FALSE`` to th
 
 The subsampling level can be set as high as the user wants it to be. Depending on whether the data in the time slices reach the subsampling quota or not, the time slices can be included or excluded from the results. If the ``useFailed`` argument is set to ``FALSE``, then the time slices that do not have enough information to reach the subsampling quota will be omitted from the resulting series. This is the default setting, and if the *applied function* output is a scalar or a vector, then the corresponding results will be omitted. If ``useFailed=TRUE`` then the bins where the quota is not reached will be represented in the *trial dataset* with all their sampled occurrences. 
 
-```{r subFail, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5}
+```{r subFail, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 # basic plot
   tsplot(stages, shading="series", boxes="sys", xlim=52:95,
     ylab="number of occurrences", ylim=c(0,100))
@@ -813,7 +813,7 @@ The subsampling level can be set as high as the user wants it to be. Depending o
 
 These arguments handle which bins should be forced to be kept (included) or removed (excluded) from the *trial dataset*. It accepts a numeric vector, with the bin identifiers. Positive entries mean that the bins will be included in the *trial dataset* without subsampling. This can be useful if you want the inclusion of recent ‘occurrences’ to demonstrate the ‘Pull of the Recent’ effect. This example uses the original ``corals`` dataset to demonstrate how the argument works (with duplicates omitted).
 
-```{r subIntact, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5}
+```{r subIntact, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 # basic plot
   tsplot(stages, shading="series", boxes="sys", xlim=52:95,
     ylab="per capita extinction rates", ylim=c(0,1))
@@ -837,7 +837,7 @@ Between these two curves, neither shows perfectly accurate results. The per capi
 
 The output type of the subsampling process can be set with the output argument. This should be dependent on the further use of the function results. The most direct output is the arithmetic (default) or geometric means of the trials. They provide almost the same output:
 
-```{r subOutput, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5}
+```{r subOutput, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 # basic plot
   tsplot(stages, shading="series", boxes="sys", xlim=52:95,
     ylab="richness of genera (corrected SIB)", ylim=c(0,100))
@@ -868,7 +868,7 @@ dim(subDist$divCSIB)
 
 Rows are time slices, while columns represent the individual trials. These can be visualized by a simple ``for()`` loop, and the arithmetic means can be calculated the regular way.
 
-```{r subMultiRes, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5}
+```{r subMultiRes, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 tsplot(stages, shading="series", boxes="sys", xlim=52:95,
   ylab="subsampled richness of genera (corrected SIB)", ylim=c(0,150))
 
@@ -883,7 +883,7 @@ lines(stages$mid[1:94], csibMeans , col="red", lwd=2)
 
 For convenience, this variance can also be plotted with the new ``shades()`` function. That will display the distribution of values by drawing transparent polygons. The quantiles of each distribution are calculated, and the same values are then connected (.75 to .75).
 
-```{r shades, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5}
+```{r shades, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 tsplot(stages, shading="series", boxes="sys", xlim=52:95,
   ylab="subsampled richness of genera (corrected SIB)", ylim=c(0,150))
 shades(stages$mid[1:94], plottedVar, res=10, col="black")
@@ -891,7 +891,7 @@ shades(stages$mid[1:94], plottedVar, res=10, col="black")
 
 Setting the ``res`` argument of this function controls the ‘quantile resolution’. The higher the number, the more refined the transparency gradient will be. However, it is more useful to the enter the exact quantiles to be plotted in the form of a numeric vector:
 
-```{r shades100, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5}
+```{r shades100, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 tsplot(stages, shading="series", boxes="sys", xlim=52:95,
   ylab="subsampled richness of genera (corrected SIB)", ylim=c(0,150))
 shades(stages$mid[1:94], plottedVar, col="blue", res=c(0.05,0.25,0.75,0.95))
@@ -934,7 +934,7 @@ subOccs [[1]]
 
 Extracting the central tendency (average of the trials) is more difficult this way, but some output structures (e.g. geographic shapes) might require special treatment that can be written as a custom function. Anyway, ``subsample()`` allows the simplification of this process, if you set the output argument to ‘list’ and by providing the custom function as the ``FUN`` argument. One rule is that the function must take the occurrence dataset as an argument, which is formally called ``x``:
 
-```{r subOCC, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5}
+```{r subOCC, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 OCC <- function(x) table(x$stg)
 subOccsInternal <- subsample(fossGen, bin="stg", tax="genus", 
   iter=100, q=40,FUN= OCC, output="list")
@@ -962,7 +962,7 @@ CAUTION: The averaging and the grouping of the resulting variables is possible b
 
 Let’s say you are interested in the maximum absolute paleolatitude of the occurrences. This will be influenced by the number of occurrences, and should therefore be rechecked with subsampling. You can calculate this in the raw dataset with the following function, using the known variable names:
 
-```{r rawPL, echo=TRUE, results=TRUE, plot=TRUE, fig.height=5.5}
+```{r rawPL, echo=TRUE, results=TRUE, plot=TRUE, fig.height=5.5, fig.width=7}
 PL <- function(x){
   tRes<- tapply(INDEX=x$stg, X=x$paleolat, FUN=function(y){
     max(abs(y), na.rm=T)
@@ -974,13 +974,13 @@ maxPaLat<- PL(fossils)
 
 This variable certainly increases with age, 
 
-```{r subPL, echo=TRUE, results =TRUE, plot=TRUE, fig.height=5.5}
+```{r subPL, echo=TRUE, results =TRUE, plot=TRUE, fig.height=5.5, fig.width=7}
 cor.test(maxPaLat, stages$mid[54:94], method="spearman")
 ```
 
 but it is questionable at this point, whether the increasing number of occurrences is responsible for this pattern, or whether you would still see it, if the same number of occurrences were sampled from each time slice. You can quickly check this association at 20 occurrences and CR by running:
 
-```{r subPLSmm, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5}
+```{r subPLSmm, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 subMaxPaLat <- subsample(fossGen, bin="stg", tax="genus", 
   iter=100, q=20,FUN=PL)
 tsplot(stages, shading="series", boxes="sys", xlim=52:95,
@@ -1018,7 +1018,7 @@ subOW <- subsample(fossGen, bin="stg", tax="genus", coll="collection_no",
 
 The output of the occurrence-weighted (OW) type is typically very close to the output of the corresponding level CR results:
 
-```{r subOW, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5}
+```{r subOW, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 subCR <- subsample(fossGen, bin="stg", tax="genus", iter=100, q=40)
 tsplot(stages, shading="series", boxes="sys", xlim=52:95,
   ylab="corrected SIB diversity", ylim=c(0,90))
@@ -1042,18 +1042,18 @@ subUW <- subsample(fossGen, bin="stg", tax="genus", coll="collection_no",
 
 By this principle, it is not difficult to see that depending on the size of the collections, the actual number of occurrences will be somewhat higher than the quota. You can quickly check the exact number of occurrences drawn with the ``binstat()`` function
 
-```{r subST, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5}
+```{r subST, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 subST <- subsample(fossGen, bin="stg", tax="genus", coll="collection_no", 
   iter=100, q=20,FUN=binstat, type="oxw")
 
 ```
-```{r subSTshow, echo=TRUE, results =TRUE, plot=TRUE, fig.height=5.5}
+```{r subSTshow, echo=TRUE, results =TRUE, plot=TRUE, fig.height=5.5, fig.width=7}
 subST[54:94, "occs"]
 ```
 
 Although there are ways to improve the accuracy of the subsampling process, the variation induced by this problem is only minuscule compared to those introduced by sampling and binning uncertainties.
 However, typically this ``xexp`` value is set to a value between 1 and 2 (e.g. 1.4). In these cases, you have to calculate the intensity of sampling . Although there is some discrepancy between the methods, the overall trajectories are quite similar.
-```{r subO2, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5}
+```{r subO2, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 subO2W <- subsample(fossGen, bin="stg", tax="genus", coll="collection_no", 
   iter=100, q=80, type="oxw", xexp=2)
 tsplot(stages, shading="series", boxes="sys", xlim=52:95,
@@ -1070,7 +1070,7 @@ legend("topleft", legend=c("CR - 40", "OW - 40", "UW - 10", "O2W - 80"),
 
 As intuitive as the CR approach is to understand, the method has been criticized for being ‘unfair’ (Alroy, 2010). The results of CR will not reflect changes of richness appropriately, if two localities with different diversities are compared and their total richnesses are not equal. 
 This can be visualized by progressively lowering the subsampling quota for CR, which will result in not just decreased levels of richness but also in a pronounced decrease in variance (Alroy, 2010b). This effect can be illustrated by rerunning CR iteratively with progressively lower quotas. 
-```{r subCRmany, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5}
+```{r subCRmany, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 # repeat CR subsampling for a set of quotas
 quotas<-seq(70,10,-10)
 for(i in quotas){
@@ -1083,7 +1083,7 @@ for(i in quotas){
 ```
 The code above reruns the CR algorithm on the dataset with 70, 60, 50 ... and 10 occurrences as the quota of the subsampling. Then the results can be plotted with:
 
-```{r subCRmanyShow, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5}
+```{r subCRmanyShow, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 tsplot(stages, shading="series", boxes="sys", xlim=52:95,
   ylab="corrected SIB richness", ylim=c(0,90))
 for(i in quotas){
@@ -1098,7 +1098,7 @@ The Shareholder Quorum subsampling approach (Alroy, 2010) effectively circumvent
 #### 5.4.3.1. The ‘inexact’ approach to SQS
 
 The original description of the SQS algorithm ensured different levels of coverages by going through the occurrences (or collections) randomly and aggregating the estimated frequencies of the species that are taken from the sample until this sum reached the subsampling quorum. John Alroy (2014) referred to this approach as the ‘inexact’ method to perform SQS. This is the default way to do SQS.
-```{r sqs1, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5}
+```{r sqs1, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 # sqs with 0.6 quorum
 sqs0.6 <-subsample(fossGen, iter=50, q=0.6,
   tax="genus", bin="stg",  type="sqs")
@@ -1120,7 +1120,7 @@ This procedure is dependent on the proper estimation of the species’ frequenci
 $$u = 1 - {1}O/o$$
 
 This is the first correction of Alroy (2010, for overall coverage). He also suggested that for Paleobiology Database occurrences, a different version of this estimator (*u’*) might be more accurate that is estimated using the single reference taxa, instead of single-collection taxa. This estimator is then used to estimate the true frequencies of species. You can choose between these versions by toggling the ``singleton`` argument between ``"occ"`` (default), ``"ref"`` and it can be switched off by setting it to ``FALSE``. Note that ``"ref"`` will require you to provide a reference variable (``ref`` argument). The discrepancy between the methods is very small: 
-```{r sqs2, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5}
+```{r sqs2, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 sqsCollSing <-subsample(fossGen, iter=50, q=0.4, 
   tax="genus", bin="stg", type="sqs", 
   singleton="occ")
@@ -1140,7 +1140,7 @@ legend("topleft", legend=c("SQS, q=0.4", "SQS, q=0.4, ref", "SQS, q=0.4, occ"),
   col=c("black", "blue", "red"), lwd=c(2,2,2), bg="white")
 ```
 Alroy (2010) also mentioned two additional corrections (for *Evenness and Dominance* and *Single large collections*) that also have minor effects on the overall results. You can use the ``excludeDominant`` and ``largestColl`` arguments to turn these on. Note that you have to provide a collection variable to make ``largestColl`` work, which is only available if ``excludeDominant=TRUE``.
-```{r sqs3, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5}
+```{r sqs3, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 sqsPure <-subsample(fossGen, iter=50, q=0.5,
   tax="genus", bin="stg", type="sqs")
 sqsCorr <-subsample(fossGen, iter=50, q=0.5,
@@ -1159,7 +1159,7 @@ legend("topleft", legend=c("uncorrected SQS",
 
 
 So far, these calculations were based on occurrence-based rarefaction, but SQS can be calculated similarly to OW, by tallying the occurrences collection-by-collection. This can be enforced with the ``byList=TRUE`` option.
-```{r sqsColl, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5}
+```{r sqsColl, echo=TRUE, results =FALSE, plot=TRUE, fig.height=5.5, fig.width=7}
 sqsByColl <-subsample(fossGen, iter=50, q=0.5,
  tax="genus", bin="stg", ref="reference_no",coll="collection_no",
  type="sqs", singleton="ref", excludeDominant=T, largestColl=T, byList=TRUE)

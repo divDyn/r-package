@@ -1,6 +1,10 @@
 tests
 README.Rmd
+README.md
+README.html
 LICENSE
+vignettes/divDyn_1_installation.Rmd
+vignettes/divDyn_2_handout.Rmd
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
