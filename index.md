@@ -6,7 +6,7 @@
 [![](http://cranlogs.r-pkg.org/badges/grand-total/divDyn?color=yellow)](https://cran.r-project.org/package=divDyn)
 [![CRAN
 checks](https://badges.cranchecks.info/summary/divDyn.svg)](https://cran.r-project.org/web/checks/check_results_divDyn.html)
-[![](https://img.shields.io/badge/doi-10.5281/zenodo.7056783-blue.svg)](https://doi.org/10.5281/zenodo.7056783)
+[![](https://img.shields.io/badge/doi-10.5281/zenodo.14202954-blue.svg)](https://doi.org/10.5281/zenodo.14202954)
 
 ### Diversity Dynamics using fossil occurrence data
 

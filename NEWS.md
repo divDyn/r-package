@@ -2,6 +2,8 @@
 
 # divDyn 0.8.3 - 2024-11-21
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14202954.svg)](https://doi.org/10.5281/zenodo.14202954) 
+
 ### Added
 - The `affinity()` function has a new argument `output`. The p-values of the binomial testing can now be returned with `alpha=NULL`.
 

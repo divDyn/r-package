@@ -52,11 +52,11 @@ As the package is still getting developed, please note that some interface chang
 You can install the appropriate binaries normally, by running 
 `install.packages("divDyn")`
 
-### 2. Using the source tarball to install (v0.8.2)
+### 2. Using the source tarball to install (v0.8.3)
 This you can do with running
 ```
 install.packages(
-  "https://github.com/divDyn/assets/raw/master/r_archive/source/divDyn_0.8.2.tar.gz", 
+  "https://zenodo.org/records/14202954/files/divDyn_0.8.3.tar.gz?download=1", 
   repos=NULL, type="source")
 ```
 

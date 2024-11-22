@@ -37,7 +37,7 @@ For the sake of completeness and simplicity, the sources of the stable version a
 
 ```{r stable, eval=FALSE}
 install.packages(
-  "https://github.com/divDyn/assets/raw/master/r_archive/source/divDyn_0.8.2.tar.gz", 
+  "https://zenodo.org/records/14202954/files/divDyn_0.8.3.tar.gz?download=1", 
   repos=NULL, type="source")
 ```
 

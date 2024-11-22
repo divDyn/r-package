@@ -15,7 +15,7 @@ See the webpage of the package for more info and tutorials:
 
 ## News
 
-- The next update of the package (V0.8.3) is now availble from the CRAN
+- The next update of the package (v0.8.3) is now availble from the CRAN
   servers! As this is a major update, I suggest everyone to update their
   copy. See the change log below for the changes.
 
@@ -53,12 +53,12 @@ mistake), do not hesitate to contact me at <adam.kocsis@fau.de>.
 You can install the appropriate binaries normally, by running
 `install.packages("divDyn")`
 
-### 2. Using the source tarball to install (v0.8.2)
+### 2. Using the source tarball to install (v0.8.3)
 
 This you can do with running
 
     install.packages(
-      "https://github.com/divDyn/assets/raw/master/r_archive/source/divDyn_0.8.2.tar.gz", 
+      "https://zenodo.org/records/14202954/files/divDyn_0.8.3.tar.gz?download=1", 
       repos=NULL, type="source")
 
 from the R console. Note that there is some code in the package that
