@@ -1,6 +1,6 @@
 # Change log of the R package 'divDyn'
 
-# divDyn 0.8.3 - 2024-11-18
+# divDyn 0.8.3 - 2024-11-21
 
 ### Added
 - The `affinity()` function has a new argument `output`. The p-values of the binomial testing can now be returned with `alpha=NULL`.
@@ -15,6 +15,9 @@
 * * *
 
 # divDyn 0.8.2 - 2022-09-05
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7056783.svg)](https://doi.org/10.5281/zenodo.7056783) 
+
 ### Added
 - the `matchtime()` function from chronosphere 0.4
 - defense against trying to use divDyn() as applied function in subsample() when bin=NULL
