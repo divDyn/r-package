@@ -19,9 +19,9 @@ included that implements frequently used sampling standardization
 methods in a multiple bin-framework. The plotting of time series and the
 occurrence data can be simplified by the functions incorporated in the
 package, as well as other calculations, such as environmental affinities
-and extinction selectivity testing. Details can be found in: Kocsis,
-A.T.; Reddin, C.J.; Alroy, J. and Kiessling, W. (2019)
-<doi:10.1101/423780>.
+and extinction selectivity testing. Details can be found in: [Kocsis,
+A.T.; Reddin, C.J.; Alroy, J. and Kiessling, W.
+(2019)](https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.13161).
 
 <br>
 
@@ -45,7 +45,7 @@ The site is getting filled with the following content:
 #### Additional material
 
 - How-to guides on combining the package’s capabilities with other
-  packages are deposited on the [evolvED
+  packages are deposited on the [Evolv-ED
   blog](https://www.evolv-ed.net/).
 
 <br>
