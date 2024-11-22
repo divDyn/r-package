@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">divDyn</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,7 +41,7 @@
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
       <ul class="navbar-nav"><li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/divDyn/divDyn/" aria-label="github">
+  <a class="external-link nav-link" href="https://github.com/divDyn/r-package/" aria-label="github">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -54,7 +54,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Time series from metrics of diversity dynamics</h1>
-      <small class="dont-index">Source: <a href="https://github.com/divDyn/divDyn/blob/HEAD/R/diversityDynamics.r" class="external-link"><code>R/diversityDynamics.r</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/divDyn/r-package/blob/HEAD/R/diversityDynamics.r" class="external-link"><code>R/diversityDynamics.r</code></a></small>
       <div class="d-none name"><code>divDyn.Rd</code></div>
     </div>
 
@@ -152,8 +152,8 @@
 <p><code>tPart</code>: Part timer taxa (Alroy, 2008; 2014), present in bin <em>i</em>-1,and <em>i</em>+1, but not in bin <em>i</em>.</p>
 <p><code>extProp</code>: Proportional extinctions including single-interval taxa: <em>(tExt + tSing) / (tThrough + tOri + tExt + tSing)</em>.</p>
 <p><code>oriProp</code>: Proportional originations including single-interval taxa:  <em>(tOri + tSing) / (tThrough + tOri + tExt + tSing)</em>.</p>
-<p><code>extPC</code>: Per capita extinction rates of Foote (1999). <em>-log(tExt/(tExt + tThrough))</em>.  Values are not normalized with bin lengths. Similar equations were used by Alroy (1996) but without taking the logarithm.</p>
-<p><code>oriPC</code>: Per capita origination rates of Foote (1999). <em>-log(tOri/(tOri + tThrough))</em>. Values are not normalized with bin lengths. Similar equations were used by Alroy (1996) but without taking the logarithm.</p>
+<p><code>extPC</code>: Per capita extinction rates of Foote (1999). <em>-log(tThrough/(tExt + tThrough))</em>.  Values are not normalized with bin lengths. Similar equations were used by Alroy (1996) but without taking the logarithm.</p>
+<p><code>oriPC</code>: Per capita origination rates of Foote (1999). <em>-log(tThrough/(tOri + tThrough))</em>. Values are not normalized with bin lengths. Similar equations were used by Alroy (1996) but without taking the logarithm.</p>
 <p><code>ext3t</code>: Three-timer extinction rates of Alroy (2008). <em>log(t2d/t3)</em>.</p>
 <p><code>ori3t</code>: Three-timer origination rates of Alroy (2008). <em>log(t2u/t3)</em>.</p>
 <p><code>extC3t</code>: Corrected three-timer extinction rates of Alroy (2008). <em>ext3t[i] + log(samp3t[i+1])</em>.</p>
@@ -164,9 +164,9 @@
 <p><code>divRT</code>: Range-through diversity (richness), all taxa in the interval, based on the range-through assumption. <em>(tSing + tOri + tExt + tThrough)</em>.</p>
 <p><code>sampRange</code>: Range-based sampling probability, without observed range end-points (Foote), <em>(divSIB - tExt - tOri- t-Sing)/tThrough</em></p>
 <p><code>samp3t</code>: Three-timer sampling completeness of Alroy (2008). <em>t3/(t3+tPart)</em></p>
-<p><code>extGF</code>: Gap-filler extinction rates of Alroy(2014). <em>log((t2d + tPart)/(t3+tPart+tGFd))</em></p>
+<p><code>extGF</code>: Gap-filler extinction rates of Alroy(2014). <em>log((t2d + tPart)/(t3+tPart+tGFu))</em></p>
 <p><code>oriGF</code>: Gap-filler origination rates of Alroy(2014). <em>log((t2u + tPart)/(t3+tPart+tGFd))</em></p>
-<p><code>E2f3</code>: Second-for-third extinction propotions of Alroy (2015). As these metrics are based on an algorithmic approach, for the equations please refer to the Alroy (2015, p. 634, right column and Eq. 4)). See source code (<a href="https://github.com/divDyn/divDyn" class="external-link">https://github.com/divDyn/divDyn</a>) for the exact implementation, found in the <code>Metrics</code> function in the diversityDynamics.R file.</p>
+<p><code>E2f3</code>: Second-for-third extinction propotions of Alroy (2015). As these metrics are based on an algorithmic approach, for the equations please refer to the Alroy (2015, p. 634, right column and Eq. 4)). See source code (<a href="https://github.com/divDyn/r-package" class="external-link">https://github.com/divDyn/r-package</a>) for the exact implementation, found in the <code>Metrics</code> function in the diversityDynamics.R file.</p>
 <p><code>O2f3</code>: Second-for-third origination propotions of Alroy (2015). Please see <code>E2f3</code>.</p>
 <p><code>ext2f3</code>: Second-for-third extinction rates (based on Alroy, 2015). Transformed to the usual rate form with <em>log(1/(1-E2f3))</em>.</p>
 <p><code>ori2f3</code>: Second-for-third origination rates (based on Alroy, 2015). Transformed to the usual rate form with <em>log(1/(1-O2f3))</em>.</p>
@@ -216,7 +216,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by <a href="https://palaeobiology.nat.fau.de/people/instructors/kocsis/" class="external-link">Adam T. Kocsis</a>, <a href="https://researchers.mq.edu.au/en/persons/john-alroy" class="external-link">John Alroy</a>, <a href="https://www.gzn.nat.fau.eu/palaeontologie/team/former-members/reddin/" class="external-link">Carl J. Reddin</a>, <a href="https://www.gzn.nat.fau.eu/palaeontologie/team/professors/kiessling/" class="external-link">Wolfgang Kiessling</a>, <a href="https://www.dfg.de/en/index.jsp" class="external-link"><img src="https://www.dfg.de/includes/bausteine/open_graph_de/dfgfallback.jpg" alt="dfg" width="80"></a>, <a href="https://www.gzn.nat.fau.eu/" class="external-link"><img src="https://www.gzn.nat.fau.de/files/2017/05/cropped-gzn-logo.jpg" alt="geozentrum" width="80"></a>.</p>
+  <p></p><p>Developed by <a href="https://palaeobiology.nat.fau.de/people/instructors/kocsis/" class="external-link">Adam T. Kocsis</a>, <a href="https://researchers.mq.edu.au/en/persons/john-alroy" class="external-link">John Alroy</a>, <a href="https://www.gzn.nat.fau.eu/palaeontologie/team/former-members/reddin/" class="external-link">Carl J. Reddin</a>, <a href="https://www.gzn.nat.fau.eu/palaeontologie/team/professors/kiessling/" class="external-link">Wolfgang Kiessling</a>, <a href="https://www.dfg.de/en/index.jsp" class="external-link"><img src="https://github.com/gplates/rgplates/blob/devel/pkgdown/assets/dfg.png?raw=true" alt="dfg" width="80"></a>, <a href="https://www.gzn.nat.fau.eu/" class="external-link"><img src="https://github.com/gplates/rgplates/blob/devel/pkgdown/assets/GeoZentrum.svg?raw=true" alt="geozentrum" width="80"></a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">

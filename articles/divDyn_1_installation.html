@@ -39,7 +39,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">divDyn</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,7 +74,7 @@
 
       <ul class="navbar-nav">
 <li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/divDyn/divDyn/" aria-label="github">
+  <a class="external-link nav-link" href="https://github.com/divDyn/r-package/" aria-label="github">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -88,12 +88,13 @@
 
 
 
-<script src="divDyn_1_installation_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+
+<div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>1. Installation</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/divDyn/divDyn/blob/HEAD/vignettes/divDyn_1_installation.Rmd" class="external-link"><code>vignettes/divDyn_1_installation.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/divDyn/r-package/blob/HEAD/vignettes/divDyn_1_installation.Rmd" class="external-link"><code>vignettes/divDyn_1_installation.Rmd</code></a></small>
       <div class="d-none name"><code>divDyn_1_installation.Rmd</code></div>
     </div>
 
@@ -102,10 +103,13 @@
 <div class="section level2">
 <h2 id="stable-version-from-the-cran">Stable version from the CRAN<a class="anchor" aria-label="anchor" href="#stable-version-from-the-cran"></a>
 </h2>
-<p>The stable version of the package is available on <a href="https://cran.r-project.org/package=divDyn" class="external-link">CRAN servers</a>, which means that you can install it with the regular <code><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages()</a></code> function.</p>
+<p>The stable version of the package is available on <a href="https://cran.r-project.org/package=divDyn" class="external-link">CRAN servers</a>, which
+means that you can install it with the regular
+<code><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages()</a></code> function.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"divDyn"</span><span class="op">)</span></span></code></pre></div>
-<p>If for some reason, the installlation from CRAN fails, you might need to look into alternative methods.</p>
+<p>If for some reason, the installlation from CRAN fails, you might need
+to look into alternative methods.</p>
 <hr>
 </div>
 <div class="section level2">
@@ -114,31 +118,48 @@
 <div class="section level4">
 <h4 id="stable-version-from-github-from-source">Stable version from GitHub from source<a class="anchor" aria-label="anchor" href="#stable-version-from-github-from-source"></a>
 </h4>
-<p>For the sake of completeness and simplicity, the sources of the stable version are also available on GitHub. The <code><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages()</a></code> function can be used to install this from source - but you will have to install dependencies of the package, and you have to have a compiler installed on your system</p>
+<p>For the sake of completeness and simplicity, the sources of the
+stable version are also available on GitHub. The
+<code><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages()</a></code> function can be used to install this
+from source - but you will have to install dependencies of the package,
+and you have to have a compiler installed on your system</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span></span>
-<span>  <span class="st">"https://github.com/divDyn/assets/raw/master/r_archive/source/divDyn_0.8.2.tar.gz"</span>, </span>
+<span>  <span class="st">"https://zenodo.org/records/14202954/files/divDyn_0.8.3.tar.gz?download=1"</span>, </span>
 <span>  repos<span class="op">=</span><span class="cn">NULL</span>, type<span class="op">=</span><span class="st">"source"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="development-version---the-raw">Development version - the raw<a class="anchor" aria-label="anchor" href="#development-version---the-raw"></a>
 </h4>
-<p>If you encounter technical problems with the package that are not described anywhere, you might want to take a look at the <a href="https://github.com/divDyn/r-package/tree/devel" class="external-link">development version</a>.</p>
-<p>If you wish to install the development version, I recommend a manual installation:<br>
+<p>If you encounter technical problems with the package that are not
+described anywhere, you might want to take a look at the <a href="https://github.com/divDyn/r-package/tree/devel" class="external-link">development
+version</a>.</p>
+<p>If you wish to install the development version, I recommend a manual
+installation:<br>
 1. Clone the repository to your local hard drive.<br>
-2. Rename the directory <code>r-package</code> to <code>divDyn</code>. 3. Make sure that you have the package dependencies, and a compiler installed: on Windows, <a href="https://cran.r-project.org/bin/windows/Rtools/" class="external-link">RTools</a> should include all the tools you need, on Mac, you will need to have <a href="https://developer.apple.com/xcode/" class="external-link">XCode</a> - if you use GNU/Linux, you have to go down deeper the rabbit hole :).<br>
-4. Open a terminal and navigate to the directory where you cloned. The <code>divDyn</code> directory should be visible from there.<br>
+2. Rename the directory <code>r-package</code> to <code>divDyn</code>.
+3. Make sure that you have the package dependencies, and a compiler
+installed: on Windows, <a href="https://cran.r-project.org/bin/windows/Rtools/" class="external-link">RTools</a> should
+include all the tools you need, on Mac, you will need to have <a href="https://developer.apple.com/xcode/" class="external-link">XCode</a> - if you use
+GNU/Linux, you have to go down deeper the rabbit hole :).<br>
+4. Open a terminal and navigate to the directory where you cloned. The
+<code>divDyn</code> directory should be visible from there.<br>
 5. Run this line in the terminal</p>
 <pre><code>R CMD INSTALL divDyn</code></pre>
 <div class="alert alert-danger" role="warning">
 <ul>
 <li>
-<em>If you see an error suggesting that <code>R</code> is not found, you have to add it to your <code>PATH</code> environmental variable.</em><br>
+<em>If you see an error suggesting that <code>R</code> is not found,
+you have to add it to your <code>PATH</code> environmental
+variable.</em><br>
 </li>
-<li><em>If the R packages that <code>divDyn</code> depend on are not installed, you have to install them manually, or you will get an error.</em></li>
+<li><em>If the R packages that <code>divDyn</code> depend on are not
+installed, you have to install them manually, or you will get an
+error.</em></li>
 </ul>
 </div>
-<p>You can also try <code>devtools::install_github("divDyn/r-package")</code></p>
+<p>You can also try
+<code>devtools::install_github("divDyn/r-package")</code></p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -149,7 +170,7 @@
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by <a href="https://palaeobiology.nat.fau.de/people/instructors/kocsis/" class="external-link">Adam T. Kocsis</a>, <a href="https://researchers.mq.edu.au/en/persons/john-alroy" class="external-link">John Alroy</a>, <a href="https://www.gzn.nat.fau.eu/palaeontologie/team/former-members/reddin/" class="external-link">Carl J. Reddin</a>, <a href="https://www.gzn.nat.fau.eu/palaeontologie/team/professors/kiessling/" class="external-link">Wolfgang Kiessling</a>, <a href="https://www.dfg.de/en/index.jsp" class="external-link"><img src="https://www.dfg.de/includes/bausteine/open_graph_de/dfgfallback.jpg" alt="dfg" width="80"></a>, <a href="https://www.gzn.nat.fau.eu/" class="external-link"><img src="https://www.gzn.nat.fau.de/files/2017/05/cropped-gzn-logo.jpg" alt="geozentrum" width="80"></a>.</p>
+<p>Developed by <a href="https://palaeobiology.nat.fau.de/people/instructors/kocsis/" class="external-link">Adam T. Kocsis</a>, <a href="https://researchers.mq.edu.au/en/persons/john-alroy" class="external-link">John Alroy</a>, <a href="https://www.gzn.nat.fau.eu/palaeontologie/team/former-members/reddin/" class="external-link">Carl J. Reddin</a>, <a href="https://www.gzn.nat.fau.eu/palaeontologie/team/professors/kiessling/" class="external-link">Wolfgang Kiessling</a>, <a href="https://www.dfg.de/en/index.jsp" class="external-link"><img src="https://github.com/gplates/rgplates/blob/devel/pkgdown/assets/dfg.png?raw=true" alt="dfg" width="80"></a>, <a href="https://www.gzn.nat.fau.eu/" class="external-link"><img src="https://github.com/gplates/rgplates/blob/devel/pkgdown/assets/GeoZentrum.svg?raw=true" alt="geozentrum" width="80"></a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">

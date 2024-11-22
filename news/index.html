@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">divDyn</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,7 +41,7 @@
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
       <ul class="navbar-nav"><li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/divDyn/divDyn/" aria-label="github">
+  <a class="external-link nav-link" href="https://github.com/divDyn/r-package/" aria-label="github">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -54,37 +54,58 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/divDyn/divDyn/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/divDyn/r-package/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.8.3" id="divdyn-083---2024-11-21">divDyn 0.8.3 - 2024-11-21<a class="anchor" aria-label="anchor" href="#divdyn-083---2024-11-21"></a></h2><p class="text-muted">CRAN release: 2024-11-21</p>
+<p><a href="https://doi.org/10.5281/zenodo.14202954" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.14202954.svg" alt="DOI"></a></p>
+<div class="section level4">
+<h4 id="added-0-8-3">Added<a class="anchor" aria-label="anchor" href="#added-0-8-3"></a></h4>
+<ul><li>The <code><a href="../reference/affinity.html">affinity()</a></code> function has a new argument <code>output</code>. The p-values of the binomial testing can now be returned with <code>alpha=NULL</code>.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="fixed-0-8-3">Fixed<a class="anchor" aria-label="anchor" href="#fixed-0-8-3"></a></h4>
+<ul><li>A myriad of documentation issues..</li>
+<li>Some data were omitted by the <code><a href="../reference/affinity.html">affinity()</a></code> function when the <code>coll</code> argument was not provided.</li>
+<li>
+<code>subsample(type="cr")</code> now has a random number generator linked to the R RNG seed, allowing reproducible examples.</li>
+<li>The <code>subtrialCR</code> function had issues when it was invoked with <code>unit=NULL</code>
+</li>
+</ul><hr></div>
+</div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.8.2" id="divdyn-082---2022-09-05">divDyn 0.8.2 - 2022-09-05<a class="anchor" aria-label="anchor" href="#divdyn-082---2022-09-05"></a></h2><p class="text-muted">CRAN release: 2022-09-05</p>
+<p><a href="https://doi.org/10.5281/zenodo.7056783" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.7056783.svg" alt="DOI"></a></p>
 <div class="section level4">
 <h4 id="added-0-8-2">Added<a class="anchor" aria-label="anchor" href="#added-0-8-2"></a></h4>
-<ul><li>the matchtime() function from chronosphere 0.4</li>
+<ul><li>the <code><a href="../reference/matchtime.html">matchtime()</a></code> function from chronosphere 0.4</li>
 <li>defense against trying to use divDyn() as applied function in subsample() when bin=NULL</li>
 <li>the probs argument to modeltab() following Reddin et al. 2021</li>
 </ul></div>
 <div class="section level4">
 <h4 id="changed-0-8-2">Changed<a class="anchor" aria-label="anchor" href="#changed-0-8-2"></a></h4>
-<ul><li>subsample() will produce warnings instead of halting when the variables ‘tax’ or ‘bin’ has NAs in them. The corresponding rows are omitted automatically.</li>
+<ul><li>
+<code><a href="../reference/subsample.html">subsample()</a></code> will produce warnings instead of halting when the variables ‘tax’ or ‘bin’ has NAs in them. The corresponding rows are omitted automatically.</li>
 <li>changed bitwise and to boolean in Engine.cpp</li>
 <li>regenerated documentation for compatibility to HTML5, corrected some entries</li>
 <li>Fixed mismatching data object keys$lat, which indicated intervals for absolute paleolatitudes instead of actual paleolatitudes.</li>
-<li>Fixed error, when parts() was invoked for "" category.</li>
+<li>Fixed error, when <code><a href="../reference/parts.html">parts()</a></code> was invoked for “” category.</li>
 </ul><hr></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.8.1" id="divdyn-081---2021-03-01">divDyn 0.8.1 - 2021-03-01<a class="anchor" aria-label="anchor" href="#divdyn-081---2021-03-01"></a></h2><p class="text-muted">CRAN release: 2021-03-02</p>
 <div class="section level4">
 <h4 id="changed-0-8-1">Changed<a class="anchor" aria-label="anchor" href="#changed-0-8-1"></a></h4>
-<ul><li>documentation fixes</li></ul><hr></div>
+<ul><li>documentation fixes</li>
+</ul><hr></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.8.0" id="divdyn-080c---2021-02-26">divDyn 0.8.0c - 2021-02-26<a class="anchor" aria-label="anchor" href="#divdyn-080c---2021-02-26"></a></h2><p class="text-muted">CRAN release: 2019-06-12</p>
 <div class="section level4">
 <h4 id="changed-0-8-0">Changed<a class="anchor" aria-label="anchor" href="#changed-0-8-0"></a></h4>
-<ul><li>binwise CR subsampling now implements std::shuffle() instead of std::random_shuffle()</li></ul><hr></div>
+<ul><li>binwise CR subsampling now implements std::shuffle() instead of std::random_shuffle()</li>
+</ul><hr></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.8.0" id="divdyn-080b---2020-08-16">divDyn 0.8.0b - 2020-08-16<a class="anchor" aria-label="anchor" href="#divdyn-080b---2020-08-16"></a></h2><p class="text-muted">CRAN release: 2019-06-12</p>
@@ -98,7 +119,7 @@
 <h2 class="pkg-version" data-toc-text="0.8.0" id="divdyn-080a---2020-08-16">divDyn 0.8.0a - 2020-08-16<a class="anchor" aria-label="anchor" href="#divdyn-080a---2020-08-16"></a></h2><p class="text-muted">CRAN release: 2019-06-12</p>
 <div class="section level4">
 <h4 id="changed-0-8-0-2">Changed<a class="anchor" aria-label="anchor" href="#changed-0-8-0-2"></a></h4>
-<ul><li>minor bugfix for the cleansp() function involving taxa that were missing ("")</li>
+<ul><li>minor bugfix for the cleansp() function involving taxa that were missing (““)</li>
 <li>cleansp()’s default changed from subgenera=FALSE to subgenera=TRUE</li>
 </ul><hr></div>
 </div>
@@ -134,10 +155,12 @@
 </ul></div>
 <div class="section level4">
 <h4 id="deleted-0-8-0">Deleted<a class="anchor" aria-label="anchor" href="#deleted-0-8-0"></a></h4>
-<ul><li>The ‘ages’ argument of the divDyn() and fadlad() functions was removed due to the re-organization of the time-argumentation.</li></ul></div>
+<ul><li>The ‘ages’ argument of the divDyn() and fadlad() functions was removed due to the re-organization of the time-argumentation.</li>
+</ul></div>
 <div class="section level4">
 <h4 id="fixed-0-8-0">Fixed<a class="anchor" aria-label="anchor" href="#fixed-0-8-0"></a></h4>
-<ul><li>The function subsample() crashed when FUN was set to ‘divDyn’, and the output resulting from its application on the subsample trial dataset did not have have the same dimensions as the result of divDyn() when it was applied to the total dataset. Note that this matching of the ‘trial results’ is only viable when the data.frame output of FUN has a ‘rownames’ attribute.</li></ul><hr></div>
+<ul><li>The function subsample() crashed when FUN was set to ‘divDyn’, and the output resulting from its application on the subsample trial dataset did not have have the same dimensions as the result of divDyn() when it was applied to the total dataset. Note that this matching of the ‘trial results’ is only viable when the data.frame output of FUN has a ‘rownames’ attribute.</li>
+</ul><hr></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.7.1" id="divdyn-071-build-670---2019-02-18">divDyn 0.7.1 (build 670) - 2019-02-18<a class="anchor" aria-label="anchor" href="#divdyn-071-build-670---2019-02-18"></a></h2><p class="text-muted">CRAN release: 2019-02-19</p>
@@ -182,7 +205,7 @@
 <li>proper NEWS file</li>
 <li>the ‘ages’ argument to the divDyn() function</li>
 <li>the ‘misspell’, ‘subgenera’ and ‘stems’ are added to the spCleanse() function, which was renamed to cleansp()</li>
-<li>warnings to some functions that signs the presence of "" empty quotes taxa</li>
+<li>warnings to some functions that signs the presence of “” empty quotes taxa</li>
 </ul></div>
 <div class="section level4">
 <h4 id="changedfixed-0-7-0">Changed/Fixed<a class="anchor" aria-label="anchor" href="#changedfixed-0-7-0"></a></h4>
@@ -191,7 +214,8 @@
 </ul></div>
 <div class="section level4">
 <h4 id="deleted-0-7-0">Deleted<a class="anchor" aria-label="anchor" href="#deleted-0-7-0"></a></h4>
-<ul><li>The inf argument of divDyn(), that an unncessary complication</li></ul><hr></div>
+<ul><li>The inf argument of divDyn(), that an unncessary complication</li>
+</ul><hr></div>
 </div>
 </div>
     <div class="section level2">
@@ -235,10 +259,12 @@
 </ul></div>
 <div class="section level3">
 <h3 id="changed-0-6-0">Changed<a class="anchor" aria-label="anchor" href="#changed-0-6-0"></a></h3>
-<ul><li>material in the sampstat() function was reorganized to two separate functions, see above</li></ul></div>
+<ul><li>material in the sampstat() function was reorganized to two separate functions, see above</li>
+</ul></div>
 <div class="section level3">
 <h3 id="deleted-0-6-0">Deleted<a class="anchor" aria-label="anchor" href="#deleted-0-6-0"></a></h3>
-<ul><li>the deprecated crDD() function and the old plotTS() functions were deleted from the package</li></ul><hr></div>
+<ul><li>the deprecated crDD() function and the old plotTS() functions were deleted from the package</li>
+</ul><hr></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.5.2" id="divdyn-052---2018-09-02">divDyn 0.5.2 - 2018-09-02<a class="anchor" aria-label="anchor" href="#divdyn-052---2018-09-02"></a></h2>
@@ -249,7 +275,8 @@
 </ul></div>
 <div class="section level4">
 <h4 id="changed-0-5-2">Changed<a class="anchor" aria-label="anchor" href="#changed-0-5-2"></a></h4>
-<ul><li>the map() function was renamed to categorize() to better reflect its intended use</li></ul><hr></div>
+<ul><li>the map() function was renamed to categorize() to better reflect its intended use</li>
+</ul><hr></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.5.1" id="divdyn-051---2018-08-31">divDyn 0.5.1 - 2018-08-31<a class="anchor" aria-label="anchor" href="#divdyn-051---2018-08-31"></a></h2>
@@ -266,7 +293,8 @@
 <h2 class="pkg-version" data-toc-text="0.5.0-1" id="divdyn-050-1---2018-08-29">divDyn 0.5.0-1 - 2018-08-29<a class="anchor" aria-label="anchor" href="#divdyn-050-1---2018-08-29"></a></h2>
 <div class="section level4">
 <h4 id="changed-0-5-0-1">Changed<a class="anchor" aria-label="anchor" href="#changed-0-5-0-1"></a></h4>
-<ul><li>stratigraphic assignment objects (in ‘keys’) now have a -1 entries for empty strings</li></ul><hr></div>
+<ul><li>stratigraphic assignment objects (in ‘keys’) now have a -1 entries for empty strings</li>
+</ul><hr></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.5.0" id="divdyn-050---2018-08-20">divDyn 0.5.0 - 2018-08-20<a class="anchor" aria-label="anchor" href="#divdyn-050---2018-08-20"></a></h2>
@@ -285,7 +313,8 @@
 </ul></div>
 <div class="section level4">
 <h4 id="deleted-0-5-0">Deleted<a class="anchor" aria-label="anchor" href="#deleted-0-5-0"></a></h4>
-<ul><li>the ‘exact’ method implementation for SQS as it was slow and and incorrect. The ‘inexact’ method was confirmed with the iNEXT package.</li></ul><hr></div>
+<ul><li>the ‘exact’ method implementation for SQS as it was slow and and incorrect. The ‘inexact’ method was confirmed with the iNEXT package.</li>
+</ul><hr></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.2" id="divdyn-042---2018-07-24">divDyn 0.4.2 - 2018-07-24<a class="anchor" aria-label="anchor" href="#divdyn-042---2018-07-24"></a></h2>
@@ -299,7 +328,8 @@
 </ul></div>
 <div class="section level4">
 <h4 id="changed-0-4-2">Changed<a class="anchor" aria-label="anchor" href="#changed-0-4-2"></a></h4>
-<ul><li>plotTS() now allows “no-boxes” plotting, and multiple layers of boxes</li></ul><hr></div>
+<ul><li>plotTS() now allows “no-boxes” plotting, and multiple layers of boxes</li>
+</ul><hr></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.1" id="divdyn-041---2018-07-07">divDyn 0.4.1 - 2018-07-07<a class="anchor" aria-label="anchor" href="#divdyn-041---2018-07-07"></a></h2>
@@ -334,16 +364,19 @@
 </ul></div>
 <div class="section level4">
 <h4 id="deleted-0-4-0">Deleted<a class="anchor" aria-label="anchor" href="#deleted-0-4-0"></a></h4>
-<ul><li>The previously added bayesian method from the affinity() function. The method had problems and is under investigation.</li></ul><hr></div>
+<ul><li>The previously added bayesian method from the affinity() function. The method had problems and is under investigation.</li>
+</ul><hr></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.1" id="divdyn-031---2018-06-04">divDyn 0.3.1 - 2018-06-04<a class="anchor" aria-label="anchor" href="#divdyn-031---2018-06-04"></a></h2>
 <div class="section level4">
 <h4 id="added-0-3-1">Added<a class="anchor" aria-label="anchor" href="#added-0-3-1"></a></h4>
-<ul><li>method argument for the affinity() function, allows implementation of a simple majority rule (method=“majority”) or the Bayesian approach of Simpson and Harnik (2009, method=“bayesian”)</li></ul></div>
+<ul><li>method argument for the affinity() function, allows implementation of a simple majority rule (method=“majority”) or the Bayesian approach of Simpson and Harnik (2009, method=“bayesian”)</li>
+</ul></div>
 <div class="section level4">
 <h4 id="changed-0-3-1">Changed<a class="anchor" aria-label="anchor" href="#changed-0-3-1"></a></h4>
-<ul><li>the affinity() function was also completely reprogrammed</li></ul><hr></div>
+<ul><li>the affinity() function was also completely reprogrammed</li>
+</ul><hr></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.0" id="divdyn-030---2018-06-01">divDyn 0.3.0 - 2018-06-01<a class="anchor" aria-label="anchor" href="#divdyn-030---2018-06-01"></a></h2>
@@ -383,7 +416,8 @@
 </ul></div>
 <div class="section level4">
 <h4 id="changed-0-2-10">Changed<a class="anchor" aria-label="anchor" href="#changed-0-2-10"></a></h4>
-<ul><li>argumentation of the divDyn function was extended to accomodate the omission of occurrences within the function (optional)</li></ul><hr></div>
+<ul><li>argumentation of the divDyn function was extended to accomodate the omission of occurrences within the function (optional)</li>
+</ul><hr></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.8" id="divdyn-028---2018-05-01">divDyn 0.2.8 - 2018-05-01<a class="anchor" aria-label="anchor" href="#divdyn-028---2018-05-01"></a></h2>
@@ -396,10 +430,12 @@
 </ul></div>
 <div class="section level4">
 <h4 id="changes-0-2-8">Changes<a class="anchor" aria-label="anchor" href="#changes-0-2-8"></a></h4>
-<ul><li>argument distribution in the subsample() function, FUN argument simplified to a single function</li></ul></div>
+<ul><li>argument distribution in the subsample() function, FUN argument simplified to a single function</li>
+</ul></div>
 <div class="section level4">
 <h4 id="planned-0-2-8">Planned<a class="anchor" aria-label="anchor" href="#planned-0-2-8"></a></h4>
-<ul><li>the subsampling routines will be remodularized so that their argument becomes the dataset, rather than the individual columns. This will allow the support for custom subsampling functions.</li></ul><hr></div>
+<ul><li>the subsampling routines will be remodularized so that their argument becomes the dataset, rather than the individual columns. This will allow the support for custom subsampling functions.</li>
+</ul><hr></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.7" id="divdyn-027---2018-02-01">divDyn 0.2.7 - 2018-02-01<a class="anchor" aria-label="anchor" href="#divdyn-027---2018-02-01"></a></h2>
@@ -413,13 +449,15 @@
 <h2 class="pkg-version" data-toc-text="0.2.6" id="divdyn-026---2018-01-26">divDyn 0.2.6 - 2018-01-26<a class="anchor" aria-label="anchor" href="#divdyn-026---2018-01-26"></a></h2>
 <div class="section level4">
 <h4 id="added-0-2-6">Added<a class="anchor" aria-label="anchor" href="#added-0-2-6"></a></h4>
-<ul><li>John Alroy’s (2015) second-for-third extinction/origination proportions/rates to the divDyn() function</li></ul><hr></div>
+<ul><li>John Alroy’s (2015) second-for-third extinction/origination proportions/rates to the divDyn() function</li>
+</ul><hr></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.5" id="divdyn-025---2018-01-22">divDyn 0.2.5 - 2018-01-22<a class="anchor" aria-label="anchor" href="#divdyn-025---2018-01-22"></a></h2>
 <div class="section level4">
 <h4 id="added-0-2-5">Added<a class="anchor" aria-label="anchor" href="#added-0-2-5"></a></h4>
-<ul><li>survivors() function to calculate survivorship probabilities</li></ul></div>
+<ul><li>survivors() function to calculate survivorship probabilities</li>
+</ul></div>
 <div class="section level4">
 <h4 id="changes-0-2-5">Changes<a class="anchor" aria-label="anchor" href="#changes-0-2-5"></a></h4>
 <ul><li>the ‘subseries()’ function was renamed to ‘subsample()’ for easier application</li>
@@ -430,19 +468,22 @@
 <h2 class="pkg-version" data-toc-text="0.2.4" id="divdyn-024---2018-01-15">divDyn 0.2.4 - 2018-01-15<a class="anchor" aria-label="anchor" href="#divdyn-024---2018-01-15"></a></h2>
 <div class="section level4">
 <h4 id="added-0-2-4">Added<a class="anchor" aria-label="anchor" href="#added-0-2-4"></a></h4>
-<ul><li>the the “oxw” method for the subseries() function. This implements occurrence-weighted by list subsampling.</li></ul><hr></div>
+<ul><li>the the “oxw” method for the subseries() function. This implements occurrence-weighted by list subsampling.</li>
+</ul><hr></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.3" id="divdyn-023---2018-01-08">divDyn 0.2.3 - 2018-01-08<a class="anchor" aria-label="anchor" href="#divdyn-023---2018-01-08"></a></h2>
 <div class="section level4">
 <h4 id="added-0-2-3">Added<a class="anchor" aria-label="anchor" href="#added-0-2-3"></a></h4>
-<ul><li>the subseries() function to execute certain functions with subsampling applied.</li></ul><hr></div>
+<ul><li>the subseries() function to execute certain functions with subsampling applied.</li>
+</ul><hr></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.2" id="divdyn-022---2017-12-18">divDyn 0.2.2 - 2017-12-18<a class="anchor" aria-label="anchor" href="#divdyn-022---2017-12-18"></a></h2>
 <div class="section level4">
 <h4 id="added-0-2-2">Added<a class="anchor" aria-label="anchor" href="#added-0-2-2"></a></h4>
-<ul><li>the shades() function for plotting distributions of values arranged in a time series</li></ul><hr></div>
+<ul><li>the shades() function for plotting distributions of values arranged in a time series</li>
+</ul><hr></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.1" id="divdyn-021---2017-12-12">divDyn 0.2.1 - 2017-12-12<a class="anchor" aria-label="anchor" href="#divdyn-021---2017-12-12"></a></h2>
@@ -453,7 +494,8 @@
 </ul></div>
 <div class="section level4">
 <h4 id="changes-0-2-1">Changes<a class="anchor" aria-label="anchor" href="#changes-0-2-1"></a></h4>
-<ul><li>plotTS() function default changes</li></ul><hr></div>
+<ul><li>plotTS() function default changes</li>
+</ul><hr></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.0" id="divdyn-020---2017-12-11">divDyn 0.2.0 - 2017-12-11<a class="anchor" aria-label="anchor" href="#divdyn-020---2017-12-11"></a></h2>
@@ -476,16 +518,19 @@
 <h2 class="pkg-version" data-toc-text="0.1.4" id="divdyn-014---2017-11-22">divDyn 0.1.4 - 2017-11-22<a class="anchor" aria-label="anchor" href="#divdyn-014---2017-11-22"></a></h2>
 <div class="section level4">
 <h4 id="changes-0-1-4">Changes<a class="anchor" aria-label="anchor" href="#changes-0-1-4"></a></h4>
-<ul><li>documentation</li></ul><hr></div>
+<ul><li>documentation</li>
+</ul><hr></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.3" id="divdyn-013---2017-11-21">divDyn 0.1.3 - 2017-11-21<a class="anchor" aria-label="anchor" href="#divdyn-013---2017-11-21"></a></h2>
 <div class="section level4">
 <h4 id="changes-0-1-3">Changes<a class="anchor" aria-label="anchor" href="#changes-0-1-3"></a></h4>
-<ul><li>output variable names in the divDyn() function</li></ul></div>
+<ul><li>output variable names in the divDyn() function</li>
+</ul></div>
 <div class="section level4">
 <h4 id="added-0-1-3">Added<a class="anchor" aria-label="anchor" href="#added-0-1-3"></a></h4>
-<ul><li>the first version of the crDD() function is added.</li></ul></div>
+<ul><li>the first version of the crDD() function is added.</li>
+</ul></div>
 <div class="section level4">
 <h4 id="notes-0-1-3">Notes<a class="anchor" aria-label="anchor" href="#notes-0-1-3"></a></h4>
 <p>Pre-open versions were not registered.</p>
@@ -496,7 +541,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by <a href="https://palaeobiology.nat.fau.de/people/instructors/kocsis/" class="external-link">Adam T. Kocsis</a>, <a href="https://researchers.mq.edu.au/en/persons/john-alroy" class="external-link">John Alroy</a>, <a href="https://www.gzn.nat.fau.eu/palaeontologie/team/former-members/reddin/" class="external-link">Carl J. Reddin</a>, <a href="https://www.gzn.nat.fau.eu/palaeontologie/team/professors/kiessling/" class="external-link">Wolfgang Kiessling</a>, <a href="https://www.dfg.de/en/index.jsp" class="external-link"><img src="https://www.dfg.de/includes/bausteine/open_graph_de/dfgfallback.jpg" alt="dfg" width="80"></a>, <a href="https://www.gzn.nat.fau.eu/" class="external-link"><img src="https://www.gzn.nat.fau.de/files/2017/05/cropped-gzn-logo.jpg" alt="geozentrum" width="80"></a>.</p>
+  <p></p><p>Developed by <a href="https://palaeobiology.nat.fau.de/people/instructors/kocsis/" class="external-link">Adam T. Kocsis</a>, <a href="https://researchers.mq.edu.au/en/persons/john-alroy" class="external-link">John Alroy</a>, <a href="https://www.gzn.nat.fau.eu/palaeontologie/team/former-members/reddin/" class="external-link">Carl J. Reddin</a>, <a href="https://www.gzn.nat.fau.eu/palaeontologie/team/professors/kiessling/" class="external-link">Wolfgang Kiessling</a>, <a href="https://www.dfg.de/en/index.jsp" class="external-link"><img src="https://github.com/gplates/rgplates/blob/devel/pkgdown/assets/dfg.png?raw=true" alt="dfg" width="80"></a>, <a href="https://www.gzn.nat.fau.eu/" class="external-link"><img src="https://github.com/gplates/rgplates/blob/devel/pkgdown/assets/GeoZentrum.svg?raw=true" alt="geozentrum" width="80"></a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">
