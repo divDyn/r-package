@@ -160,6 +160,9 @@ subsample<- function(x,
 					x <- x[!bTaxNA,]
 				}
 			}
+
+			# enforce character taxa - might
+			x[[tax]] <- as.character(x[[tax]])
 		}
 
 		# bin

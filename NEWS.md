@@ -1,5 +1,13 @@
 # Change log of the R package 'divDyn'
 
+# divDyn 0.9.0 - 2025-07-14
+
+### Fixed
+
+- The `subsample` function crashed when numeric taxon codes were entered as `tax`
+
+* * *
+
 # divDyn 0.8.3 - 2024-11-21
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14202954.svg)](https://doi.org/10.5281/zenodo.14202954) 
