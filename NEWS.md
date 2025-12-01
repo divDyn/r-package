@@ -1,10 +1,17 @@
 # Change log of the R package 'divDyn'
 
-# divDyn 0.9.0 - 2025-07-14
+# divDyn 0.9.0 - 2025-12-01
+
+### Added 
+- Basic simulation functions to fabricate artificial data for the main functions. An equilibrial birth-death process is added `equilibrialBD`
+- A function to create input from FAD-LAD matrices for the `divDyn` function.
 
 ### Fixed
 
 - The `subsample` function crashed when numeric taxon codes were entered as `tax`
+
+### In progress
+- Testing and defense of the simulation functions.
 
 * * *
 
